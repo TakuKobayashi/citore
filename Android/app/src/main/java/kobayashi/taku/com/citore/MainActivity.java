@@ -1,4 +1,4 @@
-package kobayashi.taku.com.ebtic;
+package kobayashi.taku.com.citore;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

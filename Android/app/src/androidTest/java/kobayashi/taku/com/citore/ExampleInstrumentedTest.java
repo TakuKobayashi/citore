@@ -1,4 +1,4 @@
-package kobayashi.taku.com.ebtic;
+package kobayashi.taku.com.citore;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("kobayashi.taku.com.ebtic", appContext.getPackageName());
+        assertEquals("kobayashi.taku.com.citore", appContext.getPackageName());
     }
 }

@@ -31,6 +31,8 @@ gem 'annotate'
 gem 'kaminari'
 gem 'activerecord-import'
 gem 'devise'
+gem 'twitter'
+gem 'tweetstream'
 
 gem 'httpclient'
 

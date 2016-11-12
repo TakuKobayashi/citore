@@ -1,0 +1,17 @@
+default: &default
+  adapter: mysql2
+  pool: 5
+  timeout: 5000
+  encoding: utf8
+
+development:
+  <<: *default
+  database: citore_development
+
+test:
+  <<: *default
+  database: citore_test
+
+production:
+  <<: *default
+  database: citore_production

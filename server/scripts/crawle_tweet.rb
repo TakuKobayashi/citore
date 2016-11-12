@@ -7,7 +7,11 @@ client = Twitter::REST::Client.new do |config|
     config.access_token_secret = apiconfig["twitter"]["access_token_secret"]
 end
 
+natto = Natto::MeCab.new
+
 last_id = nil
 client.search('エロく聞こえる言葉 -rt', :lang => "ja", :count => 100, :max_id => last_id).map do |status|
-  puts "#{status.to_json}"
+  natto.parse(status.text) do |n|
+    puts "#{n.surface}\t#{n.feature}"
+  end
 end

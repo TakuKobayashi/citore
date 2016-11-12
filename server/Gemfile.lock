@@ -132,6 +132,8 @@ GEM
     multi_json (1.12.1)
     multipart-post (2.0.0)
     mysql2 (0.4.5)
+    natto (1.1.1)
+      ffi (>= 1.9.0)
     naught (1.1.0)
     nio4r (1.2.1)
     nokogiri (1.6.8.1)
@@ -260,6 +262,7 @@ DEPENDENCIES
   kaminari
   listen (~> 3.0.5)
   mysql2
+  natto
   puma (~> 3.0)
   rails (~> 5.0.0, >= 5.0.0.1)
   roo

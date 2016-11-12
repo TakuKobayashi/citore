@@ -33,6 +33,7 @@ gem 'activerecord-import'
 gem 'devise'
 gem 'twitter'
 gem 'tweetstream'
+gem 'natto'
 
 gem 'httpclient'
 

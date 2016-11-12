@@ -66,6 +66,7 @@ server/coverage/
 server/config/database.yml
 server/config/initializers/devise.rb
 server/config/secrets.yml
+server/config/apiconfig.yml
 
 .ruby-gemset
 .ruby-version

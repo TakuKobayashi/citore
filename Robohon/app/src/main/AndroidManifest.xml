@@ -3,6 +3,8 @@
     package="jp.co.sharp.sample.simple" >
 
     <uses-permission android:name="jp.co.sharp.android.permission.VOICEUI" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="false"

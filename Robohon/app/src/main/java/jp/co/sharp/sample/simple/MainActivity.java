@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -155,6 +156,15 @@ public class MainActivity extends Activity implements MainActivityVoiceUIListene
         mVoiceUIStartReceiver = new VoiceUIStartReceiver();
         IntentFilter filter = new IntentFilter(VoiceUIManager.ACTION_VOICEUI_SERVICE_STARTED);
         registerReceiver(mVoiceUIStartReceiver, filter);
+
+        JsonRequest req = new JsonRequest();
+        req.addCallback(new JsonRequest.ResponseCallback() {
+            @Override
+            public void onSuccess(String url, String body) {
+                Log.d(Config.TAG, "url:" + url + " body:" + body);
+            }
+        });
+        req.execute("http://www.google.co.jp/");
     }
 
     @Override

@@ -1,5 +1,6 @@
 package kobayashi.taku.com.citore;
 
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
@@ -92,6 +93,8 @@ public class MainActivity extends AppCompatActivity {
                         Log.d(Config.TAG, "error:" + e.getMessage());
                     }
                     mVoice = null;
+                    MediaPlayer mp = MediaPlayer.create(MainActivity.this, Uri.fromFile(saveFile));
+                    mp.start();
                 }
             });
             breq.execute(builder.toString());

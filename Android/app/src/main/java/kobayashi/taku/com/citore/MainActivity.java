@@ -23,30 +23,49 @@ import okhttp3.ResponseBody;
 
 public class MainActivity extends AppCompatActivity {
     private TweetVoice mVoice;
+    private LoopSpeechRecognizer mLoopSpeechRecognizer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mLoopSpeechRecognizer = new LoopSpeechRecognizer(this);
 //        ApplicationHelper.requestPermissions(this, 1);
 
-        Uri.Builder builder = new Uri.Builder();
-        builder.scheme("http");
-        builder.authority("taptappun.cloudapp.net");
-        builder.path("/tweet_voice/search");
-        builder.appendQueryParameter("text", "オナモミ");
-        JsonRequest req = new JsonRequest();
-        req.addCallback(new JsonRequest.ResponseCallback() {
+        mLoopSpeechRecognizer.setCallback(new LoopSpeechRecognizer.RecognizeCallback() {
             @Override
-            public void onSuccess(String url, String body) {
-                Log.d(Config.TAG, "url:" + url + " body:" + body);
-                Gson gson = new Gson();
-                TweetVoice voice = gson.fromJson(body, TweetVoice.class);
-                getVoiceFile(voice);
-
+            public void onSuccess(float confidence, String value) {
+                Log.d(Config.TAG, "value:" + value);
+                Uri.Builder builder = new Uri.Builder();
+                builder.scheme("http");
+                builder.authority("taptappun.cloudapp.net");
+                builder.path("/tweet_voice/search");
+                builder.appendQueryParameter("text", value);
+                JsonRequest req = new JsonRequest();
+                req.addCallback(new JsonRequest.ResponseCallback() {
+                    @Override
+                    public void onSuccess(String url, String body) {
+                        Log.d(Config.TAG, "url:" + url + " body:" + body);
+                        Gson gson = new Gson();
+                        TweetVoice voice = gson.fromJson(body, TweetVoice.class);
+                        getVoiceFile(voice);
+                    }
+                });
             }
         });
-        req.execute(builder.toString());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mLoopSpeechRecognizer.startListening();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mLoopSpeechRecognizer.stopListening();
     }
 
     private void getVoiceFile(TweetVoice voice){

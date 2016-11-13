@@ -16,6 +16,7 @@ start_time = Time.now
 limit_span = (15.minutes.second / 180).to_i
 
 serach_keyword = "ero_kotoba_bot"
+#serach_keyword = "aegigoe_bot"
 last_id = TweetSeed.where(search_keyword: serach_keyword).last.try(:tweet_id_str)
 
 =begin
@@ -35,10 +36,12 @@ while is_all == false do
   is_all = tweet_results.size < 100
   tweet_results.each do |status|
     next if status.blank?
+    text = status.text.each_char.select{|c| c.bytes.count < 4 }.join('')
+    text = text.gsub(/[#＃@][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー_]+/, "").strip
     tweet_seed = TweetSeed.new
     tweet_seed.tweet_id_str = status.id.to_s
     tweet_seed.search_keyword = serach_keyword
-    tweet_seed.tweet = status.text.each_char.select{|c| c.bytes.count < 4 }.join('')
+    tweet_seed.tweet = text
     tweet_seeds << tweet_seed
   end
   last_id = tweet_results.last.try(:id).to_i - 1

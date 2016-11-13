@@ -1,0 +1,42 @@
+<?xml version="1.0" ?>
+<hvml version="2.0">
+    <head>
+        <producer>jp.co.sharp.sample.simple</producer>
+        <description>音声認識した内容をJava側に通知する</description>
+        <scene value="jp.co.sharp.sample.simple.scene_common"/>
+        <version value="1.0"/>
+        <tool_version>1.00</tool_version>
+        <situation priority="75" topic_id="t1" trigger="user-word">イマカラシャベルヨ near ${Lvcsr:Kana}</situation>
+    </head>
+    <body>
+        <topic id="t1" listen="false">
+            <action index="1">
+                <speech>目が黄色になったら喋ってね</speech>
+                <behavior id="assign" type="normal"/>
+            </action>
+            <next href="#t2" type="default"/>
+        </topic>
+        <topic id="t2" listen="true">
+            <a href="#t3">
+                <situation trigger="user-word">ＶＯＩＣＥＰＦ＿ＥＲＲ  in ${Lvcsr:Basic}</situation>
+            </a>
+            <a href="#t4" type="default"/>
+            <next href="#t3" type="default"/>
+        </topic>
+        <topic id="t3" listen="false">
+            <action index="1">
+                <speech>よくわからなかったよ。またお話ししてね。</speech>
+                <behavior id="assign" type="normal"/>
+            </action>
+        </topic>
+        <topic id="t4" listen="false">
+            <action index="1">
+                <speech>喋った内容を、背中の画面に表示したよ。確認してみてね</speech>
+                <behavior id="assign" type="normal"/>
+                <control function="recog_talk" target="jp.co.sharp.sample.simple">
+                    <data key="Lvcsr_Basic" value="${Lvcsr:Basic}"/>
+                </control>
+            </action>
+        </topic>
+    </body>
+</hvml>

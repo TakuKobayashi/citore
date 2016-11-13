@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:showIn="@layout/activity_main" tools:context=".MainActivity">
+
+    <ScrollView
+        android:layout_height="fill_parent"
+        android:layout_width="fill_parent">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="@string/default_mode_text"
+                android:id="@+id/mode_value"
+                android:textSize="24sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/test_value"
+                android:textSize="24sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="20dp"
+                android:background="#666666" />
+            <TextView
+                android:text="@string/recog_label_text"
+                android:id="@+id/recog_label_text"
+                android:textSize="24sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:text="@string/default_text"
+                android:id="@+id/recog_text"
+                android:textSize="24sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="20dp"
+                android:background="#666666" />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/button_voice_accost"
+                android:id="@+id/voice_accost_button"
+                android:singleLine="false"
+                android:textSize="32sp"
+                android:layout_marginTop="20dp" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/button_resolve_variable"
+                android:id="@+id/resolve_variable_button"
+                android:singleLine="false"
+                android:textSize="32sp"
+                android:layout_marginTop="20dp" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/button_set_memoryP"
+                android:id="@+id/set_memoryP"
+                android:singleLine="false"
+                android:textSize="32sp"
+                android:layout_marginTop="20dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="32sp"
+                android:id="@+id/ViewTime" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/button_get_memoryP"
+                android:id="@+id/get_memoryP"
+                android:singleLine="false"
+                android:textSize="32sp" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/button_finish_app"
+                android:id="@+id/finish_app_button"
+                android:singleLine="false"
+                android:textSize="32sp"
+                android:layout_marginTop="20dp" />
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

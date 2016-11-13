@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+<hvml version="2.0">
+    <head>
+        <producer>jp.co.sharp.sample.simple</producer>
+        <description>Java側でしか処理できない値をシナリオから取得する</description>
+        <scene value="jp.co.sharp.sample.simple.scene_common"/>
+        <version value="1.0"/>
+        <tool_version>1.00</tool_version>
+        <accost priority="75" topic_id="t1" word="jp.co.sharp.sample.simple.variable.t1"/>
+    </head>
+    <body>
+        <topic id="t1" listen="false">
+            <action index="1">
+                <speech>アプリ側から取得した情報は${jp.co.sharp.sample.simple:java_side_value}だよ</speech>
+                <behavior id="assign" type="normal"/>
+            </action>
+        </topic>
+    </body>
+</hvml>

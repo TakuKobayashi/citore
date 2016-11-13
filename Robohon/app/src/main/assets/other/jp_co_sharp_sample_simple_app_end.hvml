@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<hvml version="2.0">
+    <head>
+        <producer>jp.co.sharp.sample.simple</producer>
+        <description>サンプルアプリを終了するためのシナリオ</description>
+        <scene value="jp.co.sharp.sample.simple.scene_common"/>
+        <version value="1.0"/>
+        <tool_version>1.00</tool_version>
+        <situation priority="61" topic_id="t1" trigger="user-word">アプリ in ${Lvcsr:Basic} and ${Lvcsr:Basic} include [終了,終わ]</situation>
+        <accost priority="74" topic_id="t2" word="jp.co.sharp.sample.simple.app_end.t2"/>
+    </head>
+    <body>
+        <topic id="t1" listen="false">
+            <action index="1">
+                <speech>${resolver:speech_ok(${resolver:ok_id})}</speech>
+                <behavior id="${resolver:motion_ok(${resolver:ok_id})}" type="normal"/>
+            </action>
+            <next href="#t2" type="default"/>
+        </topic>
+        <topic id="t2" listen="false">
+            <action index="1">
+                <speech>サンプルアプリを終了するね</speech>
+                <behavior id="assign" type="normal"/>
+                <control function="end_app" target="jp.co.sharp.sample.simple"/>
+            </action>
+        </topic>
+    </body>
+</hvml>

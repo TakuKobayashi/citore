@@ -1,0 +1,26 @@
+<?xml version="1.0" ?>
+<hvml version="2.0">
+    <head>
+        <producer>jp.co.sharp.sample.simple</producer>
+        <description>覚えている時間を話す</description>
+        <scene value="jp.co.sharp.sample.simple.scene_common"/>
+        <version value="1.0"/>
+        <tool_version>1.00</tool_version>
+        <accost priority="75" topic_id="t1" word="jp.co.sharp.sample.simple.get_memoryp.t1"/>
+    </head>
+    <body>
+        <topic id="t1" listen="false">
+            <action index="1">
+                <speech>覚えている時間は</speech>
+                <behavior id="assign" type="normal"/>
+            </action>
+            <next href="#t2" type="default"/>
+        </topic>
+        <topic id="t2" listen="false">
+            <action index="1">
+                <speech>${memory_p:jp.co.sharp.sample.simple.hour}時${memory_p:jp.co.sharp.sample.simple.minute}分だよ</speech>
+                <behavior id="assign" type="normal"/>
+            </action>
+        </topic>
+    </body>
+</hvml>

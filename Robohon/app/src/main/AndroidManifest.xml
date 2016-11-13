@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="jp.co.sharp.sample.simple" >
+
+    <uses-permission android:name="jp.co.sharp.android.permission.VOICEUI" />
+
+    <application
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar.Fullscreen" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="jp.co.sharp.android.rb.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <uses-library
+            android:name="jp.co.sharp.android.voiceui.framework"
+            android:required="true" />
+
+        <service
+            android:name=".common.RegisterScenarioService"
+            android:enabled="true"
+            android:exported="false" >
+        </service>
+        <receiver android:name=".common.RequestScenarioReceiver" >
+            <intent-filter>
+                <action android:name="jp.co.sharp.android.voiceui.REQUEST_SCENARIO" />
+            </intent-filter>
+        </receiver>
+
+    </application>
+
+</manifest>

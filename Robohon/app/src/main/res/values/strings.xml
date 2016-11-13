@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">シンプル</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="default_mode_text">アイコンタップで起動したよ</string>
+
+    <string name="recog_label_text">「今から喋るよ」って言ってね</string>
+    <string name="default_text">--Recog text--</string>
+
+    <string name="button_voice_accost">accost</string>
+    <string name="button_resolve_variable">resolve variable</string>
+    <string name="button_finish_app">Finish App</string>
+    <string name="button_get_memoryP">get_memory_p</string>
+    <string name="button_set_memoryP">set_memory_p</string>
+
+</resources>

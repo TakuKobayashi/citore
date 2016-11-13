@@ -8,15 +8,15 @@ client = Twitter::REST::Client.new do |config|
 end
 
 natto = Natto::MeCab.new
-parser = CaboCha::Parser.new
+#parser = CaboCha::Parser.new
 
 is_all = false
 
 start_time = Time.now
 limit_span = (15.minutes.second / 180).to_i
 
-serach_keyword = "ero_kotoba_bot"
-#serach_keyword = "aegigoe_bot"
+serach_keyword = TweetSeed::ERO_KOTOBA_BOT
+#serach_keyword = TweetSeed::AEGIGOE_BOT
 last_id = TweetSeed.where(search_keyword: serach_keyword).last.try(:tweet_id_str)
 
 =begin

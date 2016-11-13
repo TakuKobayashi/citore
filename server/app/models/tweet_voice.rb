@@ -16,4 +16,10 @@
 
 class TweetVoice < ApplicationRecord
   belongs_to :tweet_seed
+
+  VOICE_FILE_ROOT = "/tmp/voices/"
+
+  def self.voice_file_root_path
+    return Rails.root.to_s + VOICE_FILE_ROOT
+  end
 end

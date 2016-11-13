@@ -17,4 +17,7 @@
 
 class TweetSeed < ApplicationRecord
   has_many :tweet_voices
+
+  ERO_KOTOBA_BOT = "ero_kotoba_bot"
+  AEGIGOE_BOT = "aegigoe_bot"
 end

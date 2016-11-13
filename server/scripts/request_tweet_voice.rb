@@ -8,7 +8,7 @@ emo_boy_speackers = ["taichi_emo"]
 speackers = girl_speackers + boy_speackers + emo_girl_speackers + emo_boy_speackers
 #http://webapi.aitalk.jp/webapi/v2/ttsget.php?username=MA12_WebAPI&password=TNLPXb9d&text=え?マンゴスチン&speaker_name=nozomi&volume=2.0&speed=0.5&pitch=2.0&range=2.0
 
-TweetSeed.find_each do |tweet_seed|
+TweetSeed.where("id > 468").find_each do |tweet_seed|
   speackers.each do |speack|
     http_client = HTTPClient.new
     params = {

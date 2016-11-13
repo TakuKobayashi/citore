@@ -41,6 +41,7 @@ import okhttp3.ResponseBody;
 public class MainActivity extends Activity implements MainActivityVoiceUIListener.MainActivityScenarioCallback {
     public static final String TAG = MainActivity.class.getSimpleName();
     private TweetVoice mVoice;
+    private LoopSpeechRecognizer mLoopSpeechRecognizer;
 
     /**
      * 音声UI制御.
@@ -68,6 +69,7 @@ public class MainActivity extends Activity implements MainActivityVoiceUIListene
         super.onCreate(savedInstanceState);
         Log.v(TAG, "onCreate()");
         setContentView(R.layout.activity_main);
+        mLoopSpeechRecognizer = new LoopSpeechRecognizer(this);
 
         Intent intent = getIntent();
         if (intent != null) {
@@ -168,30 +170,34 @@ public class MainActivity extends Activity implements MainActivityVoiceUIListene
         IntentFilter filter = new IntentFilter(VoiceUIManager.ACTION_VOICEUI_SERVICE_STARTED);
         registerReceiver(mVoiceUIStartReceiver, filter);
 
-
-        Uri.Builder builder = new Uri.Builder();
-        builder.scheme("http");
-        builder.authority("taptappun.cloudapp.net");
-        builder.path("/tweet_voice/search");
-        builder.appendQueryParameter("text", "オナモミ");
-        JsonRequest req = new JsonRequest();
-        req.addCallback(new JsonRequest.ResponseCallback() {
+        mLoopSpeechRecognizer.setCallback(new LoopSpeechRecognizer.RecognizeCallback() {
             @Override
-            public void onSuccess(String url, String body) {
-                Log.d(Config.TAG, "url:" + url + " body:" + body);
-                Gson gson = new Gson();
-                TweetVoice voice = gson.fromJson(body, TweetVoice.class);
-                getVoiceFile(voice);
-
+            public void onSuccess(float confidence, String value) {
+                Log.d(Config.TAG, "value:" + value);
+                Uri.Builder builder = new Uri.Builder();
+                builder.scheme("http");
+                builder.authority("taptappun.cloudapp.net");
+                builder.path("/tweet_voice/search");
+                builder.appendQueryParameter("text", value);
+                JsonRequest req = new JsonRequest();
+                req.addCallback(new JsonRequest.ResponseCallback() {
+                    @Override
+                    public void onSuccess(String url, String body) {
+                        Log.d(Config.TAG, "url:" + url + " body:" + body);
+                        Gson gson = new Gson();
+                        TweetVoice voice = gson.fromJson(body, TweetVoice.class);
+                        getVoiceFile(voice);
+                    }
+                });
             }
         });
-        req.execute(builder.toString());
     }
 
     @Override
     public void onResume() {
         super.onResume();
         Log.v(TAG, "onResume()");
+        mLoopSpeechRecognizer.startListening();
 
         //VoiceUIManagerのインスタンス取得.
         if (mVoiceUIManager == null) {
@@ -212,6 +218,7 @@ public class MainActivity extends Activity implements MainActivityVoiceUIListene
     public void onPause() {
         super.onPause();
         Log.v(TAG, "onPause()");
+        mLoopSpeechRecognizer.stopListening();
 
         //バックに回ったら発話を中止する.
         VoiceUIManagerUtil.stopSpeech();

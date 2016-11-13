@@ -8,21 +8,26 @@ emo_boy_speackers = ["taichi_emo"]
 speackers = girl_speackers + boy_speackers + emo_girl_speackers + emo_boy_speackers
 #http://webapi.aitalk.jp/webapi/v2/ttsget.php?username=MA12_WebAPI&password=TNLPXb9d&text=え?マンゴスチン&speaker_name=nozomi&volume=2.0&speed=0.5&pitch=2.0&range=2.0
 
-speackers.each do |speack|
-  http_client = HTTPClient.new
-  params = {
-    username: apiconfig["aitalk"]["username"],
-    password: apiconfig["aitalk"]["password"],
-    text: "え?マンゴスチン?",
-    speaker_name: "nozomi",
-    ext: "wav",
-    volume: 2.0,
-    speed: 0.6,
-    range: 2.0,
-    pitch: 1.8
-  }
-  response = http_client.get_content("http://webapi.aitalk.jp/webapi/v2/ttsget.php", params, {})
-  open("1_" + SecureRandom.hex + ".wav", 'wb') do |file|
-   file.write response
+TweetSeed.find_each do |tweet_seed|
+  speackers.each do |speack|
+    http_client = HTTPClient.new
+    params = {
+      username: apiconfig["aitalk"]["username"],
+      password: apiconfig["aitalk"]["password"],
+      text: tweet_seed.tweet,
+      speaker_name: speack,
+      ext: "wav",
+      volume: 2.0,
+      speed: 0.6,
+      range: 2.0,
+      pitch: 1.8,
+      style: {"j" => "1.0"}
+    }
+    response = http_client.get_content("http://webapi.aitalk.jp/webapi/v2/ttsget.php", params, {})
+    file_name = "#{tweet_seed.id}_" + SecureRandom.hex + ".wav"
+    open(TweetVoice.voice_file_root_path + file_name, 'wb') do |file|
+      file.write response
+    end
+    tweet_seed.tweet_voices.create(speech_file_path: file_name, speacker_keyword: speack)
   end
 end

@@ -5,7 +5,7 @@ class TweetVoiceController < BaseController
     natto.parse(params[:text]) do |n|
       words << n.surface if n.surface.present?
     end
-    seed = TweetSeed.where(search_keyword: TweetSeed::ERO_KOTOBA_BOT, tweet: words).sample
+    seed = TweetSeed.where(search_keyword: TweetSeed::ERO_KOTOBA_BOT, tweet: words).where("id <= 839").sample
     if params[:aegi].present?
       t_voice = TweetSeed.where(search_keyword: TweetSeed::AEGIGOE_BOT).sample.tweet_voices.sample
     else

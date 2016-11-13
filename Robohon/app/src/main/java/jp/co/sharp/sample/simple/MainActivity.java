@@ -7,13 +7,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Calendar;
 import java.util.List;
 
@@ -23,6 +32,7 @@ import jp.co.sharp.sample.simple.customize.ScenarioDefinitions;
 import jp.co.sharp.sample.simple.util.VoiceUIManagerUtil;
 import jp.co.sharp.sample.simple.util.VoiceUIVariableUtil;
 import jp.co.sharp.sample.simple.util.VoiceUIVariableUtil.VoiceUIVariableListHelper;
+import okhttp3.ResponseBody;
 
 
 /**
@@ -30,6 +40,7 @@ import jp.co.sharp.sample.simple.util.VoiceUIVariableUtil.VoiceUIVariableListHel
  */
 public class MainActivity extends Activity implements MainActivityVoiceUIListener.MainActivityScenarioCallback {
     public static final String TAG = MainActivity.class.getSimpleName();
+    private TweetVoice mVoice;
 
     /**
      * 音声UI制御.
@@ -157,14 +168,24 @@ public class MainActivity extends Activity implements MainActivityVoiceUIListene
         IntentFilter filter = new IntentFilter(VoiceUIManager.ACTION_VOICEUI_SERVICE_STARTED);
         registerReceiver(mVoiceUIStartReceiver, filter);
 
+
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme("http");
+        builder.authority("taptappun.cloudapp.net");
+        builder.path("/tweet_voice/search");
+        builder.appendQueryParameter("text", "オナモミ");
         JsonRequest req = new JsonRequest();
         req.addCallback(new JsonRequest.ResponseCallback() {
             @Override
             public void onSuccess(String url, String body) {
                 Log.d(Config.TAG, "url:" + url + " body:" + body);
+                Gson gson = new Gson();
+                TweetVoice voice = gson.fromJson(body, TweetVoice.class);
+                getVoiceFile(voice);
+
             }
         });
-        req.execute("http://www.google.co.jp/");
+        req.execute(builder.toString());
     }
 
     @Override
@@ -280,6 +301,59 @@ public class MainActivity extends Activity implements MainActivityVoiceUIListene
                 //VoiceUIListenerの登録.
                 VoiceUIManagerUtil.registerVoiceUIListener(mVoiceUIManager, mMainActivityVoiceUIListener);
             }
+        }
+    }
+
+
+    private void getVoiceFile(TweetVoice voice){
+        if(voice != null){
+            mVoice = voice;
+            //http://taptappun.cloudapp.net/tweet_voice/download?tweet_voice_id=3
+            Uri.Builder builder = new Uri.Builder();
+            builder.scheme("http");
+            builder.authority("taptappun.cloudapp.net");
+            builder.path("/tweet_voice/download");
+            builder.appendQueryParameter("tweet_voice_id", String.valueOf(voice.id));
+            BinaryRequest breq = new BinaryRequest();
+            breq.addCallback(new BinaryRequest.ResponseCallback() {
+                private ResponseBody mResponse;
+                @Override
+                public void onSuccess(String url, ResponseBody response) {
+                    Log.d(Config.TAG, "url:" + url);
+                    String mydirName = "citore";
+                    File myDir = new File(Environment.getExternalStorageDirectory(), mydirName);
+                    if (!myDir.exists()) { //MyDirectoryというディレクトリーがなかったら作成
+                        myDir.mkdirs();
+                    }
+                    String filename = mVoice.speech_file_path;
+                    File saveFile = new File(myDir, filename);
+                    InputStream is = response.byteStream();
+                    BufferedInputStream input = new BufferedInputStream(is);
+
+                    Log.d(Config.TAG, saveFile.getPath());
+                    try {
+                        FileOutputStream outputStream = new FileOutputStream(saveFile);
+                        byte[] data = new byte[1024];
+                        int count = 0;
+                        long total = 0;
+
+                        while ((count = input.read(data)) != -1) {
+                            total += count;
+                            outputStream.write(data, 0, count);
+                        }
+
+                        outputStream.flush();
+                        outputStream.close();
+                        input.close();
+                    } catch (IOException e) {
+                        Log.d(Config.TAG, "error:" + e.getMessage());
+                    }
+                    mVoice = null;
+                    MediaPlayer mp = MediaPlayer.create(MainActivity.this, Uri.fromFile(saveFile));
+                    mp.start();
+                }
+            });
+            breq.execute(builder.toString());
         }
     }
 }

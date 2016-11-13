@@ -13,12 +13,13 @@ import java.util.Map;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
-public class JsonRequest extends AsyncTask<String, Void, Map<String, String>> {
+public class BinaryRequest extends AsyncTask<String, Void, Map<String, ResponseBody>> {
     private Map<String, Object> mParams = new HashMap<String, Object>();
     private ArrayList<ResponseCallback> callbackList = new ArrayList<ResponseCallback>();
 
-    public JsonRequest(){
+    public BinaryRequest(){
     }
 
     public void setParams(HashMap<String, Object> params){
@@ -35,8 +36,8 @@ public class JsonRequest extends AsyncTask<String, Void, Map<String, String>> {
         callbackList.clear();
     }
 
-    protected Map<String, String> doInBackground(String... urls){
-        HashMap<String, String> urlResponse = new HashMap<String, String>();
+    protected Map<String, ResponseBody> doInBackground(String... urls){
+        HashMap<String, ResponseBody> urlResponse = new HashMap<String, ResponseBody>();
         OkHttpClient client = new OkHttpClient();
         for(String url : urls){
             Gson gson = new Gson();
@@ -53,7 +54,10 @@ public class JsonRequest extends AsyncTask<String, Void, Map<String, String>> {
             try {
                 response = client.newCall(request).execute();
                 if(response.isSuccessful()){
-                    urlResponse.put(url, response.body().string());
+                    for (ResponseCallback c : callbackList) {
+                        c.onSuccess(url, response.body());
+                    }
+//                    urlResponse.put(url, response.body());
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -64,17 +68,19 @@ public class JsonRequest extends AsyncTask<String, Void, Map<String, String>> {
     }
 
     @Override
-    protected void onPostExecute(Map<String, String> result) {
+    protected void onPostExecute(Map<String, ResponseBody> result) {
         super.onPostExecute(result);
-        for(Map.Entry<String, String> e : result.entrySet()) {
+        /*
+        for(Map.Entry<String, ResponseBody> e : result.entrySet()) {
             for (ResponseCallback c : callbackList) {
                 c.onSuccess(e.getKey(), e.getValue());
             }
         }
+        */
         callbackList.clear();
     }
 
     public interface ResponseCallback{
-        public void onSuccess(String url, String body);
+        public void onSuccess(String url, ResponseBody response);
     }
 }

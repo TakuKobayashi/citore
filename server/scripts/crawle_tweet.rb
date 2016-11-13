@@ -18,6 +18,12 @@ limit_span = (15.minutes.second / 180).to_i
 serach_keyword = "ero_kotoba_bot"
 last_id = TweetSeed.where(search_keyword: serach_keyword).last.try(:tweet_id_str)
 
+=begin
+natto.parse("マンゴスチン") do |n|
+  puts "#{n.surface}\t#{n.feature}"
+end
+=end
+
 while is_all == false do
   sleep limit_span
   tweet_seeds = []

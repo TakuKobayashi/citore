@@ -6,7 +6,12 @@ class TweetVoiceController < BaseController
       words << n.surface if n.surface.present?
     end
     seed = TweetSeed.where(search_keyword: TweetSeed::ERO_KOTOBA_BOT, tweet: words).sample
-    t_voice = seed.tweet_voices.sample || {}
+    t_voice = {}
+    if params[:aegi].present?
+      t_voice = TweetSeed.where(search_keyword: TweetSeed::AEGIGOE_BOT).sample.tweet_voices.sample
+    else
+      t_voice = seed.tweet_voices.sample
+    end
     render :json => t_voice.to_json
   end
 

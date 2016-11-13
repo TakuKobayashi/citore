@@ -34,7 +34,6 @@ gem 'devise'
 gem 'twitter'
 gem 'tweetstream'
 gem 'natto'
-gem 'cabocha'
 
 gem 'httpclient'
 

@@ -50,6 +50,7 @@ GEM
     buftok (0.2.0)
     builder (3.2.2)
     byebug (9.0.6)
+    charwidth (0.1.3)
     chronic (0.10.2)
     coffee-rails (4.2.1)
       coffee-script (>= 2.2.0)
@@ -254,6 +255,7 @@ DEPENDENCIES
   activerecord-import
   annotate
   byebug
+  charwidth
   coffee-rails (~> 4.2)
   devise
   httpclient

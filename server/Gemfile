@@ -34,6 +34,7 @@ gem 'devise'
 gem 'twitter'
 gem 'tweetstream'
 gem 'natto'
+gem 'charwidth'
 
 gem 'httpclient'
 

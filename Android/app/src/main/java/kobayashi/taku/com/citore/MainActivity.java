@@ -1,11 +1,18 @@
 package kobayashi.taku.com.citore;
 
+import android.app.Activity;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 
@@ -21,14 +28,31 @@ import java.util.Objects;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
     private TweetVoice mVoice;
     private LoopSpeechRecognizer mLoopSpeechRecognizer;
+    private EditText mEditText;
+    private TextView mRecordText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+
         setContentView(R.layout.activity_main);
+
+        mEditText = (EditText) findViewById(R.id.debug_text);
+        mRecordText = (TextView) findViewById(R.id.recognize_text);
+
+        Button debugButton = (Button) findViewById(R.id.debug_button);
+        debugButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                requestServer(mEditText.getEditableText().toString());
+            }
+        });
 
         mLoopSpeechRecognizer = new LoopSpeechRecognizer(this);
 //        ApplicationHelper.requestPermissions(this, 1);
@@ -37,23 +61,30 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(float confidence, String value) {
                 Log.d(Config.TAG, "value:" + value);
-                Uri.Builder builder = new Uri.Builder();
-                builder.scheme("http");
-                builder.authority("taptappun.cloudapp.net");
-                builder.path("/tweet_voice/search");
-                builder.appendQueryParameter("text", value);
-                JsonRequest req = new JsonRequest();
-                req.addCallback(new JsonRequest.ResponseCallback() {
-                    @Override
-                    public void onSuccess(String url, String body) {
-                        Log.d(Config.TAG, "url:" + url + " body:" + body);
-                        Gson gson = new Gson();
-                        TweetVoice voice = gson.fromJson(body, TweetVoice.class);
-                        getVoiceFile(voice);
-                    }
-                });
+                mRecordText.setText(value);
+                requestServer(value);
             }
         });
+    }
+
+    private void requestServer(String value){
+        Log.d(Config.TAG, "value:" + value);
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme("http");
+        builder.authority("taptappun.cloudapp.net");
+        builder.path("/tweet_voice/search");
+        builder.appendQueryParameter("text", value);
+        JsonRequest req = new JsonRequest();
+        req.addCallback(new JsonRequest.ResponseCallback() {
+            @Override
+            public void onSuccess(String url, String body) {
+                Log.d(Config.TAG, "url:" + url + " body:" + body);
+                Gson gson = new Gson();
+                TweetVoice voice = gson.fromJson(body, TweetVoice.class);
+                getVoiceFile(voice);
+            }
+        });
+        req.execute(builder.toString());
     }
 
     @Override

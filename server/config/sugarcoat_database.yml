@@ -1,0 +1,17 @@
+default: &default
+  adapter: mysql2
+  pool: 5
+  timeout: 5000
+  encoding: utf8
+
+development:
+  <<: *default
+  database: sugarcoat_development
+
+test:
+  <<: *default
+  database: sugarcoat_test
+
+production:
+  <<: *default
+  database: sugarcoat_production

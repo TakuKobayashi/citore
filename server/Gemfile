@@ -44,6 +44,8 @@ gem 'turnout'
 #エクセル操作
 gem 'roo'
 
+gem 'facebook-messenger'
+
 gem 'whenever', :require => false
 
 # Use Capistrano for deployment

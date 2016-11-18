@@ -85,3 +85,4 @@ server/public/assets/
 !server/tmp/.keep
 
 server/.byebug_history
+server/config/aws.yml

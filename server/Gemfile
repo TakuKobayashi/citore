@@ -46,6 +46,8 @@ gem 'roo'
 
 gem 'facebook-messenger'
 
+gem 'cabocha'
+
 gem 'whenever', :require => false
 
 # Use Capistrano for deployment

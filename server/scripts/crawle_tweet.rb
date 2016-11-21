@@ -39,7 +39,8 @@ while is_all == false do
     tweet_seed = TweetSeed.new
     tweet_seed.tweet_id_str = status.id.to_s
     tweet_seed.search_keyword = serach_keyword
-    tweet_seed.sanitized(status.text)
+    sanitaized_word = TweetSeed.sanitized(status.text)
+    reading = TweetSeed.reading(sanitaized_word)
     tweet_seeds << tweet_seed
   end
   last_id = tweet_results.last.try(:id).to_i - 1

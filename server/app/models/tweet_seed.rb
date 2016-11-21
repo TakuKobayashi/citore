@@ -23,7 +23,7 @@ class TweetSeed < ApplicationRecord
   ERO_KOTOBA_BOT = "ero_kotoba_bot"
   AEGIGOE_BOT = "aegigoe_bot"
 
-  def sanitized(tweet)
+  def self.sanitized(text)
     #絵文字を除去
     sanitized_word = tweet.each_char.select{|c| c.bytes.count < 4 }.join('')
     #全角半角をいい感じに整える
@@ -32,7 +32,24 @@ class TweetSeed < ApplicationRecord
     sanitized_word = sanitized_word.gsub(/[#＃@][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー_]+/, "")
     # 余分な空欄を除去
     sanitized_word.strip!
-    tweet = sanitized_word
-    # TODO nattoで読みをひらがなに分解して分解した読みデータも保存する
+    return sanitized_word
+  end
+
+  def self.reading(text)
+    natto = Natto::MeCab.new
+    #記号を除去
+    sanitaized_word = text.gsub(/[、。《》「」〔〕・（）［］｛｝！＂＃＄％＆＇＊＋，－．／：；＜＝＞？＠＼＾＿｀｜～￠￡￣]/, "")
+    reading_array = []
+    natto.parse(sanitaized_word) do |n|
+      next if n.surface.blank?
+      csv = n.feature.split(",")
+      puts csv.join(",")
+      reading = csv[7]
+      if reading.blank?
+        reading = n.surface
+      end
+      reading_array << reading
+    end
+    return reading_array.join("")
   end
 end

@@ -46,6 +46,19 @@ GEM
       activerecord (>= 3.2, < 6.0)
       rake (>= 10.4, < 12.0)
     arel (7.1.4)
+    aws-record (1.0.1)
+      aws-sdk-resources (~> 2.0)
+    aws-sdk (2.6.26)
+      aws-sdk-resources (= 2.6.26)
+    aws-sdk-core (2.6.26)
+      aws-sigv4 (~> 1.0)
+      jmespath (~> 1.0)
+    aws-sdk-rails (1.0.1)
+      aws-sdk-resources (~> 2)
+      railties (>= 3)
+    aws-sdk-resources (2.6.26)
+      aws-sdk-core (= 2.6.26)
+    aws-sigv4 (1.0.0)
     bcrypt (3.1.11)
     buftok (0.2.0)
     builder (3.2.2)
@@ -113,6 +126,7 @@ GEM
     jbuilder (2.6.0)
       activesupport (>= 3.0.0, < 5.1)
       multi_json (~> 1.2)
+    jmespath (1.3.1)
     jquery-rails (4.2.1)
       rails-dom-testing (>= 1, < 3)
       railties (>= 4.2.0)
@@ -261,6 +275,9 @@ PLATFORMS
 DEPENDENCIES
   activerecord-import
   annotate
+  aws-record (~> 1.0)
+  aws-sdk (~> 2)
+  aws-sdk-rails
   byebug
   cabocha
   charwidth

@@ -15,7 +15,7 @@
 #
 
 class CrawlScheduler < ApplicationRecord
-  def self.tweet_crawl(action_name, search_word, &block)
+  def self.tweet_crawl(action_name, search_word, crawl_options, &block)
   	apiconfig = YAML.load(File.open("config/apiconfig.yml"))
   	client = Twitter::REST::Client.new do |config|
       config.consumer_key        = apiconfig["twitter"]["consumer_key"]
@@ -30,7 +30,7 @@ class CrawlScheduler < ApplicationRecord
     #last_id = TweetSeed.where(search_keyword: serach_keyword).last.try(:tweet_id_str)
     while is_all == false do
       sleep limit_span
-      options = {:count => 100}
+      options = crawl_options.merge({:count => 100})
 #      if last_id.present?
 #  	    options[:max_id] = last_id.to_i
 #      end

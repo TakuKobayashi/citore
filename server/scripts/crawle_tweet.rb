@@ -2,7 +2,7 @@ serach_keyword = TweetSeed::ERO_KOTOBA_BOT
 #serach_keyword = TweetSeed::AEGIGOE_BOT
 #last_id = TweetSeed.where(search_keyword: serach_keyword).last.try(:tweet_id_str)
 
-CrawlScheduler.tweet_crawl("user_timeline", serach_keyword) do |tweet_statuses|
+CrawlScheduler.tweet_crawl("user_timeline", serach_keyword, {}) do |tweet_statuses|
   tweet_seeds = []
   tweet_statuses.each do |status|
     next if status.blank?

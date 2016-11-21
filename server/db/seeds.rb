@@ -6,14 +6,6 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-parts = {
-  "v" => "動詞",
-  "a" => "形容詞",
-  "n" => "名詞",
-  "r" => "副詞",
-  "av" => "助動詞"
-}
-
 dics = []
 
 EmotionalWordDictionary.connection.execute("TRUNCATE TABLE #{EmotionalWordDictionary.table_name}")
@@ -31,7 +23,7 @@ ens.each do |e|
   puts dic.to_json if dic.part.nil?
 end
 
-parts = parts.invert
+parts = EmotionalWordDictionary::PARTS
 ja = File.read(Rails.root.to_s + "/scripts/dictionary/pn_ja.dic")
 jas = ja.split("\r\n")
 jas.each do |j|

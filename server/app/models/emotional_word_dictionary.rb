@@ -19,4 +19,12 @@
 class EmotionalWordDictionary < ApplicationRecord
   sugarcoat_database = YAML::load(IO.read('config/sugarcoat_database.yml'))
   establish_connection(sugarcoat_database[Rails.env])
+
+  PARTS = {
+    "動詞" => "v",
+    "形容詞" => "a",
+    "名詞" => "n",
+    "副詞" => "r",
+    "助動詞" =>"av"
+  }
 end

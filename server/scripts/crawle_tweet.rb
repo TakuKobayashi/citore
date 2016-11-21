@@ -36,12 +36,18 @@ while is_all == false do
   is_all = tweet_results.size < 100
   tweet_results.each do |status|
     next if status.blank?
-    tweet_seed = TweetSeed.new
-    tweet_seed.tweet_id_str = status.id.to_s
-    tweet_seed.search_keyword = serach_keyword
     sanitaized_word = TweetSeed.sanitized(status.text)
-    reading = TweetSeed.reading(sanitaized_word)
-    tweet_seeds << tweet_seed
+    split_words = TweetSeed.bracket_split(sanitaized_word)
+    if split_words.blank?
+      split_words = [sanitaized_word]
+    end
+    split_words.each do |word|
+      reading = TweetSeed.reading(word)
+      tweet_seed = TweetSeed.new
+      tweet_seed.tweet_id_str = status.id.to_s
+      tweet_seed.search_keyword = serach_keyword
+      tweet_seeds << tweet_seed
+    end
   end
   last_id = tweet_results.last.try(:id).to_i - 1
   TweetSeed.import(tweet_seeds)

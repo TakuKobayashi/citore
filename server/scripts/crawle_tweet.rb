@@ -1,40 +1,10 @@
-apiconfig = YAML.load(File.open("config/apiconfig.yml"))
-
-client = Twitter::REST::Client.new do |config|
-    config.consumer_key        = apiconfig["twitter"]["consumer_key"]
-    config.consumer_secret     = apiconfig["twitter"]["consumer_secret"]
-    config.access_token        = apiconfig["twitter"]["access_token_key"]
-    config.access_token_secret = apiconfig["twitter"]["access_token_secret"]
-end
-
-natto = Natto::MeCab.new
-#parser = CaboCha::Parser.new
-
-is_all = false
-
-start_time = Time.now
-limit_span = (15.minutes.second / 180).to_i
-
 serach_keyword = TweetSeed::ERO_KOTOBA_BOT
 #serach_keyword = TweetSeed::AEGIGOE_BOT
-last_id = TweetSeed.where(search_keyword: serach_keyword).last.try(:tweet_id_str)
+#last_id = TweetSeed.where(search_keyword: serach_keyword).last.try(:tweet_id_str)
 
-=begin
-natto.parse("マンゴスチン") do |n|
-  puts "#{n.surface}\t#{n.feature}"
-end
-=end
-
-while is_all == false do
-  sleep limit_span
+CrawlScheduler.tweet_crawl("user_timeline", serach_keyword) do |tweet_statuses|
   tweet_seeds = []
-  options = {:count => 100}
-  if last_id.present?
-  	options[:max_id] = last_id.to_i
-  end
-  tweet_results = client.user_timeline(serach_keyword, options)
-  is_all = tweet_results.size < 100
-  tweet_results.each do |status|
+  tweet_statuses.each do |status|
     next if status.blank?
     sanitaized_word = TweetSeed.sanitized(status.text)
     split_words = TweetSeed.bracket_split(sanitaized_word)
@@ -49,7 +19,7 @@ while is_all == false do
       tweet_seeds << tweet_seed
     end
   end
-  last_id = tweet_results.last.try(:id).to_i - 1
+  #last_id = tweet_statuses.select{|s| s.try(:id).present? }.min_by{|s| s.id.to_i }.try(:id).to_i
   TweetSeed.import(tweet_seeds)
 end
 

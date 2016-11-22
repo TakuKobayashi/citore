@@ -19,6 +19,12 @@ class TweetVoiceController < BaseController
   	tweet_voice = TweetVoice.find_by(id: params[:tweet_voice_id])
   	filepath = TweetVoice.voice_file_root_path + tweet_voice.speech_file_path
     stat = File::stat(filepath)
-    send_file(filepath, :filename => tweet_voice.speech_file_path, :length => stat.size)
+
+    s3 = Aws::S3::Client.new
+    filename = File.basename(filepath)
+    ext = File.extname(filename)
+    resp = s3.get_object({bucket: "taptappun", key: file_name})
+    send_data(resp.body.read, filename: filename type: "audio/" + ext[1..(ext.size - 1)])
+    #send_file(filepath, :filename => tweet_voice.speech_file_path, :length => stat.size)
   end
 end

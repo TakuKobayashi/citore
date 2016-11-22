@@ -25,9 +25,11 @@ TweetSeed.where("id > 468").find_each do |tweet_seed|
     }
     response = http_client.get_content("http://webapi.aitalk.jp/webapi/v2/ttsget.php", params, {})
     file_name = "#{tweet_seed.id}_" + SecureRandom.hex + ".wav"
-    open(TweetVoice.voice_file_root_path + file_name, 'wb') do |file|
-      file.write response
-    end
+
+    s3 = Aws::S3::Client.new
+    file_path = "project/citore/voices/" + file_name
+    s3.put_object(bucket: "taptappun",body: response,key: file_path)
+
     tweet_seed.tweet_voices.create(speech_file_path: file_name, speacker_keyword: speack)
   end
 end

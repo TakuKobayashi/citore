@@ -25,6 +25,8 @@ class Voice < ApplicationRecord
   end
 
   def self.generate_and_upload_voice(text, recource_type, speaker_name, option = {})
+    voice = VoiceDynamo.find(word: text, speaker_name: speaker_name)
+    return nil if voice.present?
   	apiconfig = YAML.load(File.open("config/apiconfig.yml"))
     http_client = HTTPClient.new
     params = TweetSeed::VOICE_PARAMS.merge({
@@ -39,10 +41,7 @@ class Voice < ApplicationRecord
     s3 = Aws::S3::Client.new
     file_path = VOICE_S3_FILE_ROOT + file_name
     s3.put_object(bucket: "taptappun",body: response,key: file_path)
-    voice = VoiceDynamo.find(word: text, speaker_name: speaker_name)
-    if voice.blank?
-      voice = VoiceDynamo.new
-    end
+    voice = VoiceDynamo.new
     voice.word = text
     voice.speaker_name = speaker_name
     voice.info = {file_path: file_path, recource_type: recource_type}

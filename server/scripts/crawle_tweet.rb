@@ -1,26 +1,34 @@
-serach_keyword = TweetSeed::ERO_KOTOBA_BOT
-#serach_keyword = TweetSeed::AEGIGOE_BOT
-#last_id = TweetSeed.where(search_keyword: serach_keyword).last.try(:tweet_id_str)
-
-CrawlScheduler.tweet_crawl("user_timeline", serach_keyword, {}) do |tweet_statuses|
+CrawlScheduler.tweet_crawl("citore", {}) do |tweet_statuses|
   tweet_seeds = []
   tweet_statuses.each do |status|
     next if status.blank?
     sanitaized_word = TweetSeed.sanitized(status.text)
+    puts sanitaized_word
+
     split_words = TweetSeed.bracket_split(sanitaized_word)
     if split_words.blank?
       split_words = [sanitaized_word]
     end
     split_words.each do |word|
       reading = TweetSeed.reading(word)
-      tweet_seed = TweetSeed.new
-      tweet_seed.tweet_id_str = status.id.to_s
-      tweet_seed.search_keyword = serach_keyword
-      tweet_seeds << tweet_seed
+      puts word
+      natto = Natto::MeCab.new
+      natto.parse(word) do |n|
+        next if n.surface.blank?
+        csv = n.feature.split(",")
+        next if !csv[0].to_s.include?("動詞") && csv[0].to_s.include?("名詞")
+        tweet = TweetVoiceSeedDynamo.find(key: n.surface, reading: reading)
+        if tweet.blank?
+          tweet = TweetVoiceSeedDynamo.new
+        end
+        next if tweet.try(:reading) == reading
+        tweet.key = n.surface
+        tweet.reading = reading
+        tweet.info = {tweet_id: status.id, origin: sanitaized_word, tweet_user_id: status.user.id, tweet_user_name: status.user.name}
+        tweet.save!
+      end
     end
   end
-  #last_id = tweet_statuses.select{|s| s.try(:id).present? }.min_by{|s| s.id.to_i }.try(:id).to_i
-  TweetSeed.import(tweet_seeds)
 end
 
 =begin

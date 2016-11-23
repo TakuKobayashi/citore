@@ -63,8 +63,8 @@ json = {}
 json[:en_average_score] = ens_average_score
 json[:ja_average_score] = jas_average_score
 json[:crawl_info] = []
-json[:crawl_info] << {state: CrawlScheduler.states[:pending], search_action: "user_timeline", keyword: "citore", search_word: TweetSeed::ERO_KOTOBA_BOT}
-json[:crawl_info] << {state: CrawlScheduler.states[:pending], search_action: "user_timeline", keyword: "citore", search_word: TweetSeed::AEGIGOE_BOT}
-json[:crawl_info] << {state: CrawlScheduler.states[:pending], search_action: "search", keyword: "sugarcoat", search_word: "オブラート"}
-json[:crawl_info] << {state: CrawlScheduler.states[:pending], search_action: "search", keyword: "sugarcoat", search_word: "#言い方"}
+json[:crawl_info] << {state: CrawlScheduler.states[:pending], search_action: "user_timeline", keyword: "citore", search_word: TweetSeed::ERO_KOTOBA_BOT, uuid: SecureRandom.hex}
+json[:crawl_info] << {state: CrawlScheduler.states[:pending], search_action: "user_timeline", keyword: "citore", search_word: TweetSeed::AEGIGOE_BOT, uuid: SecureRandom.hex}
+json[:crawl_info] << {state: CrawlScheduler.states[:pending], search_action: "search", keyword: "sugarcoat", search_word: "オブラート", uuid: SecureRandom.hex}
+json[:crawl_info] << {state: CrawlScheduler.states[:pending], search_action: "search", keyword: "sugarcoat", search_word: "#言い方", uuid: SecureRandom.hex}
 File.open("tmp/extra_info.json", "w"){|f| f.write(json.to_json) }

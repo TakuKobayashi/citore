@@ -25,7 +25,7 @@ class TweetSeed < ApplicationRecord
 
   def self.sanitized(text)
     #絵文字を除去
-    sanitized_word = tweet.each_char.select{|c| c.bytes.count < 4 }.join('')
+    sanitized_word = text.each_char.select{|c| c.bytes.count < 4 }.join('')
     #全角半角をいい感じに整える
     sanitized_word = Charwidth.normalize(sanitized_word)
     #返信やハッシュタグを除去
@@ -36,14 +36,13 @@ class TweetSeed < ApplicationRecord
   end
 
   def self.reading(text)
-    natto = Natto::MeCab.new
     #記号を除去
     sanitaized_word = text.gsub(/[、。《》「」〔〕・（）［］｛｝！＂＃＄％＆＇＊＋，－．／：；＜＝＞？＠＼＾＿｀｜～￠￡￣\(\)\[\]<>{}]/, "")
     reading_array = []
+    natto = Natto::MeCab.new
     natto.parse(sanitaized_word) do |n|
       next if n.surface.blank?
       csv = n.feature.split(",")
-      puts csv.join(",")
       reading = csv[7]
       if reading.blank?
         reading = n.surface
@@ -55,6 +54,6 @@ class TweetSeed < ApplicationRecord
 
   # カッコの中身の文だけ取得
   def self.bracket_split(text)
-    return text.scan(/[「\(\[<\{].+?[」\)\]>\}]/).map{|t| t[1..(t.size - 2)]}
+    return text.scan(/[「\(].+?[」\)]/).map{|t| t[1..(t.size - 2)]}
   end
 end

@@ -60,10 +60,10 @@ class CrawlScheduler < ApplicationRecord
     limit_span = (15.minutes.second / 180).to_i
 
     crawl_info = read_extra_info["crawl_info"]
-    return nil if crawl_info.any?{|hash| hash["state"] == CrawlScheduler.states[:crawling] && hash["state"] == CrawlScheduler.states[:stay] }
-    crawls = crawl_info.select{|hash| hash["state"] == CrawlScheduler.states[:pending] && hash["keyword"] == keyword}
+    crawls = crawl_info.select{|hash| hash["state"] != CrawlScheduler.states[:completed] && hash["keyword"] == keyword}
     crawls.each do |crawl|
       last_id = crawl["last_id"]
+      crawl["start_time"] = Time.now
       while is_all == false do
         crawl["state"] = CrawlScheduler.states[:crawling]
         puts crawl
@@ -83,6 +83,9 @@ class CrawlScheduler < ApplicationRecord
         crawl["state"] = CrawlScheduler.states[:stay]
         update_crawl_info(crawl)
       end
+      crawl["complete_time"] = Time.now
+      crawl["state"] = CrawlScheduler.states[:completed]
+      update_crawl_info(crawl)
     end
   end
 end

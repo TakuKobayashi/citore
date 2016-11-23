@@ -27,6 +27,11 @@ CrawlScheduler.tweet_crawl("citore", {}) do |tweet_statuses|
         tweet.info = {tweet_id: status.id, origin: sanitaized_word, tweet_user_id: status.user.id, tweet_user_name: status.user.name}
         tweet.save!
       end
+
+      puts "generate_voice"
+      Voice.all_speacker_names.each do |speacker|
+        Voice.generate_and_upload_voice(reading, TweetVoiceSeedDynamo.to_s, speacker)
+      end
     end
   end
 end

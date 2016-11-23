@@ -23,6 +23,16 @@ class TweetSeed < ApplicationRecord
   ERO_KOTOBA_BOT = "ero_kotoba_bot"
   AEGIGOE_BOT = "aegigoe_bot"
 
+  VOICE_PARAMS = {
+    ext: "wav",
+    volume: 2.0,
+    speed: 0.6,
+    range: 2.0,
+    pitch: 1.8,
+    style: {"j" => "1.0"}
+  }
+
+
   def self.sanitized(text)
     #絵文字を除去
     sanitized_word = text.each_char.select{|c| c.bytes.count < 4 }.join('')

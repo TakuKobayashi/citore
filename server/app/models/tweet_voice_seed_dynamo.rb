@@ -1,0 +1,2 @@
+class TweetVoiceSeedDynamo < ApplicationRecord
+end

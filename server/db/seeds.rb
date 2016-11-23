@@ -56,4 +56,15 @@ jas.each do |j|
   puts dic.to_json if dic.part.nil?
 end
 
-# EmotionalWordDictionary.import(dics)
+ens_average_score = ens.inject(0){|result, cell| result += cell.split(":")[2].to_f} / ens.size
+jas_average_score = jas.inject(0){|result, cell| result += cell.split(":")[3].to_f} / jas.size
+
+json = {}
+json[:en_average_score] = ens_average_score
+json[:ja_average_score] = jas_average_score
+json[:crawl_info] = []
+json[:crawl_info] << {state: CrawlScheduler.states[:pending], search_action: "user_timeline", keyword: "citore", search_word: TweetSeed::ERO_KOTOBA_BOT}
+json[:crawl_info] << {state: CrawlScheduler.states[:pending], search_action: "user_timeline", keyword: "citore", search_word: TweetSeed::AEGIGOE_BOT}
+json[:crawl_info] << {state: CrawlScheduler.states[:pending], search_action: "search", keyword: "sugarcoat", search_word: "オブラート"}
+json[:crawl_info] << {state: CrawlScheduler.states[:pending], search_action: "search", keyword: "sugarcoat", search_word: "#言い方"}
+File.open("tmp/extra_info.json", "w"){|f| f.write(json.to_json) }

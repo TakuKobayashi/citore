@@ -6,10 +6,28 @@ class Sugarcoat::BotController < BaseController
   end
 
   def callback
-    if params["hub.verify_token"] == "taptappun"
-      render json: params["hub.challenge"]
-    else
-      render json: "Error, wrong validation token"
+    case request.method_symbol
+    when :get
+      if params["hub.verify_token"] == "taptappun"
+        render json: params["hub.challenge"]
+      else
+        render json: "Error, wrong validation token"
+      end
+    when :post
+      message = params["entry"][0]["messaging"][0]
+      if message.include?("message")
+        #ユーザーの発言
+        sender = message["sender"]["id"]
+        text = message["message"]["text"]
+
+        endpoint_uri = "https://graph.facebook.com/v2.6/me/messages?access_token=" + token
+        request_content = {recipient: {id:sender}, message: {text: text}}
+
+        http_client = http_client = HTTPClient.new
+        http_client.post(endpoint_uri, content_json, {'Content-Type' => 'application/json; charset=UTF-8'})
+      else
+        #botの発言
+      end
     end
   end
 

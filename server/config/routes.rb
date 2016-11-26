@@ -5,6 +5,10 @@ Rails.application.routes.draw do
     get 'download'
   end
 
+  resource :apk_downloader, controller: :apk_downloader, only: [] do
+    get 'warakatsu'
+  end
+
   namespace :sugarcoat do
     resource :bot, controller: :bot, only: [] do
       get 'speak'

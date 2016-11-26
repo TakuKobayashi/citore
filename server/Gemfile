@@ -50,6 +50,7 @@ gem 'aws-sdk-rails'
 gem 'aws-record', '~> 1.0'
 
 gem 'cabocha'
+gem 'messenger-bot'
 
 gem 'whenever', :require => false
 

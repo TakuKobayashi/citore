@@ -33,7 +33,7 @@ class Citore::VoiceController < BaseController
 
   def download
     tweet = TweetVoiceSeedDynamo.find(key: params[:key], reading: params[:reading])
-    speaker = Voice.all_speacker_names.detect{|n| n.include?(params[:file_name].to_s) }
+    speaker = Voice.all_speacker_names.detect{|n| params[:file_name].to_s.include?(n) }
     voice = VoiceDynamo.find(word: tweet.reading, speaker_name: speaker)
 
     filepath = voice.info["file_path"].to_s

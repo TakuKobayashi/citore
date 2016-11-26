@@ -1,0 +1,2 @@
+module Sugarcoat::BotHelper
+end

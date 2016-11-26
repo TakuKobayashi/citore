@@ -4,4 +4,10 @@ Rails.application.routes.draw do
     get 'search'
     get 'download'
   end
+
+  namespace :sugarcoat do
+    resource :bot, controller: :bot, only: [] do
+      get 'speak'
+    end
+  end
 end

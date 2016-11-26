@@ -14,13 +14,14 @@ class Sugarcoat::BotController < BaseController
         render json: "Error, wrong validation token"
       end
     when :post
+      apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
       message = params["entry"][0]["messaging"][0]
       if message.include?("message")
         #ユーザーの発言
         sender = message["sender"]["id"]
         text = message["message"]["text"]
 
-        endpoint_uri = "https://graph.facebook.com/v2.6/me/messages?access_token=" + token
+        endpoint_uri = "https://graph.facebook.com/v2.6/me/messages?access_token=" + apiconfig["facebook_bot"]["access_token"]
         request_content = {recipient: {id:sender}, message: {text: text}}
 
         http_client = http_client = HTTPClient.new

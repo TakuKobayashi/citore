@@ -25,7 +25,7 @@ class Sugarcoat::BotController < BaseController
         request_content = {recipient: {id:sender}, message: {text: text}}
 
         http_client = http_client = HTTPClient.new
-        res = http_client.post(endpoint_uri, request_content, {'Content-Type' => 'application/json; charset=UTF-8'})
+        res = http_client.post(endpoint_uri, request_content.to_json, {'Content-Type' => 'application/json; charset=UTF-8'})
         logger.info res.body
         head(:ok)
       else

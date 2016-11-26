@@ -25,12 +25,16 @@ class Citore::VoiceController < BaseController
 
     result = results.sample
     render :json => {} and return if result.blank?
-    render :json => {key: result.try(:key), reading: result.try(:reading)}.merge(result.try(:info) || {})
+    hash = {key: result.try(:key), reading: result.try(:reading)}.merge(result.try(:info) || {}
+    voice = VoiceDynamo.find(word: result.try(:reading), speaker_name: Voice.all_speacker_names.sample)
+    filename = File.basename(voice.info["file_path"].to_s)
+    render :json => hash.merge(file_name: filename))
   end
 
   def download
     tweet = TweetVoiceSeedDynamo.find(key: params[:key], reading: params[:reading])
-    voice = VoiceDynamo.find(word: tweet.reading, speaker_name: Voice.all_speacker_names.sample)
+    speaker = Voice.all_speacker_names.detect{|n| n.include?(params[:file_name].to_s) }
+    voice = VoiceDynamo.find(word: tweet.reading, speaker_name: speaker)
 
     filepath = voice.info["file_path"].to_s
 

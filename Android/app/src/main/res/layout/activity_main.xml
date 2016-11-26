@@ -4,6 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <Button
+        android:id="@+id/recording_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"/>
+<!--
     <EditText
         android:id="@+id/debug_text"
         android:layout_width="match_parent"
@@ -30,4 +37,5 @@
         android:layout_below="@+id/debug_button"
         android:textColor="#FFFFFFFF"
         android:layout_alignParentLeft="true"/>
+-->
 </RelativeLayout>

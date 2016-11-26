@@ -1,9 +1,13 @@
 package kobayashi.taku.com.citore;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Environment;
+import android.preference.PreferenceActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -30,9 +34,9 @@ import okhttp3.ResponseBody;
 
 public class MainActivity extends Activity {
     private TweetVoice mVoice;
-    private LoopSpeechRecognizer mLoopSpeechRecognizer;
-    private EditText mEditText;
-    private TextView mRecordText;
+    //private LoopSpeechRecognizer mLoopSpeechRecognizer;
+    //private EditText mEditText;
+    //private TextView mRecordText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +47,17 @@ public class MainActivity extends Activity {
 
         setContentView(R.layout.activity_main);
 
+        setupRecordingButtonText();
+        Button recordingButton = (Button) findViewById(R.id.recording_button);
+        recordingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                changeRecordState();
+                setupRecordingButtonText();
+            }
+        });
+
+        /*
         mEditText = (EditText) findViewById(R.id.debug_text);
         mRecordText = (TextView) findViewById(R.id.recognize_text);
 
@@ -53,7 +68,6 @@ public class MainActivity extends Activity {
                 requestServer(mEditText.getEditableText().toString());
             }
         });
-
         mLoopSpeechRecognizer = new LoopSpeechRecognizer(this);
 //        ApplicationHelper.requestPermissions(this, 1);
 
@@ -65,6 +79,33 @@ public class MainActivity extends Activity {
                 requestServer(value);
             }
         });
+*/
+    }
+
+    private void setupRecordingButtonText(){
+        Button recordingButton = (Button) findViewById(R.id.recording_button);
+        SharedPreferences sp = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
+        if(sp.getBoolean(getString(R.string.recoarding_key), false)){
+            recordingButton.setText(getString(R.string.recoarding_now));
+        }else{
+            recordingButton.setText(getString(R.string.recoarding_start));
+        }
+    }
+
+    private void changeRecordState(){
+        SharedPreferences sp = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        String recordingKey = getString(R.string.recoarding_key);
+        if(sp.getBoolean(recordingKey, false)){
+            Log.d(Config.TAG, "stopService");
+            editor.putBoolean(recordingKey, false);
+            stopService(new Intent(this, VoiceRecordService.class));
+        }else{
+            Log.d(Config.TAG, "startService");
+            editor.putBoolean(recordingKey, true);
+            startService(new Intent(this, VoiceRecordService.class));
+        }
+        editor.apply();
     }
 
     private void requestServer(String value){
@@ -90,13 +131,13 @@ public class MainActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        mLoopSpeechRecognizer.startListening();
+        //mLoopSpeechRecognizer.startListening();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        mLoopSpeechRecognizer.stopListening();
+        //mLoopSpeechRecognizer.stopListening();
     }
 
     private void getVoiceFile(TweetVoice voice){

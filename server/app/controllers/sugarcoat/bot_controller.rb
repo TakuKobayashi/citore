@@ -1,4 +1,6 @@
 class Sugarcoat::BotController < BaseController
+  protect_from_forgery
+
   def speak
     head(:ok)
   end

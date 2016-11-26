@@ -108,6 +108,7 @@ public class MainActivity extends Activity {
                 @Override
                 public void onSuccess(float confidence, String value) {
                     Log.d(Config.TAG, "value:" + value);
+                    requestServer(value);
                 }
             });
             mLoopSpeechRecognizer.startListening();
@@ -121,9 +122,9 @@ public class MainActivity extends Activity {
     private void requestServer(String value){
         Log.d(Config.TAG, "value:" + value);
         Uri.Builder builder = new Uri.Builder();
-        builder.scheme("http");
-        builder.authority("taptappun.cloudapp.net");
-        builder.path("/tweet_voice/search");
+        builder.scheme("https");
+        builder.authority("taptappun.net");
+        builder.path("/citore/voice/search");
         builder.appendQueryParameter("text", value);
         JsonRequest req = new JsonRequest();
         req.addCallback(new JsonRequest.ResponseCallback() {
@@ -155,10 +156,12 @@ public class MainActivity extends Activity {
             mVoice = voice;
             //http://taptappun.cloudapp.net/tweet_voice/download?tweet_voice_id=3
             Uri.Builder builder = new Uri.Builder();
-            builder.scheme("http");
-            builder.authority("taptappun.cloudapp.net");
-            builder.path("/tweet_voice/download");
-            builder.appendQueryParameter("tweet_voice_id", String.valueOf(voice.id));
+            builder.scheme("https");
+            builder.authority("taptappun.net");
+            builder.path("/citore/voice/download");
+            builder.appendQueryParameter("key", voice.key);
+            builder.appendQueryParameter("reading", voice.reading);
+            builder.appendQueryParameter("file_name", voice.file_name);
             BinaryRequest breq = new BinaryRequest();
             breq.addCallback(new BinaryRequest.ResponseCallback() {
                 private ResponseBody mResponse;
@@ -170,7 +173,7 @@ public class MainActivity extends Activity {
                     if (!myDir.exists()) { //MyDirectoryというディレクトリーがなかったら作成
                         myDir.mkdirs();
                     }
-                    String filename = mVoice.speech_file_path;
+                    String filename = mVoice.file_name;
                     File saveFile = new File(myDir, filename);
                     InputStream is = response.byteStream();
                     BufferedInputStream input = new BufferedInputStream(is);

@@ -83,8 +83,10 @@ public class VoiceRecordService extends Service{
 			//音量が最大の周波数と，その音量を表示
 			Log.d("fft","周波数："+ resol * max_i+" [Hz] 音量：" +  max_db+" [dB]");
 		}
-		mAudioRecord.stop();
-		mAudioRecord.release();
+		if(mAudioRecord != null) {
+			mAudioRecord.stop();
+			mAudioRecord.release();
+		}
 	}
 
 	public int onStartCommand(Intent intent, int flags, int startId) {
@@ -108,6 +110,9 @@ public class VoiceRecordService extends Service{
 
 	public void onDestroy() {
 		mIsRecording = false;
+		mAudioRecord.stop();
+		mAudioRecord.release();
+		mAudioRecord = null;
 		Log.d(Config.TAG, "destroy");
 		Toast.makeText(this, "service done", Toast.LENGTH_SHORT).show();
 	}

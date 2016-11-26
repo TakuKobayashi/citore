@@ -9,7 +9,7 @@
 using namespace std;
 
 extern "C" {
-JNIEXPORT void JNICALL Java_sing_narcis_com_narcissing_NativeHelper_FFTrdft(
+JNIEXPORT void JNICALL Java_kobayashi_taku_com_citore_NativeHelper_FFTrdft(
         JNIEnv *env, jobject obj, jint size, jint isgn, jdoubleArray fft_data) {
     jdoubleArray fft_doubles = env->NewDoubleArray(size);
     jdouble *darr = env->GetDoubleArrayElements(fft_data, 0);

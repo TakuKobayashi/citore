@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   namespace :sugarcoat do
     resource :bot, controller: :bot, only: [] do
       get 'speak'
+      get 'callback'
     end
   end
 end

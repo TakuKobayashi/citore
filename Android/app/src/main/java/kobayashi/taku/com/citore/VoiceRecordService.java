@@ -2,6 +2,9 @@ package kobayashi.taku.com.citore;
 
 import android.app.Service;
 import android.content.Intent;
+import android.media.AudioFormat;
+import android.media.AudioRecord;
+import android.media.MediaRecorder;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
@@ -11,60 +14,84 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+
 public class VoiceRecordService extends Service{
-	private final class ServiceHandler extends Handler {
-		// メッセージ送付先指定のハンドラを作成
-		public ServiceHandler(Looper looper) {
-			super(looper);
-		}
-
-		public void handleMessage(Message msg) {
-			// サービスオブジェクトでの２重処理防止。
-			synchronized (this) {
-				try {
-					// トースト発行。ただし、handleMessageが終わるまで実行されない。
-					Toast.makeText(getApplicationContext(),
-							"handleMessage wait 5000ms" + msg.arg1,
-							Toast.LENGTH_SHORT).show();
-					wait(5000);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			Toast.makeText(getApplicationContext(), "handleMessage end",
-					Toast.LENGTH_SHORT).show();
-			Log.d(Config.TAG, "end::::::");
-			// 処理後、サービスの停止。
-			stopSelf(msg.arg1);
-		}
-	}
-
-	private Looper mServiceLooper;
-	private ServiceHandler mServiceHandler;
+	private Thread mLoopThread;
+	private AudioRecord mAudioRecord = null;
+	private boolean mIsRecording = false;
+	private static final int SAMPLING_RATE = 44100;
+	private byte[] mRecordingBuffer;
+	private static final int FFT_SIZE = 4096;
+	// デシベルベースラインの設定
+	private double dB_baseline = Math.pow(2, 15) * FFT_SIZE * Math.sqrt(2);
+	// 分解能の計算
+	private double resol = ((SAMPLING_RATE / (double) FFT_SIZE));
 
 	public void onCreate() {
+		mRecordingBuffer = new byte[AudioRecord.getMinBufferSize(SAMPLING_RATE,
+				AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT) * 2];
+		mAudioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, SAMPLING_RATE,
+				AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT,
+				mRecordingBuffer.length);
 		// ハンドラスレッドを生成。
 		// （ここで、ルーパー（メッセージディスパッチャーみたいなもの）
 		// が作成されるようです。）
-		HandlerThread thread = new HandlerThread("ServiceStartArguments",
-				android.os.Process.THREAD_PRIORITY_BACKGROUND);
-		thread.start();
-		// ハンドラスレッドからメッセージルーパー取得
-		mServiceLooper = thread.getLooper();
-		// サービスハンドラを生成
-		mServiceHandler = new ServiceHandler(mServiceLooper);
+		mLoopThread = new Thread() {
+			@Override
+			public void run() {
+				RecordingSound();
+			}
+		};
+		mLoopThread.start();
 		Log.d(Config.TAG, "create");
+	}
+
+	private void RecordingSound(){
+		mIsRecording = true;
+		while (mIsRecording) {
+			// 録音データ読み込み
+			int read = mAudioRecord.read(mRecordingBuffer, 0, mRecordingBuffer.length);
+			if (read < 0) {
+				throw new IllegalStateException();
+			}
+			ByteBuffer bf = ByteBuffer.wrap(mRecordingBuffer);
+			bf.order(ByteOrder.LITTLE_ENDIAN);
+			short[] s = new short[(int) mRecordingBuffer.length];
+			for (int i = bf.position(); i < bf.capacity() / 2; i++) {
+				s[i] = bf.getShort();
+			}
+
+			double[] FFTdata = new double[FFT_SIZE];
+			for (int i = 0; i < FFT_SIZE; i++) {
+				FFTdata[i] = (double) s[i];
+			}
+			NativeHelper.FFTrdft(FFT_SIZE, 1, FFTdata);
+			// デシベルの計算
+			double[] dbfs = new double[FFT_SIZE / 2];
+			double max_db = -120d;
+			int max_i = 0;
+			for (int i = 0; i < FFT_SIZE; i += 2) {
+				dbfs[i / 2] = (int) (20 * Math.log10(Math.sqrt(Math.pow(FFTdata[i], 2)
+						+ Math.pow(FFTdata[i + 1], 2)) / dB_baseline));
+				if (max_db < dbfs[i / 2]) {
+					max_db = dbfs[i / 2];
+					max_i = i / 2;
+				}
+			}
+			//音量が最大の周波数と，その音量を表示
+			Log.d("fft","周波数："+ resol * max_i+" [Hz] 音量：" +  max_db+" [dB]");
+		}
+		mAudioRecord.stop();
+		mAudioRecord.release();
 	}
 
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.d(Config.TAG, "start");
-		Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show();
 		// サービスハンドラのglobal message poolから再利用可能なメッセージを取得
 		// なければ新たにメッセージのインスタンス化してメッセージ返却
-		Message msg = mServiceHandler.obtainMessage();
-		msg.arg1 = startId;
 		// ハンドラに対し、メッセージ送付
-		mServiceHandler.sendMessage(msg);
 		// START_STICKY は明示的に起動され、明示的に停止されるサービスが使う。
 		// START_NOT_STICKYはonStartCommand() から戻った後、サービスを強制終了した場合、
 		// ペンディングインテントが存在しない限りサービスが再開されないようにするものです 。
@@ -80,6 +107,7 @@ public class VoiceRecordService extends Service{
 	}
 
 	public void onDestroy() {
+		mIsRecording = false;
 		Log.d(Config.TAG, "destroy");
 		Toast.makeText(this, "service done", Toast.LENGTH_SHORT).show();
 	}

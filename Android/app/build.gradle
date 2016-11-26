@@ -10,6 +10,12 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        ndk {
+            moduleName "jni_sample"
+            stl "gnustl_shared"
+            abiFilters "armeabi", "armeabi-v7a", "x86", "mips"
+            ldLibs "log"
+        }
     }
     buildTypes {
         release {

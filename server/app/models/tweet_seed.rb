@@ -66,4 +66,10 @@ class TweetSeed < ApplicationRecord
   def self.bracket_split(text)
     return text.scan(/[「\(].+?[」\)]/).map{|t| t[1..(t.size - 2)]}
   end
+
+  def self.ngram(word, n)
+    characters = word.split(//u)
+    return [word] if characters.size <= n
+    return characters.each_cons(n).map(&:join)
+  end
 end

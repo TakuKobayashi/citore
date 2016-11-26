@@ -17,5 +17,16 @@ Rails.application.routes.draw do
       get 'callback'
       post 'callback'
     end
+
+    resource :landing, controller: :landing, only: [] do
+      get 'page'
+    end
+  end
+
+  namespace :citore do
+    resource :voice, controller: :voice, only: [] do
+      get 'search'
+      get 'download'
+    end
   end
 end

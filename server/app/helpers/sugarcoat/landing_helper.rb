@@ -1,0 +1,2 @@
+module Sugarcoat::LandingHelper
+end

@@ -16,7 +16,7 @@ class Sugarcoat::BotController < BaseController
     logger.info event
     logger.info sender
     # profile = sender.get_profile(field) # default field [:locale, :timezone, :gender, :first_name, :last_name, :profile_pic]
-    sender.reply({ text: event['message']['text']} })
+    sender.reply({ text: event['message']['text']})
   end
 
   def delivery(event, sender)

@@ -15,6 +15,7 @@ Rails.application.routes.draw do
     resource :bot, controller: :bot, only: [] do
       get 'speak'
       get 'callback'
+      post 'callback'
     end
   end
 end

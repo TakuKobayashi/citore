@@ -132,6 +132,7 @@ public class LoopSpeechRecognizer implements RecognitionListener{
 
 	@Override
 	public void onResults(Bundle bundle) {
+		Log.d(Config.TAG, "success");
 		// 結果をArrayListとして取得
 		ArrayList<String> results_array = bundle.getStringArrayList(
 				SpeechRecognizer.RESULTS_RECOGNITION);
@@ -141,12 +142,14 @@ public class LoopSpeechRecognizer implements RecognitionListener{
 		float[] scores = bundle.getFloatArray(SpeechRecognizer.CONFIDENCE_SCORES);
 
 		for(int i = 0;i < scores.length;++i){
+			Log.d(Config.TAG, "score:" + scores[i]);
 			if(scores[i] > maxScore){
 				maxScore = scores[i];
 				index = i;
 			}
 		}
-		if(index > 0){
+		Log.d(Config.TAG, "index:" + index);
+		if(index >= 0){
 			if(mCallback != null){
 				mCallback.onSuccess(scores[index], results_array.get(index));
 			}

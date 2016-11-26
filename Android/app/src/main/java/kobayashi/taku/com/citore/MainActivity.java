@@ -34,7 +34,7 @@ import okhttp3.ResponseBody;
 
 public class MainActivity extends Activity {
     private TweetVoice mVoice;
-    //private LoopSpeechRecognizer mLoopSpeechRecognizer;
+    private LoopSpeechRecognizer mLoopSpeechRecognizer;
     //private EditText mEditText;
     //private TextView mRecordText;
 
@@ -47,6 +47,7 @@ public class MainActivity extends Activity {
 
         setContentView(R.layout.activity_main);
 
+        mLoopSpeechRecognizer = new LoopSpeechRecognizer(this);
         setupRecordingButtonText();
         Button recordingButton = (Button) findViewById(R.id.recording_button);
         recordingButton.setOnClickListener(new View.OnClickListener() {
@@ -56,6 +57,7 @@ public class MainActivity extends Activity {
                 setupRecordingButtonText();
             }
         });
+        ApplicationHelper.requestPermissions(this, 1);
 
         /*
         mEditText = (EditText) findViewById(R.id.debug_text);
@@ -99,11 +101,19 @@ public class MainActivity extends Activity {
         if(sp.getBoolean(recordingKey, false)){
             Log.d(Config.TAG, "stopService");
             editor.putBoolean(recordingKey, false);
-            stopService(new Intent(this, VoiceRecordService.class));
+            mLoopSpeechRecognizer.stopListening();
+//            stopService(new Intent(this, VoiceRecordService.class));
         }else{
+            mLoopSpeechRecognizer.setCallback(new LoopSpeechRecognizer.RecognizeCallback() {
+                @Override
+                public void onSuccess(float confidence, String value) {
+                    Log.d(Config.TAG, "value:" + value);
+                }
+            });
+            mLoopSpeechRecognizer.startListening();
             Log.d(Config.TAG, "startService");
             editor.putBoolean(recordingKey, true);
-            startService(new Intent(this, VoiceRecordService.class));
+//            startService(new Intent(this, VoiceRecordService.class));
         }
         editor.apply();
     }

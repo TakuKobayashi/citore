@@ -28,7 +28,7 @@ class Citore::VoiceController < BaseController
     hash = {key: result.try(:key), reading: result.try(:reading)}.merge(result.try(:info)) || {}
     voice = VoiceDynamo.find(word: result.try(:reading), speaker_name: Voice.all_speacker_names.sample)
     filename = File.basename(voice.info["file_path"].to_s)
-    render :json => hash.merge(file_name: filename))
+    render :json => hash.merge(file_name: filename)
   end
 
   def download

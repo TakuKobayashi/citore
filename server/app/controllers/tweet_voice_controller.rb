@@ -16,8 +16,8 @@ class TweetVoiceController < BaseController
   end
 
   def download
-  	tweet_voice = TweetVoice.find_by(id: params[:tweet_voice_id])
-  	filepath = TweetVoice.voice_file_root_path + tweet_voice.speech_file_path
+    tweet_voice = TweetVoice.find_by(id: params[:tweet_voice_id])
+    filepath = TweetVoice.voice_file_root_path + tweet_voice.speech_file_path
     stat = File::stat(filepath)
 
     s3 = Aws::S3::Client.new

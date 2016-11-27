@@ -22,7 +22,8 @@ class Sugarcoat::BotController < BaseController
         text = message["message"]["text"]
 
         endpoint_uri = "https://graph.facebook.com/v2.6/me/messages?access_token=" + apiconfig["facebook_bot"]["access_token"]
-        request_content = {recipient: {id:sender}, message: {text: text}}
+        sugarcoated = TweetSeed.to_sugarcoat(text).join("")
+        request_content = {recipient: {id:sender}, message: {text: sugarcoated}}
 
         http_client = http_client = HTTPClient.new
         res = http_client.post(endpoint_uri, request_content.to_json, {'Content-Type' => 'application/json; charset=UTF-8'})

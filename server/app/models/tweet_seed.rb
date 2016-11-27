@@ -94,15 +94,20 @@ class TweetSeed < ApplicationRecord
           tree_separate_words = []
           next
         end
-        tree_separate_words << cells[0]
+        next if cells[1].blank?
         features = cells[1].split(",")
-        puts features
-        score = get_word_score(features[0].strip, cells[0].strip)
-        next if score.blank?
-        next if score >= extra["ja_average_score"].to_f
+        score = get_word_score(features[0].force_encoding("utf-8"), cells[0].force_encoding("utf-8"))
+        if score.blank?
+          tree_separate_words << cells[0]
+          next
+        end
+        if score >= extra["ja_average_score"].to_f
+          tree_separate_words << cells[0]
+          next
+        end
         list = `http -a #{apiconfig["metadata_wordassociator"]["username"]}:#{apiconfig["metadata_wordassociator"]["password"]} GET wordassociator.ap.mextractr.net/word_associator/api_query query==#{cells[0]}`
-        max_word = list.max_by{|arr| get_word_score(arr[0].strip, features[0].strip) }
-        tree_separate_words << max_word
+        max_word = JSON.parse(list).max_by{|arr| get_word_score(arr[0].strip, features[0].strip) }
+        tree_separate_words << max_word[0]
       end
       tree_separate_words.join("")
     end

@@ -74,7 +74,7 @@ class TweetSeed < ApplicationRecord
   end
 
   def self.to_sugarcoat(text, options = {})
-    apiconfig = YAML.load(File.open("config/apiconfig.yml"))
+    apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
     sanitaized_word = TweetSeed.sanitized(text)
     split_words = TweetSeed.bracket_split(sanitaized_word)
     if split_words.blank?

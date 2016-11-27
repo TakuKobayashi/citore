@@ -22,7 +22,6 @@ CrawlScheduler.tweet_crawl("search", "オブラート -rt", {:lang => "ja"}) do 
           next
         end
         tree_separate_words << cells[0]
-        features = cells[1].split(",")
       end
     end
   end

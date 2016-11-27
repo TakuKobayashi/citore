@@ -67,7 +67,7 @@ public class VoiceRecordService extends Service{
 			for (int i = 0; i < FFT_SIZE; i++) {
 				FFTdata[i] = (double) s[i];
 			}
-			NativeHelper.FFTrdft(FFT_SIZE, 1, FFTdata);
+			//NativeHelper.FFTrdft(FFT_SIZE, 1, FFTdata);
 			// デシベルの計算
 			double[] dbfs = new double[FFT_SIZE / 2];
 			double max_db = -120d;

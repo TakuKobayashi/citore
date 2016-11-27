@@ -20,6 +20,9 @@ Rails.application.routes.draw do
 
     resource :landing, controller: :landing, only: [] do
       get 'page'
+      get 'page01'
+      get 'page02'
+      get 'page03'
     end
   end
 

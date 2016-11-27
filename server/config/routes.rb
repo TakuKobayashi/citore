@@ -7,6 +7,7 @@ Rails.application.routes.draw do
 
   resource :apk_downloader, controller: :apk_downloader, only: [] do
     get 'warakatsu'
+    get 'citore'
   end
 
   mount Messenger::Bot::Space => "/sugarcoat/bot/"

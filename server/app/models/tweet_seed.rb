@@ -120,6 +120,7 @@ class TweetSeed < ApplicationRecord
     return nil if verb.blank?
     v = EmotionalWordDictionary::PARTS[verb]
     emotion = EmotionalWordDynamo.find(word: word, part: v)
+    return nil if emotion.blank?
     return emotion.info["score"].to_f
   end
 end

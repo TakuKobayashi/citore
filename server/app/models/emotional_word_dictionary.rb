@@ -17,7 +17,7 @@
 #
 
 class EmotionalWordDictionary < ApplicationRecord
-  sugarcoat_database = YAML::load(IO.read(Rails.root.to_s +'/config/sugarcoat_database.yml'))
+  sugarcoat_database = YAML::load(IO.read(Rails.root.to_s + "/config/sugarcoat_database.yml"))
   establish_connection(sugarcoat_database[Rails.env])
 
   PARTS = {

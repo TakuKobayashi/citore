@@ -5,7 +5,7 @@ class CreateEmotionalWordDynamos < ActiveRecord::Migration[5.0]
     migration.create!(
       provisioned_throughput: {
         read_capacity_units: 5,
-        write_capacity_units: 1
+        write_capacity_units: 5
       }
     )
     migration.wait_until_available

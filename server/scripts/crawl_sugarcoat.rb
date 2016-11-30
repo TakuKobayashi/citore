@@ -4,8 +4,8 @@ CrawlScheduler.tweet_crawl("search", "オブラート -rt", {:lang => "ja"}) do 
   tweet_seeds = []
   tweet_statuses.each do |status|
     next if status.blank?
-    sanitaized_word = TweetSeed.sanitized(status.text)
-    split_words = TweetSeed.bracket_split(sanitaized_word)
+    sanitaized_word = TweetVoiceSeedDynamo.sanitized(status.text)
+    split_words = TweetVoiceSeedDynamo.bracket_split(sanitaized_word)
     if split_words.blank?
       split_words = [sanitaized_word]
     end
@@ -26,5 +26,4 @@ CrawlScheduler.tweet_crawl("search", "オブラート -rt", {:lang => "ja"}) do 
     end
   end
   #last_id = tweet_statuses.select{|s| s.try(:id).present? }.min_by{|s| s.id.to_i }.try(:id).to_i
-  TweetSeed.import(tweet_seeds)
 end

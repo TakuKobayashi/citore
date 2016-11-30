@@ -1,9 +1,9 @@
 class Citore::VoiceController < BaseController
   def search
     natto = Natto::MeCab.new
-    sanitaized_word = TweetSeed.sanitized(params[:text].to_s)
-    reading = TweetSeed.reading(sanitaized_word)
-    split_words = TweetSeed.ngram(reading, 2).uniq
+    sanitaized_word = TweetVoiceSeedDynamo.sanitized(params[:text].to_s)
+    reading = TweetVoiceSeedDynamo.reading(sanitaized_word)
+    split_words = TweetVoiceSeedDynamo.ngram(reading, 2).uniq
 
     results = []
     natto.parse(sanitaized_word) do |n|

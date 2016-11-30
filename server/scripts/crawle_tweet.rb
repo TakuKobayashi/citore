@@ -1,7 +1,7 @@
 CrawlScheduler.tweet_crawl("citore", {}) do |tweet_statuses|
   tweet_statuses.each do |status|
     next if status.blank?
-    TweetSeed.generate_data_and_voice(status.text, {tweet_id: status.id, tweet_user_id: status.user.id, tweet_user_name: status.user.name})
+    TweetVoiceSeedDynamo.generate_data_and_voice(TweetVoiceSeedDynamo::ERO_KOTOBA_KEY, status.text, {tweet_id: status.id, tweet_user_id: status.user.id, tweet_user_name: status.user.name})
   end
 end
 

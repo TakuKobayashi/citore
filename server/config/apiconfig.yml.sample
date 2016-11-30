@@ -3,3 +3,33 @@ twitter:
   consumer_secret:
   access_token_key:
   access_token_secret:
+
+
+aitalk:
+  username:
+  password:
+
+watson:
+  username:
+  password:
+
+microsoft:
+  client_id:
+  client_secret:
+
+
+yahoo:
+  appId:
+
+metadata_wordassociator:
+  username:
+  password:
+
+
+metadata_general:
+  apikey:
+
+facebook_bot:
+  access_token:
+  validation_token:
+  secret_token:

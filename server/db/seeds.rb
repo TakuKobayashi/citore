@@ -7,7 +7,6 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 dics = []
-
 en = File.read(Rails.root.to_s + "/scripts/dictionary/pn_en.dic")
 ens = en.split("\n")
 ens.each do |e|
@@ -23,19 +22,21 @@ ens.each do |e|
   p "w:#{es[0]} r:#{es[0]} p:#{es[1]} s:#{es[2]}"
 end
 
-parts = EmotionalWordDictionary::PARTS
+parts = EmotionalWordDynamo::PARTS
 ja = File.read(Rails.root.to_s + "/scripts/dictionary/pn_ja.dic")
 jas = ja.split("\r\n")
 jas.each do |j|
   js = j.split(":")
-  dic = EmotionalWordDynamo.find(word: js[0], reading: js[1])
+  word = TweetVoiceSeedDynamo.sanitized(js[0])
+  reading = TweetVoiceSeedDynamo.reading(js[1])
+  dic = EmotionalWordDynamo.find(word: word, reading: reading,part:  parts[js[2]])
   next if dic.present?
-  dic = EmotionalWordDictionary.new
-  dic.word = js[0]
-  dic.reading = js[1]
+  dic = EmotionalWordDynamo.new
+  dic.word = word
+  dic.reading = reading
   dic.part = parts[js[2]]
   dic.score = js[3].to_f
-  p "w:#{js[0]} r:#{js[1]} p:#{js[2]} s:#{js[3]}"
+  p "w:#{word} r:#{reading} p:#{js[2]} s:#{js[3]}"
   dic.save!
 end
 

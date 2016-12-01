@@ -38,7 +38,7 @@ class VoiceDynamo
   end
 
   def self.generate_and_upload_voice(text, keyword, speaker_name, acl = :private, options = {})
-    apiconfig = YAML.load(File.open("config/apiconfig.yml"))
+    apiconfig = YAML.load(File.open(Rails.roo.to_s + "/config/apiconfig.yml"))
     params = VOICE_PARAMS.merge({
       username: apiconfig["aitalk"]["username"],
       password: apiconfig["aitalk"]["password"],

@@ -3,7 +3,7 @@
 # Table name: crawl_schedulers
 #
 #  id             :integer          not null, primary key
-#  state          :integer          default(0), not null
+#  state          :integer          default("pending"), not null
 #  search_kind    :integer          default(0), not null
 #  search_word    :string(255)      not null
 #  resource_type  :string(255)

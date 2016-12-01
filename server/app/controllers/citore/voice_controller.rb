@@ -17,7 +17,6 @@ class Citore::VoiceController < BaseController
           expression_attribute_names: {"#H" => "key", "#B" => "reading"},
           expression_attribute_values: {":h" => n.surface, ":b" => word}
         }).map{|r| r }
-        results.select{|r| reading.include?(r.reading) }
         break if results.present?
       end
       break if results.present?
@@ -42,6 +41,6 @@ class Citore::VoiceController < BaseController
     filename = File.basename(filepath)
     ext = File.extname(filename)
     resp = s3.get_object({bucket: "taptappun", key: filepath})
-    send_data(resp.body.read, filename: filename, type: "audio/" + ext[1..(ext.size - 1)])
+    send_data(resp.body.read,{filename: filename, type: "audio/" + ext[1..(ext.size - 1)]})
   end
 end

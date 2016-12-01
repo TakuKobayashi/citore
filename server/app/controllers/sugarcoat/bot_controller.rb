@@ -23,7 +23,7 @@ class Sugarcoat::BotController < BaseController
 
         endpoint_uri = "https://graph.facebook.com/v2.6/me/messages?access_token=" + apiconfig["facebook_bot"]["access_token"]
         sugarcoated = TweetVoiceSeedDynamo.to_sugarcoat(text).join("")
-        voice = VoiceDynamo.generate_and_upload_voice(sugarcoated, VoiceDynamo::SUGARCOAT_VOICE_KEY, "aoi", "public-read", VoiceDynamo::SUGARCOAT_VOICE_PARAMS)
+        voice = VoiceDynamo.generate_and_upload_voice(TweetVoiceSeedDynamo.reading(sugarcoated), VoiceDynamo::SUGARCOAT_VOICE_KEY, "aoi", "public-read", VoiceDynamo::SUGARCOAT_VOICE_PARAMS)
         request_content = {
           recipient: {
             id:sender

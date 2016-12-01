@@ -29,6 +29,9 @@ class TweetVoiceSeedDynamo
       end
       tweet.appear_count = tweet.appear_count.to_i + 1
       if twitter_info.present?
+        if tweet.twitter_info.blank?
+          tweet.twitter_info = []
+        end
         tweet.twitter_info += [twitter_info]
       end
       if options.present?
@@ -94,7 +97,6 @@ class TweetVoiceSeedDynamo
       split_words = [sanitaized_word]
     end
 
-
     split_words.each do |word|
       generate!(word, keyword, twitter_info, options)
       puts "generate_voice"
@@ -150,8 +152,8 @@ class TweetVoiceSeedDynamo
     verb = verbs.detect{|v| cverb.include?(v) }
     return nil if verb.blank?
     v = EmotionalWordDictionary::PARTS[verb]
-    reading = reading(word)
-    emotion = EmotionalWordDynamo.find(word: word, reading: reading, part: v)
+    reading_word = reading(word)
+    emotion = EmotionalWordDynamo.find(word: word, reading: reading_word, part: v)
     return nil if emotion.blank?
     return emotion.score.to_f
   end

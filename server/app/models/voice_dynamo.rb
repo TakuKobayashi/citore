@@ -36,7 +36,7 @@ class VoiceDynamo
     file_name = "#{speaker_name}_" + SecureRandom.hex + ".wav"
 
     voice = VoiceDynamo.find(word: text, speaker_name: speaker_name, keyword: keyword)
-    if voice.present? && voice.generate_params == params
+    if voice.present?
       return nil
     end
     if voice.blank?

@@ -19,7 +19,7 @@ class VoiceDynamo
   }
 
   SUGARCOAT_VOICE_PARAMS = {
-    ext: "mp3",
+    ext: "wav",
     volume: 2.0,
     speed: 1.0,
     range: 1.0,
@@ -45,7 +45,7 @@ class VoiceDynamo
       text: text,
       speaker_name: speaker_name
     }).merge(options)
-    file_name = "#{speaker_name}_" + SecureRandom.hex + "." + params[:ext]
+    file_name = "#{speaker_name}_" + SecureRandom.hex + ".wav"
 
     voice = VoiceDynamo.find(word: text, speaker_name: speaker_name, keyword: keyword)
     if voice.present?

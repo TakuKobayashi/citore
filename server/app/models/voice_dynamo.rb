@@ -49,7 +49,7 @@ class VoiceDynamo
 
     voice = VoiceDynamo.find(word: text, speaker_name: speaker_name, keyword: keyword)
     if voice.present?
-      return nil
+      return voice
     end
     if voice.blank?
       voice = VoiceDynamo.new

@@ -31,6 +31,7 @@ class VoiceDynamo
 
   VOICE_FILE_ROOT = "/tmp/voices/"
   VOICE_S3_FILE_ROOT = "project/citore/voices/"
+  VOICE_S3_SUGARCOAT_FILE_ROOT = "project/sugarcoat/voices/"
 
   def self.voice_file_root_path
     return Rails.root.to_s + VOICE_FILE_ROOT
@@ -65,7 +66,11 @@ class VoiceDynamo
     response = http_client.get_content("http://webapi.aitalk.jp/webapi/v2/ttsget.php", params, {})
     
     s3 = Aws::S3::Client.new
-    file_path = VOICE_S3_FILE_ROOT + file_name
+    if keyword == SUGARCOAT_VOICE_KEY
+      file_path = VOICE_S3_SUGARCOAT_FILE_ROOT + file_name
+    else
+      file_path = VOICE_S3_FILE_ROOT + file_name
+    end
     s3.put_object(bucket: "taptappun",body: response,key: file_path, :acl => acl)
     voice.save!
     return voice

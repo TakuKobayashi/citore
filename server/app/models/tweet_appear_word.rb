@@ -15,4 +15,5 @@
 #
 
 class TweetAppearWord < ApplicationRecord
+  has_many :tweet_words
 end

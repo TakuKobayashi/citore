@@ -33,7 +33,7 @@ class Sugarcoat::BotController < BaseController
             attachment: {
               type: "audio",
               payload: {
-                url: "https://petersapparel.parseapp.com/img/shirt.png",
+                url: "https://taptappun.s3.amazonaws.com/" + VoiceDynamo::VOICE_S3_SUGARCOAT_FILE_ROOT + voice.file_name,
                 is_reusable: true
               }
             }

@@ -148,10 +148,10 @@ class TweetVoiceSeedDynamo
   end
 
   def self.get_word_score(cverb, word)
-    verbs = EmotionalWordDictionary::PARTS.keys
+    verbs = EmotionalWordDynamo::PARTS.keys
     verb = verbs.detect{|v| cverb.include?(v) }
     return nil if verb.blank?
-    v = EmotionalWordDictionary::PARTS[verb]
+    v = EmotionalWordDynamo::PARTS[verb]
     reading_word = reading(word)
     emotion = EmotionalWordDynamo.find(word: word, reading: reading_word, part: v)
     return nil if emotion.blank?

@@ -41,8 +41,7 @@ class Sugarcoat::BotController < BaseController
             attachment: {
               type: "audio",
               payload: {
-                url: "https://taptappun.s3.amazonaws.com/" + VoiceDynamo::VOICE_S3_SUGARCOAT_FILE_ROOT + voice.file_name,
-                is_reusable: true
+                url: "https://taptappun.s3.amazonaws.com/" + VoiceDynamo::VOICE_S3_SUGARCOAT_FILE_ROOT + voice.file_name
               }
             }
           }

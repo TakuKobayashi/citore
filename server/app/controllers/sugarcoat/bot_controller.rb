@@ -29,7 +29,15 @@ class Sugarcoat::BotController < BaseController
             id:sender
           },
           message: {
-            text: sugarcoated,
+            text: sugarcoated
+          }
+        }
+
+        request_voice_content = {
+          recipient: {
+            id:sender
+          },
+          message: {
             attachment: {
               type: "audio",
               payload: {
@@ -42,6 +50,9 @@ class Sugarcoat::BotController < BaseController
 
         http_client = http_client = HTTPClient.new
         res = http_client.post(endpoint_uri, request_content.to_json, {'Content-Type' => 'application/json; charset=UTF-8'})
+        logger.info res.body
+        http_client = http_client = HTTPClient.new
+        res = http_client.post(endpoint_uri, request_voice_content.to_json, {'Content-Type' => 'application/json; charset=UTF-8'})
         logger.info res.body
         head(:ok)
       else

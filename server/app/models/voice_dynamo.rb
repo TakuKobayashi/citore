@@ -18,6 +18,17 @@ class VoiceDynamo
     style: {"j" => "1.0"}
   }
 
+  SUGARCOAT_VOICE_PARAMS = {
+    ext: "wav",
+    volume: 2.0,
+    speed: 1.0,
+    range: 1.0,
+    pitch: 1.0,
+    style: {"j" => "1.0"}
+  }
+
+  SUGARCOAT_VOICE_KEY = "sugarcoat"
+
   VOICE_FILE_ROOT = "/tmp/voices/"
   VOICE_S3_FILE_ROOT = "project/citore/voices/"
 

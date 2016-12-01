@@ -23,7 +23,22 @@ class Sugarcoat::BotController < BaseController
 
         endpoint_uri = "https://graph.facebook.com/v2.6/me/messages?access_token=" + apiconfig["facebook_bot"]["access_token"]
         sugarcoated = TweetVoiceSeedDynamo.to_sugarcoat(text).join("")
-        request_content = {recipient: {id:sender}, message: {text: sugarcoated}}
+        voice = VoiceDynamo.generate_and_upload_voice(sugarcoated, VoiceDynamo::SUGARCOAT_VOICE_KEY, "aoi", :public_read, VoiceDynamo::SUGARCOAT_VOICE_PARAMS)
+        request_content = {
+          recipient: {
+            id:sender
+          },
+          message: {
+            text: sugarcoated,
+            attachment: {
+              type: "audio",
+              payload: {
+                url: "https://petersapparel.parseapp.com/img/shirt.png",
+                is_reusable: true
+              }
+            }
+          }
+        }
 
         http_client = http_client = HTTPClient.new
         res = http_client.post(endpoint_uri, request_content.to_json, {'Content-Type' => 'application/json; charset=UTF-8'})

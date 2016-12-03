@@ -49,17 +49,36 @@ class TweetVoiceSeedDynamo
     sanitized_word = Charwidth.normalize(sanitized_word)
     #返信やハッシュタグを除去
     sanitized_word = sanitized_word.gsub(/[#＃@][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー_]+/, "")
+    #リツイートにRTとつける事が多いので、そこの部分は取り除く
+    sanitized_word = sanitized_word.gsub(/RT[;: ]/, "")
+    
     # 余分な空欄を除去
     sanitized_word.strip!
     return sanitized_word
   end
 
+  def self.separate_urls(text)
+    result = text
+    #URLがあったらそれは別にする
+    urls = URI.extract(result)
+    urls.each do |url|
+      result.gsub!(url, "")
+    end
+    return result, urls
+  end
+
+  #記号を除去
+  def self.delete_symbols(text)
+    return text.gsub(/[【】、。《》「」〔〕・（）［］｛｝！＂＃＄％＆＇＊＋，－．／：；＜＝＞？＠＼＾＿｀｜￠￡￣\(\)\[\]<>{},!? \.\-\+\\~^='&%$#\"\'_\/;:*‼•一]/, "")
+  end
+
   def self.reading(text)
     #記号を除去
-    sanitaized_word = text.gsub(/[、。《》「」〔〕・（）［］｛｝！＂＃＄％＆＇＊＋，－．／：；＜＝＞？＠＼＾＿｀｜～￠￡￣\(\)\[\]<>{}]/, "")
+    sanitaized_word = delete_symbols(text)
+    word, urls = separate_urls(sanitaized_word)
     reading_array = []
     natto = Natto::MeCab.new
-    natto.parse(sanitaized_word) do |n|
+    natto.parse(word) do |n|
       next if n.surface.blank?
       csv = n.feature.split(",")
       reading = csv[7]
@@ -71,7 +90,7 @@ class TweetVoiceSeedDynamo
     return reading_array.join("")
   end
 
-  # カッコの中身の文だけ取得
+  # カッコの中身の文を分ける
   def self.bracket_split(text)
     bracket_words = text.scan(/[「\(].+?[」\)]/)
     split_words = text.split(/[「\(].+?[」\)]/)
@@ -109,6 +128,7 @@ class TweetVoiceSeedDynamo
   def self.to_sugarcoat(text, options = {})
     apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
     sanitaized_word = sanitized(text)
+    sanitaized_word, urls = separate_urls(sanitaized_word)
     split_words = bracket_split(sanitaized_word)
     if split_words.blank?
       split_words = [sanitaized_word]

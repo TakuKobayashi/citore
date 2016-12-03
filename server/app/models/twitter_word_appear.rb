@@ -14,4 +14,6 @@
 #
 
 class TwitterWordAppear < ApplicationRecord
+  belongs_to :tweet_appear_word
+  belongs_to :twitter_word
 end

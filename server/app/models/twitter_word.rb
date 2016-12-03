@@ -7,6 +7,7 @@
 #  twitter_user_name :string(255)
 #  twitter_tweet_id  :string(255)      not null
 #  tweet             :string(255)      not null
+#  csv_url           :text(65535)
 #  tweet_created_at  :datetime         not null
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
@@ -19,5 +20,6 @@
 #
 
 class TwitterWord < ApplicationRecord
-  belongs_to :tweet_appear_word
+  has_many :twitter_word_appears
+  has_many :appears, through: :twitter_word_appears, source: :tweet_appear_word
 end

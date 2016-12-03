@@ -15,5 +15,6 @@
 #
 
 class TweetAppearWord < ApplicationRecord
-  has_many :tweet_words
+  has_many :twitter_word_appears
+  has_many :words, through: :twitter_word_appears, source: :twitter_word
 end

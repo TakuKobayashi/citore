@@ -18,7 +18,7 @@ class Citore::VoiceController < BaseController
 
     result = results.sample
     render :json => {} and return if result.blank?
-    hash = {uuid: result.try(:uuid), reading: result.try(:reading), key: result.try(:key) }) || {}
+    hash = {uuid: result.try(:uuid), reading: result.try(:reading), key: result.try(:key) } || {}
     voice = VoiceDynamo.find(word: result.try(:reading), speaker_name: Voice.all_speacker_names.sample)
     filename = File.basename(voice.file_name.to_s)
     if filename.present?

@@ -14,4 +14,6 @@ class EmotionalWordDynamo
     "副詞" => "r",
     "助動詞" =>"av"
   }
+
+  KAOMOJI_PART = "kao"
 end

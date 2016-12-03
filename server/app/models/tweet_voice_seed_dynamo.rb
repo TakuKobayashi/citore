@@ -72,6 +72,15 @@ class TweetVoiceSeedDynamo
     return text.gsub(/[【】、。《》「」〔〕・（）［］｛｝！＂＃＄％＆＇＊＋，－．／：；＜＝＞？＠＼＾＿｀｜￠￡￣\(\)\[\]<>{},!? \.\-\+\\~^='&%$#\"\'_\/;:*‼•一]/, "")
   end
 
+  def self.separate_kaomoji(text)
+    result = text
+    kaomojis = text.scan(/(?:[^0-9A-Za-zぁ-ヶ一-龠]|[ovっつ゜ニノ三二])*[\(∩꒰（](?!(?:[0-9A-Za-zぁ-ヶ一-龠]|[ｦ-ﾟ]){3,}).{3,}[\)∩꒱）](?:[^0-9A-Za-zぁ-ヶ一-龠]|[ovっつ゜ニノ三二])*/)
+    kaomojis.each do |kaomoji|
+      result.gsub!(kaomoji, "")
+    end
+    return result, kaomojis
+  end
+
   def self.reading(text)
     #記号を除去
     sanitaized_word = delete_symbols(text)

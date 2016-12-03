@@ -63,9 +63,11 @@ client.sample do |status|
     end
     TweetAppearWord.import(import_words, on_duplicate_key_update: "appear_count = appear_count + VALUES(appear_count), `updated_at`=VALUES(`updated_at`)")
     ids = TweetAppearWord.where(word: import_words.map(&:word), part: import_words.map(&:part)).pluck(:id)
+    next if ids.blank?
     #なぜか謎のloadが入ってしまうのでimportするのは一回だけ
     values = ids.map{|id| "(" + ["NULL", id, tweet.id, "'#{Time.now.to_s(:db)}'", "'#{Time.now.to_s(:db)}'"].join(",") + ")" }
-    TwitterWordAppear.connection.execute("INSERT INTO `#{TwitterWordAppear.table_name}` (#{TwitterWordAppear.column_names.join(',')}) VALUES " + values.join(","))
+    sql = "INSERT INTO `#{TwitterWordAppear.table_name}` (#{TwitterWordAppear.column_names.join(',')}) VALUES " + values.join(",")
+    TwitterWordAppear.connection.execute(sql)
   rescue => e # => StandardError を catch
     puts e.message
   end

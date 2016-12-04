@@ -5,7 +5,7 @@
 
 set :output, "#{path}/log/cron.log"
 
-every :day, at: "2:00 am" do
+every :day, at: "3:00 am" do
   rake "batch:db_dump_and_upload"
   command "/bin/echo `date`: Daily upload sql"
 end

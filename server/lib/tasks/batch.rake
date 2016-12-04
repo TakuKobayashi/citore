@@ -5,7 +5,7 @@ namespace :batch do
     configuration = ActiveRecord::Base.configurations[environment]
     tables = ["tweet_appear_words", "twitter_words", "twitter_word_appears"].join(" ")
     now_str = Time.now.strftime("%Y%m%d_%H%M%S")
-    file_path = "tmp/dbdump/#{now_str}.sql"
+    file_path = Rails.root.to_s + "/tmp/dbdump/#{now_str}.sql"
     cmd = "mysqldump -u #{configuration['username']} "
     if configuration['password'].present?
       cmd += "-p #{configuration['password']} "
@@ -15,5 +15,6 @@ namespace :batch do
     file = File.open(file_path, 'rb')
     s3 = Aws::S3::Client.new
     s3.put_object(bucket: "taptappun",body: file,key: "project/sugarcoat/dbdump/#{now_str}.sql", acl: "public-read")
-  end 
+    system("rm #{file_path}")
+  end
 end

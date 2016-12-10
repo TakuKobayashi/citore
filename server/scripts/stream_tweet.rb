@@ -7,7 +7,7 @@ TweetStream.configure do |config|
   config.auth_method        = :oauth
 end
 
-natto = Natto::MeCab.new
+natto = Natto::MeCab.new(dicdir: TweetVoiceSeedDynamo::MECAB_NEOLOGD_DIC_PATH)
 
 client = TweetStream::Client.new
 client.sample do |status|

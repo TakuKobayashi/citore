@@ -14,6 +14,8 @@ class TweetVoiceSeedDynamo
 
   ERO_KOTOBA_KEY = "ero_kotoba"
 
+  MECAB_NEOLOGD_DIC_PATH = "/usr/local/lib/mecab/dic/mecab-ipadic-neologd"
+
   def self.generate!(text, keyword, twitter_info = {}, options = {})
     puts text
   	reading = reading(text)
@@ -86,7 +88,7 @@ class TweetVoiceSeedDynamo
     sanitaized_word = delete_symbols(text)
     word, urls = separate_urls(sanitaized_word)
     reading_array = []
-    natto = Natto::MeCab.new
+    natto = Natto::MeCab.new(dicdir: MECAB_NEOLOGD_DIC_PATH)
     natto.parse(word) do |n|
       next if n.surface.blank?
       csv = n.feature.split(",")

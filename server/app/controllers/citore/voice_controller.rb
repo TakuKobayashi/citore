@@ -1,6 +1,6 @@
 class Citore::VoiceController < BaseController
   def search
-    natto = Natto::MeCab.new
+    natto = Natto::MeCab.new(dicdir: TweetVoiceSeedDynamo::MECAB_NEOLOGD_DIC_PATH)
     sanitaized_word = TweetVoiceSeedDynamo.sanitized(params[:text].to_s)
     reading = TweetVoiceSeedDynamo.reading(sanitaized_word)
     split_words = TweetVoiceSeedDynamo.ngram(reading, 2).uniq

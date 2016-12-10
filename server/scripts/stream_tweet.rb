@@ -65,7 +65,7 @@ client.sample do |status|
     ids = TweetAppearWord.where(word: import_words.map(&:word), part: import_words.map(&:part)).pluck(:id)
     next if ids.blank?
     #なぜか謎のloadが入ってしまうのでimportするのは一回だけ
-    values = ids.map{|id| "(" + ["NULL", id, tweet.id, "'#{Time.now.to_s(:db)}'", "'#{Time.now.to_s(:db)}'"].join(",") + ")" }
+    values = ids.map{|id| "(" + ["NULL", id, tweet.id].join(",") + ")" }
     sql = "INSERT INTO `#{TwitterWordAppear.table_name}` (#{TwitterWordAppear.column_names.join(',')}) VALUES " + values.join(",")
     TwitterWordAppear.connection.execute(sql)
   rescue => e # => StandardError を catch

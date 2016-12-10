@@ -5,8 +5,6 @@
 #  id                   :integer          not null, primary key
 #  tweet_appear_word_id :integer          not null
 #  twitter_word_id      :integer          not null
-#  created_at           :datetime         not null
-#  updated_at           :datetime         not null
 #
 # Indexes
 #

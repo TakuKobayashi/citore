@@ -1,0 +1,2 @@
+class WikipediaTopicCategory < ApplicationRecord
+end

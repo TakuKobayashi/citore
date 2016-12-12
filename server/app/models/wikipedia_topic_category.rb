@@ -14,5 +14,5 @@
 #  index_wikipedia_topic_categories_on_title  (title) UNIQUE
 #
 
-class WikipediaTopicCategory < ApplicationRecord
+class WikipediaTopicCategory < WikipediaRecord
 end

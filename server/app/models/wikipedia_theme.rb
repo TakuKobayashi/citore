@@ -14,5 +14,5 @@
 #  index_wikipedia_themes_on_title       (title) UNIQUE
 #
 
-class WikipediaTheme < ApplicationRecord
+class WikipediaTheme < WikipediaRecord
 end

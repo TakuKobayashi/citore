@@ -15,4 +15,7 @@
 #
 
 class WikipediaTopicCategory < WikipediaRecord
+  def self.sanitized_query(query_string)
+    return query_string.gsub("cat_", "").gsub("`category`", "`" + table_name + "`")
+  end
 end

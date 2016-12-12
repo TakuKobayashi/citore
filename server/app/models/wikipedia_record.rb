@@ -4,8 +4,7 @@ class WikipediaRecord < ApplicationRecord
   SAVE_DUMP_FILE_ROOT_PATH = Rails.root.to_s + "/tmp"
   DOWNLOAD_URL = "https://dumps.wikimedia.org/jawiki/latest/"
 
-  def self.download_dumpdata(download_file_name)
-    category_sql_file_name = category_sql_gz_file_name.gsub(".gz", "")
+  def self.download_file(download_file_name)
     savefile_path = [SAVE_DUMP_FILE_ROOT_PATH, download_file_name].join("/")
 
     http_client = HTTPClient.new
@@ -14,23 +13,27 @@ class WikipediaRecord < ApplicationRecord
     return savefile_path
   end
 
-  def self.decompress_data
-    gzfile = File.open([save_file_root_path, category_sql_gz_file_name].join("/"), "r")
-    File.open([save_file_root_path, category_sql_file_name].join("/"), 'wb'){|f|
-      Zlib::GzipReader.wrap(gzfile){|gz|
-        sanitized = gz.read.gsub("cat_", "").gsub("`category`", "`" + WikipediaTopicCategory.table_name + "`").force_encoding("utf-8")
-        f.write(sanitized)
-      }
+  def self.decompress_gz_query_string(gz_file_path)
+    result = ""
+    gzfile = File.open(gz_file_path, "r")
+    Zlib::GzipReader.wrap(gzfile){|gz|
+      result = gz.read.to_s.force_encoding("utf-8")
     }
+    return result
+  end
+
+  def self.import_dump_query(query_file_path)
     environment = Rails.env
     configuration = ActiveRecord::Base.configurations[environment]
     cmd = "mysql -u #{configuration['username']} "
     if configuration['password'].present?
       cmd += "--opt --password=#{configuration['password']} "
     end
-    cmd += "-t #{configuration['database']} < #{[save_file_root_path, category_sql_file_name].join("/")}"
+    cmd += "-t #{configuration['database']} < #{query_file_path}"
     system(cmd)
-    system("rm #{[save_file_root_path, category_sql_gz_file_name].join("/")}")
-    system("rm #{[save_file_root_path, category_sql_file_name].join("/")}")
+  end
+
+  def self.remove_file(file_path)
+    system("rm #{file_path}")
   end
 end

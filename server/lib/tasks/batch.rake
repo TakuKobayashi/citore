@@ -19,29 +19,13 @@ namespace :batch do
   end
 
   task update_from_wikipedia: :environment do
-    save_file_root_path = "tmp"
-    category_sql_gz_file_name = "jawiki-latest-category.sql.gz"
-    category_sql_file_name = category_sql_gz_file_name.gsub(".gz", "")
-    root_url = "https://dumps.wikimedia.org/jawiki/latest/"
-    http_client = HTTPClient.new
-    response = http_client.get_content(root_url + category_sql_gz_file_name, {}, {})
-    File.open([save_file_root_path, category_sql_gz_file_name].join("/"), 'wb'){|f| f.write(response) }
-    gzfile = File.open([save_file_root_path, category_sql_gz_file_name].join("/"), "r")
-    File.open([save_file_root_path, category_sql_file_name].join("/"), 'wb'){|f|
-      Zlib::GzipReader.wrap(gzfile){|gz|
-        sanitized = gz.read.gsub("cat_", "").gsub("`category`", "`" + WikipediaTopicCategory.table_name + "`").force_encoding("utf-8")
-        f.write(sanitized)
-      }
-    }
-    environment = Rails.env
-    configuration = ActiveRecord::Base.configurations[environment]
-    cmd = "mysql -u #{configuration['username']} "
-    if configuration['password'].present?
-      cmd += "--opt --password=#{configuration['password']} "
-    end
-    cmd += "-t #{configuration['database']} < #{[save_file_root_path, category_sql_file_name].join("/")}"
-    system(cmd)
-    system("rm #{[save_file_root_path, category_sql_gz_file_name].join("/")}")
-    system("rm #{[save_file_root_path, category_sql_file_name].join("/")}")
+    gz_file_path = WikipediaTopicCategory.download_file("jawiki-latest-category.sql.gz")
+    query_string = WikipediaTopicCategory.decompress_gz_query_string(gz_file_path)
+    sanitized_query = WikipediaTopicCategory.try(:sanitized_query, query_string) || query_string
+    decompressed_file_path = gz_file_path.gsub(".gz", "")
+    File.open(decompressed_file_path, 'wb'){|f| f.write(sanitized_query) }
+    WikipediaTopicCategory.import_dump_query(decompressed_file_path)
+    WikipediaTopicCategory.remove_file(gz_file_path)
+    WikipediaTopicCategory.remove_file(decompressed_file_path)
   end
 end

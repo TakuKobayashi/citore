@@ -11,6 +11,7 @@
 # Indexes
 #
 #  index_wikipedia_themes_on_crawled_at  (crawled_at)
+#  index_wikipedia_themes_on_title       (title) UNIQUE
 #
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html

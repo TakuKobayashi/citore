@@ -6,5 +6,6 @@ class CreateWikipediaThemes < ActiveRecord::Migration[5.0]
       t.timestamps
     end
     add_index :wikipedia_themes, :crawled_at
+    add_index :wikipedia_themes, :title, unique: true
   end
 end

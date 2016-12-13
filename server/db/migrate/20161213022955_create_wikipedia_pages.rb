@@ -14,8 +14,6 @@ class CreateWikipediaPages < ActiveRecord::Migration[5.0]
       t.integer :len, null: false, default: 0
       t.string :content_model
       t.string :lang
-
-      t.timestamps
     end
 
     add_index :wikipedia_pages, [:namespace, :title], unique: true

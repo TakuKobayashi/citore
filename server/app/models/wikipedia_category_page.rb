@@ -24,6 +24,7 @@ class WikipediaCategoryPage < WikipediaRecord
 
   def self.sanitized_query(query_string)
     return query_string.
+      gsub("UNIQUE KEY `cl_from`", "UNIQUE KEY `cl_from_and_to`").
       gsub("`cl_from`", "`wikipedia_page_id`").
       gsub("`cl_to`", "`category_title`").
       gsub("`cl_type`", "`category_type`").

@@ -19,13 +19,20 @@ namespace :batch do
   end
 
   task update_from_wikipedia: :environment do
-    gz_file_path = WikipediaTopicCategory.download_file("jawiki-latest-category.sql.gz")
-    query_string = WikipediaTopicCategory.decompress_gz_query_string(gz_file_path)
-    sanitized_query = WikipediaTopicCategory.try(:sanitized_query, query_string) || query_string
-    decompressed_file_path = gz_file_path.gsub(".gz", "")
-    File.open(decompressed_file_path, 'wb'){|f| f.write(sanitized_query) }
-    WikipediaTopicCategory.import_dump_query(decompressed_file_path)
-    WikipediaTopicCategory.remove_file(gz_file_path)
-    WikipediaTopicCategory.remove_file(decompressed_file_path)
+    [[WikipediaTopicCategory, "jawiki-latest-category.sql.gz"],[WikipediaPage, "jawiki-latest-page.sql.gz"]].each do |clazz, file_name|
+      puts "#{clazz.table_name} download start"
+      gz_file_path = clazz.download_file(file_name)
+      puts "#{clazz.table_name} decompress start"
+      query_string = clazz.decompress_gz_query_string(gz_file_path)
+      puts "#{clazz.table_name} save file start"
+      sanitized_query = clazz.try(:sanitized_query, query_string) || query_string
+      decompressed_file_path = gz_file_path.gsub(".gz", "")
+      File.open(decompressed_file_path, 'wb'){|f| f.write(sanitized_query) }
+      puts "#{clazz.table_name} import data start"
+      clazz.import_dump_query(decompressed_file_path)
+      clazz.remove_file(gz_file_path)
+      clazz.remove_file(decompressed_file_path)
+      puts "#{clazz.table_name} import completed"
+    end
   end
 end

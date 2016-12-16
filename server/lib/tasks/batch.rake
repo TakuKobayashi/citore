@@ -41,7 +41,7 @@ namespace :batch do
   end
 
   task crawl_lyric_html: :environment do
-    targets = ["http://www.uta-net.com/song/1/", ]
+    targets = ["http://www.uta-net.com/song/1/", "https://www.joysound.com/web/search/song/1"]
     http_client = HTTPClient.new
     response = http_client.get("https://artists.utamap.com/50/ne.html", {}, {})
     doc = Nokogiri::HTML.parse(response.body)

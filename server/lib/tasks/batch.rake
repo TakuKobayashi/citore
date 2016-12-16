@@ -39,4 +39,19 @@ namespace :batch do
       puts "#{clazz.table_name} import completed"
     end
   end
+
+  task crawl_lyric_html: :environment do
+    http_client = HTTPClient.new
+    response = http_client.get("https://artists.utamap.com/50/ne.html", {}, {})
+    doc = Nokogiri::HTML.parse(response.body)
+    urls = doc.css('a').map do |anchor|
+      if anchor[:href].include?("http")
+        nil
+      else
+        anchor[:href]
+      end
+    end
+    urls = urls.uniq.compact
+    p urls
+  end
 end

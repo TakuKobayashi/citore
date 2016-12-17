@@ -136,6 +136,7 @@ GEM
     kaminari (0.17.0)
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
+    line-bot-api (1.0.0)
     listen (3.0.8)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
@@ -282,6 +283,7 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord-import
+  addressable
   annotate
   aws-record (~> 1.0)
   aws-sdk (~> 2)
@@ -296,6 +298,7 @@ DEPENDENCIES
   jbuilder (~> 2.5)
   jquery-rails
   kaminari
+  line-bot-api
   listen (~> 3.0.5)
   messenger-bot
   mysql2

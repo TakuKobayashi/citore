@@ -55,6 +55,8 @@ gem 'messenger-bot'
 gem 'whenever', :require => false
 
 gem 'sanitize'
+gem 'addressable'
+gem 'line-bot-api'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development

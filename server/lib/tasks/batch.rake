@@ -48,8 +48,6 @@ namespace :batch do
       if svg_img_path.present?
         url.path = svg_img_path
         CrawlTargetUrl.setting_target!(Lyric.to_s, url.to_s)
-      else
-        break
       end
     end
   end

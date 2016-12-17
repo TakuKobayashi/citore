@@ -4,25 +4,25 @@
 #
 #  id            :integer          not null, primary key
 #  namespace     :integer          default(0), not null
-#  title         :binary(255)      default(""), not null
-#  restrictions  :binary(255)      default(""), not null
+#  title         :string(255)      default(""), not null
+#  restrictions  :string(255)      default(""), not null
 #  counter       :integer          default(0), not null
 #  is_redirect   :boolean          default(FALSE), not null
 #  is_new        :boolean          default(FALSE), not null
 #  random        :float(53)        default(0.0), not null
-#  touched       :binary(14)       default(""), not null
-#  links_updated :binary(14)
+#  touched       :string(255)      default(""), not null
+#  links_updated :string(255)      default(""), not null
 #  latest        :integer          default(0), not null
 #  len           :integer          default(0), not null
-#  content_model :binary(32)
-#  lang          :binary(35)
+#  content_model :string(255)
+#  lang          :string(255)
 #
 # Indexes
 #
-#  len                     (len)
-#  name_title              (namespace,title) UNIQUE
-#  random                  (random)
-#  redirect_namespace_len  (is_redirect,namespace,len)
+#  index_wikipedia_pages_on_is_redirect_and_namespace_and_len  (is_redirect,namespace,len)
+#  index_wikipedia_pages_on_len                                (len)
+#  index_wikipedia_pages_on_namespace_and_title                (namespace,title) UNIQUE
+#  index_wikipedia_pages_on_random                             (random)
 #
 
 class WikipediaPage < WikipediaRecord

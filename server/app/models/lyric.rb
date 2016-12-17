@@ -18,4 +18,26 @@
 #
 
 class Lyric < ApplicationRecord
+  UTAMAP_ROOT_URL = "http://artists.utamap.com/"
+  UTANET_ROOT_CRAWL_URL = "http://www.uta-net.com/song/"
+  JOYSOUND_ROOT_URL = "https://www.joysound.com/web/search/song/"
+
+  def self.request_and_parse_html(url)
+    http_client = HTTPClient.new
+    response = http_client.get(url, {}, {})
+    doc = Nokogiri::HTML.parse(response.body)
+    return doc
+  end
+
+  def self.request_and_scrape_link_filters(url, filter_word)
+    doc = request_and_parse_html(url)
+    pathes = doc.css('a').map do |anchor|
+      if anchor[:href].include?(filter_word)
+        nil
+      else
+        anchor[:href]
+      end
+    end.uniq.compact
+    return pathes
+  end
 end

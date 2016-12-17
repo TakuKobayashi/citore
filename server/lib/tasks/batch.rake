@@ -41,18 +41,14 @@ namespace :batch do
   end
 
   task crawl_lyric_html: :environment do
-    targets = ["http://www.uta-net.com/song/1/", "https://www.joysound.com/web/search/song/1"]
-    http_client = HTTPClient.new
-    response = http_client.get("https://artists.utamap.com/50/ne.html", {}, {})
-    doc = Nokogiri::HTML.parse(response.body)
-    urls = doc.css('a').map do |anchor|
-      if anchor[:href].include?("http")
-        nil
-      else
-        anchor[:href]
-      end
-    end
-    urls = urls.uniq.compact
-    p urls
+    counter = 1
+    url = Addressable::URI.parse(Lyric::UTANET_ROOT_CRAWL_URL + counter.to_s + "/")
+    doc = Lyric.request_and_parse_html(url)
+    svg_img_path = doc.css('#ipad_kashi').map{|d| d.children.map{|c| c[:src] } }.flatten.first
+    url.path = svg_img_path
+    p url.to_s
+    doc = Lyric.request_and_parse_html(url.to_s)
+    texts = doc.css('text').map{|d| d.children.to_s }.join("\n")
+    p texts
   end
 end

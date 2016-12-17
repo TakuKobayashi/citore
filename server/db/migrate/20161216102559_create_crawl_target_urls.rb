@@ -3,9 +3,9 @@ class CreateCrawlTargetUrls < ActiveRecord::Migration[5.0]
     create_table :crawl_target_urls do |t|
       t.string :source_type, null: false
       t.string :protocol, null: false
-      t.string :method, null: false
       t.string :host, null: false
-      t.string :path, null: false
+      t.integer :port
+      t.string :path, null: false, default: ''
       t.text :query, null: false
       t.datetime :crawled_at
       t.string :content_type

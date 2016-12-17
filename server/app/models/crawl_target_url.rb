@@ -23,4 +23,14 @@
 #
 
 class CrawlTargetUrl < ApplicationRecord
+  def self.setting_target!(target_class_name, url_string)
+    url = Addressable::URI.parse(url_string)
+    return CrawlTargetUrl.create!({
+      source_type: target_class_name,
+      protocol: url.scheme,
+      host: url.host,
+      path: url.path,
+      query: url.query.to_s
+    })
+  end
 end

@@ -13,6 +13,8 @@ Rails.application.routes.draw do
       get 'speak'
       get 'callback'
       post 'callback'
+      get 'linebot_callback'
+      post 'linebot_callback'
     end
 
     resource :landing, controller: :landing, only: [] do

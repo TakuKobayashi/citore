@@ -61,6 +61,25 @@ class Sugarcoat::BotController < BaseController
     end
   end
 
+  def linebot_callback
+    apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
+    client = Line::Bot::Client.new {|config|
+      config.channel_secret = apiconfig["line_bot"]["sugarcoat"]["channel_secret"]
+      config.channel_token = apiconfig["line_bot"]["sugarcoat"]["channel_token"]
+    }
+    body = request.body.read
+    logger.info "-----------------------------------"
+    logger.info body
+    signature = request.env['HTTP_X_LINE_SIGNATURE']
+    unless client.validate_signature(body, signature)
+      error 400 do 'Bad Request' end
+    end
+    events = client.parse_events_from(body)
+    logger.info "-----------------------------------"
+    logger.info events
+
+  end
+
   def message(event, sender)
     logger.info "message"
     logger.info event

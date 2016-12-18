@@ -55,11 +55,34 @@ namespace :batch do
   end
 
   task crawl_lyric_html: :environment do
-
-=begin
-    doc = Lyric.request_and_parse_html(url.to_s)
-    texts = doc.css('text').map{|d| d.children.to_s }.join("\n")
-    p texts
-=end
+    CrawlTargetUrl.where(source_type: Lyric.to_s, crawled_at: nil).find_each do |crawl_target|
+      url = Addressable::URI.new({host: crawl_target.host,port: crawl_target.port,path: crawl_target.path})
+      url.scheme = crawl_target.protocol
+      url.query = crawl_target.query
+      http_client = HTTPClient.new
+      response = http_client.get(url.to_s, {}, {})
+      next if response.status.to_i >= 400
+      crawl_target.status_code = response.status
+      crawl_target.content_type = response.headers["Content-Type"]
+      doc = Nokogiri::HTML.parse(response.body)
+      text = doc.css('text').map{|d| d.children.to_s }.join("\n")
+      sleep 0.1
+      origin_url = Addressable::URI.parse(crawl_target.crawl_from_keyword)
+      origin_doc = Lyric.request_and_parse_html(origin_url)
+      artist = origin_doc.css(".kashi_artist").text
+      words = TweetVoiceSeedDynamo.sanitized(artist).split("\n").map(&:strip).select{|s| s.present? }
+      lyric = Lyric.find_or_initialize_by(title: origin_doc.css(".prev_pad").try(:text).to_s.strip)
+      lyric.transaction do
+        lyric.update!({
+          artist_name: words.detect{|w| w.include?("歌手") }.to_s.split(":")[1],
+          word_by: words.detect{|w| w.include?("作詞") }.to_s.split(":")[1],
+          music_by: words.detect{|w| w.include?("作曲") }.to_s.split(":")[1],
+          body: text}
+        )
+        crawl_target.crawled_at = Time.now
+        crawl_target.save!
+      end
+      sleep 0.1
+    end
   end
 end

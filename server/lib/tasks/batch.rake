@@ -41,10 +41,7 @@ namespace :batch do
   end
 
   task generate_crawl_target: :environment do
-    now = Time.now
     (1..1000000).each do |i|
-      p (Time.now - now).second
-      now = Time.now
       from_url = Lyric::UTANET_ROOT_CRAWL_URL + i.to_s + "/"
       url = Addressable::URI.parse(from_url)
       doc = Lyric.request_and_parse_html(url)

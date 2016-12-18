@@ -41,14 +41,19 @@ namespace :batch do
   end
 
   task generate_crawl_target: :environment do
+    now = Time.now
     (1..1000000).each do |i|
-      url = Addressable::URI.parse(Lyric::UTANET_ROOT_CRAWL_URL + i.to_s + "/")
+      p (Time.now - now).second
+      now = Time.now
+      from_url = Lyric::UTANET_ROOT_CRAWL_URL + i.to_s + "/"
+      url = Addressable::URI.parse(from_url)
       doc = Lyric.request_and_parse_html(url)
       svg_img_path = doc.css('#ipad_kashi').map{|d| d.children.map{|c| c[:src] } }.flatten.first
       if svg_img_path.present?
         url.path = svg_img_path
-        CrawlTargetUrl.setting_target!(Lyric.to_s, url.to_s)
+        CrawlTargetUrl.setting_target!(Lyric.to_s, url.to_s, from_url)
       end
+      sleep 0.1
     end
   end
 

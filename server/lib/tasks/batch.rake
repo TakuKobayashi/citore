@@ -54,6 +54,11 @@ namespace :batch do
     end
   end
 
+  task crawl_wikipedia_article: :environment do
+    WikipediaArticle.get_article("HTML")
+#    Sanitize.clean(hash["query"]["pages"]["9793"]["revisions"].first["*"], Sanitize::Config::RESTRICTED)
+  end
+
   task crawl_lyric_html: :environment do
     CrawlTargetUrl.where(source_type: Lyric.to_s, crawled_at: nil).find_each do |crawl_target|
       url = Addressable::URI.new({host: crawl_target.host,port: crawl_target.port,path: crawl_target.path})

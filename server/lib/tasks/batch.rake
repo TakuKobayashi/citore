@@ -74,7 +74,7 @@ namespace :batch do
       lyric = Lyric.find_or_initialize_by(title: origin_doc.css(".prev_pad").try(:text).to_s.strip)
       lyric.transaction do
         lyric.update!({
-          artist_name: words.detect{|w| w.include?("歌手") }.to_s.split(":")[1],
+          artist_name: words.detect{|w| w.include?("歌手") }.to_s.split(":")[1].to_s.strip,
           word_by: words.detect{|w| w.include?("作詞") }.to_s.split(":")[1],
           music_by: words.detect{|w| w.include?("作曲") }.to_s.split(":")[1],
           body: text}

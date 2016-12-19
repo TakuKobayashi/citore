@@ -74,7 +74,7 @@ class Sugarcoat::BotController < BaseController
     logger.info body
     signature = request.env['HTTP_X_LINE_SIGNATURE']
     unless client.validate_signature(body, signature)
-      error 400 do 'Bad Request' end
+      render status: 400, json: { message: "BadRequest" }.to_json and return
     end
     events = client.parse_events_from(body)
     logger.info "-----------------------------------"
@@ -92,6 +92,7 @@ class Sugarcoat::BotController < BaseController
         end
       end
     end
+    head(:ok)
   end
 
   def message(event, sender)

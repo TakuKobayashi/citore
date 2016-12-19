@@ -1,3 +1,5 @@
+require 'line/bot'
+
 class Sugarcoat::BotController < BaseController
   protect_from_forgery
 

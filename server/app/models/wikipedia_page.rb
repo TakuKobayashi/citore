@@ -27,6 +27,6 @@
 
 class WikipediaPage < WikipediaRecord
   def self.sanitized_query(query_string)
-    return query_string.gsub("`page_", "`").gsub("`page`", "`" + table_name + "`").gsub(" varbinary(", " varchar(")
+    return standard_sanitized_query(query_string).gsub("`page_", "`").gsub("`page`", "`" + table_name + "`")
   end
 end

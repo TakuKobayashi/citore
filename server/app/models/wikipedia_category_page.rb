@@ -23,7 +23,7 @@ class WikipediaCategoryPage < WikipediaRecord
   enum category_type: [:page, :subcat, :file]
 
   def self.sanitized_query(query_string)
-    return query_string.
+    return standard_sanitized_query(query_string).
       gsub("UNIQUE KEY `cl_from`", "UNIQUE KEY `cl_from_and_to`").
       gsub("`cl_from`", "`wikipedia_page_id`").
       gsub("`cl_to`", "`category_title`").
@@ -32,7 +32,6 @@ class WikipediaCategoryPage < WikipediaRecord
       gsub("'subcat'", "1").
       gsub("'file'", "2").
       gsub("`cl_", "`").
-      gsub("`categorylinks`", "`" + table_name + "`").
-      gsub(" varbinary(", " varchar(")
+      gsub("`categorylinks`", "`" + table_name + "`")
   end
 end

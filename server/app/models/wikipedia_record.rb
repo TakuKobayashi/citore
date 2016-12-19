@@ -18,7 +18,7 @@ class WikipediaRecord < ApplicationRecord
     gzfile = File.open(gz_file_path, "r")
     Zlib::GzipReader.wrap(gzfile){|gz|
       result = gz.read.to_s.force_encoding("UTF-8")
-      result = result.encode("UTF-16BE", "UTF-8", :invalid => :replace, :undef => :replace, :replace => '?').encode("UTF-8")
+      result = result.encode("UTF-16BE", "UTF-8", :invalid => :replace, :undef => :replace, :replace => '').encode("UTF-8")
     }
     return result
   end

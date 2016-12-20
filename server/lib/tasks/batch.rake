@@ -100,4 +100,8 @@ namespace :batch do
 #    response.items
     p response
   end
+
+  task youtube_download: :environment do
+    YoutubeDL.download "https://www.youtube.com/watch?v=0E00Zuayv9Q", output: 'some_file.mp4'
+  end
 end

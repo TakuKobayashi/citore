@@ -16,12 +16,14 @@
 #  message            :string(255)
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
+#  source_id          :integer
 #
 # Indexes
 #
 #  index_crawl_target_urls_on_crawl_from_keyword          (crawl_from_keyword)
 #  index_crawl_target_urls_on_crawled_at_and_status_code  (crawled_at,status_code)
 #  index_crawl_target_urls_on_host_and_path               (host,path)
+#  index_crawl_target_urls_on_source_type_and_source_id   (source_type,source_id)
 #
 
 require 'test_helper'

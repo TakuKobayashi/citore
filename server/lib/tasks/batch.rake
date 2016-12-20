@@ -5,7 +5,7 @@ namespace :batch do
     cmd = nil 
     environment = Rails.env
     configuration = ActiveRecord::Base.configurations[environment]
-    tables = ["tweet_appear_words", "twitter_words", "twitter_word_appears"].join(" ")
+    tables = ["tweet_appear_words", "twitter_words", "twitter_word_appears", "lyrics"].join(" ")
     now_str = Time.now.strftime("%Y%m%d_%H%M%S")
     file_path = Rails.root.to_s + "/tmp/dbdump/#{now_str}.sql"
     cmd = "mysqldump -u #{configuration['username']} "
@@ -78,14 +78,15 @@ namespace :batch do
       origin_doc = Lyric.request_and_parse_html(origin_url)
       artist = origin_doc.css(".kashi_artist").text
       words = TweetVoiceSeedDynamo.sanitized(artist).split("\n").map(&:strip).select{|s| s.present? }
-      lyric = Lyric.find_or_initialize_by(title: origin_doc.css(".prev_pad").try(:text).to_s.strip)
-      lyric.transaction do
-        lyric.update!({
+      Lyric.transaction do
+        lyric = Lyric.create!({
+          title: origin_doc.css(".prev_pad").try(:text).to_s.strip,
           artist_name: words.detect{|w| w.include?("歌手") }.to_s.split(":")[1].to_s.strip,
           word_by: words.detect{|w| w.include?("作詞") }.to_s.split(":")[1],
           music_by: words.detect{|w| w.include?("作曲") }.to_s.split(":")[1],
-          body: text}
-        )
+          body: text
+        })
+        crawl_target.source_id = lyric.id
         crawl_target.crawled_at = Time.now
         crawl_target.save!
       end

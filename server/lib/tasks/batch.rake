@@ -95,8 +95,9 @@ namespace :batch do
   end
 
   task crawl_youtube: :environment do
+    apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
     youtube = Google::Apis::YoutubeV3::YouTubeService.new
-    youtube.key = "key"
+    youtube.key = apiconfig["google_api"]["key"]
     response = youtube.list_searches("id,snippet", maxResults: 50)
 #    response.items
     p response

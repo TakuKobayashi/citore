@@ -57,7 +57,9 @@ gem 'whenever', :require => false
 gem 'sanitize'
 gem 'addressable'
 gem 'line-bot-api'
+gem "koala", '~> 2.2'
 gem 'google-api-client', '~> 0.9'
+gem 'youtube-dl.rb'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development

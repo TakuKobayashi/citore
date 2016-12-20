@@ -1,3 +1,5 @@
+require 'google/apis/youtube_v3'
+
 namespace :batch do
   task db_dump_and_upload: :environment do
     cmd = nil 
@@ -89,5 +91,13 @@ namespace :batch do
       end
       sleep 0.1
     end
+  end
+
+  task crawl_youtube: :environment do
+    youtube = Google::Apis::YoutubeV3::YouTubeService.new
+    youtube.key = "key"
+    response = youtube.list_searches("id,snippet", maxResults: 50)
+#    response.items
+    p response
   end
 end

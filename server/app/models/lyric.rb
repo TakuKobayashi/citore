@@ -21,6 +21,7 @@ class Lyric < ApplicationRecord
   UTAMAP_ROOT_URL = "http://artists.utamap.com/"
   UTANET_ROOT_CRAWL_URL = "http://www.uta-net.com/song/"
   JOYSOUND_ROOT_URL = "https://www.joysound.com/web/search/song/"
+  JLYRIC_ROOT_URL = "http://j-lyric.net/lyric/"
 
   def self.request_and_parse_html(url)
     http_client = HTTPClient.new

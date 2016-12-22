@@ -31,4 +31,9 @@ Rails.application.routes.draw do
       get 'download'
     end
   end
+
+  namespace :tools do
+    resource :chat, controller: :chat, only: [] do
+    end
+  end
 end

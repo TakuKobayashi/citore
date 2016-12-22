@@ -3,7 +3,7 @@
 # Table name: wikipedia_topic_categories
 #
 #  id      :integer          not null, primary key
-#  title   :string(255)      default(""), not null
+#  title   :binary(255)      default(""), not null
 #  pages   :integer          default(0), not null
 #  subcats :integer          default(0), not null
 #  files   :integer          default(0), not null

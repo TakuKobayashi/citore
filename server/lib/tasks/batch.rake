@@ -57,8 +57,17 @@ namespace :batch do
   end
 
   task crawl_wikipedia_article: :environment do
-    WikipediaArticle.get_article("HTML")
-#    Sanitize.clean(hash["query"]["pages"]["9793"]["revisions"].first["*"], Sanitize::Config::RESTRICTED)
+    WikipediaPage.where(is_redirect: false).find_each do |page|
+      article_json = WikipediaArticle.get_article(page.title)
+      article_rev = article_json["query"]["pages"][page.id.to_s]["revisions"].first
+      next if article_rev.blank?
+      doc = Nokogiri::HTML.parse(article_rev.first["*"])
+      WikipediaArticle.create(
+        wikipedia_page_id: page.id,
+        title: article_json["query"]["pages"][page.id.to_s]["title"],
+        body: doc.css("p").text
+      )
+    end
   end
 
   task crawl_lyric_html: :environment do

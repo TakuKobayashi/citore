@@ -23,13 +23,6 @@ class Lyric < ApplicationRecord
   JOYSOUND_ROOT_URL = "https://www.joysound.com/web/search/song/"
   JLYRIC_ROOT_URL = "http://j-lyric.net/lyric/"
 
-  def self.request_and_parse_html(url)
-    http_client = HTTPClient.new
-    response = http_client.get(url, {}, {})
-    doc = Nokogiri::HTML.parse(response.body)
-    return doc
-  end
-
   def self.request_and_scrape_link_filters(url, filter_word)
     doc = request_and_parse_html(url)
     pathes = doc.css('a').map do |anchor|

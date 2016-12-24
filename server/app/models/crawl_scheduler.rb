@@ -17,24 +17,15 @@
 class CrawlScheduler < ApplicationRecord
   enum state: { pending: 0, crawling: 1, stay: 2, completed: 3}
 
-  EXTRA_INFO_FILE_PATH = "tmp/extra_info.json"
-
-  def self.read_extra_info
-    return {} unless File.exist?(EXTRA_INFO_FILE_PATH)
-    return JSON.parse(File.read(EXTRA_INFO_FILE_PATH))
-  end
-
   def self.add_crawl_info(search_action:, resource_type:, search_word:)
     scedular_hash = {state: CrawlScheduler[:pending], search_action: search_action, resource_type: resource_type, search_word: search_word}
-    hash = read_extra_info
+    hash = ExtraInfo.read_extra_info
     hash[:crawl_info] << scedular_hash
-    File.open(EXTRA_INFO_FILE_PATH, "w"){
-      |f| f.write(hash.to_json)
-    }
+    ExtraInfo.update(hash)
   end
 
   def self.update_crawl_info(new_crawl_hash)
-    hash = read_extra_info
+    hash = ExtraInfo.read_extra_info
     hash[:crawl_info] = hash["crawl_info"].map do |h|
       result = h
       if h["uuid"] == new_crawl_hash["uuid"]
@@ -42,13 +33,11 @@ class CrawlScheduler < ApplicationRecord
       end
       result
     end
-    File.open(EXTRA_INFO_FILE_PATH, "w"){
-      |f| f.write(hash.to_json)
-    }
+    ExtraInfo.update(hash)
   end
 
   def self.tweet_crawl(keyword, crawl_options, &block)
-    apiconfig = YAML.load(File.open("config/apiconfig.yml"))
+    apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
     client = Twitter::REST::Client.new do |config|
       config.consumer_key        = apiconfig["twitter"]["consumer_key"]
       config.consumer_secret     = apiconfig["twitter"]["consumer_secret"]
@@ -59,7 +48,7 @@ class CrawlScheduler < ApplicationRecord
     start_time = Time.now
     limit_span = (15.minutes.second / 180).to_i
 
-    crawl_info = read_extra_info["crawl_info"]
+    crawl_info = ExtraInfo.read_extra_info["crawl_info"]
     crawls = crawl_info.select{|hash| hash["state"] != CrawlScheduler.states[:completed] && hash["keyword"] == keyword}
     crawls.each do |crawl|
       last_id = crawl["last_id"]

@@ -28,9 +28,9 @@ class WikipediaRecord < ApplicationRecord
     configuration = ActiveRecord::Base.configurations[environment]
     cmd = "mysql -u #{configuration['username']} "
     if configuration['password'].present?
-      cmd += "--opt --password=#{configuration['password']} "
+      cmd += "-p #{configuration['password']} "
     end
-    cmd += "-t #{configuration['database']} < #{query_file_path}"
+    cmd += "--skip-lock-tables -t #{configuration['database']} < #{query_file_path}"
     system(cmd)
   end
 

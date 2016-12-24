@@ -10,9 +10,9 @@ namespace :batch do
     file_path = Rails.root.to_s + "/tmp/dbdump/#{now_str}.sql"
     cmd = "mysqldump -u #{configuration['username']} "
     if configuration['password'].present?
-      cmd += "--opt --password=#{configuration['password']} "
+      cmd += "-p #{configuration['password']} "
     end
-    cmd += "-t #{configuration['database']} #{tables} > #{file_path}"
+    cmd += "--skip-lock-tables -t #{configuration['database']} #{tables} > #{file_path}"
     system(cmd)
     file = File.open(file_path, 'rb')
     s3 = Aws::S3::Client.new

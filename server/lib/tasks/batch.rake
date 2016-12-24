@@ -10,7 +10,7 @@ namespace :batch do
     file_path = Rails.root.to_s + "/tmp/dbdump/#{now_str}.sql"
     cmd = "mysqldump -u #{configuration['username']} "
     if configuration['password'].present?
-      cmd += "-p #{configuration['password']} "
+      cmd += "--password=#{configuration['password']} "
     end
     cmd += "--skip-lock-tables -t #{configuration['database']} #{tables} > #{file_path}"
     system(cmd)

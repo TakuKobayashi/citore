@@ -50,16 +50,19 @@ gem 'aws-sdk-rails'
 gem 'aws-record', '~> 1.0'
 
 gem 'cabocha'
-gem 'messenger-bot'
 
 gem 'whenever', :require => false
 
-gem 'sanitize'
 gem 'addressable'
 gem 'line-bot-api'
 gem "koala", '~> 2.2'
 gem 'google-api-client', '~> 0.9'
 gem 'youtube-dl.rb'
+
+gem 'omniauth'
+gem 'omniauth-twitter'
+gem 'omniauth-facebook'
+gem 'omniauth-google-oauth2'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development

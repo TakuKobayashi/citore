@@ -6,8 +6,6 @@ Rails.application.routes.draw do
     get 'citore'
   end
 
-  mount Messenger::Bot::Space => "/sugarcoat/bot/"
-
   namespace :sugarcoat do
     resource :bot, controller: :bot, only: [] do
       get 'speak'

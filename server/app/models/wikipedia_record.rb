@@ -30,7 +30,8 @@ class WikipediaRecord < ApplicationRecord
     if configuration['password'].present?
       cmd += "--password=#{configuration['password']} "
     end
-    cmd += "--skip-lock-tables -t #{configuration['database']} < #{query_file_path}"
+    cmd += "-t #{configuration['database']} < #{query_file_path}"
+
     system(cmd)
   end
 

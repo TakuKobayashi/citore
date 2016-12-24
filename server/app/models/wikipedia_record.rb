@@ -8,8 +8,11 @@ class WikipediaRecord < ApplicationRecord
     savefile_path = [SAVE_DUMP_FILE_ROOT_PATH, download_file_name].join("/")
 
     http_client = HTTPClient.new
-    response = http_client.get_content(DOWNLOAD_URL + download_file_name, {}, {})
-    File.open(savefile_path, 'wb'){|f| f.write(response) }
+    File.open(savefile_path, 'wb') do |file|
+      http_client.get_content(DOWNLOAD_URL + download_file_name, {}, {}) do |chunk|
+        file.write chunk
+      end
+    end
     return savefile_path
   end
 

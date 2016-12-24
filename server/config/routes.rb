@@ -33,7 +33,8 @@ Rails.application.routes.draw do
   end
 
   namespace :tools do
-    resource :chat, controller: :chat, only: [] do
+    resource :chat, controller: :chat, only: [:index] do
+      get :index
     end
   end
 end

@@ -44,7 +44,7 @@ class WikipediaRecord < ApplicationRecord
 
   def self.standard_sanitized_query(query_string)
     return query_string.
-      gsub("DEFAULT CHARSET=binary", "DEFAULT CHARSET=utf8").
+      #gsub("DEFAULT CHARSET=binary", "DEFAULT CHARSET=utf8").
       gsub(/ enum\(.+?\)/, "smallint(2)")
   end
 end

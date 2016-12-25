@@ -20,29 +20,12 @@ namespace :batch do
     system("rm #{file_path}")
   end
 
-  task import_sql_from_wikipedia: :environment do
-    [
-        [WikipediaTopicCategory, "jawiki-latest-category.sql.gz"],
-        [WikipediaPage, "jawiki-latest-page.sql.gz"], 
-        [WikipediaCategoryPage, "jawiki-latest-categorylinks.sql.gz"]
-    ].each do |clazz, file_name|
-      puts "#{clazz.table_name} download start"
-      gz_file_path = clazz.download_file(file_name)
-      puts "#{clazz.table_name} decompress start"
-      query_string = clazz.decompress_gz_query_string(gz_file_path)
-      puts "#{clazz.table_name} save file start"
-      sanitized_query = clazz.try(:sanitized_query, query_string) || query_string
-      decompressed_file_path = gz_file_path.gsub(".gz", "")
-      File.open(decompressed_file_path, 'wb'){|f| f.write(sanitized_query) }
-      puts "#{clazz.table_name} import data start"
-      clazz.import_dump_query(decompressed_file_path)
-      clazz.remove_file(gz_file_path)
-      clazz.remove_file(decompressed_file_path)
-      puts "#{clazz.table_name} import completed"
-    end
-  end
-
-  task youtube_download: :environment do
-    YoutubeDL.download "https://www.youtube.com/watch?v=0E00Zuayv9Q", output: 'some_file.mp4'
+  task sugarcoat_bot_tweet: :environment do
+    apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
+#    facebook_sugarcoat = Koala::Facebook::API.new(apiconfig["facebook_bot"]["access_token"])
+#    page_token = facebook_sugarcoat.get_page_access_token("346231432435056")
+#    facebook_page = Koala::Facebook::API.new(page_token)
+    #facebook_page.put_wall_post('post on page wall')
+    #facebook_page.put_connections("346231432435056", 'feed', :message => "甘い甘いシュガーコートだお")
   end
 end

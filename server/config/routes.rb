@@ -1,6 +1,12 @@
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
+  get "/auth/:provider/callback" => "sns#oauth_callback"
+
+  resource :sns, controller: :sns, only: [] do
+    get :admin_index
+  end
+
   resource :apk_downloader, controller: :apk_downloader, only: [] do
     get 'warakatsu'
     get 'citore'

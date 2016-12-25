@@ -4,18 +4,18 @@
 #
 #  id            :integer          not null, primary key
 #  namespace     :integer          default(0), not null
-#  title         :binary(255)      default(""), not null
-#  restrictions  :binary(255)      default(""), not null
+#  title         :string(255)      default(""), not null
+#  restrictions  :string(255)      default(""), not null
 #  counter       :integer          default(0), not null
 #  is_redirect   :boolean          default(FALSE), not null
 #  is_new        :boolean          default(FALSE), not null
 #  random        :float(53)        default(0.0), not null
-#  touched       :binary(14)       default(""), not null
-#  links_updated :binary(14)
+#  touched       :string(255)      default(""), not null
+#  links_updated :string(255)
 #  latest        :integer          default(0), not null
 #  len           :integer          default(0), not null
-#  content_model :binary(32)
-#  lang          :binary(35)
+#  content_model :string(255)
+#  lang          :string(255)
 #
 # Indexes
 #

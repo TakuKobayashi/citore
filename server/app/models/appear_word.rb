@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: tweet_appear_words
+# Table name: appear_words
 #
 #  id           :integer          not null, primary key
 #  appear_count :integer          default(0), not null
@@ -14,7 +14,7 @@
 #  index_tweet_appear_words_on_word_and_part  (word,part) UNIQUE
 #
 
-class TweetAppearWord < ApplicationRecord
+class AppearWord < ApplicationRecord
   has_many :twitter_word_appears
   has_many :words, through: :twitter_word_appears, source: :twitter_word
 end

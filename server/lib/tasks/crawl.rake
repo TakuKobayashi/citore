@@ -2,6 +2,7 @@ namespace :crawl do
   task wikipedia_article: :environment do
     WikipediaPage.where(is_redirect: false).find_each do |page|
       article_json = WikipediaArticle.get_article(page.title)
+      next if article_json["query"]["pages"][page.id.to_s].blank?
       article_rev = article_json["query"]["pages"][page.id.to_s]["revisions"].first
       next if article_rev.blank?
       doc = Nokogiri::HTML.parse(article_rev.first["*"])

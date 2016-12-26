@@ -45,7 +45,7 @@ Rails.application.configure do
   # Suppress logger output for asset requests.
   config.assets.quiet = true
 
-  config.action_cable.allowed_request_origins = ['http://27.133.128.228/']
+  #config.action_cable.allowed_request_origins = ['http://27.133.128.228/']
   #config.action_cable.disable_request_forgery_protection = true
 
   # Raises error for missing translations

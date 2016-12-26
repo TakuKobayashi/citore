@@ -72,8 +72,8 @@ namespace :crawl do
   task import_sql_from_wikipedia: :environment do
     [
         [WikipediaTopicCategory, "jawiki-latest-category.sql.gz"],
-        [WikipediaPage, "jawiki-latest-page.sql.gz"], 
-        [WikipediaCategoryPage, "jawiki-latest-categorylinks.sql.gz"]
+        [WikipediaPage, "jawiki-latest-page.sql.gz"]
+#        [WikipediaCategoryPage, "jawiki-latest-categorylinks.sql.gz"]
     ].each do |clazz, file_name|
       puts "#{clazz.table_name} download start"
       gz_file_path = clazz.download_file(file_name)

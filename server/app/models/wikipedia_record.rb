@@ -20,8 +20,7 @@ class WikipediaRecord < ApplicationRecord
     result = ""
     gzfile = File.open(gz_file_path, "r")
     Zlib::GzipReader.wrap(gzfile){|gz|
-      result = gz.read.to_s.force_encoding("UTF-8")
-      result = result.encode("UTF-16BE", "UTF-8", :invalid => :replace, :undef => :replace, :replace => '').encode("UTF-8")
+      result = gz.read.to_s
     }
     return result
   end
@@ -44,7 +43,9 @@ class WikipediaRecord < ApplicationRecord
 
   def self.standard_sanitized_query(query_string)
     return query_string.
-      #gsub("DEFAULT CHARSET=binary", "DEFAULT CHARSET=utf8").
+      gsub(/varbinary\(.+?\)/, "varchar(255)").
+      gsub("UNIQUE KEY", "KEY").
+      gsub("DEFAULT CHARSET=binary", "DEFAULT CHARSET=utf8").
       gsub(/ enum\(.+?\)/, "smallint(2)")
   end
 end

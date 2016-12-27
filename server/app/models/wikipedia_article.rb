@@ -31,4 +31,12 @@ class WikipediaArticle < ApplicationRecord
     response = http_client.get(WIKIPEDIA_API_URL.to_s, params, {})
     return JSON.parse(response.body)
   end
+
+  def self.sanitize(text)
+    #絵文字を除去
+    sanitized_word = text.each_char.select{|c| c.bytes.count < 4 }.join('')
+    #全角半角をいい感じに整える
+    sanitized_word = Charwidth.normalize(sanitized_word)
+    return sanitized_word
+  end
 end

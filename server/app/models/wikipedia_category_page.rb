@@ -3,11 +3,11 @@
 # Table name: wikipedia_category_pages
 #
 #  wikipedia_page_id :integer          default(0), not null
-#  category_title    :string(255)      default(""), not null
-#  sortkey           :string(255)      default(""), not null
+#  category_title    :binary(255)      default(""), not null
+#  sortkey           :binary(230)      default(""), not null
 #  timestamp         :datetime         not null
-#  sortkey_prefix    :string(255)      default(""), not null
-#  collation         :string(255)      default(""), not null
+#  sortkey_prefix    :binary(255)      default(""), not null
+#  collation         :binary(32)       default(""), not null
 #  category_type     :integer          default("page"), not null
 #
 # Indexes
@@ -23,7 +23,7 @@ class WikipediaCategoryPage < WikipediaRecord
 
   def self.sanitized_query(query_string)
     return standard_sanitized_query(query_string).
-      gsub("UNIQUE KEY `cl_from`", "UNIQUE KEY `cl_from_and_to`").
+      gsub("KEY `cl_from`", "KEY `cl_from_and_to`").
       gsub("`cl_from`", "`wikipedia_page_id`").
       gsub("`cl_to`", "`category_title`").
       gsub("`cl_type`", "`category_type`").

@@ -11,7 +11,7 @@
 # Indexes
 #
 #  pages  (pages)
-#  title  (title) UNIQUE
+#  title  (title)
 #
 
 class WikipediaTopicCategory < WikipediaRecord

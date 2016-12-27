@@ -5,7 +5,7 @@
 #  id                :integer          not null, primary key
 #  wikipedia_page_id :integer          default(0), not null
 #  title             :string(255)      default(""), not null
-#  body              :text(65535)
+#  body              :text(4294967295)
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #

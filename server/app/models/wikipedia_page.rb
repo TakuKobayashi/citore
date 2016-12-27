@@ -20,7 +20,7 @@
 # Indexes
 #
 #  len                     (len)
-#  name_title              (namespace,title) UNIQUE
+#  name_title              (namespace,title)
 #  random                  (random)
 #  redirect_namespace_len  (is_redirect,namespace,len)
 #

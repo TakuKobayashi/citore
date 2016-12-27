@@ -5,7 +5,7 @@ namespace :crawl do
       next if article_json["query"]["pages"][page.id.to_s].blank?
       article_rev = article_json["query"]["pages"][page.id.to_s]["revisions"].first
       next if article_rev.blank?
-      doc = Nokogiri::HTML.parse(article_rev.first["*"])
+      doc = Nokogiri::HTML.parse(article_rev["*"])
       WikipediaArticle.create(
         wikipedia_page_id: page.id,
         title: article_json["query"]["pages"][page.id.to_s]["title"],

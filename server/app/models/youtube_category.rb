@@ -16,6 +16,8 @@
 #
 
 class YoutubeCategory < YoutubeRecord
+  has_many :channels, class_name: 'YoutubeChannel', foreign_key: :youtube_category_id
+
   enum kind: { video: 0, guide: 1}
 
   def self.generate_categories

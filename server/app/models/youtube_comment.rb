@@ -17,4 +17,6 @@
 #
 
 class YoutubeComment < YoutubeRecord
+  belongs_to :video, class_name: 'YoutubeVideo', foreign_key: :youtube_video_id
+  belongs_to :channel, class_name: 'YoutubeChannel', foreign_key: :youtube_channel_id
 end

@@ -22,4 +22,7 @@
 #
 
 class YoutubeChannel < YoutubeRecord
+  belongs_to :category, class_name: 'YoutubeCategory', foreign_key: :youtube_category_id
+  has_many :videos, class_name: 'YoutubeVideo', foreign_key: :youtube_channel_id
+  has_many :comments, class_name: 'YoutubeComment', foreign_key: :youtube_video_id
 end

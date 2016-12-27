@@ -16,5 +16,5 @@
 #  index_youtube_videos_on_youtube_channel_id  (youtube_channel_id)
 #
 
-class YoutubeVideo < ApplicationRecord
+class YoutubeVideo < YoutubeRecord
 end

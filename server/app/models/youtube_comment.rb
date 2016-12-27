@@ -16,5 +16,5 @@
 #  index_youtube_comments_on_youtube_video_id    (youtube_video_id)
 #
 
-class YoutubeComment < ApplicationRecord
+class YoutubeComment < YoutubeRecord
 end

@@ -21,5 +21,5 @@
 #  index_youtube_channels_on_youtube_category_id  (youtube_category_id)
 #
 
-class YoutubeChannel < ApplicationRecord
+class YoutubeChannel < YoutubeRecord
 end

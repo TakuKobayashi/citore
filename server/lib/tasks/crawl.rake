@@ -1,16 +1,23 @@
 namespace :crawl do
   task wikipedia_article: :environment do
     WikipediaPage.where(is_redirect: false).find_each do |page|
-      article_json = WikipediaArticle.get_article(page.title)
-      next if article_json["query"]["pages"][page.id.to_s].blank?
-      article_rev = article_json["query"]["pages"][page.id.to_s]["revisions"].first
-      next if article_rev.blank?
-      doc = Nokogiri::HTML.parse(article_rev["*"])
-      WikipediaArticle.create(
-        wikipedia_page_id: page.id,
-        title: article_json["query"]["pages"][page.id.to_s]["title"],
-        body: WikipediaArticle.sanitize(doc.css("p").text)
-      )
+      articles = WikipediaArticle.select(:wikipedia_page_id).where(wikipedia_page_id: page.id).to_a
+      articles[1].try(:destroy)
+      next if articles.present?
+      begin
+        article_json = WikipediaArticle.get_article(page.title)
+        next if article_json["query"]["pages"][page.id.to_s].blank?
+        article_rev = article_json["query"]["pages"][page.id.to_s]["revisions"].first
+        next if article_rev.blank?
+        doc = Nokogiri::HTML.parse(article_rev["*"])
+        WikipediaArticle.create!(
+          wikipedia_page_id: page.id,
+          title: article_json["query"]["pages"][page.id.to_s]["title"],
+          body: WikipediaArticle.sanitize(doc.css("p").text)
+        )
+      rescue
+        sleep 1
+      end
     end
   end
 

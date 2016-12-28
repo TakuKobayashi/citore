@@ -1,7 +1,7 @@
 namespace :crawl do
   task wikipedia_article: :environment do
     WikipediaPage.where(is_redirect: false).find_each do |page|
-      articles = WikipediaArticle.select(:wikipedia_page_id).where(wikipedia_page_id: page.id).to_a
+      articles = WikipediaArticle.select(:id).where(wikipedia_page_id: page.id).to_a
       articles[1].try(:destroy)
       next if articles.present?
       begin

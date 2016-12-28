@@ -72,20 +72,21 @@ namespace :crawl do
 #    youtube.key = apiconfig["google_api"]["key"]
 
     YoutubeCategory.guide.find_each do |guide_category|
-       YoutubeChannel.crawl_loop_request do |youtube, page_token|
-         youtube_channel = youtube.list_channels("id,snippet,statistics,brandingSettings", max_results: 50, category_id: guide_category.category_id, page_token: page_token)
-         channels = youtube_channel.items.map do |item|
-           cannel = guide_category.channels.new(
-             channel_id: item.id,
-             title: item.snippet.title,
-             description: item.snippet.description,
-             published_at: item.snippet.published_at,
-             thumnail_image_url: item.snippet.thumbnails.default.url,
-             comment_count: item.statistics.comment_count,
-             subscriber_count: item.statistics.subscriber_count,
-             video_count: item.statistics.video_count,
-             view_count: item.statistics.view_count,
-             banner_image_url_json: item.branding_settings.image.to_json
+      YoutubeChannel.crawl_loop_request do |youtube, page_token|
+        youtube_channel = youtube.list_channels("id,snippet,statistics,brandingSettings", max_results: 50, category_id: guide_category.category_id, page_token: page_token)
+        channels = youtube_channel.items.map do |item|
+          cannel = YoutubeChannel.new(
+            youtube_category_id: guide_category.id,
+            channel_id: item.id,
+            title: item.snippet.title,
+            description: item.snippet.description,
+            published_at: item.snippet.published_at,
+            thumnail_image_url: item.snippet.thumbnails.default.url,
+            comment_count: item.statistics.comment_count,
+            subscriber_count: item.statistics.subscriber_count,
+            video_count: item.statistics.video_count,
+            view_count: item.statistics.view_count,
+            banner_image_url_json: item.branding_settings.image.to_json
           )
           cannel
         end

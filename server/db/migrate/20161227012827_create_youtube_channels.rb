@@ -16,5 +16,6 @@ class CreateYoutubeChannels < ActiveRecord::Migration[5.0]
 
     add_index :youtube_channels, :youtube_category_id
     add_index :youtube_channels, :published_at
+    add_index :youtube_channels, :channel_id, unique: true
   end
 end

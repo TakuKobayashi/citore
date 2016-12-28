@@ -9,5 +9,6 @@ class CreateYoutubeCategories < ActiveRecord::Migration[5.0]
     end
 
     add_index :youtube_categories, :title
+    add_index :youtube_categories, :category_id, unique: true
   end
 end

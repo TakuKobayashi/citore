@@ -11,5 +11,6 @@ class CreateYoutubeVideos < ActiveRecord::Migration[5.0]
 
     add_index :youtube_videos, :youtube_channel_id
     add_index :youtube_videos, :published_at
+    add_index :youtube_videos, :video_id, unique: true
   end
 end

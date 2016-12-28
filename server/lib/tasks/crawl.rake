@@ -1,9 +1,7 @@
 namespace :crawl do
   task wikipedia_article: :environment do
     WikipediaPage.where(is_redirect: false).find_each do |page|
-      articles = WikipediaArticle.select(:id).where(wikipedia_page_id: page.id).to_a
-      articles[1].try(:destroy)
-      next if articles.present?
+      next if WikipediaArticle.exists?(wikipedia_page_id: page.id)
       begin
         article_json = WikipediaArticle.get_article(page.title)
         next if article_json["query"]["pages"][page.id.to_s].blank?

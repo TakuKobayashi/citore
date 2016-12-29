@@ -67,7 +67,7 @@ class Lyric < ApplicationRecord
   end
 
   def self.generate_jlyric_taget!
-    (1..106).each do |i|
+    (1..107).each do |i|
       (1..3000).each do |j|
         from_url = Lyric::JLYRIC_ROOT_URL + "i#{i}p#{j}.html"
         url = Addressable::URI.parse(from_url)

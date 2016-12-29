@@ -87,11 +87,13 @@ class Lyric < ApplicationRecord
 
   def self.generate_by_jlyric!(nokogiri_doc)
     text = nokogiri_doc.css("#lyricBody").text
-    artist = nokogiri_doc.css("#lyricBlock").children.css("td").text
+    lyric_block = nokogiri_doc.css("#lyricBlock").children
+    artist = lyric_block.css("td").text
+    title = lyric_block.css("h2").text
     words = TweetVoiceSeedDynamo.sanitized(artist)
     music_by = words.split(/(歌:|作詞:|作曲:)/).select{|w| w.strip.present? }
     lyric = Lyric.create!({
-      title: origin_doc.css(".prev_pad").try(:text).to_s.strip,
+      title: title.to_s.strip,
       artist_name: music_by[1].to_s.strip,
       word_by: music_by[3].to_s.strip,
       music_by: music_by[5].to_s.strip,

@@ -85,7 +85,7 @@ class Lyric < ApplicationRecord
     end
   end
 
-  def self.generate_by_jlyric(nokogiri_doc)
+  def self.generate_by_jlyric!(nokogiri_doc)
     text = nokogiri_doc.css("#lyricBody").text
     artist = doc.css("#lyricBlock").children.css("td").text
     words = TweetVoiceSeedDynamo.sanitized(artist)

@@ -34,4 +34,11 @@ class Lyric < ApplicationRecord
     end.uniq.compact
     return pathes
   end
+
+  def self.crawl_jlyric
+    doc = ApplicationRecord.request_and_parse_html("http://j-lyric.net/lyric/i1.html")
+    doc.css(".title").children.map{|c| c[:href]}.select{|url| url != "/" }.compact
+#    doc.css("#lyricBody").text
+#    doc.css("#lyricBlock").children.css("td").text
+  end
 end

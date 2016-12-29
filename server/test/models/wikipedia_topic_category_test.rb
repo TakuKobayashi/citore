@@ -10,8 +10,8 @@
 #
 # Indexes
 #
-#  pages  (pages)
-#  title  (title)
+#  index_wikipedia_topic_categories_on_pages  (pages)
+#  index_wikipedia_topic_categories_on_title  (title) UNIQUE
 #
 
 require 'test_helper'

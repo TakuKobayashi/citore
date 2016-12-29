@@ -11,7 +11,7 @@
 #  is_new        :boolean          default(FALSE), not null
 #  random        :float(53)        default(0.0), not null
 #  touched       :string(255)      default(""), not null
-#  links_updated :string(255)
+#  links_updated :string(255)      default(""), not null
 #  latest        :integer          default(0), not null
 #  len           :integer          default(0), not null
 #  content_model :string(255)
@@ -19,10 +19,10 @@
 #
 # Indexes
 #
-#  len                     (len)
-#  name_title              (namespace,title)
-#  random                  (random)
-#  redirect_namespace_len  (is_redirect,namespace,len)
+#  index_wikipedia_pages_on_is_redirect_and_namespace_and_len  (is_redirect,namespace,len)
+#  index_wikipedia_pages_on_len                                (len)
+#  index_wikipedia_pages_on_namespace_and_title                (namespace,title) UNIQUE
+#  index_wikipedia_pages_on_random                             (random)
 #
 
 require 'test_helper'

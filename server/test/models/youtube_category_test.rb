@@ -12,7 +12,8 @@
 #
 # Indexes
 #
-#  index_youtube_categories_on_title  (title)
+#  index_youtube_categories_on_category_id  (category_id) UNIQUE
+#  index_youtube_categories_on_title        (title)
 #
 
 require 'test_helper'

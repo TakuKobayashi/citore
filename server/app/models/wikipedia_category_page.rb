@@ -2,20 +2,21 @@
 #
 # Table name: wikipedia_category_pages
 #
+#  id                :integer          not null, primary key
 #  wikipedia_page_id :integer          default(0), not null
-#  category_title    :binary(255)      default(""), not null
-#  sortkey           :binary(230)      default(""), not null
-#  timestamp         :datetime         not null
-#  sortkey_prefix    :binary(255)      default(""), not null
-#  collation         :binary(32)       default(""), not null
+#  category_title    :string(255)      default(""), not null
+#  sortkey           :string(255)      default(""), not null
+#  timestamp         :datetime
+#  sortkey_prefix    :string(255)      default(""), not null
+#  collation         :string(255)      default(""), not null
 #  category_type     :integer          default("page"), not null
 #
 # Indexes
 #
-#  collation_ext  (collation,category_title,category_type,wikipedia_page_id)
-#  from_and_to    (wikipedia_page_id,category_title) UNIQUE
-#  sortkey        (category_title,category_type,sortkey,wikipedia_page_id)
-#  timestamp      (category_title,timestamp)
+#  collation_ext                                                   (collation,category_title,category_type,wikipedia_page_id)
+#  from_to                                                         (wikipedia_page_id,category_title) UNIQUE
+#  index_wikipedia_category_pages_on_category_title_and_timestamp  (category_title,timestamp)
+#  sortkey                                                         (category_title,category_type,sortkey,wikipedia_page_id)
 #
 
 class WikipediaCategoryPage < WikipediaRecord

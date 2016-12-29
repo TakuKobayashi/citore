@@ -13,6 +13,7 @@
 # Indexes
 #
 #  index_youtube_videos_on_published_at        (published_at)
+#  index_youtube_videos_on_video_id            (video_id) UNIQUE
 #  index_youtube_videos_on_youtube_channel_id  (youtube_channel_id)
 #
 

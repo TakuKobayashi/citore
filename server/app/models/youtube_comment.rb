@@ -12,6 +12,7 @@
 #
 # Indexes
 #
+#  index_youtube_comments_on_comment_id          (comment_id) UNIQUE
 #  index_youtube_comments_on_youtube_channel_id  (youtube_channel_id)
 #  index_youtube_comments_on_youtube_video_id    (youtube_video_id)
 #

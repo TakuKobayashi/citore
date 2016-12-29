@@ -20,17 +20,8 @@ namespace :crawl do
   end
 
   task generate_target: :environment do
-    (1..1000000).each do |i|
-      from_url = Lyric::UTANET_ROOT_CRAWL_URL + i.to_s + "/"
-      url = Addressable::URI.parse(from_url)
-      doc = Lyric.request_and_parse_html(url)
-      svg_img_path = doc.css('#ipad_kashi').map{|d| d.children.map{|c| c[:src] } }.flatten.first
-      if svg_img_path.present?
-        url.path = svg_img_path
-        CrawlTargetUrl.setting_target!(Lyric.to_s, url.to_s, from_url)
-      end
-      sleep 0.1
-    end
+    #Lyric.generate_utanet_taget!
+    Lyric.generate_jlyric_taget!
   end
 
   task lyric_html: :environment do

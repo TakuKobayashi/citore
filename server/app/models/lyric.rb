@@ -35,6 +35,20 @@ class Lyric < ApplicationRecord
     return pathes
   end
 
+  def self.generate_utanet_taget!
+    (1..250000).each do |i|
+      from_url = Lyric::UTANET_ROOT_CRAWL_URL + i.to_s + "/"
+      url = Addressable::URI.parse(from_url)
+      doc = Lyric.request_and_parse_html(url)
+      svg_img_path = doc.css('#ipad_kashi').map{|d| d.children.map{|c| c[:src] } }.flatten.first
+      if svg_img_path.present?
+        url.path = svg_img_path
+        CrawlTargetUrl.setting_target!(Lyric.to_s, url.to_s, from_url)
+      end
+      sleep 0.1
+    end
+  end
+
   def self.generate_by_utanet!(origin_url, nokogiri_doc)
     text = nokogiri_doc.css('text').map{|d| d.children.to_s }.join("\n")
     sleep 0.1
@@ -52,21 +66,37 @@ class Lyric < ApplicationRecord
     return lyric
   end
 
+  def self.generate_jlyric_taget!
+    (1..106).each do |i|
+      (1..3000).each do |j|
+        from_url = Lyric::JLYRIC_ROOT_URL + "i#{i}p#{j}.html"
+        url = Addressable::URI.parse(from_url)
+        doc = Lyric.request_and_parse_html(url)
+        pathes = doc.css(".title").children.map{|c| c[:href]}.select{|url| url != "/" }.compact
+        break if pathes.blank?
+        transaction do
+          pathes.each do |path|
+            url.path = path
+            CrawlTargetUrl.setting_target!(Lyric.to_s, url.to_s, from_url)
+          end
+        end
+        sleep 0.1
+      end
+    end
+  end
+
   def self.generate_by_jlyric(nokogiri_doc)
-    doc = ApplicationRecord.request_and_parse_html("http://j-lyric.net/lyric/i1.html")
-    doc.css(".title").children.map{|c| c[:href]}.select{|url| url != "/" }.compact
     text = nokogiri_doc.css("#lyricBody").text
     artist = doc.css("#lyricBlock").children.css("td").text
     words = TweetVoiceSeedDynamo.sanitized(artist)
+    music_by = words.split(/(歌:|作詞:|作曲:)/).select{|w| w.strip.present? }
     lyric = Lyric.create!({
       title: origin_doc.css(".prev_pad").try(:text).to_s.strip,
-      artist_name: words.detect{|w| w.include?("歌") }.to_s.split(":")[1].to_s.strip,
-      word_by: words.detect{|w| w.include?("作詞") }.to_s.split(":")[1],
-      music_by: words.detect{|w| w.include?("作曲") }.to_s.split(":")[1],
+      artist_name: music_by[1].to_s.strip,
+      word_by: music_by[3].to_s.strip,
+      music_by: music_by[5].to_s.strip,
       body: text
     })
     return lyric
-#    doc.css("#lyricBody").text
-#    doc.css("#lyricBlock").children.css("td").text
   end
 end

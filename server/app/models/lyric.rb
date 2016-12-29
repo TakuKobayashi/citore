@@ -35,9 +35,37 @@ class Lyric < ApplicationRecord
     return pathes
   end
 
-  def self.crawl_jlyric
+  def self.generate_by_utanet!(origin_url, nokogiri_doc)
+    text = nokogiri_doc.css('text').map{|d| d.children.to_s }.join("\n")
+    sleep 0.1
+    origin_url = Addressable::URI.parse(origin_url)
+    origin_doc = Lyric.request_and_parse_html(origin_url)
+    artist = origin_doc.css(".kashi_artist").text
+    words = TweetVoiceSeedDynamo.sanitized(artist).split("\n").map(&:strip).select{|s| s.present? }
+    lyric = Lyric.create!({
+      title: origin_doc.css(".prev_pad").try(:text).to_s.strip,
+      artist_name: words.detect{|w| w.include?("歌手") }.to_s.split(":")[1].to_s.strip,
+      word_by: words.detect{|w| w.include?("作詞") }.to_s.split(":")[1],
+      music_by: words.detect{|w| w.include?("作曲") }.to_s.split(":")[1],
+      body: text
+    })
+    return lyric
+  end
+
+  def self.generate_by_jlyric(nokogiri_doc)
     doc = ApplicationRecord.request_and_parse_html("http://j-lyric.net/lyric/i1.html")
     doc.css(".title").children.map{|c| c[:href]}.select{|url| url != "/" }.compact
+    text = nokogiri_doc.css("#lyricBody").text
+    artist = doc.css("#lyricBlock").children.css("td").text
+    words = TweetVoiceSeedDynamo.sanitized(artist)
+    lyric = Lyric.create!({
+      title: origin_doc.css(".prev_pad").try(:text).to_s.strip,
+      artist_name: words.detect{|w| w.include?("歌") }.to_s.split(":")[1].to_s.strip,
+      word_by: words.detect{|w| w.include?("作詞") }.to_s.split(":")[1],
+      music_by: words.detect{|w| w.include?("作曲") }.to_s.split(":")[1],
+      body: text
+    })
+    return lyric
 #    doc.css("#lyricBody").text
 #    doc.css("#lyricBlock").children.css("td").text
   end

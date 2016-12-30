@@ -37,39 +37,47 @@ namespace :crawl do
 #    youtube = Google::Apis::YoutubeV3::YouTubeService.new
 #    youtube.key = apiconfig["google_api"]["key"]
 
-    YoutubeCategory.guide.find_each do |guide_category|
+    stay_id = ExtraInfo.read_extra_info["crawl_category_id"]
+    YoutubeCategory.guide.where("id > ?", stay_id.to_i).find_each do |guide_category|
       YoutubeChannel.crawl_loop_request do |youtube, page_token|
         youtube_channel = youtube.list_channels("id,snippet,statistics", max_results: 50, category_id: guide_category.category_id, page_token: page_token)
         YoutubeChannel.import_channel!(youtube_channel, category_id: guide_category.id)
         youtube_channel
       end
+      ExtraInfo.update({"crawl_category_id" => guide_category.id})
     end
 
-    YoutubeChannel.find_each do |channel|
+    stay_id = ExtraInfo.read_extra_info["crawl_channel_video_id"]
+    YoutubeChannel.where("id > ?", stay_id.to_i).find_each do |channel|
       YoutubeVideo.crawl_loop_request do |youtube, page_token|
         youtube_search = youtube.list_searches("id,snippet", max_results: 50, region_code: "JP",  type: "video", channel_id: channel.channel_id, page_token: page_token)
         youtube_video = youtube.list_videos("id,snippet,statistics", max_results: 50, id: youtube_search.items.map{|item| item.id.video_id}.join(","))
         YoutubeVideo.import_video!(youtube_video, channel_id: channel.id)
         youtube_search
       end
+      ExtraInfo.update({"crawl_channel_video_id" => channel.id})
     end
 
-    YoutubeCategory.video.find_each do |video_category|
+    stay_id = ExtraInfo.read_extra_info["crawl_category_video_id"]
+    YoutubeCategory.where("id > ?", stay_id.to_i).video.find_each do |video_category|
       YoutubeVideo.crawl_loop_request do |youtube, page_token|
         youtube_search = youtube.list_searches("id,snippet", max_results: 50, region_code: "JP",  type: "video", video_category_id: video_category.category_id, page_token: page_token)
         youtube_video = youtube.list_videos("id,snippet,statistics", max_results: 50, id: youtube_search.items.map{|item| item.id.video_id}.join(","))
         YoutubeVideo.import_video!(youtube_video, category_id: video_category.id)
         youtube_search
       end
+      ExtraInfo.update({"crawl_category_video_id" => video_category.id})
     end
 
-    YoutubeChannel.where("comment_count > 0").find_each do |channel|
+    stay_id = ExtraInfo.read_extra_info["crawl_channel_comment_id"]
+    YoutubeChannel.where("comment_count > 0 AND id > ?", stay_id.to_i).find_each do |channel|
       YoutubeComment.crawl_loop_request do |youtube, page_token|
         youtube_comment_thread = youtube.list_comment_threads("id,snippet", max_results: 100, channel_id: channel.channel_id, page_token: page_token, text_format: "plainText")
 
         YoutubeComment.import_comment!(youtube_comment_thread, channel_id: channel.id)
         youtube_comment_thread
       end
+      ExtraInfo.update({"crawl_channel_comment_id" => channel.id})
     end
 =begin
     YoutubeVideo.find_in_batches(batch_size: 50) do |video|

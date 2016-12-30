@@ -31,8 +31,8 @@ class YoutubeChannel < YoutubeRecord
       cannel = YoutubeChannel.new(
         youtube_category_id: category_id,
         channel_id: item.id,
-        title: item.snippet.title,
-        description: item.snippet.description,
+        title: TweetVoiceSeedDynamo.sanitized(item.snippet.title),
+        description: TweetVoiceSeedDynamo.sanitized(item.snippet.description),
         published_at: item.snippet.published_at,
         thumnail_image_url: item.snippet.thumbnails.default.url,
         comment_count: item.statistics.comment_count,

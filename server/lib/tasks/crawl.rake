@@ -39,30 +39,30 @@ namespace :crawl do
 
     YoutubeCategory.guide.find_each do |guide_category|
       YoutubeChannel.crawl_loop_request do |youtube, page_token|
-        youtube_channel = youtube.list_channels("id,snippet,statistics,brandingSettings", max_results: 50, category_id: guide_category.category_id, page_token: page_token)
-        channels = youtube_channel.items.map do |item|
-          cannel = YoutubeChannel.new(
-            youtube_category_id: guide_category.id,
-            channel_id: item.id,
-            title: item.snippet.title,
-            description: item.snippet.description,
-            published_at: item.snippet.published_at,
-            thumnail_image_url: item.snippet.thumbnails.default.url,
-            comment_count: item.statistics.comment_count,
-            subscriber_count: item.statistics.subscriber_count,
-            video_count: item.statistics.video_count,
-            view_count: item.statistics.view_count,
-            banner_image_url_json: item.branding_settings.image.to_json
-          )
-          cannel
-        end
-        YoutubeChannel.import(channels)
+        youtube_channel = youtube.list_channels("id,snippet,statistics", max_results: 50, category_id: guide_category.category_id, page_token: page_token)
+        YoutubeChannel.import_channel!(youtube_channel, category_id: guide_category.id)
         youtube_channel
       end
     end
 
+    YoutubeChannel.find_each do |channel|
+      YoutubeVideo.crawl_loop_request do |youtube, page_token|
+        youtube_video = youtube.list_searches("id,snippet", max_results: 50, region_code: "JP",  type: "video", channel_id: channel.channel_id)
+        YoutubeVideo.import_video!(youtube_video, channel_id: channel.id)
+        youtube_video
+      end
+    end
+
+    YoutubeCategory.video.find_each do |video_category|
+      YoutubeVideo.crawl_loop_request do |youtube, page_token|
+        youtube_video = youtube.list_searches("id,snippet", max_results: 50, region_code: "JP",  type: "video", video_category_id: video_category.category_id)
+        YoutubeVideo.import_video!(youtube_video, category_id: video_category.id)
+        youtube_video
+      end
+    end
+
 #    response = youtube.list_comment_threads("id,snippet,replies", max_results: 100, video_id: "YIF2mSTNtEc")
-#    response = youtube.list_searches("id,snippet", max_results: 50, region_code: "JP", q: "PPAP")
+#    response = youtube.list_searches("id,snippet", max_results: 50, region_code: "JP", q: "PPAP",  type: "video", video_category_id: nil, channel_id: nil)
 #    response = youtube.list_channels("id,snippet,statistics,brandingSettings", max_results: 50, category_id: "GCQmVzdCBvZiBZb3VUdWJl")
     #response = youtube.list_guide_categories("id,snippet", region_code: "JP", hl: "ja_JP")
 #    response.items

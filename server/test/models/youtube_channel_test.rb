@@ -2,18 +2,17 @@
 #
 # Table name: youtube_channels
 #
-#  id                    :integer          not null, primary key
-#  youtube_category_id   :integer
-#  channel_id            :string(255)      default(""), not null
-#  title                 :string(255)      default(""), not null
-#  description           :text(65535)
-#  comment_count         :integer          default(0), not null
-#  subscriber_count      :integer          default(0), not null
-#  video_count           :integer          default(0), not null
-#  view_count            :integer          default(0), not null
-#  thumnail_image_url    :string(255)      default(""), not null
-#  banner_image_url_json :text(65535)
-#  published_at          :datetime
+#  id                  :integer          not null, primary key
+#  youtube_category_id :integer
+#  channel_id          :string(255)      default(""), not null
+#  title               :string(255)      default(""), not null
+#  description         :text(65535)
+#  comment_count       :integer          default(0), not null
+#  subscriber_count    :integer          default(0), not null
+#  video_count         :integer          default(0), not null
+#  view_count          :integer          default(0), not null
+#  thumnail_image_url  :string(255)      default(""), not null
+#  published_at        :datetime
 #
 # Indexes
 #

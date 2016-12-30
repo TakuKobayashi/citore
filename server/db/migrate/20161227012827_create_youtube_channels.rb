@@ -10,7 +10,6 @@ class CreateYoutubeChannels < ActiveRecord::Migration[5.0]
       t.integer :video_count, null: false, default: 0
       t.integer :view_count, null: false, default: 0, limit: 8
       t.string :thumnail_image_url, null: false, default: ''
-      t.text :banner_image_url_json
       t.datetime :published_at
     end
 

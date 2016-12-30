@@ -41,19 +41,23 @@ class CrawlTargetUrl < ApplicationRecord
 
   def self.execute_html_crawl!(&block)
     CrawlTargetUrl.where(source_type: Lyric.to_s, crawled_at: nil).find_each do |crawl_target|
-      url = Addressable::URI.new({host: crawl_target.host,port: crawl_target.port,path: crawl_target.path})
-      url.scheme = crawl_target.protocol
-      url.query = crawl_target.query
-      http_client = HTTPClient.new
-      response = http_client.get(url.to_s, {}, {})
-      next if response.status.to_i >= 400
-      crawl_target.status_code = response.status
-      crawl_target.content_type = response.headers["Content-Type"]
-      doc = Nokogiri::HTML.parse(response.body)
-      transaction do
-        block.call(crawl_target, doc)
-        crawl_target.crawled_at = Time.now
-        crawl_target.save!
+      begin
+        url = Addressable::URI.new({host: crawl_target.host,port: crawl_target.port,path: crawl_target.path})
+        url.scheme = crawl_target.protocol
+        url.query = crawl_target.query
+        http_client = HTTPClient.new
+        response = http_client.get(url.to_s, {}, {})
+        next if response.status.to_i >= 400
+        crawl_target.status_code = response.status
+        crawl_target.content_type = response.headers["Content-Type"]
+        doc = Nokogiri::HTML.parse(response.body)
+        transaction do
+          block.call(crawl_target, doc)
+          crawl_target.crawled_at = Time.now
+          crawl_target.save!
+        end
+      rescue
+        sleep 1
       end
     end
   end

@@ -18,6 +18,8 @@
 #
 
 class Lyric < ApplicationRecord
+  has_one :target, as: :source, class_name: 'CrawlTargetUrl'
+
   UTAMAP_ROOT_URL = "http://artists.utamap.com/"
   UTANET_ROOT_CRAWL_URL = "http://www.uta-net.com/song/"
   JOYSOUND_ROOT_URL = "https://www.joysound.com/web/search/song/"

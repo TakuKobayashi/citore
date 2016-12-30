@@ -47,20 +47,42 @@ namespace :crawl do
 
     YoutubeChannel.find_each do |channel|
       YoutubeVideo.crawl_loop_request do |youtube, page_token|
-        youtube_video = youtube.list_searches("id,snippet", max_results: 50, region_code: "JP",  type: "video", channel_id: channel.channel_id)
+        youtube_search = youtube.list_searches("id,snippet", max_results: 50, region_code: "JP",  type: "video", channel_id: channel.channel_id, page_token: page_token)
+        youtube_video = youtube.list_videos("id,snippet,statistics", max_results: 50, id: youtube_search.items.map{|item| item.id.video_id}.join(","))
         YoutubeVideo.import_video!(youtube_video, channel_id: channel.id)
-        youtube_video
+        youtube_search
       end
     end
 
     YoutubeCategory.video.find_each do |video_category|
       YoutubeVideo.crawl_loop_request do |youtube, page_token|
-        youtube_video = youtube.list_searches("id,snippet", max_results: 50, region_code: "JP",  type: "video", video_category_id: video_category.category_id)
+        youtube_search = youtube.list_searches("id,snippet", max_results: 50, region_code: "JP",  type: "video", video_category_id: video_category.category_id, page_token: page_token)
+        youtube_video = youtube.list_videos("id,snippet,statistics", max_results: 50, id: youtube_search.items.map{|item| item.id.video_id}.join(","))
         YoutubeVideo.import_video!(youtube_video, category_id: video_category.id)
-        youtube_video
+        youtube_search
       end
     end
 
+    YoutubeChannel.where("comment_count > 0").find_each do |channel|
+      YoutubeComment.crawl_loop_request do |youtube, page_token|
+        youtube_comment_thread = youtube.list_comment_threads("id,snippet", max_results: 100, channel_id: channel.channel_id, page_token: page_token, text_format: "plainText")
+
+        YoutubeComment.import_comment!(youtube_comment_thread, channel_id: channel.id)
+        youtube_comment_thread
+      end
+    end
+=begin
+    YoutubeVideo.find_in_batches(batch_size: 50) do |video|
+      YoutubeComment.crawl_loop_request do |youtube, page_token|
+
+        youtube_comment_thread = youtube.list_comment_threads("id,snippet", max_results: 100, video_id: video.video_id, page_token: page_token, text_format: "plainText")
+        YoutubeComment.import_comment!(youtube_comment_thread, video_id: video.id)
+        youtube_comment_thread
+      end
+    end
+=end
+#    response = youtube.list_videos("id,snippet,contentDetails,liveStreamingDetails,player,recordingDetails,statistics,status,topicDetails", max_results: 50, id: YoutubeVideo.limit(50).pluck(:video_id).join(","))
+#    response = youtube.list_comment_threads("id,snippet,replies", max_results: 100, video_id: "0E00Zuayv9Q")
 #    response = youtube.list_comment_threads("id,snippet,replies", max_results: 100, video_id: "YIF2mSTNtEc")
 #    response = youtube.list_searches("id,snippet", max_results: 50, region_code: "JP", q: "PPAP",  type: "video", video_category_id: nil, channel_id: nil)
 #    response = youtube.list_channels("id,snippet,statistics,brandingSettings", max_results: 50, category_id: "GCQmVzdCBvZiBZb3VUdWJl")

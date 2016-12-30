@@ -8,7 +8,6 @@ class CreateYoutubeVideos < ActiveRecord::Migration[5.0]
       t.text :description
       t.string :thumnail_image_url, null: false, default: ''
       t.datetime :published_at
-      t.integer :comment_count, null: false, default: 0
       t.integer :dislike_count, null: false, default: 0
       t.integer :like_count, null: false, default: 0
       t.integer :favorite_count, null: false, default: 0
@@ -16,7 +15,6 @@ class CreateYoutubeVideos < ActiveRecord::Migration[5.0]
     end
 
     add_index :youtube_videos, :youtube_channel_id
-    add_index :youtube_videos, :comment_count
     add_index :youtube_videos, :published_at
     add_index :youtube_videos, :video_id, unique: true
   end

@@ -40,7 +40,7 @@ class YoutubeVideo < YoutubeRecord
         thumnail_image_url: item.snippet.thumbnails.default.url,
         comment_count: item.statistics.comment_count,
         dislike_count: item.statistics.dislike_count,
-        like_count: item.statistics.like_count
+        like_count: item.statistics.like_count,
         favorite_count: item.statistics.favorite_count,
         view_count: item.statistics.view_count
       )

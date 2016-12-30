@@ -18,6 +18,24 @@
 #
 
 class YoutubeComment < YoutubeRecord
-  belongs_to :video, class_name: 'YoutubeVideo', foreign_key: :youtube_video_id
-  belongs_to :channel, class_name: 'YoutubeChannel', foreign_key: :youtube_channel_id
+  #belongs_to :video, class_name: 'YoutubeVideo', foreign_key: :youtube_video_id
+  #belongs_to :channel, class_name: 'YoutubeChannel', foreign_key: :youtube_channel_id
+
+  def self.import_comment!(youtube_comment_thread, video_id: nil, channel_id: nil)
+    comments = youtube_comment_thread.items.map do |item|
+      comment = YoutubeComment.new(
+        youtube_video_id: video_id,
+        youtube_channel_id: channel_id,
+        comment_id: item.id,
+        published_at: item.snippet.top_level_comment.snippet.published_at,
+        comment: item.snippet.top_level_comment.snippet.text_display,
+        like_count: item.snippet.top_level_comment.snippet.like_count
+      )
+      comment
+    end
+    updates = [:published_at]
+    updates << :youtube_channel_id if channel_id.present?
+    updates <<  :youtube_video_id if video_id.present?
+    YoutubeComment.import(comments, on_duplicate_key_update: updates)
+  end
 end

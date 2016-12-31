@@ -17,6 +17,7 @@
 # Indexes
 #
 #  index_youtube_channels_on_channel_id           (channel_id) UNIQUE
+#  index_youtube_channels_on_comment_count        (comment_count)
 #  index_youtube_channels_on_published_at         (published_at)
 #  index_youtube_channels_on_youtube_category_id  (youtube_category_id)
 #

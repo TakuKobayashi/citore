@@ -29,7 +29,7 @@ class YoutubeComment < YoutubeRecord
         comment_id: item.id,
         published_at: item.snippet.top_level_comment.snippet.published_at,
         comment: TweetVoiceSeedDynamo.sanitized(item.snippet.top_level_comment.snippet.text_display),
-        like_count: item.snippet.top_level_comment.snippet.like_count
+        like_count: item.snippet.top_level_comment.snippet.like_count.to_i
       )
       comment
     end

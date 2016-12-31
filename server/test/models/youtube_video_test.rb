@@ -14,9 +14,11 @@
 #  like_count          :integer          default(0), not null
 #  favorite_count      :integer          default(0), not null
 #  view_count          :integer          default(0), not null
+#  comment_count       :integer          default(0), not null
 #
 # Indexes
 #
+#  index_youtube_videos_on_comment_count       (comment_count)
 #  index_youtube_videos_on_published_at        (published_at)
 #  index_youtube_videos_on_video_id            (video_id) UNIQUE
 #  index_youtube_videos_on_youtube_channel_id  (youtube_channel_id)

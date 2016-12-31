@@ -5,19 +5,49 @@ namespace :batch do
     cmd = nil 
     environment = Rails.env
     configuration = ActiveRecord::Base.configurations[environment]
-    tables = ["tweet_appear_words", "twitter_words", "twitter_word_appears", "lyrics"].join(" ")
+    tables = [
+      "appear_words",
+      "twitter_words",
+      "twitter_word_appears",
+      "lyrics",
+      "crawl_target_urls",
+      "wikipedia_pages",
+      "wikipedia_topic_categories",
+      "wikipedia_articles",
+      "youtube_videos",
+      "youtube_categories",
+      "youtube_channels",
+      "youtube_comments",
+      "youtube_video_relateds",
+      "youtube_video_tags"
+    ]
     now_str = Time.now.strftime("%Y%m%d_%H%M%S")
-    file_path = Rails.root.to_s + "/tmp/dbdump/#{now_str}.sql"
-    cmd = "mysqldump -u #{configuration['username']} "
-    if configuration['password'].present?
-      cmd += "--password=#{configuration['password']} "
+    dir_path = Rails.root.to_s + "/tmp/dbdump/#{now_str}"
+    system("mkdir #{dir_path}")
+    tables.each do |table|
+      cmd = "mysqldump -u #{configuration['username']} "
+      if configuration['password'].present?
+        cmd += "--password=#{configuration['password']} "
+      end
+      cmd += "--skip-lock-tables -t #{configuration['database']} #{table} > #{dir_path}/#{table}.sql"
+      system(cmd)
     end
-    cmd += "--skip-lock-tables -t #{configuration['database']} #{tables} > #{file_path}"
-    system(cmd)
-    file = File.open(file_path, 'rb')
+    Zip::File.open(dir_path + ".zip", Zip::File::CREATE) do |zip|
+      # (1) ZIP内にディレクトリを作成
+      zip.mkdir now_str
+
+      tables.each do |table|
+        file = File.open(dir_path + "/" + table + ".sql", 'rb')
+        # (2) 作ったディレクトリにファイルを書き込む１
+        zip.get_output_stream( now_str + "/#{table}.sql" ){ |s| s.print(file.read) }
+      end
+    end
+
+    zip_file = File.open(dir_path + ".zip", 'rb')
     s3 = Aws::S3::Client.new
-    s3.put_object(bucket: "taptappun",body: file,key: "project/sugarcoat/dbdump/#{now_str}.sql", acl: "public-read")
-    system("rm #{file_path}")
+    s3.put_object(bucket: "taptappun",body: zip_file,key: "project/sugarcoat/dbdump/#{now_str}.zip", acl: "public-read")
+    system("rm -r " + dir_path)
+    system("rm " + dir_path + ".zip")
   end
 
   task sugarcoat_bot_tweet: :environment do

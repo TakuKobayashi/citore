@@ -61,6 +61,6 @@ class YoutubeVideo < YoutubeRecord
         end
       end
     end.flatten.compact
-    YoutubeVideoTag.import(tags)
+    YoutubeVideoTag.import(tags, on_duplicate_key_update: [:youtube_video_id, :tag])
   end
 end

@@ -22,7 +22,7 @@ namespace :batch do
       "youtube_video_tags"
     ]
     now_str = Time.now.strftime("%Y%m%d_%H%M%S")
-    dir_path = Rails.root.to_s + "/tmp/dbdump/#{now_str}"
+    dir_path = Rails.root.to_s + "/tmp/dbdump/" + now_str
     system("mkdir #{dir_path}")
     tables.each do |table|
       cmd = "mysqldump -u #{configuration['username']} "
@@ -32,14 +32,20 @@ namespace :batch do
       cmd += "--skip-lock-tables -t #{configuration['database']} #{table} > #{dir_path}/#{table}.sql"
       system(cmd)
     end
+
     Zip::File.open(dir_path + ".zip", Zip::File::CREATE) do |zip|
       # (1) ZIP内にディレクトリを作成
       zip.mkdir now_str
 
       tables.each do |table|
-        file = File.open(dir_path + "/" + table + ".sql", 'rb')
-        # (2) 作ったディレクトリにファイルを書き込む１
-        zip.get_output_stream( now_str + "/#{table}.sql" ){ |s| s.print(file.read) }
+        File.open(dir_path + "/" + table + ".sql", 'rb') do |file|
+          file.each_line do |line|
+            # (2) 作ったディレクトリにファイルを書き込む１
+            zip.get_output_stream(now_str + "/#{table}.sql" ) do |s|
+              s.print(line)
+            end
+          end
+        end
       end
     end
 

@@ -31,8 +31,10 @@ namespace :batch do
       end
       cmd += "--skip-lock-tables -t #{configuration['database']} #{table} > #{dir_path}/#{table}.sql"
       system(cmd)
+      puts "#{table} dump complete"
     end
 
+    puts "compress start"
     Zip::File.open(dir_path + ".zip", Zip::File::CREATE) do |zip|
       # (1) ZIP内にディレクトリを作成
       zip.mkdir now_str
@@ -45,15 +47,20 @@ namespace :batch do
               s.print(line)
             end
           end
+          puts "#{table} compressed complete"
         end
       end
     end
-
-    zip_file = File.open(dir_path + ".zip", 'rb')
-    s3 = Aws::S3::Client.new
-    s3.put_object(bucket: "taptappun",body: zip_file,key: "project/sugarcoat/dbdump/#{now_str}.zip", acl: "public-read")
+    puts "compress completed"
     system("rm -r " + dir_path)
+    puts "upload start"
+    s3 = Aws::S3::Client.new
+    File.open(dir_path + ".zip", 'rb') do |zip_file|
+      s3.put_object(bucket: "taptappun",body: zip_file,key: "project/sugarcoat/dbdump/#{now_str}.zip", acl: "public-read")
+    end
+    puts "upload completed"
     system("rm " + dir_path + ".zip")
+    puts "batch completed"
   end
 
   task sugarcoat_bot_tweet: :environment do

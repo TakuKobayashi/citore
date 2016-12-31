@@ -60,7 +60,7 @@ class YoutubeVideo < YoutubeRecord
         nil
       else
         id_and_tags[video_id].map do |tag|
-          YoutubeVideoTag.new(youtube_video_id: id, tag: tag)
+          YoutubeVideoTag.new(youtube_video_id: id, tag: TweetVoiceSeedDynamo.sanitized(tag))
         end
       end
     end.flatten.compact

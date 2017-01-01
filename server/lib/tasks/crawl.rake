@@ -11,7 +11,7 @@ namespace :crawl do
         WikipediaArticle.create!(
           wikipedia_page_id: page.id,
           title: article_json["query"]["pages"][page.id.to_s]["title"],
-          body: WikipediaArticle.sanitize(doc.css("p").text)
+          body: WikipediaArticle.basic_sanitize(doc.css("p").text)
         )
       rescue
         sleep 1

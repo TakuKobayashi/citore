@@ -57,7 +57,7 @@ class Lyric < ApplicationRecord
     origin_url = Addressable::URI.parse(origin_url)
     origin_doc = Lyric.request_and_parse_html(origin_url)
     artist = origin_doc.css(".kashi_artist").text
-    words = TweetVoiceSeedDynamo.sanitized(artist).split("\n").map(&:strip).select{|s| s.present? }
+    words = Lyric.basic_sanitize(artist).split("\n").map(&:strip).select{|s| s.present? }
     lyric = Lyric.create!({
       title: origin_doc.css(".prev_pad").try(:text).to_s.strip,
       artist_name: words.detect{|w| w.include?("歌手") }.to_s.split(":")[1].to_s.strip,
@@ -92,7 +92,7 @@ class Lyric < ApplicationRecord
     lyric_block = nokogiri_doc.css("#lyricBlock").children
     artist = lyric_block.css("td").text
     title = lyric_block.css("h2").text
-    words = TweetVoiceSeedDynamo.sanitized(artist)
+    words = Lyric.basic_sanitize(artist)
     music_by = words.split(/(歌:|作詞:|作曲:)/).select{|w| w.strip.present? }
     lyric = Lyric.create!({
       title: title.to_s.strip,

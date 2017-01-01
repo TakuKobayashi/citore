@@ -37,8 +37,8 @@ class YoutubeVideo < YoutubeRecord
         youtube_category_id: category_id,
         youtube_channel_id: channel_id,
         video_id: item.id,
-        title: TweetVoiceSeedDynamo.sanitized(item.snippet.title),
-        description: TweetVoiceSeedDynamo.sanitized(item.snippet.description),
+        title: YoutubeVideo.basic_sanitize(item.snippet.title),
+        description: YoutubeVideo.basic_sanitize(item.snippet.description),
         published_at: item.snippet.published_at,
         thumnail_image_url: item.snippet.thumbnails.default.url,
         comment_count: item.statistics.comment_count.to_i,
@@ -60,7 +60,7 @@ class YoutubeVideo < YoutubeRecord
         nil
       else
         id_and_tags[video_id].map do |tag|
-          YoutubeVideoTag.new(youtube_video_id: id, tag: TweetVoiceSeedDynamo.sanitized(tag))
+          YoutubeVideoTag.new(youtube_video_id: id, tag: YoutubeVideo.basic_sanitize(tag))
         end
       end
     end.flatten.compact

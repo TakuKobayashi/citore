@@ -51,12 +51,14 @@ namespace :batch do
         end
       end
     end
+    puts "compress completed"
+    system("rm -r " + dir_path)
     puts "upload start"
     s3 = Aws::S3::Client.new
-    zip_file = File.open(dir_path + ".zip", 'rb')
-    s3.put_object(bucket: "taptappun",body: zip_file,key: "project/sugarcoat/dbdump/#{now_str}.zip", acl: "public-read")
+    File.open(dir_path + ".zip", 'rb') do |zip_file|
+      s3.put_object(bucket: "taptappun",body: zip_file,key: "project/sugarcoat/dbdump/#{now_str}.zip", acl: "public-read")
+    end
     puts "upload completed"
-    system("rm -r " + dir_path)
     system("rm " + dir_path + ".zip")
     puts "batch completed"
   end

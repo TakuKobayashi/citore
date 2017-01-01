@@ -14,7 +14,7 @@
 # Indexes
 #
 #  collation_ext                                                   (collation,category_title,category_type,wikipedia_page_id)
-#  from_to                                                         (wikipedia_page_id,category_title) UNIQUE
+#  from_to                                                         (wikipedia_page_id,category_title)
 #  index_wikipedia_category_pages_on_category_title_and_timestamp  (category_title,timestamp)
 #  sortkey                                                         (category_title,category_type,sortkey,wikipedia_page_id)
 #

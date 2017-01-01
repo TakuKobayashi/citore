@@ -21,7 +21,7 @@
 #
 #  index_wikipedia_pages_on_is_redirect_and_namespace_and_len  (is_redirect,namespace,len)
 #  index_wikipedia_pages_on_len                                (len)
-#  index_wikipedia_pages_on_namespace_and_title                (namespace,title) UNIQUE
+#  index_wikipedia_pages_on_namespace_and_title                (namespace,title)
 #  index_wikipedia_pages_on_random                             (random)
 #
 

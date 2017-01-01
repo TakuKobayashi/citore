@@ -16,7 +16,7 @@ class CreateWikipediaPages < ActiveRecord::Migration[5.0]
       t.string :lang
     end
 
-    add_index :wikipedia_pages, [:namespace, :title], unique: true
+    add_index :wikipedia_pages, [:namespace, :title]
     add_index :wikipedia_pages, :random
     add_index :wikipedia_pages, :len
     add_index :wikipedia_pages, [:is_redirect, :namespace, :len]

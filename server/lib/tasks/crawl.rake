@@ -1,6 +1,7 @@
 namespace :crawl do
   task wikipedia_article: :environment do
-    WikipediaPage.where(is_redirect: false).find_each do |page|
+    last_page_id = WikipediaArticle.maximum(:wikipedia_page_id).to_i
+    WikipediaPage.where("id > ?", last_page_id).where(is_redirect: false).find_each do |page|
       next if WikipediaArticle.exists?(wikipedia_page_id: page.id)
       begin
         article_json = WikipediaArticle.get_article(page.title)

@@ -80,6 +80,7 @@ namespace :crawl do
       end
       ExtraInfo.update({"crawl_channel_comment_id" => channel.id})
     end
+
 =begin
     YoutubeVideo.find_in_batches(batch_size: 50) do |video|
       YoutubeComment.crawl_loop_request do |youtube, page_token|
@@ -90,6 +91,21 @@ namespace :crawl do
       end
     end
 =end
+
+    info = ExtraInfo.read_extra_info
+    stay_id = info["crawl_related_video_id"]
+    youtube_last_video = YoutubeVideo.last
+    ExtraInfo.update({"related_max_id" => youtube_last_video.id}) if info["related_max_id"].blank?
+    YoutubeVideo.where("id > ?", stay_id.to_i).find_each do |video|
+      YoutubeVideo.crawl_loop_request do |youtube, page_token|
+        youtube_search = youtube.list_searches("id,snippet", max_results: 50, region_code: "JP",  type: "video", related_to_video_id: video.video_id, page_token: page_token)
+        youtube_video = youtube.list_videos("id,snippet,statistics", max_results: 50, id: youtube_search.items.map{|item| item.id.video_id}.join(","))
+        video.import_related_video!(youtube_video)
+        youtube_search
+      end
+      ExtraInfo.update({"crawl_related_video_id" => video.id})
+    end
+
 #    response = youtube.list_videos("id,snippet,contentDetails,liveStreamingDetails,player,recordingDetails,statistics,status,topicDetails", max_results: 50, id: YoutubeVideo.limit(50).pluck(:video_id).join(","))
 #    response = youtube.list_comment_threads("id,snippet,replies", max_results: 100, video_id: "0E00Zuayv9Q")
 #    response = youtube.list_comment_threads("id,snippet,replies", max_results: 100, video_id: "YIF2mSTNtEc")

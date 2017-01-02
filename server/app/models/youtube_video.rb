@@ -69,4 +69,13 @@ class YoutubeVideo < YoutubeRecord
     end.flatten.compact
     YoutubeVideoTag.import(tags, on_duplicate_key_update: [:youtube_video_id, :tag])
   end
+
+  def import_related_video!(youtube_video)
+    YoutubeVideo.import_video!(youtube_video)
+    video_ids = YoutubeVideo.where(video_id: youtube_video.items.map(&:id)).pluck(:id)
+    relateds = video_ids.map do |to_id|
+      YoutubeVideoRelated.new(youtube_video_id: self.id, to_youtube_video_id: to_id)
+    end
+    YoutubeVideoRelated.import(relateds)
+  end
 end

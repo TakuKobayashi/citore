@@ -60,7 +60,10 @@ class YoutubeVideo < YoutubeRecord
         nil
       else
         id_and_tags[video_id].map do |tag|
-          YoutubeVideoTag.new(youtube_video_id: id, tag: YoutubeVideo.basic_sanitize(tag))
+          sanitize_split_tags = YoutubeVideo.basic_sanitize(tag).split(" ")
+          sanitize_split_tags.map do |t|
+            YoutubeVideoTag.new(youtube_video_id: id, tag: t)
+          end
         end
       end
     end.flatten.compact

@@ -14,7 +14,6 @@ class YoutubeRecord < ApplicationRecord
         get_list = block.call(youtube, page_token)
         page_token = get_list.next_page_token
         ExtraInfo.update({table_name => page_token})
-        retry_counter = 0
       rescue
         retry_counter += 1
         if retry_counter <= 5

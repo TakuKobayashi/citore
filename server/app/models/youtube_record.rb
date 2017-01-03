@@ -12,7 +12,11 @@ class YoutubeRecord < ApplicationRecord
     begin
       begin
         get_list = block.call(youtube, page_token)
-        page_token = get_list.next_page_token
+        if get_list.next_page_token.blank?
+          page_token = nil
+        else
+          page_token = get_list.next_page_token
+        end
         ExtraInfo.update({table_name => page_token})
       rescue
         retry_counter += 1

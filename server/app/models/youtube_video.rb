@@ -54,13 +54,17 @@ class YoutubeVideo < YoutubeRecord
     updates << :youtube_channel_id if channel_id.present?
     updates <<  :youtube_category_id if category_id.present?
     YoutubeVideo.import(videos, on_duplicate_key_update: updates)
-    video_ids = YoutubeVideo.where(video_id: id_and_tags.keys).pluck(:id, :video_id)
+    YoutubeVideo.import_tags(id_and_tags)
+  end
+
+  def self.import_tags(video_id_and_tags)
+    video_ids = YoutubeVideo.where(video_id: video_id_and_tags.keys).pluck(:id, :video_id)
     tags = video_ids.map do |id, video_id|
-      if id_and_tags[video_id].blank?
+      if video_id_and_tags[video_id].blank?
         nil
       else
         results = []
-        id_and_tags[video_id].each do |tag|
+        video_id_and_tags[video_id].each do |tag|
           sanitized = YoutubeVideo.basic_sanitize(tag)
           next if sanitized.blank?
           sanitize_split_tags = [sanitized]

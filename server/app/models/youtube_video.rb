@@ -59,12 +59,19 @@ class YoutubeVideo < YoutubeRecord
       if id_and_tags[video_id].blank?
         nil
       else
-        id_and_tags[video_id].map do |tag|
-          sanitize_split_tags = YoutubeVideo.basic_sanitize(tag).split(" ")
-          sanitize_split_tags.map do |t|
+        results = []
+        id_and_tags[video_id].each do |tag|
+          sanitized = YoutubeVideo.basic_sanitize(tag)
+          next if sanitized.blank?
+          sanitize_split_tags = [sanitized]
+          if sanitized.length > 255
+            sanitize_split_tags = sanitized.split(" ")
+          end
+          results += sanitize_split_tags.map do |t|
             YoutubeVideoTag.new(youtube_video_id: id, tag: t)
           end
         end
+        results
       end
     end.flatten.compact
     YoutubeVideoTag.import(tags, on_duplicate_key_update: [:youtube_video_id, :tag])

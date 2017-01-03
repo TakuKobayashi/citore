@@ -126,6 +126,24 @@ namespace :crawl do
 #    p response.to_h
   end
 
+  task rebuild_youtube_video_tags: :environment do
+    apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
+    youtube = Google::Apis::YoutubeV3::YouTubeService.new
+    youtube.key = apiconfig["google_api"]["key"]
+
+    stay_id = ExtraInfo.read_extra_info["rebuild_video_id"]
+    YoutubeVideo.where("id > ?", stay_id.to_i).find_in_batches({batch_size: 50}) do |videos|
+      youtube_video = youtube.list_videos("id,snippet", max_results: 50, id: videos.map{|video| video.video_id}.join(","))
+      id_and_tags = {}
+      youtube_video.items.each do |item|
+        id_and_tags[item.id] = item.snippet.tags
+      end
+      YoutubeVideoTag.where(youtube_video_id: videos.map(&:id)).delete_all
+      YoutubeVideo.import_tags(id_and_tags)
+      ExtraInfo.update({"rebuild_video_id" => videos.max_by{|v| v.id }.try(:id)})
+    end
+  end
+
   task import_sql_from_wikipedia: :environment do
     [
         [WikipediaTopicCategory, "jawiki-latest-category.sql.gz"],

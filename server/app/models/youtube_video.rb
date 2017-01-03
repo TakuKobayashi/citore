@@ -29,6 +29,12 @@ class YoutubeVideo < YoutubeRecord
   has_many :comments, class_name: 'YoutubeComment', foreign_key: :youtube_video_id
   has_many :tags, class_name: 'YoutubeComment', foreign_key: :youtube_video_id
 
+  def video_url
+    url = Addressable::URI.parse("https://www.youtube.com/watch")
+    url.query_values = {v: self.video_id}
+    return url.to_s
+  end
+
   def self.import_video!(youtube_video, category_id: nil, channel_id: nil)
     videos = []
     id_and_tags = {}

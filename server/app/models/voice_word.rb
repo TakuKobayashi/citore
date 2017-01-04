@@ -3,8 +3,8 @@
 # Table name: voice_words
 #
 #  id           :integer          not null, primary key
-#  word_type    :string(255)      not null
-#  word_id      :integer          not null
+#  from_type    :string(255)      not null
+#  from_id      :integer          not null
 #  speaker_name :string(255)      not null
 #  file_name    :string(255)      not null
 #  created_at   :datetime         not null
@@ -12,11 +12,12 @@
 #
 # Indexes
 #
-#  vioce_word_indexes  (word_type,word_id,speaker_name) UNIQUE
+#  vioce_from_indexes  (from_type,from_id,speaker_name) UNIQUE
 #
 
 class VoiceWord < ApplicationRecord
-	
+  belongs_to :from, polymorphic: true
+
   VOICE_PARAMS = {
     ext: "wav",
     volume: 2.0,
@@ -45,7 +46,7 @@ class VoiceWord < ApplicationRecord
     return Rails.root.to_s + VOICE_FILE_ROOT
   end
 
-  def self.generate_and_upload_voice(text, keyword, speaker_name, acl = :private, options = {})
+  def self.generate_and_upload_voice(from_clazz, text, speaker_name, acl = :private, options = {})
     apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
     params = VOICE_PARAMS.merge({
       username: apiconfig["aitalk"]["username"],
@@ -55,20 +56,10 @@ class VoiceWord < ApplicationRecord
     }).merge(options)
     file_name = "#{speaker_name}_" + SecureRandom.hex + "." + params[:ext]
 
-    voice = VoiceDynamo.find(word: text, speaker_name: speaker_name, keyword: keyword)
+    voice = VoiceWord.find_by(from: from_clazz, speaker_name: speaker_name)
     if voice.present?
       return voice
     end
-    if voice.blank?
-      voice = VoiceDynamo.new
-      voice.uuid = SecureRandom.hex
-      voice.keyword = keyword
-    end
-    voice.word = text
-    voice.speaker_name = speaker_name    
-    voice.file_name = file_name
-    voice.generate_params = params
-    voice.options = options
 
     http_client = HTTPClient.new
     response = http_client.get_content("http://webapi.aitalk.jp/webapi/v2/ttsget.php", params, {})
@@ -80,7 +71,8 @@ class VoiceWord < ApplicationRecord
       file_path = VOICE_S3_FILE_ROOT + file_name
     end
     s3.put_object(bucket: "taptappun",body: response,key: file_path, :acl => acl)
-    voice.save!
+
+    voice = VoiceWord.create!(from: from_clazz, speaker_name: speaker_name, file_name: file_name)
     return voice
   end
 

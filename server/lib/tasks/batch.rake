@@ -63,6 +63,15 @@ namespace :batch do
     puts "batch completed"
   end
 
+  task get_erokotoba: :environment do
+    CrawlScheduler.tweet_crawl("citore", {}) do |tweet_statuses|
+      tweet_statuses.each do |status|
+        next if status.blank?
+        Citore::EroticWord.generate_data_and_voice(TweetVoiceSeedDynamo::ERO_KOTOBA_KEY, status.text, {tweet_id: status.id, tweet_user_id: status.user.id, tweet_user_name: status.user.name})
+      end
+    end
+  end
+
   task sugarcoat_bot_tweet: :environment do
     apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
 #    facebook_sugarcoat = Koala::Facebook::API.new(apiconfig["facebook_bot"]["access_token"])

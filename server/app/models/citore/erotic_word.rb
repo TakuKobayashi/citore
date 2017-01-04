@@ -33,10 +33,10 @@ class Citore::EroticWord < TwitterRecord
     erotic_word.save!
     if new_record
       words = ApplicationRecord.ngram(reading, 2).uniq
-      ngrams = words.map do |word|
-        erotic_word.ngrams.build(bigram: word)
-      end
-      NgramWord.import!(ngrams)
+      #なぜか謎のloadが入ってしまうのでimportするのは一回だけ
+      values = words.map{|word| "(" + ["NULL", "'#{erotic_word.class.base_class.name}'", erotic_word.id, "'#{word}'"].join(",") + ")" }
+      sql = "INSERT INTO `#{NgramWord.table_name}` (#{NgramWord.column_names.join(',')}) VALUES " + values.join(",")
+      NgramWord.connection.execute(sql)
     end
     return erotic_word
   end

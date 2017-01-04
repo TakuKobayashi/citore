@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: citore_voice_words
+# Table name: voice_words
 #
 #  id           :integer          not null, primary key
 #  word_type    :string(255)      not null
@@ -15,8 +15,8 @@
 #  vioce_word_indexes  (word_type,word_id,speaker_name) UNIQUE
 #
 
-class Citore::VoiceWord < TwitterRecord
-
+class VoiceWord < ApplicationRecord
+	
   VOICE_PARAMS = {
     ext: "wav",
     volume: 2.0,

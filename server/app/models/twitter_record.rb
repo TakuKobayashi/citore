@@ -58,8 +58,8 @@ class TwitterRecord < ApplicationRecord
     split_words.each do |word|
       generate!(word, keyword, twitter_info, options)
       puts "generate_voice"
-      Citore::VoiceWord.all_speacker_names.each do |speacker|
-        Citore::VoiceWord.generate_and_upload_voice(ApplicationRecord.reading(word), ERO_KOTOBA_KEY, speacker)
+      VoiceWord.all_speacker_names.each do |speacker|
+        VoiceWord.generate_and_upload_voice(ApplicationRecord.reading(word), ERO_KOTOBA_KEY, speacker)
       end
     end
   end

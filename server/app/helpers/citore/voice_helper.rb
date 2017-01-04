@@ -1,2 +1,0 @@
-module Citore::VoiceHelper
-end

@@ -10,7 +10,7 @@
 class Sugarcoat::Seed < TwitterRecord
   def self.to_sugarcoat(text, options = {})
     apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
-    sanitaized_word = TwitterRecord.sanitized(text)
+    sanitaized_word = ApplicationRecord.basic_sanitize(text)
     sanitaized_word, urls = separate_urls(sanitaized_word)
     split_words = bracket_split(sanitaized_word)
     if split_words.blank?

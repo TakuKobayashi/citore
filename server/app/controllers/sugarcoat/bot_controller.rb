@@ -20,8 +20,8 @@ class Sugarcoat::BotController < BaseController
         text = message["message"]["text"]
 
         endpoint_uri = "https://graph.facebook.com/v2.6/me/messages?access_token=" + apiconfig["facebook_bot"]["access_token"]
-        sugarcoated = TweetVoiceSeedDynamo.to_sugarcoat(text).join("")
-        voice = VoiceDynamo.generate_and_upload_voice(TweetVoiceSeedDynamo.reading(sugarcoated), VoiceDynamo::SUGARCOAT_VOICE_KEY, "aoi", "public-read", VoiceDynamo::SUGARCOAT_VOICE_PARAMS)
+        sugarcoated = Sugarcoat::Seed.to_sugarcoat(text).join("")
+        voice = VoiceWord.generate_and_upload_voice(ApplicationRecord.reading(sugarcoated), VoiceWord::SUGARCOAT_VOICE_KEY, "aoi", "public-read", VoiceWord::SUGARCOAT_VOICE_PARAMS)
         request_content = {
           recipient: {
             id:sender
@@ -39,7 +39,7 @@ class Sugarcoat::BotController < BaseController
             attachment: {
               type: "audio",
               payload: {
-                url: "https://taptappun.s3.amazonaws.com/" + VoiceDynamo::VOICE_S3_SUGARCOAT_FILE_ROOT + voice.file_name
+                url: "https://taptappun.s3.amazonaws.com/" + VoiceWord::VOICE_S3_SUGARCOAT_FILE_ROOT + voice.file_name
               }
             }
           }

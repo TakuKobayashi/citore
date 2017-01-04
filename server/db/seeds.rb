@@ -27,8 +27,8 @@ ja = File.read(Rails.root.to_s + "/scripts/dictionary/pn_ja.dic")
 jas = ja.split("\r\n")
 jas.each do |j|
   js = j.split(":")
-  word = TweetVoiceSeedDynamo.sanitized(js[0])
-  reading = TweetVoiceSeedDynamo.reading(js[1])
+  word = ApplicationRecord.sanitized(js[0])
+  reading = ApplicationRecord.reading(js[1])
   dic = EmotionalWordDynamo.find(word: word, reading: reading,part:  parts[js[2]])
   next if dic.present?
   dic = EmotionalWordDynamo.new
@@ -47,8 +47,8 @@ json = {}
 json[:en_average_score] = ens_average_score
 json[:ja_average_score] = jas_average_score
 json[:crawl_info] = []
-json[:crawl_info] << {state: CrawlScheduler.states[:pending], search_action: "user_timeline", keyword: "citore", search_word: TweetVoiceSeedDynamo::ERO_KOTOBA_BOT, uuid: SecureRandom.hex}
-json[:crawl_info] << {state: CrawlScheduler.states[:pending], search_action: "user_timeline", keyword: "citore", search_word: TweetVoiceSeedDynamo::AEGIGOE_BOT, uuid: SecureRandom.hex}
+json[:crawl_info] << {state: CrawlScheduler.states[:pending], search_action: "user_timeline", keyword: "citore", search_word: Citore::EroticWord::ERO_KOTOBA_BOT, uuid: SecureRandom.hex}
+json[:crawl_info] << {state: CrawlScheduler.states[:pending], search_action: "user_timeline", keyword: "citore", search_word: Citore::AegigoeWord::AEGIGOE_BOT, uuid: SecureRandom.hex}
 json[:crawl_info] << {state: CrawlScheduler.states[:pending], search_action: "search", keyword: "sugarcoat", search_word: "オブラート", uuid: SecureRandom.hex}
 json[:crawl_info] << {state: CrawlScheduler.states[:pending], search_action: "search", keyword: "sugarcoat", search_word: "#言い方", uuid: SecureRandom.hex}
 File.open("tmp/extra_info.json", "w"){|f| f.write(json.to_json) }

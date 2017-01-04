@@ -7,16 +7,16 @@ TweetStream.configure do |config|
   config.auth_method        = :oauth
 end
 
-natto = Natto::MeCab.new(dicdir: TweetVoiceSeedDynamo::MECAB_NEOLOGD_DIC_PATH)
+natto = Natto::MeCab.new(dicdir: ApplicationRecord::MECAB_NEOLOGD_DIC_PATH)
 
 client = TweetStream::Client.new
 client.sample do |status|
   next if status.lang != "ja"
-  sanitaized_word = TweetVoiceSeedDynamo.sanitized(status.text)
-  without_url_tweet, urls = TweetVoiceSeedDynamo.separate_urls(sanitaized_word)
-  without_kaomoji_tweet, kaomojis = TweetVoiceSeedDynamo.separate_kaomoji(without_url_tweet)
-  tweet_words = TweetVoiceSeedDynamo.bracket_split(without_kaomoji_tweet)
-  tweet_words = tweet_words.map{|t| TweetVoiceSeedDynamo.delete_symbols(t) }
+  sanitaized_word = TwitterRecord.sanitized(status.text)
+  without_url_tweet, urls = ApplicationRecord.separate_urls(sanitaized_word)
+  without_kaomoji_tweet, kaomojis = ApplicationRecord.separate_kaomoji(without_url_tweet)
+  tweet_words = ApplicationRecord.bracket_split(without_kaomoji_tweet)
+  tweet_words = tweet_words.map{|t| ApplicationRecord.delete_symbols(t) }
 
   begin
     tweet = TwitterWord.create!(

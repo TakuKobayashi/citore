@@ -1,9 +1,9 @@
 class Citore::VoiceController < BaseController
   def search
-    natto = Natto::MeCab.new(dicdir: TweetVoiceSeedDynamo::MECAB_NEOLOGD_DIC_PATH)
-    sanitaized_word = TweetVoiceSeedDynamo.sanitized(params[:text].to_s)
-    reading = TweetVoiceSeedDynamo.reading(sanitaized_word)
-    split_words = TweetVoiceSeedDynamo.ngram(reading, 2).uniq
+    natto = Natto::MeCab.new(dicdir: ApplicationRecord::MECAB_NEOLOGD_DIC_PATH)
+    sanitaized_word = ApplicationRecord.basic_sanitize(params[:text].to_s)
+    reading = ApplicationRecord.reading(sanitaized_word)
+    split_words = ApplicationRecord.ngram(reading, 2).uniq
 
     results = []
     split_words.each do |word|
@@ -11,7 +11,7 @@ class Citore::VoiceController < BaseController
         key_condition_expression: "#H = :h AND #K = :k",
         filter_expression: "contains(#B, :b)",
         expression_attribute_names: {"#H" => "key", "#B" => "reading", "#K" => "keyword"},
-        expression_attribute_values: {":h" => word, ":b" => word, ":k" => TweetVoiceSeedDynamo::ERO_KOTOBA_KEY }
+        expression_attribute_values: {":h" => word, ":b" => word, ":k" => Citore::EroticWord::ERO_KOTOBA_KEY }
       }).map{|r| r }.select{|r| reading.include?(r.reading) }
       break if results.present?
     end
@@ -28,10 +28,10 @@ class Citore::VoiceController < BaseController
   end
 
   def download
-    tweet = TweetVoiceSeedDynamo.find(key: params[:key], reading: params[:reading], uuid: params[:uuid])
-    voice = VoiceDynamo.find(word: tweet.reading, speaker_name: params[:speaker_name].to_s)
+#    tweet = TweetVoiceSeedDynamo.find(key: params[:key], reading: params[:reading], uuid: params[:uuid])
+#    voice = VoiceDynamo.find(word: tweet.reading, speaker_name: params[:speaker_name].to_s)
 
-    filepath = VoiceDynamo::VOICE_S3_FILE_ROOT + voice.file_name.to_s
+    filepath = VoiceWord::VOICE_S3_FILE_ROOT + voice.file_name.to_s
 
     s3 = Aws::S3::Client.new
     filename = File.basename(filepath)

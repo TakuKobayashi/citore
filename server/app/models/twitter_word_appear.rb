@@ -11,7 +11,7 @@
 #  twitter_word_appears_relation_index  (appear_word_id,twitter_word_id)
 #
 
-class TwitterWordAppear < ApplicationRecord
+class TwitterWordAppear < TwitterRecord
   belongs_to :appear_word
   belongs_to :twitter_word
 end

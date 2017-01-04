@@ -6,7 +6,7 @@
 #  twitter_word_id :integer
 #  origin          :string(255)      not null
 #  reading         :string(255)      not null
-#  appear_count    :integer          not null
+#  appear_count    :integer          default(0), not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #

@@ -12,7 +12,7 @@
 # Indexes
 #
 #  index_ngram_words_on_bigram  (bigram)
-#  ngeam_from_indexes           (from_type,from_id)
+#  ngeam_from_indexes           (from_type,from_id,bigram) UNIQUE
 #
 
 class NgramWord < ApplicationRecord

@@ -21,7 +21,7 @@ class Sugarcoat::BotController < BaseController
 
         endpoint_uri = "https://graph.facebook.com/v2.6/me/messages?access_token=" + apiconfig["facebook_bot"]["access_token"]
         sugarcoated = Sugarcoat::Seed.to_sugarcoat(text).join("")
-        voice = VoiceWord.generate_and_upload_voice(ApplicationRecord.reading(sugarcoated), VoiceWord::SUGARCOAT_VOICE_KEY, "aoi", "public-read", VoiceWord::SUGARCOAT_VOICE_PARAMS)
+        voice = VoiceWord.generate_and_upload_voice(nil, ApplicationRecord.reading(sugarcoated), "aoi", VoiceWord::VOICE_S3_SUGARCOAT_FILE_ROOT, "public-read", VoiceWord::SUGARCOAT_VOICE_PARAMS)
         request_content = {
           recipient: {
             id:sender

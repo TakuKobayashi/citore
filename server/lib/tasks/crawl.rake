@@ -70,17 +70,6 @@ namespace :crawl do
       ExtraInfo.update({"crawl_category_video_id" => video_category.id})
     end
 
-=begin
-    YoutubeVideo.find_in_batches(batch_size: 50) do |video|
-      YoutubeComment.crawl_loop_request do |youtube, page_token|
-
-        youtube_comment_thread = youtube.list_comment_threads("id,snippet", max_results: 100, video_id: video.video_id, page_token: page_token, text_format: "plainText")
-        YoutubeComment.import_comment!(youtube_comment_thread, video_id: video.id)
-        youtube_comment_thread
-      end
-    end
-=end
-
     info = ExtraInfo.read_extra_info
     stay_id = info["crawl_related_video_id"]
     youtube_last_video = YoutubeVideo.last

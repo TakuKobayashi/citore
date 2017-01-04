@@ -19,7 +19,7 @@
 #  index_twitter_words_on_twitter_user_id   (twitter_user_id)
 #
 
-class TwitterWord < ApplicationRecord
+class TwitterWord < TwitterRecord
   has_many :twitter_word_appears
   has_many :appears, through: :twitter_word_appears, source: :tweet_appear_word
 end

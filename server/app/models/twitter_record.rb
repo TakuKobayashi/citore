@@ -8,10 +8,7 @@ class TwitterRecord < ApplicationRecord
     completed: 3
   }
 
-  ERO_KOTOBA_BOT = "ero_kotoba_bot"
-  AEGIGOE_BOT = "aegigoe_bot"
-
-  ERO_KOTOBA_KEY = "ero_kotoba"
+  CRAWL_RESET_TIME_SPAN = 12.hours
 
   def self.sanitized(text)
     sanitized_word = ApplicationRecord.basic_sanitize(text)
@@ -39,33 +36,13 @@ class TwitterRecord < ApplicationRecord
         twitter_record = try(:generate!, word, twitter_word_id)
         puts "generate_voice"
         VoiceWord.all_speacker_names.each do |speacker|
-          VoiceWord.generate_and_upload_voice(twitter_record, ApplicationRecord.reading(word), speacker)
+          VoiceWord.generate_and_upload_voice!(twitter_record, ApplicationRecord.reading(word), speacker)
         end
       end
     end
   end
 
-
-  def self.add_crawl_info(search_action:, resource_type:, search_word:)
-    scedular_hash = {state: CrawlScheduler[:pending], search_action: search_action, resource_type: resource_type, search_word: search_word}
-    hash = ExtraInfo.read_extra_info
-    hash[:crawl_info] << scedular_hash
-    ExtraInfo.update(hash)
-  end
-
-  def self.update_crawl_info(new_crawl_hash)
-    hash = ExtraInfo.read_extra_info
-    hash[:crawl_info] = hash["crawl_info"].map do |h|
-      result = h
-      if h["uuid"] == new_crawl_hash["uuid"]
-        result = new_crawl_hash
-      end
-      result
-    end
-    ExtraInfo.update(hash)
-  end
-
-  def self.tweet_crawl(crawl_options, &block)
+  def self.twitter_crawl(crawl_options, &block)
     apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
     client = Twitter::REST::Client.new do |config|
       config.consumer_key        = apiconfig["twitter"]["consumer_key"]
@@ -79,33 +56,33 @@ class TwitterRecord < ApplicationRecord
 
     extra_info = ExtraInfo.read_extra_info
     crawl_info = extra_info[self.table_name] || {}
+    state = crawl_info["state"].to_i
+    return if !["pending", "completed"].include?(CRAWL_STATES.invert[state].to_s)
 
-    crawls = crawl_info.select{|hash| hash["state"] != CrawlScheduler.states[:completed] && hash["keyword"] == keyword}
-    crawls.each do |crawl|
-      last_id = crawl["last_id"]
-      crawl["start_time"] = Time.now
+    last_tweet_id = crawl_info["last_tweet_id"]
+    if crawl_info["complete_time"].present? && Time.parse(crawl_info["complete_time"]) < CRAWL_RESET_TIME_SPAN.ago 
+      last_tweet_id = nil
+    end
+    crawl_info["start_time"] = Time.now
       while is_all == false do
-        crawl["state"] = CrawlScheduler.states[:crawling]
-        puts crawl
-        update_crawl_info(crawl)
+        crawl_info["state"] = CRAWL_STATES[:crawling]
+        puts crawl_info
+        ExtraInfo.update({self.table_name => crawl_info})
         sleep limit_span
         options = crawl_options.merge({:count => 100})
-        if last_id.present?
-          options[:max_id] = last_id.to_i
+        if last_tweet_id.present?
+          options[:max_id] = last_tweet_id.to_i
         end
         puts options
-
-        tweet_results = client.send(crawl["search_action"], crawl["search_word"], options)
+        tweet_results = block.call(client, options)
         is_all = tweet_results.size < 100
-        block.call(tweet_results)
-        last_id = tweet_results.select{|s| s.try(:id).present? }.min_by{|s| s.id.to_i }.try(:id).to_i
-        crawl["last_id"] = last_id
-        crawl["state"] = CrawlScheduler.states[:stay]
-        update_crawl_info(crawl)
+        last_tweet_id = tweet_results.select{|s| s.try(:id).present? }.min_by{|s| s.id.to_i }.try(:id).to_i
+        crawl_info["last_tweet_id"] = last_tweet_id
+        crawl_info["state"] = CRAWL_STATES[:stay]
+        ExtraInfo.update({self.table_name => crawl_info})
       end
-      crawl["complete_time"] = Time.now
-      crawl["state"] = CrawlScheduler.states[:completed]
+      crawl_info["state"] = CRAWL_STATES[:completed]
+      crawl_info["complete_time"] = Time.now
       ExtraInfo.update({self.table_name => crawl_info})
-    end
   end
 end

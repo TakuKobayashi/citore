@@ -36,8 +36,6 @@ class VoiceWord < ApplicationRecord
     style: {"j" => "1.0"}
   }
 
-  SUGARCOAT_VOICE_KEY = "sugarcoat"
-
   VOICE_FILE_ROOT = "/tmp/voices/"
   VOICE_S3_FILE_ROOT = "project/citore/voices/"
   VOICE_S3_SUGARCOAT_FILE_ROOT = "project/sugarcoat/voices/"
@@ -46,7 +44,7 @@ class VoiceWord < ApplicationRecord
     return Rails.root.to_s + VOICE_FILE_ROOT
   end
 
-  def self.generate_and_upload_voice(from_clazz, text, speaker_name, acl = :private, options = {})
+  def self.generate_and_upload_voice!(from_clazz, text, speaker_name, upload_pfile_path = VOICE_S3_FILE_ROOT, acl = :private, options = {})
     apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
     params = VOICE_PARAMS.merge({
       username: apiconfig["aitalk"]["username"],
@@ -65,11 +63,7 @@ class VoiceWord < ApplicationRecord
     response = http_client.get_content("http://webapi.aitalk.jp/webapi/v2/ttsget.php", params, {})
     
     s3 = Aws::S3::Client.new
-    if keyword == SUGARCOAT_VOICE_KEY
-      file_path = VOICE_S3_SUGARCOAT_FILE_ROOT + file_name
-    else
-      file_path = VOICE_S3_FILE_ROOT + file_name
-    end
+    file_path = VOICE_S3_FILE_ROOT + file_name
     s3.put_object(bucket: "taptappun",body: response,key: file_path, :acl => acl)
 
     voice = VoiceWord.create!(from: from_clazz, speaker_name: speaker_name, file_name: file_name)

@@ -64,11 +64,23 @@ namespace :batch do
   end
 
   task get_erokotoba: :environment do
-    CrawlScheduler.tweet_crawl("citore", {}) do |tweet_statuses|
-      tweet_statuses.each do |status|
+    Citore::EroticWord.twitter_crawl({}) do |twitter_client, options|
+      tweet_results = twitter_client.user_timeline(Citore::EroticWord::ERO_KOTOBA_BOT, options)
+      tweet_results.each do |status|
         next if status.blank?
-        Citore::EroticWord.generate_data_and_voice(TweetVoiceSeedDynamo::ERO_KOTOBA_KEY, status.text, {tweet_id: status.id, tweet_user_id: status.user.id, tweet_user_name: status.user.name})
+        sanitaized_word = TwitterRecord.sanitized(status.text)
+        without_url_tweet, urls = ApplicationRecord.separate_urls(sanitaized_word)
+        tweet = TwitterWord.create!(
+          twitter_user_id: status.user.id.to_s,
+          twitter_user_name: status.user.screen_name.to_s,
+          twitter_tweet_id: status.id.to_s,
+          tweet: without_url_tweet,
+          csv_url: urls.join(","),
+          tweet_created_at: status.created_at
+        )
+        Citore::EroticWord.generate_data_and_voice!(sanitaized_word, tweet.id)
       end
+      tweet_results
     end
   end
 

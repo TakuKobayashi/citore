@@ -9,7 +9,7 @@ module ExtraInfo
   def self.update(hash = {})
   	new_hash = read_extra_info.merge(hash)
   	File.open(EXTRA_INFO_FILE_PATH, "w"){
-      |f| f.write(new_hash.to_json)
+      |f| f.write(JSON.pretty_generate(new_hash))
     }
     return new_hash
   end

@@ -2,12 +2,10 @@
 #
 # Table name: ngram_words
 #
-#  id         :integer          not null, primary key
-#  from_type  :string(255)      not null
-#  from_id    :integer          not null
-#  bigram     :string(255)      not null
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id        :integer          not null, primary key
+#  from_type :string(255)      not null
+#  from_id   :integer          not null
+#  bigram    :string(255)      not null
 #
 # Indexes
 #

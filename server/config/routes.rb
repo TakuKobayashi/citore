@@ -12,6 +12,12 @@ Rails.application.routes.draw do
     get 'citore'
   end
 
+  resource :variable_template, controller: :variable_template, only: [] do
+    get 'warakatsu_apk_download'
+    get 'citore_apk_download'
+    get 'citore_movie'
+  end
+
   namespace :sugarcoat do
     resource :bot, controller: :bot, only: [] do
       get 'speak'

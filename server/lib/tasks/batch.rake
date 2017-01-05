@@ -5,6 +5,9 @@ namespace :batch do
     cmd = nil 
     environment = Rails.env
     configuration = ActiveRecord::Base.configurations[environment]
+    database = Regexp.escape(configuration['database'].to_s)
+    username = Regexp.escape(configuration['username'].to_s)
+    password = Regexp.escape(configuration['password'].to_s)
     tables = [
       "appear_words",
       "twitter_words",
@@ -29,11 +32,11 @@ namespace :batch do
     dir_path = Rails.root.to_s + "/tmp/dbdump/" + now_str
     system("mkdir #{dir_path}")
     tables.each do |table|
-      cmd = "mysqldump -u #{configuration['username']} "
-      if configuration['password'].present?
-        cmd += "--password=#{configuration['password']} "
+      cmd = "mysqldump -u #{username} "
+      if password.present?
+        cmd += "--password=#{password} "
       end
-      cmd += "--skip-lock-tables -t #{configuration['database']} #{table} > #{dir_path}/#{table}.sql"
+      cmd += "--skip-lock-tables -t #{database} #{table} > #{dir_path}/#{table}.sql"
       system(cmd)
       puts "#{table} dump complete"
     end

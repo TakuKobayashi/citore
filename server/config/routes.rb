@@ -16,6 +16,7 @@ Rails.application.routes.draw do
     get 'warakatsu_apk_download'
     get 'citore_apk_download'
     get 'citore_movie'
+    get 'citore_slide'
   end
 
   namespace :sugarcoat do

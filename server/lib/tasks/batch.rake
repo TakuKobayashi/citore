@@ -19,7 +19,11 @@ namespace :batch do
       "youtube_channels",
       "youtube_comments",
       "youtube_video_relateds",
-      "youtube_video_tags"
+      "youtube_video_tags",
+      "citore_erotic_words",
+      "citore_aegigoe_words",
+      "voice_words",
+      "ngram_words"
     ]
     now_str = Time.now.strftime("%Y%m%d_%H%M%S")
     dir_path = Rails.root.to_s + "/tmp/dbdump/" + now_str
@@ -40,13 +44,9 @@ namespace :batch do
       zip.mkdir now_str
 
       tables.each do |table|
+        # (2) 作ったディレクトリにファイルを書き込む１
         File.open(dir_path + "/" + table + ".sql", 'rb') do |file|
-          file.each_line do |line|
-            # (2) 作ったディレクトリにファイルを書き込む１
-            zip.get_output_stream(now_str + "/#{table}.sql" ) do |s|
-              s.print(line)
-            end
-          end
+          zip.get_output_stream(now_str + "/#{table}.sql" ){ |s| s.print(file.read) }
           puts "#{table} compressed complete"
         end
       end

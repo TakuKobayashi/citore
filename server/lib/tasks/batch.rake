@@ -41,6 +41,7 @@ namespace :batch do
       puts "#{table} dump complete"
     end
 
+=begin
     puts "compress start"
     Zip::OutputStream.open(dir_path + ".zip") do |zos|
       puts 'Creating zip file...'
@@ -53,7 +54,7 @@ namespace :batch do
         end
       end
     end
-=begin
+=end
     Zip::File.open(dir_path + ".zip", Zip::File::CREATE) do |zip|
       # (1) ZIP内にディレクトリを作成
       zip.mkdir now_str
@@ -62,13 +63,15 @@ namespace :batch do
         # (2) 作ったディレクトリにファイルを書き込む１
         File.open(dir_path + "/" + table + ".sql", 'rb') do |file|
           zip.get_output_stream(now_str + "/#{table}.sql" ){|s|
-            s.print(file.read)
+            file.each_line do |line|
+              s.write(line)
+            end
           }
           puts "#{table} compressed complete"
         end
       end
     end
-=end
+
     puts "compress completed"
     system("rm -r " + dir_path)
     puts "upload start"

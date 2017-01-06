@@ -189,6 +189,7 @@
         <File name="structures" src="lib/requests/structures.pyc" />
         <File name="utils" src="lib/requests/utils.py" />
         <File name="utils" src="lib/requests/utils.pyc" />
+        <File name="MrChildren_fake_ins" src="html/MrChildren_fake_karaoke.mp4" />
     </Resources>
     <Topics />
     <IgnoredPaths>

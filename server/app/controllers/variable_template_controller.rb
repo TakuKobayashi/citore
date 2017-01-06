@@ -1,6 +1,6 @@
 class VariableTemplateController < BaseController
   def citore_movie
-    redirect_to "https://www.youtube.com/watch?v=o4HaOGu--yI"
+    redirect_to "https://www.youtube.com/watch?v=9jqTH2fgB4g"
   end
 
   def citore_slide

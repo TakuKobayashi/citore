@@ -44,7 +44,11 @@ Rails.application.routes.draw do
       get 'download'
     end
 
-    resources :words, only: [:index]
+    resources :words, only: [:index] do
+      collection do
+        get 'search'
+      end
+    end
   end
 
   namespace :tools do

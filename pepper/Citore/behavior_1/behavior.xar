@@ -436,7 +436,7 @@ class MyClass(GeneratedClass):
         if self.folderName not in sys.path:
             sys.path.append(self.folderName)
         import requests
-        r = requests.get('http://qiita.com/n0bisuke/items/d07b5485f4e767bc6e20.json') #←追記
+        r = requests.get('https://taptappun.net/citore/words') #←追記
         self.logger.info(r.json()) #←追記
 
     def onInput_onStop(self):

@@ -28,15 +28,15 @@ class Citore::VoiceController < BaseController
   end
 
   def download
-#    tweet = TweetVoiceSeedDynamo.find(key: params[:key], reading: params[:reading], uuid: params[:uuid])
-#    voice = VoiceDynamo.find(word: tweet.reading, speaker_name: params[:speaker_name].to_s)
-
-    filepath = VoiceWord::VOICE_S3_FILE_ROOT + voice.file_name.to_s
-
-    s3 = Aws::S3::Client.new
-    filename = File.basename(filepath)
-    ext = File.extname(filename)
-    resp = s3.get_object({bucket: "taptappun", key: filepath})
-    send_data(resp.body.read,{filename: filename, type: "audio/" + ext[1..(ext.size - 1)]})
+    voice = VoiceWord.find_by(id: params[:voice_id])
+    if voice.present?
+      s3 = Aws::S3::Client.new
+      origin_filename = File.basename(voice.file_name)
+      ext = File.extname(origin_filename)
+      resp = s3.get_object({bucket: "taptappun", key: voice.file_name})
+      send_data(resp.body.read,{filename: origin_filename, type: "audio/" + ext[1..(ext.size - 1)]})
+    else
+      head(:ok)
+    end
   end
 end

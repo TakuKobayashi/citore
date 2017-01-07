@@ -21,6 +21,10 @@ class Citore::EroticWord < TwitterRecord
 
   ERO_KOTOBA_BOT = "ero_kotoba_bot"
 
+  def self.reading_words
+    return Citore::EroticWord.pluck(:reading)
+  end
+
   def self.generate!(text, twitter_word_id = nil)
     reading = ApplicationRecord.reading(text)
     erotic_word = Citore::EroticWord.find_or_initialize_by(reading: reading)

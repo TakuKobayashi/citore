@@ -14,6 +14,7 @@ class Citore::WordsController < BaseController
     hash = {}
     if erotic_word.present?
       hash = erotic_word.attributes.slice("id", "origin", "reading")
+      hash["voice_id"] = erotic_word.voices.sample.try(:id)
     end
     render :json => hash
   end

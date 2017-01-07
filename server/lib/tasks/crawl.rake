@@ -77,11 +77,29 @@ namespace :crawl do
     YoutubeVideo.where("id > ?", stay_id.to_i).find_each do |video|
       YoutubeVideo.crawl_loop_request do |youtube, page_token|
         youtube_search = youtube.list_searches("id,snippet", max_results: 50, region_code: "JP",  type: "video", related_to_video_id: video.video_id, page_token: page_token)
-        youtube_video = youtube.list_videos("id,snippet,statistics", max_results: 50, id: youtube_search.items.map{|item| item.id.video_id}.join(","))
-        video.import_related_video!(youtube_video)
+        if youtube_search.items.present?
+          youtube_video = youtube.list_videos("id,snippet,statistics", max_results: 50, id: youtube_search.items.map{|item| item.id.video_id}.join(","))
+          video.import_related_video!(youtube_video)
+        end
         youtube_search
       end
       ExtraInfo.update({"crawl_related_video_id" => video.id})
+    end
+
+    apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
+    youtube = Google::Apis::YoutubeV3::YouTubeService.new
+    youtube.key = apiconfig["google_api"]["key"]
+
+    stay_id = ExtraInfo.read_extra_info["rebuild_video_id"]
+    YoutubeVideo.where("id > ?", stay_id.to_i).find_in_batches({batch_size: 50}) do |videos|
+      youtube_video = youtube.list_videos("id,snippet", max_results: 50, id: videos.map{|video| video.video_id}.join(","))
+      id_and_tags = {}
+      youtube_video.items.each do |item|
+        id_and_tags[item.id] = item.snippet.tags
+      end
+      YoutubeVideoTag.where(youtube_video_id: videos.map(&:id)).delete_all
+      YoutubeVideo.import_tags(id_and_tags)
+      ExtraInfo.update({"rebuild_video_id" => videos.max_by{|v| v.id }.try(:id)})
     end
 
     stay_id = ExtraInfo.read_extra_info["crawl_channel_comment_id"]

@@ -26,9 +26,9 @@ class Citore::EroticWord < TwitterRecord
     erotic_word = Citore::EroticWord.find_or_initialize_by(reading: reading)
     new_record = erotic_word.new_record?
     if new_record
-      erotic_word.origin = text
       erotic_word.twitter_word_id = twitter_word_id
     end
+    erotic_word.origin = text
     erotic_word.appear_count = erotic_word.appear_count.to_i + 1
     erotic_word.save!
     if new_record

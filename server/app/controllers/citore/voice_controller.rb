@@ -28,7 +28,7 @@ class Citore::VoiceController < BaseController
   end
 
   def download
-    erotic_word = Citore::EroticWord.find_by(id: params[:word_id])
+    erotic_word = Citore::EroticWord.find_by_used_cache(id: params[:word_id].to_i)
     voice = erotic_word.voices.find_by(speaker_name: params[:speaker_name])
     if voice.present?
       s3 = Aws::S3::Client.new

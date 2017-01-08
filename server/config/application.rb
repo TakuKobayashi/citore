@@ -11,5 +11,19 @@ module Server
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
+    config.time_zone = "Tokyo"
+    config.active_record.default_timezone = :local
+
+    config.autoload_paths << Rails.root.join('app', 'settings')
+    config.autoload_paths << Rails.root.join('lib')
+
+    config.encoding = "utf-8"
+
+    config.after_initialize do
+      if defined?(Rails::Server) || (defined?(Puma))
+        # アプリキャッシュにマスター情報を入れておくことでスピードを稼ぐ
+        CacheStore.cache_to_memory!
+      end
+    end
   end
 end

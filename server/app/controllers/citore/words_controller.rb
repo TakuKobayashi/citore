@@ -1,6 +1,6 @@
 class Citore::WordsController < BaseController
   def index
-    readings = Citore::EroticWord.pluck(:reading)
+    readings = Citore::EroticWord.reading_words
     render :json => readings
   end
 

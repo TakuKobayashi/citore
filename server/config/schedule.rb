@@ -5,10 +5,22 @@
 
 set :output, "#{path}/log/cron.log"
 
-every :day, at: "3:00 am" do
+every :day, at: "2:00 am" do
   rake "batch:db_dump_and_upload"
   command "/bin/echo `date`: Daily upload sql"
 end
+
+every 8.hours do
+  rake "crawl:youtube"
+  command "/bin/echo `date`: crawl youtube"
+end
+
+every :day, at: "8:00 am" do
+  rake "batch:get_erokotoba"
+  command "/bin/echo `date`: crawl youtube"
+end
+
+
 
 # Example:
 #

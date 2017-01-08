@@ -79,4 +79,19 @@ class ApplicationRecord < ActiveRecord::Base
     return [word] if characters.size <= n
     return characters.each_cons(n).map(&:join)
   end
+
+  def self.memory_cache!
+    CacheStore::CACHE.write(self.table_name, self.all.index_by(&:id))
+  end
+
+  def self.find_by_used_cache(filter = {})
+    records = CacheStore::CACHE.read(self.table_name)
+    if records.blank?
+      return self.find_by(filter)
+    end
+    if filter.key?(:id) || filter.key?("id")
+      return records[filter["id"]] || records[filter[:id]] 
+    end
+    return records.values.detect{|r| filter.all?{|k, v| r.send(k) == v } }
+  end
 end

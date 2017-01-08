@@ -89,6 +89,7 @@ namespace :batch do
       tweet_results = twitter_client.user_timeline(Citore::EroticWord::ERO_KOTOBA_BOT, options)
       tweet_results.each do |status|
         next if status.blank?
+        next if TwitterWord.exists?(twitter_tweet_id: status.id)
         sanitaized_word = TwitterRecord.sanitized(status.text)
         without_url_tweet, urls = ApplicationRecord.separate_urls(sanitaized_word)
         TwitterWord.transaction do

@@ -1,6 +1,14 @@
 class ApplicationRecord < ActiveRecord::Base
   self.abstract_class = true
 
+  after_save do
+    update_cache!
+  end
+
+  before_destroy do
+    destory_cache!
+  end
+
   MECAB_NEOLOGD_DIC_PATH = "/usr/local/lib/mecab/dic/mecab-ipadic-neologd"
 
   def self.request_and_parse_html(url)
@@ -93,5 +101,21 @@ class ApplicationRecord < ActiveRecord::Base
       return records[filter["id"]] || records[filter[:id]] 
     end
     return records.values.detect{|r| filter.all?{|k, v| r.send(k) == v } }
+  end
+
+  def update_cache!
+    records = CacheStore::CACHE.read(self.class.table_name)
+    if records.present?
+      records[self.id] = self
+      CacheStore::CACHE.write(self.class.table_name, records)
+    end
+  end
+
+  def destory_cache!
+    records = CacheStore::CACHE.read(self.class.table_name)
+    if records.present?
+      records.delete("self.id")
+      CacheStore::CACHE.write(self.class.table_name, records)
+    end
   end
 end

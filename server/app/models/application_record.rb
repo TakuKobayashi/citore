@@ -98,9 +98,21 @@ class ApplicationRecord < ActiveRecord::Base
       return self.find_by(filter)
     end
     if filter.key?(:id) || filter.key?("id")
-      return records[filter["id"]] || records[filter[:id]] 
+      return records[filter["id"]] || records[filter[:id]]
     end
     return records.values.detect{|r| filter.all?{|k, v| r.send(k) == v } }
+  end
+
+  def self.where_used_cache(filter = {})
+    records = CacheStore::CACHE.read(self.table_name)
+    if records.blank?
+      return self.where(filter).to_a
+    end
+    if filter.key?(:id) || filter.key?("id")
+      value = records[filter["id"]] || records[filter[:id]]
+      return [value].compact
+    end
+    return records.values.select{|r| filter.all?{|k, v| r.send(k) == v } }
   end
 
   def update_cache!

@@ -25,6 +25,7 @@ sugarcoat_client = Twitter::REST::Client.new do |config|
   config.access_token_secret = extra_info["twitter_811024427487936512"]["token_secret"]
 end
 
+CacheStore.cache!
 stream_client = TweetStream::Client.new
 stream_client.track('#citore', '#Citore', '@citore_bot', '@sugarcoat_bot', '#sugarcoat', '#SugarCoat') do |status|
   next if status.lang != "ja" || ["811029389575979008", "811024427487936512"].include?(status.user.id.to_s)

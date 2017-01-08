@@ -22,7 +22,11 @@ class Citore::EroticWord < TwitterRecord
   ERO_KOTOBA_BOT = "ero_kotoba_bot"
 
   def self.reading_words
-    return Citore::EroticWord.pluck(:reading)
+    records = CacheStore::CACHE.read(self.table_name)
+    if records.blank?
+      return sCitore::EroticWord.pluck(:reading)
+    end
+    return records.values.map(&:reading)
   end
 
   def self.generate!(text, twitter_word_id = nil)

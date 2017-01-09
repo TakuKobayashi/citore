@@ -95,6 +95,12 @@ namespace :batch do
       Citore::EroticWord.import_tweet!(tweet_results: tweet_results, generate_voice: true)
       tweet_results
     end
+    Citore::EroticWord.twitter_crawl(prefix_key: Citore::EroticWord::UTIDAMINAKO_BOT) do |twitter_client, options|
+      tweet_results = twitter_client.user_timeline(Citore::EroticWord::UTIDAMINAKO_BOT, options)
+      tweet_results.select!{|t| t.text.include?("#エロくないけどエロく聞こえる単語") }
+      Citore::EroticWord.import_tweet!(tweet_results: tweet_results, generate_voice: true)
+      tweet_results
+    end
   end
 
   task sugarcoat_bot_tweet: :environment do

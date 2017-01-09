@@ -20,6 +20,7 @@ class Citore::EroticWord < TwitterRecord
   has_many :voices, as: :from, class_name: 'VoiceWord'
 
   ERO_KOTOBA_BOT = "ero_kotoba_bot"
+  UTIDAMINAKO_BOT = "mixigogle"
 
   def self.import_tweet!(tweet_results:, generate_voice: false)
     tweet_results.each do |status|

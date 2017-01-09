@@ -87,12 +87,12 @@ namespace :batch do
   task get_erokotoba: :environment do
     Citore::EroticWord.twitter_crawl(prefix_key: Citore::EroticWord::ERO_KOTOBA_BOT) do |twitter_client, options|
       tweet_results = twitter_client.user_timeline(Citore::EroticWord::ERO_KOTOBA_BOT, options)
-      Citore::EroticWord.import_tweet!(tweet_results)
+      Citore::EroticWord.import_tweet!(tweet_results: tweet_results, generate_voice: true)
       tweet_results
     end
-    Citore::EroticWord.twitter_crawl(prefix_key: "erokotoba_hash_tag") do |twitter_client, options|
+    Citore::EroticWord.twitter_crawl(prefix_key: "erokotoba_hash_tag", ) do |twitter_client, options|
       tweet_results = twitter_client.search("#エロくないけどエロく聞こえる単語", options)
-      Citore::EroticWord.import_tweet!(tweet_results)
+      Citore::EroticWord.import_tweet!(tweet_results: tweet_results, generate_voice: true)
       tweet_results
     end
   end

@@ -21,7 +21,7 @@ class Citore::EroticWord < TwitterRecord
 
   ERO_KOTOBA_BOT = "ero_kotoba_bot"
 
-  def self.import_tweet!(tweet_results)
+  def self.import_tweet!(tweet_results:, generate_voice: false)
     tweet_results.each do |status|
       next if status.blank?
       next if TwitterWord.exists?(twitter_tweet_id: status.id)
@@ -36,7 +36,7 @@ class Citore::EroticWord < TwitterRecord
           csv_url: urls.join(","),
           tweet_created_at: status.created_at
         )
-        Citore::EroticWord.generate_data_and_voice!(sanitaized_word, tweet.id)
+        Citore::EroticWord.generate_data_and_voice!(text: sanitaized_word, twitter_word_id: tweet.id, generate_voice: generate_voice)
       end
     end
   end

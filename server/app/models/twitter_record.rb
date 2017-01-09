@@ -22,7 +22,7 @@ class TwitterRecord < ApplicationRecord
     return sanitized_word
   end
 
-  def self.generate_data_and_voice!(text, twitter_word_id = nil)
+  def self.generate_data_and_voice!(text:, twitter_word_id: nil, generate_voice: false)
     sanitaized_word = TwitterRecord.sanitized(text)
     puts sanitaized_word
 
@@ -35,8 +35,10 @@ class TwitterRecord < ApplicationRecord
       split_words.each do |word|
         twitter_record = try(:generate!, word, twitter_word_id)
         puts "generate_voice"
-        VoiceWord.all_speacker_names.each do |speacker|
-          VoiceWord.generate_and_upload_voice!(twitter_record, ApplicationRecord.reading(word), speacker)
+        if generate_voice
+          VoiceWord.all_speacker_names.each do |speacker|
+            VoiceWord.generate_and_upload_voice!(twitter_record, ApplicationRecord.reading(word), speacker)
+          end
         end
       end
     end

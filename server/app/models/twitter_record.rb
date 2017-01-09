@@ -42,7 +42,7 @@ class TwitterRecord < ApplicationRecord
     end
   end
 
-  def self.twitter_crawl(crawl_options, &block)
+  def self.twitter_crawl(prefix_key: "", crawl_options: {})
     apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
     client = Twitter::REST::Client.new do |config|
       config.consumer_key        = apiconfig["twitter"]["consumer_key"]
@@ -55,7 +55,7 @@ class TwitterRecord < ApplicationRecord
     limit_span = (15.minutes.second / 180).to_i
 
     extra_info = ExtraInfo.read_extra_info
-    crawl_info = extra_info[self.table_name] || {}
+    crawl_info = extra_info[prefix_key + self.table_name] || {}
     state = crawl_info["state"].to_i
     return if !["pending", "completed"].include?(CRAWL_STATES.invert[state].to_s)
 
@@ -64,25 +64,25 @@ class TwitterRecord < ApplicationRecord
       last_tweet_id = nil
     end
     crawl_info["start_time"] = Time.now
-      while is_all == false do
-        crawl_info["state"] = CRAWL_STATES[:crawling]
-        puts crawl_info
-        ExtraInfo.update({self.table_name => crawl_info})
-        sleep limit_span
-        options = crawl_options.merge({:count => 100})
-        if last_tweet_id.present?
-          options[:max_id] = last_tweet_id.to_i
-        end
-        puts options
-        tweet_results = block.call(client, options)
-        is_all = tweet_results.size < 100
-        last_tweet_id = tweet_results.select{|s| s.try(:id).present? }.min_by{|s| s.id.to_i }.try(:id).to_i
-        crawl_info["last_tweet_id"] = last_tweet_id
-        crawl_info["state"] = CRAWL_STATES[:stay]
-        ExtraInfo.update({self.table_name => crawl_info})
-      end
-      crawl_info["state"] = CRAWL_STATES[:completed]
-      crawl_info["complete_time"] = Time.now
+    while is_all == false do
+      crawl_info["state"] = CRAWL_STATES[:crawling]
+      puts crawl_info
       ExtraInfo.update({self.table_name => crawl_info})
+      sleep limit_span
+      options = crawl_options.merge({:count => 100})
+      if last_tweet_id.present?
+        options[:max_id] = last_tweet_id.to_i
+      end
+      puts options
+      tweet_results = yield(client, options)
+      is_all = tweet_results.size < 100
+      last_tweet_id = tweet_results.select{|s| s.try(:id).present? }.min_by{|s| s.id.to_i }.try(:id).to_i
+      crawl_info["last_tweet_id"] = last_tweet_id
+      crawl_info["state"] = CRAWL_STATES[:stay]
+      ExtraInfo.update({(prefix_key + self.table_name) => crawl_info})
+    end
+    crawl_info["state"] = CRAWL_STATES[:completed]
+    crawl_info["complete_time"] = Time.now
+    ExtraInfo.update({self.table_name => crawl_info})
   end
 end

@@ -78,8 +78,12 @@ class Sugarcoat::BotController < BaseController
     events.each do |event|
       case event
       when Line::Bot::Event::Message
+        logger.info "message"
+        logger.info "-----------------------------------"
+        logger.info event.type
         case event.type
         when Line::Bot::Event::MessageType::Text
+          logger.info "text"
           message = {
             type: 'text',
             text: event.message['text']

@@ -11,6 +11,9 @@
 #  output_file_path        :string(255)
 #  input_text              :text(65535)
 #  output_text             :text(65535)
+#  address                 :string(255)
+#  latitude                :float(24)
+#  longitude               :float(24)
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
 #

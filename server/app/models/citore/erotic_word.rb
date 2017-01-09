@@ -27,12 +27,13 @@ class Citore::EroticWord < TwitterRecord
       next if TwitterWord.exists?(twitter_tweet_id: status.id)
       sanitaized_word = TwitterRecord.sanitized(status.text)
       without_url_tweet, urls = ApplicationRecord.separate_urls(sanitaized_word)
+      tweet = ApplicationRecord.delete_symbols(without_url_tweet)
       TwitterWord.transaction do
         tweet = TwitterWord.create!(
           twitter_user_id: status.user.id.to_s,
           twitter_user_name: status.user.screen_name.to_s,
           twitter_tweet_id: status.id.to_s,
-          tweet: without_url_tweet,
+          tweet: tweet,
           csv_url: urls.join(","),
           tweet_created_at: status.created_at
         )

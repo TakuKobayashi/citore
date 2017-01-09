@@ -90,6 +90,11 @@ namespace :batch do
       Citore::EroticWord.import_tweet!(tweet_results)
       tweet_results
     end
+    Citore::EroticWord.twitter_crawl(prefix_key: "erokotoba_hash_tag") do |twitter_client, options|
+      tweet_results = twitter_client.search("#エロくないけどエロく聞こえる単語", options)
+      Citore::EroticWord.import_tweet!(tweet_results)
+      tweet_results
+    end
   end
 
   task sugarcoat_bot_tweet: :environment do

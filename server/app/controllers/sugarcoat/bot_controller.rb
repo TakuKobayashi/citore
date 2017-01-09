@@ -95,8 +95,7 @@ class Sugarcoat::BotController < BaseController
           res = client.reply_message(event['replyToken'], message)
         when Line::Bot::Event::MessageType::Image, Line::Bot::Event::MessageType::Video, Line::Bot::Event::MessageType::Audio
           response = client.get_message_content(event.message['id'])
-          tf = Tempfile.open("content")
-          tf.write(response.body)
+          File.open(Rails.root.to_s +"/tmp/" + SecureRandom.hex, 'wb'){|f| f.write(response.body) }
         end
       when Line::Bot::Event::Follow
       when Line::Bot::Event::Unfollow

@@ -83,12 +83,14 @@ class Sugarcoat::BotController < BaseController
         logger.info event.type
         case event.type
         when Line::Bot::Event::MessageType::Text
-          logger.info "text"
+          logger.info event.message
+          logger.info event['replyToken']
           message = {
             type: 'text',
             text: event.message['text']
           }
-          client.reply_message(event['replyToken'], message)
+          res = client.reply_message(event['replyToken'], message)
+          logger.info res
         end
       end
     end

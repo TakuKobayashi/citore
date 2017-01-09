@@ -91,9 +91,9 @@ class Sugarcoat::BotController < BaseController
           }
           logger.info event["source"]
           user = client.get_profile(event["source"]["userId"])
-          logger.info user
+          logger.info user.body
           res = client.reply_message(event['replyToken'], message)
-          logger.info res
+          logger.info res.body
         end
       end
     end

@@ -78,9 +78,7 @@ class Sugarcoat::BotController < BaseController
     events.each do |event|
       case event
       when Line::Bot::Event::Message
-        logger.info "message"
-        logger.info "-----------------------------------"
-        logger.info event.type
+        line_user_id = event["source"]["userId"]
         case event.type
         when Line::Bot::Event::MessageType::Text
           logger.info event.message
@@ -98,7 +96,9 @@ class Sugarcoat::BotController < BaseController
           File.open(Rails.root.to_s +"/tmp/" + SecureRandom.hex, 'wb'){|f| f.write(response.body) }
         end
       when Line::Bot::Event::Follow
+        Sugarcoat::LinebotFollowerUser.generate_profile!(line_client: client, line_user_id: event["source"]["userId"], isfollow: true)
       when Line::Bot::Event::Unfollow
+        Sugarcoat::LinebotFollowerUser.generate_profile!(line_client: client, line_user_id: event["source"]["userId"], isfollow: false)
       end
     end
     head(:ok)

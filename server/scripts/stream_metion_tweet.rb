@@ -13,7 +13,6 @@ client.sample do |status|
   sanitaized_word = TwitterRecord.sanitized(status.text)
   without_url_tweet, urls = ApplicationRecord.separate_urls(sanitaized_word)
 
-  puts status.in_reply_to_status_id
   TwitterWordMention.create!(
     twitter_user_id: status.user.id.to_s,
     twitter_user_name: status.user.screen_name.to_s,

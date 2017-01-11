@@ -1,15 +1,16 @@
 # == Schema Information
 #
-# Table name: appear_words
+# Table name: word_to_markovs
 #
-#  id           :integer          not null, primary key
-#  appear_count :integer          default(0), not null
-#  word         :string(255)      not null
-#  part         :string(255)      not null
+#  id                :integer          not null, primary key
+#  source_type       :string(255)      not null
+#  source_id         :integer          not null
+#  markov_trigram_id :integer          not null
 #
 # Indexes
 #
-#  index_tweet_appear_words_on_word_and_part  (word,part) UNIQUE
+#  word_to_markovs_index         (markov_trigram_id,source_type,source_id)
+#  word_to_markovs_source_index  (source_type,source_id)
 #
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html

@@ -1,15 +1,15 @@
 # == Schema Information
 #
-# Table name: appear_words
+# Table name: wikipedia_article_appear_words
 #
-#  id           :integer          not null, primary key
-#  appear_count :integer          default(0), not null
-#  word         :string(255)      not null
-#  part         :string(255)      not null
+#  id                   :integer          not null, primary key
+#  wikipedia_article_id :integer          not null
+#  appear_word_id       :integer          not null
+#  category             :integer          not null
 #
 # Indexes
 #
-#  index_tweet_appear_words_on_word_and_part  (word,part) UNIQUE
+#  article_appear_words_index  (wikipedia_article_id,appear_word_id,category)
 #
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html

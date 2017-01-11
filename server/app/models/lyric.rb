@@ -19,6 +19,10 @@
 
 class Lyric < ApplicationRecord
   has_one :target, as: :source, class_name: 'CrawlTargetUrl'
+  has_many :lyric_appear_words
+  has_many :appears, through: :lyric_appear_words, source: :appear_word
+  has_many :word_to_markovs, as: :source
+  has_many :markovs, through: :word_to_markovs, source: :markov_trigram
 
   UTAMAP_ROOT_URL = "http://artists.utamap.com/"
   UTANET_ROOT_CRAWL_URL = "http://www.uta-net.com/song/"

@@ -19,5 +19,7 @@
 
 class TwitterWord < TwitterRecord
   has_many :twitter_word_appears
-  has_many :appears, through: :twitter_word_appears, source: :tweet_appear_word
+  has_many :appears, through: :twitter_word_appears, source: :appear_word
+  has_many :word_to_markovs, as: :source
+  has_many :markovs, through: :word_to_markovs, source: :markov_trigram
 end

@@ -1,15 +1,14 @@
 # == Schema Information
 #
-# Table name: appear_words
+# Table name: lyric_appear_words
 #
-#  id           :integer          not null, primary key
-#  appear_count :integer          default(0), not null
-#  word         :string(255)      not null
-#  part         :string(255)      not null
+#  id             :integer          not null, primary key
+#  lyric_id       :integer          not null
+#  appear_word_id :integer          not null
 #
 # Indexes
 #
-#  index_tweet_appear_words_on_word_and_part  (word,part) UNIQUE
+#  lyric_appear_words_index  (lyric_id,appear_word_id)
 #
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html

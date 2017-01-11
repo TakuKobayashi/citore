@@ -7,7 +7,7 @@ class CreateMarkovTrigrams < ActiveRecord::Migration[5.0]
       t.string :third_gram, null: false, default: ""
       t.integer :appear_count, null: false, default: 0
     end
-    add_index :markov_trigrams, [:source_type, :first_gram, :second_gram, :third_gram], name: "markov_trigram_type_word_index"
+    add_index :markov_trigrams, [:source_type, :first_gram, :second_gram, :third_gram], name: "markov_trigram_type_word_index", unique: true
     add_index :markov_trigrams, [:first_gram, :second_gram, :third_gram], name: "markov_trigram_word_index"
   end
 end

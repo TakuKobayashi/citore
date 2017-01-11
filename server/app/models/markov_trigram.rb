@@ -11,7 +11,7 @@
 #
 # Indexes
 #
-#  markov_trigram_type_word_index  (source_type,first_gram,second_gram,third_gram)
+#  markov_trigram_type_word_index  (source_type,first_gram,second_gram,third_gram) UNIQUE
 #  markov_trigram_word_index       (first_gram,second_gram,third_gram)
 #
 

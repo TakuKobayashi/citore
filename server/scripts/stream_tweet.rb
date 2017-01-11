@@ -61,7 +61,7 @@ client.sample do |status|
       appear_word = AppearWord.new(hash)
       import_words << appear_word
     end
-    AppearWord.import(import_words, on_duplicate_key_update: "appear_count = appear_count + VALUES(appear_count), `updated_at`=VALUES(`updated_at`)")
+    AppearWord.import(import_words, on_duplicate_key_update: "appear_count = appear_count + VALUES(appear_count)")
     ids = AppearWord.where(word: import_words.map(&:word), part: import_words.map(&:part)).pluck(:id)
     next if ids.blank?
     #なぜか謎のloadが入ってしまうのでimportするのは一回だけ

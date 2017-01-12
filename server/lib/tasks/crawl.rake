@@ -173,6 +173,31 @@ namespace :crawl do
     end
   end
 
+  task get_replay_tweet: :environment do
+    apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
+    client = Twitter::REST::Client.new do |config|
+      config.consumer_key        = apiconfig["twitter"]["consumer_key"]
+      config.consumer_secret     = apiconfig["twitter"]["consumer_secret"]
+      config.access_token        = apiconfig["twitter"]["access_token_key"]
+      config.access_token_secret = apiconfig["twitter"]["access_token_secret"]
+    end
+    TwitterWordMention.where.not(reply_to_tweet_id: nil).includes(:parent).find_each do |t|
+      next if t.parent.present?
+      status = client.status(t.reply_to_tweet_id)
+      sanitaized_word = TwitterRecord.sanitized(status.text)
+      without_url_tweet, urls = ApplicationRecord.separate_urls(sanitaized_word)
+      TwitterWordMention.create!(
+        twitter_user_id: status.user.id.to_s,
+        twitter_user_name: status.user.screen_name.to_s,
+        twitter_tweet_id: status.id.to_s,
+        tweet: without_url_tweet,
+        csv_url: urls.join(","),
+        tweet_created_at: status.created_at,
+        reply_to_tweet_id: status.in_reply_to_status_id.to_s
+     )
+    end
+  end
+
   task youtube_download: :environment do
     YoutubeDL.download "https://www.youtube.com/watch?v=0E00Zuayv9Q", output: 'some_file.mp4'
   end

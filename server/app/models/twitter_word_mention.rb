@@ -20,4 +20,6 @@
 #
 
 class TwitterWordMention < TwitterRecord
+  belongs_to :parent, class_name: 'TwitterWordMention', foreign_key: :reply_to_tweet_id, primary_key: :twitter_tweet_id
+  belongs_to :children, class_name: 'TwitterWordMention', foreign_key: :reply_to_tweet_id, primary_key: :twitter_tweet_id
 end

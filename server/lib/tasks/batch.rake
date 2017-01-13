@@ -1,116 +1,6 @@
 require 'google/apis/youtube_v3'
 
 namespace :batch do
-  task db_dump_and_upload: :environment do
-    cmd = nil 
-    environment = Rails.env
-    configuration = ActiveRecord::Base.configurations[environment]
-    database = Regexp.escape(configuration['database'].to_s)
-    username = Regexp.escape(configuration['username'].to_s)
-    password = Regexp.escape(configuration['password'].to_s)
-    tables = [
-      "appear_words",
-      "twitter_words",
-      "twitter_word_appears",
-      "lyrics",
-      "crawl_target_urls",
-      "wikipedia_pages",
-      "wikipedia_topic_categories",
-      "wikipedia_articles",
-      "youtube_videos",
-      "youtube_categories",
-      "youtube_channels",
-      "youtube_comments",
-      "youtube_video_relateds",
-      "youtube_video_tags",
-      "citore_erotic_words",
-      "citore_aegigoe_words",
-      "voice_words",
-      "ngram_words"
-    ]
-    now_str = Time.now.strftime("%Y%m%d_%H%M%S")
-    dir_path = Rails.root.to_s + "/tmp/dbdump/" + now_str
-    system("mkdir #{dir_path}")
-    tables.each do |table|
-      cmd = "mysqldump -u #{username} "
-      if password.present?
-        cmd += "--password=#{password} "
-      end
-      cmd += "--skip-lock-tables -t #{database} #{table} > #{dir_path}/#{table}.sql"
-      system(cmd)
-      puts "#{table} dump complete"
-    end
-
-=begin
-    puts "compress start"
-    Zip::OutputStream.open(dir_path + ".zip") do |zos|
-      puts 'Creating zip file...'
-      tables.each do |table|
-        zos.put_next_entry("#{table}.sql")
-        File.open(dir_path + "/" + table + ".sql", 'rb') do |file|
-          file.each_line do |line|
-            zos.puts line
-          end
-        end
-      end
-    end
-=end
-    Zip::File.open(dir_path + ".zip", Zip::File::CREATE) do |zip|
-      # (1) ZIP内にディレクトリを作成
-      zip.mkdir now_str
-
-      tables.each do |table|
-        # (2) 作ったディレクトリにファイルを書き込む１
-        File.open(dir_path + "/" + table + ".sql", 'rb') do |file|
-          zip.get_output_stream(now_str + "/#{table}.sql" ){|s|
-            file.each_line do |line|
-              s.write(line)
-            end
-          }
-          puts "#{table} compressed complete"
-        end
-      end
-    end
-
-    puts "compress completed"
-    system("rm -r " + dir_path)
-    puts "upload start"
-    s3 = Aws::S3::Client.new
-    File.open(dir_path + ".zip", 'rb') do |zip_file|
-      s3.put_object(bucket: "taptappun",body: zip_file,key: "project/sugarcoat/dbdump/#{now_str}.zip", acl: "public-read")
-    end
-    puts "upload completed"
-    system("rm " + dir_path + ".zip")
-    puts "batch completed"
-  end
-
-  task get_erokotoba: :environment do
-    Citore::EroticWord.twitter_crawl(prefix_key: Citore::EroticWord::ERO_KOTOBA_BOT) do |twitter_client, options|
-      tweet_results = twitter_client.user_timeline(Citore::EroticWord::ERO_KOTOBA_BOT, options)
-      Citore::EroticWord.import_tweet!(tweet_results: tweet_results, generate_voice: true)
-      tweet_results
-    end
-    Citore::EroticWord.twitter_crawl(prefix_key: "erokotoba_hash_tag") do |twitter_client, options|
-      tweet_results = twitter_client.search("#エロくないけどエロく聞こえる単語", options)
-      Citore::EroticWord.import_tweet!(tweet_results: tweet_results, generate_voice: true)
-      tweet_results
-    end
-    Citore::EroticWord.twitter_crawl(prefix_key: Citore::EroticWord::UTIDAMINAKO_BOT) do |twitter_client, options|
-      tweet_results = twitter_client.user_timeline(Citore::EroticWord::UTIDAMINAKO_BOT, options)
-      tweet_results.select!{|t| t.text.include?("#エロくないけどエロく聞こえる単語") }
-      Citore::EroticWord.import_tweet!(tweet_results: tweet_results, generate_voice: true)
-      tweet_results
-    end
-  end
-
-  task sugarcoat_bot_tweet: :environment do
-    apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
-#    facebook_sugarcoat = Koala::Facebook::API.new(apiconfig["facebook_bot"]["access_token"])
-#    page_token = facebook_sugarcoat.get_page_access_token("346231432435056")
-#    facebook_page = Koala::Facebook::API.new(page_token)
-    #facebook_page.put_wall_post('post on page wall')
-    #facebook_page.put_connections("346231432435056", 'feed', :message => "甘い甘いシュガーコートだお")
-  end
 
   task :export_to_csv_from_dynamodb, :environment do
     Aws.config.update(Rails.application.config_for(:aws).symbolize_keys)
@@ -142,5 +32,27 @@ namespace :batch do
     end
     # 空タスク作ってエラーを握りつぶす
     ARGV.slice(1,ARGV.size).each{|v| task v.to_sym do; end}
+  end
+
+  task import_sql_from_wikipedia: :environment do
+    [
+        [WikipediaTopicCategory, "jawiki-latest-category.sql.gz"],
+        [WikipediaPage, "jawiki-latest-page.sql.gz"]
+#        [WikipediaCategoryPage, "jawiki-latest-categorylinks.sql.gz"]
+    ].each do |clazz, file_name|
+      puts "#{clazz.table_name} download start"
+      gz_file_path = clazz.download_file(file_name)
+      puts "#{clazz.table_name} decompress start"
+      query_string = clazz.decompress_gz_query_string(gz_file_path)
+      puts "#{clazz.table_name} save file start"
+      sanitized_query = clazz.try(:sanitized_query, query_string) || query_string
+      decompressed_file_path = gz_file_path.gsub(".gz", "")
+      File.open(decompressed_file_path, 'wb'){|f| f.write(sanitized_query) }
+      puts "#{clazz.table_name} import data start"
+      clazz.import_dump_query(decompressed_file_path)
+      clazz.remove_file(gz_file_path)
+      clazz.remove_file(decompressed_file_path)
+      puts "#{clazz.table_name} import completed"
+    end
   end
 end

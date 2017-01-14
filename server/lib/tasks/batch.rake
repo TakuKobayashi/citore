@@ -68,18 +68,19 @@ namespace :batch do
       clazz.find_each do |c|
         malkovs = {}
         arr = []
-        natto.parse(c.send(word)) do |n|
+        without_kaomoji_tweet, kaomojis = ApplicationRecord.separate_kaomoji(c.send(word))
+        natto.parse(without_kaomoji_tweet) do |n|
           next if n.surface.blank?
           arr << n.surface
         end
         next if arr.blank?
         tris = arr.each_cons(3).map.to_a
-        tri_arrs = [["", arr[0..1]].flatten] + tris + [["", arr[(arr.size - 2)..(arr.size - 1)]].flatten]
+        tri_arrs = [["", arr[0..1]].flatten] + tris + [[arr[(arr.size - 2)..(arr.size - 1)] ,""].flatten]
         tri_arrs.each do |tri_arr|
           w = tri_arr.to_a
           tri = malkovs[w]
           if tri.blank?
-            malkovs[w] = MarkovTrigram.new(source_type: clazz.to_s, first_gram: w[0], second_gram: w[1], third_gram: w[2], appear_count: 1)
+            malkovs[w] = MarkovTrigram.new(source_type: clazz.to_s, first_gram: w[0].to_s, second_gram: w[1].to_s, third_gram: w[2].to_s, appear_count: 1)
           else
             malkovs[w].appear_count = malkovs[w].appear_count + 1
           end

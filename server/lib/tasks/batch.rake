@@ -73,7 +73,7 @@ namespace :batch do
           arr << n.surface
         end
         next if arr.blank?
-        tris = arr.each_cons(3).map
+        tris = arr.each_cons(3).map.to_a
         tri_arrs = [["", arr[0..1]].flatten] + tris + [["", arr[(arr.size - 2)..(arr.size - 1)]].flatten]
         tri_arrs.each do |tri_arr|
           w = tri_arr.to_a

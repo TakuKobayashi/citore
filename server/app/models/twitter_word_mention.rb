@@ -22,4 +22,6 @@
 class TwitterWordMention < TwitterRecord
   belongs_to :parent, class_name: 'TwitterWordMention', foreign_key: :reply_to_tweet_id, primary_key: :twitter_tweet_id
   has_many :children, class_name: 'TwitterWordMention', foreign_key: :reply_to_tweet_id, primary_key: :twitter_tweet_id
+
+  validates :parent, presence: true, allow_nil: true
 end

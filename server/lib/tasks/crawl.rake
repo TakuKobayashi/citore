@@ -160,7 +160,7 @@ namespace :crawl do
       config.access_token_secret = apiconfig["twitter"]["access_token_secret"]
     end
     TwitterWordMention.where.not(reply_to_tweet_id: nil).includes(:parent).find_each do |t|
-      next if t.parent.present?
+      next if t.parent_word.present?
       status = client.status(t.reply_to_tweet_id)
       sanitaized_word = TwitterRecord.sanitized(status.text)
       without_url_tweet, urls = ApplicationRecord.separate_urls(sanitaized_word)

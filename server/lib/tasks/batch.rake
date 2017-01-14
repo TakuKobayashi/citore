@@ -55,4 +55,37 @@ namespace :batch do
       puts "#{clazz.table_name} import completed"
     end
   end
+
+  task generate_to_malkov: :environment do
+    natto = Natto::MeCab.new(dicdir: ApplicationRecord::MECAB_NEOLOGD_DIC_PATH)
+
+    {
+      TwitterWord => "tweet",
+      TwitterWordMention => "tweet",
+      Lyric => "body",
+      WikipediaArticle => "body"
+    }.each do |clazz, word|
+      clazz.find_each do |c|
+        malkovs = {}
+        arr = []
+        natto.parse(c.send(word)) do |n|
+          next if n.surface.blank?
+          arr << n.surface
+        end
+        next if arr.blank?
+        tris = arr.each_cons(3).map
+        tri_arrs = [["", arr[0..1]].flatten] + tris + [["", arr[(arr.size - 2)..(arr.size - 1)]].flatten]
+        tri_arrs.each do |tri_arr|
+          w = tri_arr.to_a
+          tri = malkovs[w]
+          if tri.blank?
+            malkovs[w] = MarkovTrigram.new(source_type: clazz.to_s, first_gram: w[0], second_gram: w[1], third_gram: w[2], appear_count: 1)
+          else
+            malkovs[w].appear_count = malkovs[w].appear_count + 1
+          end
+        end
+        MarkovTrigram.import!(malkovs.values, on_duplicate_key_update: "appear_count = appear_count + VALUES(appear_count)")
+      end
+    end
+  end
 end

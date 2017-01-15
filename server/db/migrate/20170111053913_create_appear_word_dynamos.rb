@@ -1,5 +1,5 @@
 class CreateAppearWordDynamos < ActiveRecord::Migration[5.0]
-  def change
+  def up
     return if AppearWordDynamo.table_exists?
     migration = Aws::Record::TableMigration.new(AppearWordDynamo)
     migration.create!(

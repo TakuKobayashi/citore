@@ -40,7 +40,6 @@ Rails.application.routes.draw do
 
   namespace :citore do
     resource :voice, controller: :voice, only: [] do
-      get 'search'
       get 'download'
     end
 

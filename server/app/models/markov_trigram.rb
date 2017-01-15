@@ -30,7 +30,7 @@ class MarkovTrigram < ApplicationRecord
     candidates = MarkovTrigram.where(first_gram: "", second_gram: seed)
     sentence_array = []
     record = nil
-    while
+    begin
       # 初期化
       record = nil
       if word_records[record.try(:first_gram).to_s].present?

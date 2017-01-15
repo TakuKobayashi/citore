@@ -32,7 +32,7 @@ class MarkovTrigram < ApplicationRecord
     record = nil
     begin
       # cacheがアレばそこから引っ張る
-      if word_records[record.try(:first_gram).to_s].present?
+      if word_records[record.try(:third_gram).to_s].present?
         candidates = word_records[record.try(:first_gram).to_s]
       else
         if source_type.present?

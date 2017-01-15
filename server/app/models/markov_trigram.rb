@@ -57,6 +57,6 @@ class MarkovTrigram < ApplicationRecord
       candidates = MarkovTrigram.where(first_gram: record.third_gram).where.not(id: sentence_array.map(&:id))
     end while record.try(:third_gram).present?
 
-    return sentence_array.map(&joint).join("")
+    return sentence_array.map(&:joint).join("")
   end
 end

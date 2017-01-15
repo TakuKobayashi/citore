@@ -65,9 +65,14 @@ namespace :batch do
     limit_span = (15.minutes.second / 180).to_i
     TwitterWord.find_in_batches do |words|
       words.each_slice(100) do |w|
+        t_words = []
         tweets = client.statuses(w.map(&:twitter_tweet_id), {include_entities: false, map: true})
-        t_words = tweets.map do |status|
-          TwitterWord.new(w.attributes.merge(reply_to_tweet_id: status.in_reply_to_status_id.to_s))
+        tweets.each do |status|
+          tw_word = w.detect{|wt| wt.twitter_tweet_id.to_s == status.id.to_s }
+          if tw_word.present?
+            tw_word.reply_to_tweet_id = status.in_reply_to_status_id.to_s
+            t_words << tw_word
+          end
         end
         TwitterWord.import(t_words, on_duplicate_key_update: [:reply_to_tweet_id])
         sleep limit_span

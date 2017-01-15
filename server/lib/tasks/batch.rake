@@ -54,7 +54,7 @@ namespace :batch do
     end
   end
 
-  task rebuild_twitter_replay_id:, :environment do
+  task :rebuild_twitter_replay_id, :environment do
     apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
     client = Twitter::REST::Client.new do |config|
       config.consumer_key        = apiconfig["twitter"]["consumer_key"]

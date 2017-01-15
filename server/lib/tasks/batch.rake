@@ -66,7 +66,7 @@ namespace :batch do
     TwitterWord.find_in_batches do |words|
       words.each_slice(100) do |w|
         t_words = []
-        tweets = client.statuses(w.map(&:twitter_tweet_id), {include_entities: false, map: true})
+        tweets = client.statuses(w.map(&:twitter_tweet_id))
         tweets.each do |status|
           tw_word = w.detect{|wt| wt.twitter_tweet_id.to_s == status.id.to_s }
           if tw_word.present?

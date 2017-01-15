@@ -43,6 +43,8 @@ class MarkovTrigram < ApplicationRecord
       record = nil
       #ActiveRecordなら SQL を発行させる
       candidates = candidates.to_a
+      # もう出ちゃったものは除外する
+      candidates.reject!{|r| sentence_array.any?{|c| c.id == r.id } }
       lot_value = rand(candidates.sum(&:appear_count))
       counter = 0
       candidates.each do |candidate|
@@ -55,7 +57,7 @@ class MarkovTrigram < ApplicationRecord
       # cacheとしていれる。 同じものは使わない
       word_records[record.try(:first_gram).to_s] = candidates.select{|r| r.id != record.try(:id).to_i }
       sentence_array << record
-      candidates = MarkovTrigram.where(first_gram: record.try(:third_gram).to_s).where.not(id: sentence_array.map(&:id))
+      candidates = MarkovTrigram.where(first_gram: record.try(:third_gram).to_s)
     end while record.try(:third_gram).present?
 
     return sentence_array.map(&:joint).join("")

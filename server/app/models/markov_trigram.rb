@@ -31,8 +31,7 @@ class MarkovTrigram < ApplicationRecord
     sentence_array = []
     record = nil
     begin
-      # 初期化
-      record = nil
+      # cacheがアレばそこから引っ張る
       if word_records[record.try(:first_gram).to_s].present?
         candidates = word_records[record.try(:first_gram).to_s]
       else
@@ -40,6 +39,8 @@ class MarkovTrigram < ApplicationRecord
           candidates = candidates.where(source_type: source_type)
         end
       end
+      # 初期化
+      record = nil
       #ActiveRecordなら SQL を発行させる
       candidates = candidates.to_a
       lot_value = rand(candidates.sum(&:appear_count))
@@ -55,7 +56,7 @@ class MarkovTrigram < ApplicationRecord
       word_records[record.try(:first_gram).to_s] = candidates.select{|r| r.id != record.try(:id).to_i }
       sentence_array << record
       candidates = MarkovTrigram.where(first_gram: record.third_gram).where.not(id: sentence_array.map(&:id))
-    end while record.try(:third_gram).present?
+    end while record.try(:third_gram).blank?
 
     return sentence_array.map(&:joint).join("")
   end

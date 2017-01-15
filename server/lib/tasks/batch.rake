@@ -34,6 +34,26 @@ namespace :batch do
     ARGV.slice(1,ARGV.size).each{|v| task v.to_sym do; end}
   end
 
+  task :import_to_dynamodb_from_table, :environment do
+    Aws.config.update(Rails.application.config_for(:aws).symbolize_keys)
+    client = Aws::DynamoDB::Client.new
+    {
+      AppearWord => "AppearWordDynamo",
+      TwitterWord => "TwitterWordDynamo",
+      MarkovTrigram => "MarkovTrigramDynamo",
+    }.each do |activerecord_clazz, dynamodb_tablename|
+      activerecord_clazz.find_in_batches do |clazzes|
+        clazzes.each_slice(25) do |records|
+          client.batch_write_item({
+            request_items: {
+              dynamodb_tablename => records.map{|r| {put_request: {item: r.attributes} } }
+            }
+          })
+        end
+      end
+    end
+  end
+
   task import_sql_from_wikipedia: :environment do
     [
         [WikipediaTopicCategory, "jawiki-latest-category.sql.gz"],

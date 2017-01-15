@@ -9,12 +9,14 @@
 #  tweet             :string(255)      not null
 #  csv_url           :text(65535)
 #  tweet_created_at  :datetime         not null
+#  reply_to_tweet_id :string(255)
 #
 # Indexes
 #
-#  index_twitter_words_on_tweet_created_at  (tweet_created_at)
-#  index_twitter_words_on_twitter_tweet_id  (twitter_tweet_id)
-#  index_twitter_words_on_twitter_user_id   (twitter_user_id)
+#  index_twitter_words_on_reply_to_tweet_id  (reply_to_tweet_id)
+#  index_twitter_words_on_tweet_created_at   (tweet_created_at)
+#  index_twitter_words_on_twitter_tweet_id   (twitter_tweet_id) UNIQUE
+#  index_twitter_words_on_twitter_user_id    (twitter_user_id)
 #
 
 require 'test_helper'

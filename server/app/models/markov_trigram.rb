@@ -39,7 +39,7 @@ class MarkovTrigram < ApplicationRecord
           candidates = candidates.where(source_type: source_type)
         end
       end
-      # 初期化
+      # 一つ前のrecordの情報はもういらないので初期化
       record = nil
       #ActiveRecordなら SQL を発行させる
       candidates = candidates.to_a
@@ -55,8 +55,8 @@ class MarkovTrigram < ApplicationRecord
       # cacheとしていれる。 同じものは使わない
       word_records[record.try(:first_gram).to_s] = candidates.select{|r| r.id != record.try(:id).to_i }
       sentence_array << record
-      candidates = MarkovTrigram.where(first_gram: record.third_gram).where.not(id: sentence_array.map(&:id))
-    end while record.try(:third_gram).blank?
+      candidates = MarkovTrigram.where(first_gram: record.try(:third_gram).to_s).where.not(id: sentence_array.map(&:id))
+    end while record.try(:third_gram).present?
 
     return sentence_array.map(&:joint).join("")
   end

@@ -58,7 +58,7 @@ class MarkovTrigram < ApplicationRecord
       word_records[record.try(:first_gram).to_s] = candidates.select{|r| r.id != record.try(:id).to_i }
       sentence_array << record
       candidates = MarkovTrigram.where(first_gram: record.try(:third_gram).to_s)
-    end while record.try(:third_gram).present?
+    end while ApplicationRecord.delete_symbols(record.try(:third_gram)).present?
 
     return sentence_array.map(&:joint).join("")
   end

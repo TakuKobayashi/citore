@@ -2,7 +2,7 @@ require 'google/apis/youtube_v3'
 
 namespace :batch do
 
-  task :export_to_csv_from_dynamodb, :environment do
+  task export_to_csv_from_dynamodb: :environment do
     Aws.config.update(Rails.application.config_for(:aws).symbolize_keys)
     table_name = ARGV.last
     client = Aws::DynamoDB::Client.new
@@ -34,12 +34,12 @@ namespace :batch do
     ARGV.slice(1,ARGV.size).each{|v| task v.to_sym do; end}
   end
 
-  task :import_to_dynamodb_from_table, :environment do
+  task import_to_dynamodb_from_table: :environment do
     Aws.config.update(Rails.application.config_for(:aws).symbolize_keys)
     client = Aws::DynamoDB::Client.new
     {
-      AppearWord => "AppearWordDynamo",
       TwitterWord => "TwitterWordDynamo",
+      AppearWord => "AppearWordDynamo",
       MarkovTrigram => "MarkovTrigramDynamo",
     }.each do |activerecord_clazz, dynamodb_tablename|
       activerecord_clazz.find_in_batches do |clazzes|
@@ -54,7 +54,7 @@ namespace :batch do
     end
   end
 
-  task :rebuild_twitter_replay_id, :environment do
+  task rebuild_twitter_replay_id: :environment do
     apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
     client = Twitter::REST::Client.new do |config|
       config.consumer_key        = apiconfig["twitter"]["consumer_key"]

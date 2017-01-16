@@ -63,19 +63,24 @@ namespace :batch do
       config.access_token_secret = apiconfig["twitter"]["access_token_secret"]
     end
     limit_span = (15.minutes.second / 300).to_i
-    TwitterWord.where("id > 34000").find_in_batches do |words|
+    TwitterWord.find_in_batches do |words|
       words.each_slice(100) do |w|
-        t_words = []
-        tweets = client.statuses(w.map(&:twitter_tweet_id))
-        tweets.each do |status|
-          tw_word = w.detect{|wt| wt.twitter_tweet_id.to_s == status.id.to_s }
-          if tw_word.present?
-            tw_word.reply_to_tweet_id = status.in_reply_to_status_id.to_s
-            t_words << tw_word
+        begin
+          t_words = []
+          tweets = client.statuses(w.map(&:twitter_tweet_id))
+          tweets.each do |status|
+            tw_word = w.detect{|wt| wt.twitter_tweet_id.to_s == status.id.to_s }
+            if tw_word.present?
+              tw_word.reply_to_tweet_id = status.in_reply_to_status_id.to_s
+              t_words << tw_word
+            end
           end
+          TwitterWord.import(t_words, on_duplicate_key_update: [:reply_to_tweet_id])
+          sleep limit_span
+        rescue
+          sleep 60
+          retry
         end
-        TwitterWord.import(t_words, on_duplicate_key_update: [:reply_to_tweet_id])
-        sleep limit_span
       end
     end
   end

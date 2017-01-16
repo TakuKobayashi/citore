@@ -34,7 +34,7 @@ namespace :batch do
     ARGV.slice(1,ARGV.size).each{|v| task v.to_sym do; end}
   end
 
-  task import_to_dynamodb_from_table: :environment do
+  task import_to_appear_word: :environment do
     {
       TwitterWordMention => "tweet",
       Lyric => "body",
@@ -74,7 +74,7 @@ namespace :batch do
     end
   end
 
-  task import_to_appear_word: :environment do
+  task import_to_dynamodb_from_table: :environment do
     Aws.config.update(Rails.application.config_for(:aws).symbolize_keys)
     client = Aws::DynamoDB::Client.new
     {

@@ -35,6 +35,46 @@ namespace :batch do
   end
 
   task import_to_dynamodb_from_table: :environment do
+    {
+      TwitterWordMention => "tweet",
+      Lyric => "body",
+      WikipediaArticle => "body"
+    }.each do |activerecord_clazz, field_name|
+      activerecord_clazz.find_in_batches do |clazzes|
+        import_words = []
+        appear_imports = {}
+        clazzes.each do |clazz|
+          sanitaized_word = ApplicationRecord.basic_sanitize(clazz.send(field_name))
+          without_url, urls = ApplicationRecord.separate_urls(sanitaized_word)
+          word = ApplicationRecord.delete_symbols(without_url)
+
+          natto.parse(word) do |n|
+            next if n.surface.blank?
+            features = n.feature.split(",")
+            part = EmotionalWordDynamo::PARTS[features[0]]
+            next if part.blank? || part == "av"
+            word = features[6]
+            if word.blank? || word == "*"
+              word = n.surface
+            end
+            appears = appear_imports[word]
+            if appears.present?
+              count = appears[:appear_count]
+            end
+            appear_imports[word] = {word: word, part: part, appear_count: count.to_i + 1}
+          end
+        end
+
+        appear_imports.each do |word, hash|
+          appear_word = AppearWord.new(hash)
+          import_words << appear_word
+        end
+        AppearWord.import(import_words, on_duplicate_key_update: "appear_count = appear_count + VALUES(appear_count)")
+      end
+    end
+  end
+
+  task import_to_appear_word: :environment do
     Aws.config.update(Rails.application.config_for(:aws).symbolize_keys)
     client = Aws::DynamoDB::Client.new
     {

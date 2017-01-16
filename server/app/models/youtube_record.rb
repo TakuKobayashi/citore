@@ -22,7 +22,7 @@ class YoutubeRecord < ApplicationRecord
         logger = ActiveSupport::Logger.new("log/batch_error.log")
         console = ActiveSupport::Logger.new(STDOUT)
         logger.extend ActiveSupport::Logger.broadcast(console)
-        logger.error "error message:" + e.message,to_s
+        logger.info("error message:" + e.message,to_s)
         puts "error message:" + e.message,to_s
         retry_counter += 1
         if retry_counter <= 5

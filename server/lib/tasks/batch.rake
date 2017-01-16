@@ -35,6 +35,7 @@ namespace :batch do
   end
 
   task import_to_appear_word: :environment do
+    natto = Natto::MeCab.new(dicdir: ApplicationRecord::MECAB_NEOLOGD_DIC_PATH)
     {
       TwitterWordMention => "tweet",
       Lyric => "body",

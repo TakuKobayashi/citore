@@ -18,7 +18,8 @@ class YoutubeRecord < ApplicationRecord
           page_token = get_list.next_page_token
         end
         ExtraInfo.update({table_name => page_token})
-      rescue
+      rescue Exception => e
+        puts "error message:" + e.message,to_s
         retry_counter += 1
         if retry_counter <= 5
           retry

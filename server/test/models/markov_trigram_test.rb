@@ -2,17 +2,15 @@
 #
 # Table name: markov_trigrams
 #
-#  id           :integer          not null, primary key
-#  source_type  :string(255)      not null
-#  first_gram   :string(255)      default(""), not null
-#  second_gram  :string(255)      default(""), not null
-#  third_gram   :string(255)      default(""), not null
-#  appear_count :integer          default(0), not null
+#  id          :integer          not null, primary key
+#  source_type :string(255)      not null
+#  prefix      :string(255)      default(""), not null
+#  others_json :text(65535)      not null
+#  state       :integer          default(0), not null
 #
 # Indexes
 #
-#  index_markov_trigrams_on_first_gram  (first_gram)
-#  markov_trigram_type_word_index       (source_type,first_gram,second_gram,third_gram) UNIQUE
+#  index_markov_trigrams_on_prefix_and_state  (prefix,state) UNIQUE
 #
 
 require 'test_helper'

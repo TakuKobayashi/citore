@@ -2,24 +2,31 @@
 #
 # Table name: markov_trigrams
 #
-#  id           :integer          not null, primary key
-#  source_type  :string(255)      not null
-#  first_gram   :string(255)      default(""), not null
-#  second_gram  :string(255)      default(""), not null
-#  third_gram   :string(255)      default(""), not null
-#  appear_count :integer          default(0), not null
+#  id          :integer          not null, primary key
+#  source_type :string(255)      not null
+#  prefix      :string(255)      default(""), not null
+#  others_json :text(65535)      not null
+#  state       :integer          default(0), not null
 #
 # Indexes
 #
-#  index_markov_trigrams_on_first_gram  (first_gram)
-#  markov_trigram_type_word_index       (source_type,first_gram,second_gram,third_gram) UNIQUE
+#  index_markov_trigrams_on_prefix_and_state  (prefix,state) UNIQUE
 #
 
 class MarkovTrigram < ApplicationRecord
+  serialize :others_json, JSON
+
+  enum state: [:normal, :bos, :eos]
+
   has_many :word_to_markovs
   has_many :lyrics, through: :word_to_markovs, source: :source, source_type: 'Lyric'
   has_many :twitter_words, through: :word_to_markovs, source: :source, source_type: 'TwitterWord'
   has_many :wikipedia_articles, through: :word_to_markovs, source: :source, source_type: 'WikipediaArticle'
+
+  def others
+    #cache
+    @others_array ||= others_json
+  end
 
   def joint
     return self.second_gram + self.third_gram
@@ -27,39 +34,48 @@ class MarkovTrigram < ApplicationRecord
 
   def self.generate_sentence(seed: , source_type: nil)
     word_records = {}
-    candidates = MarkovTrigram.where(first_gram: "", second_gram: seed)
+    markovs = MarkovTrigram.bos.where(prefix: seed)
     sentence_array = []
-    record = nil
+    markov = nil
+    counter = 0
     begin
       # cacheがアレばそこから引っ張る
-      if word_records[record.try(:third_gram).to_s].present?
-        candidates = word_records[record.try(:first_gram).to_s]
+      if word_records[markov.try(:prefix).to_s].present? || markovs.instance_of?(Array)
+        markovs = word_records[markov.try(:prefix).to_s]
       else
         if source_type.present?
-          candidates = candidates.where(source_type: source_type)
+          markovs = markovs.where(source_type: source_type).limit(1)
         end
       end
       # 一つ前のrecordの情報はもういらないので初期化
-      record = nil
+      other_word = nil
       #ActiveRecordなら SQL を発行させる
-      candidates = candidates.to_a
-      # もう出ちゃったものは除外する
-      candidates.reject!{|r| sentence_array.any?{|c| c.id == r.id } }
-      lot_value = rand(candidates.sum(&:appear_count))
+      markovs = markovs.to_a
+      candidates = markovs.map(&:others).flatten
+      lot_value = rand(candidates.sum{|c| c["appear_count"].to_i })
       counter = 0
       candidates.each do |candidate|
-        counter += candidate.appear_count
+        counter += candidate["appear_count"].to_i
         if counter > lot_value
-      	  record = candidate
+      	  other_word = candidate
           break
         end
       end
-      # cacheとしていれる。 同じものは使わない
-      word_records[record.try(:first_gram).to_s] = candidates.select{|r| r.id != record.try(:id).to_i }
-      sentence_array << record
-      candidates = MarkovTrigram.where(first_gram: record.try(:third_gram).to_s)
-    end while ApplicationRecord.delete_symbols(record.try(:third_gram)).present?
 
-    return sentence_array.map(&:joint).join("")
+      # 今引き当てたものは次に出ないようにするために除外する
+      markovs.each{|m| m.others.select{|r| r["second_word"] != other_word["second_word"] && r["third_word"] != other_word["third_word"] } }
+      # prefixはどれも同じはず
+      markov = markovs.sample
+      # cacheとしていれる。 同じものは使わない
+      word_records[markov.try(:prefix).to_s] = markovs
+      if counter == 0
+        sentence_array << markov.prefix
+      end
+      sentence_array += [other_word["second_word"], other_word["third_word"]]
+      counter = counter + 1
+      markovs = MarkovTrigram.where(prefix: other_word["third_word"].to_s)
+    end while markov.blank? || markov.eos?
+
+    return sentence_array.flatten.join("")
   end
 end

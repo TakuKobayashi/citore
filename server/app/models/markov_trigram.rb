@@ -14,6 +14,14 @@
 #
 
 class MarkovTrigram < ApplicationRecord
+
+  #[
+  #  {
+  #    second_word: string,
+  #    third_word: string,
+  #    appear_count: integer,
+  #  },
+  #]
   serialize :others_json, JSON
 
   enum state: [:normal, :bos, :eos]

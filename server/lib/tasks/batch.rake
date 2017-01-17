@@ -152,30 +152,23 @@ namespace :batch do
     natto = Natto::MeCab.new(dicdir: ApplicationRecord::MECAB_NEOLOGD_DIC_PATH)
 
     {
-      TwitterWord => "tweet",
-      TwitterWordMention => "tweet",
+      TwitterWord => "tweet"
       Lyric => "body",
       WikipediaArticle => "body"
     }.each do |clazz, word|
-      clazz.find_each do |c|
+      clazz.find_in_batches do |cs|
         malkovs = {}
-        arr = []
-        without_kaomoji_tweet, kaomojis = ApplicationRecord.separate_kaomoji(c.send(word))
-        natto.parse(without_kaomoji_tweet) do |n|
-          next if n.surface.blank?
-          arr << n.surface
-        end
-        next if arr.blank?
-        tris = arr.each_cons(3).map.to_a
-        tri_arrs = [["", arr[0..1]].flatten] + tris + [[arr[(arr.size - 2)..(arr.size - 1)] ,""].flatten]
-        tri_arrs.each do |tri_arr|
-          w = tri_arr.to_a
-          tri = malkovs[w]
-          if tri.blank?
-            malkovs[w] = MarkovTrigram.new(source_type: clazz.to_s, first_gram: w[0].to_s, second_gram: w[1].to_s, third_gram: w[2].to_s, appear_count: 1)
-          else
-            malkovs[w].appear_count = malkovs[w].appear_count + 1
+        cs.each do |c|
+          arr = []
+          sanitaized_word = TwitterRecord.sanitized(c.send(word))
+          without_url_tweet, urls = ApplicationRecord.separate_urls(sanitaized_word)
+          without_kaomoji_tweet, kaomojis = ApplicationRecord.separate_kaomoji(without_url_tweet)
+          natto.parse(without_kaomoji_tweet) do |n|
+            next if n.surface.blank?
+            arr << n.surface
           end
+          words = arr.map{|t| ApplicationRecord.delete_symbols(t) }.select{|t| .present? }
+          next if words.blank?
         end
         MarkovTrigram.import!(malkovs.values, on_duplicate_key_update: "appear_count = appear_count + VALUES(appear_count)")
       end

@@ -85,11 +85,15 @@ namespace :batch do
     }.each do |activerecord_clazz, dynamodb_tablename|
       activerecord_clazz.find_in_batches do |clazzes|
         clazzes.each_slice(25) do |records|
-          client.batch_write_item({
-            request_items: {
-              dynamodb_tablename => records.map{|r| {put_request: {item: r.attributes} } }
-            }
-          })
+          begin
+            client.batch_write_item({
+              request_items: {
+                dynamodb_tablename => records.map{|r| {put_request: {item: r.attributes} } }
+              }
+            })
+          rescue Exception => e
+            puts e.message
+          end
         end
       end
     end

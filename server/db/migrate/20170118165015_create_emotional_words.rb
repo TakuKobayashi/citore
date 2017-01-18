@@ -1,0 +1,8 @@
+class CreateEmotionalWords < ActiveRecord::Migration[5.0]
+  def change
+    create_table :emotional_words do |t|
+
+      t.timestamps
+    end
+  end
+end

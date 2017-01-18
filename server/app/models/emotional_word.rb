@@ -1,0 +1,2 @@
+class EmotionalWord < ApplicationRecord
+end

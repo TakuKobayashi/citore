@@ -92,6 +92,10 @@ namespace :batch do
               }
             })
           rescue Exception => e
+            logger = ActiveSupport::Logger.new("log/batch_error.log")
+            console = ActiveSupport::Logger.new(STDOUT)
+            logger.extend ActiveSupport::Logger.broadcast(console)
+            logger.info("error message:#{e.message.to_s}")
             puts e.message
           end
         end

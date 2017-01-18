@@ -152,9 +152,8 @@ namespace :batch do
     natto = Natto::MeCab.new(dicdir: ApplicationRecord::MECAB_NEOLOGD_DIC_PATH)
 
     {
-      TwitterWord => "tweet"
-      Lyric => "body",
-      WikipediaArticle => "body"
+      TwitterWord => "tweet",
+      Lyric => "body"
     }.each do |clazz, word|
       clazz.find_in_batches do |cs|
         malkovs = {}
@@ -167,10 +166,25 @@ namespace :batch do
             next if n.surface.blank?
             arr << n.surface
           end
-          words = arr.map{|t| ApplicationRecord.delete_symbols(t) }.select{|t| .present? }
+          words = arr.map{|t| ApplicationRecord.delete_symbols(t) }.select{|t| t.present? }.each_cons(3).map.to_a
           next if words.blank?
+          words.each_with_index do |w, index|
+            if index == 0
+              state = MarkovTrigram.states[:bos]
+            elsif index == words.size - 1
+              state = MarkovTrigram.states[:eos]
+            else
+              state = MarkovTrigram.states[:normal]
+            end
+            malkov = malkovs[w[0].to_s, state]
+            if malkov.blank?
+              malkov = MarkovTrigram.new(source_type: clazz.to_s, prefix: w[0].to_s, state: state)
+            end
+            malkov.others = {"second_word" => w[1], "third_word" => w[2]}
+            malkovs[w[0], state] = malkov
+          end
         end
-        MarkovTrigram.import!(malkovs.values, on_duplicate_key_update: "appear_count = appear_count + VALUES(appear_count)")
+        MarkovTrigram.import!(malkovs.values, on_duplicate_key_update: [:others_json])
       end
     end
   end

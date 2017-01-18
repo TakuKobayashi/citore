@@ -36,6 +36,23 @@ class MarkovTrigram < ApplicationRecord
     @others_array ||= others_json
   end
 
+  def others=(hash)
+    #cache
+    array = others || []
+    if array.detect{|r| r["second_word"] == hash["second_word"] && r["third_word"] == hash["third_word"]}.any?
+      array.each do |h|
+        if h["second_word"] == hash["second_word"] && h["third_word"] == hash["third_word"]
+          h["appear_count"] = h["appear_count"].to_i + 1
+          break
+        end
+      end
+    else
+      array << hash.merge("appear_count" => 1)
+    end
+    self.others_json = array
+    @others_array = array
+  end
+
   def joint
     return self.second_gram + self.third_gram
   end

@@ -5,5 +5,5 @@ class MarkovTrigramDynamo
   string_attr :source_type, range_key: true
   integer_attr :id
   integer_attr :state
-  array_attr :others_json
+  list_attr :others_json
 end

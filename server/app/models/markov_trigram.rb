@@ -39,7 +39,7 @@ class MarkovTrigram < ApplicationRecord
   def others=(hash)
     #cache
     array = others || []
-    if array.detect{|r| r["second_word"] == hash["second_word"] && r["third_word"] == hash["third_word"]}.any?
+    if array.any?{|r| r["second_word"] == hash["second_word"] && r["third_word"] == hash["third_word"]}
       array.each do |h|
         if h["second_word"] == hash["second_word"] && h["third_word"] == hash["third_word"]
           h["appear_count"] = h["appear_count"].to_i + 1

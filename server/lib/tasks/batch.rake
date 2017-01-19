@@ -163,45 +163,55 @@ namespace :batch do
       TwitterWord => "tweet",
       Lyric => "body"
     }.each do |clazz, word|
+
       clazz.find_in_batches do |cs|
         batch_words = []
-        cs.each do |c|
-          arr = []
-          sanitaized_word = TwitterRecord.sanitized(c.send(word))
-          without_url_tweet, urls = ApplicationRecord.separate_urls(sanitaized_word)
-          without_kaomoji_tweet, kaomojis = ApplicationRecord.separate_kaomoji(without_url_tweet)
-          natto.parse(without_kaomoji_tweet) do |n|
-            next if n.surface.blank?
-            arr << n.surface
-          end
-          words = arr.map{|t| ApplicationRecord.delete_symbols(t) }.select{|t| t.present? }.each_cons(3).map.to_a
-          next if words.blank?
-          batch_words << words
-        end
-        tri_group = MarkovTrigram.where(prefix: batch_words.map{|words| words.map{|tri| tri[0] } }.flatten.uniq).group_by(&:prefix)
-        malkovs = {}
-        batch_words.each do |words|
-          words.each_with_index do |w, index|
-            if index == 0
-              state = MarkovTrigram.states[:bos]
-            elsif index == words.size - 1
-              state = MarkovTrigram.states[:eos]
-            else
-              state = MarkovTrigram.states[:normal]
+        begin
+          cs.each do |c|
+            arr = []
+            sanitaized_word = TwitterRecord.sanitized(c.send(word))
+            without_url_tweet, urls = ApplicationRecord.separate_urls(sanitaized_word)
+            without_kaomoji_tweet, kaomojis = ApplicationRecord.separate_kaomoji(without_url_tweet)
+            natto.parse(without_kaomoji_tweet) do |n|
+              next if n.surface.blank?
+              arr << n.surface
             end
-            malkov = malkovs[[w[0].to_s, state]]
-            if malkov.blank?
-              currents = tri_group[w[0].to_s] || []
-              malkov = currents.detect{|c| MarkovTrigram.states[c.state] == state }
-              if malkov.blank?
-                malkov = MarkovTrigram.new(source_type: clazz.to_s, prefix: w[0].to_s, state: state)
+            words = arr.map{|t| ApplicationRecord.delete_symbols(t) }.select{|t| t.present? }.each_cons(3).map.to_a
+            next if words.blank?
+            batch_words << words
+          end
+          tri_group = MarkovTrigram.where(prefix: batch_words.map{|words| words.map{|tri| tri[0] } }.flatten.uniq).group_by(&:prefix)
+          malkovs = {}
+          batch_words.each do |words|
+            words.each_with_index do |w, index|
+              if index == 0
+                state = MarkovTrigram.states[:bos]
+              elsif index == words.size - 1
+                state = MarkovTrigram.states[:eos]
+              else
+                state = MarkovTrigram.states[:normal]
               end
+              malkov = malkovs[[w[0].to_s, state]]
+              if malkov.blank?
+                currents = tri_group[w[0].to_s] || []
+                malkov = currents.detect{|c| MarkovTrigram.states[c.state] == state }
+                if malkov.blank?
+                  malkov = MarkovTrigram.new(source_type: clazz.to_s, prefix: w[0].to_s, state: state)
+                end
+              end
+              malkov.others = {"second_word" => w[1], "third_word" => w[2]}
+              malkovs[[w[0].to_s, state]] = malkov
             end
-            malkov.others = {"second_word" => w[1], "third_word" => w[2]}
-            malkovs[[w[0].to_s, state]] = malkov
           end
+          MarkovTrigram.import!(malkovs.values, on_duplicate_key_update: [:others_json])
+        rescue Exception => e
+          logger = ActiveSupport::Logger.new("log/batch_error.log")
+          console = ActiveSupport::Logger.new(STDOUT)
+          logger.extend ActiveSupport::Logger.broadcast(console)
+          logger.info("error message:#{e.message.to_s}")
+          puts e.message
+          retry
         end
-        MarkovTrigram.import!(malkovs.values, on_duplicate_key_update: [:others_json])
       end
     end
   end

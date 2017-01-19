@@ -6,7 +6,7 @@
 #  source_type :string(255)      not null
 #  prefix      :string(255)      default(""), not null
 #  others_json :text(65535)      not null
-#  state       :integer          default(0), not null
+#  state       :integer          default("normal"), not null
 #
 # Indexes
 #

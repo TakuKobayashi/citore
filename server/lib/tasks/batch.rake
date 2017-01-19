@@ -163,8 +163,8 @@ namespace :batch do
       TwitterWord => "tweet",
       Lyric => "body"
     }.each do |clazz, word|
-      batch_words = []
       clazz.find_in_batches do |cs|
+        batch_words = []
         cs.each do |c|
           arr = []
           sanitaized_word = TwitterRecord.sanitized(c.send(word))

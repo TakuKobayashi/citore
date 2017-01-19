@@ -189,7 +189,7 @@ namespace :batch do
             else
               state = MarkovTrigram.states[:normal]
             end
-            malkov = malkovs[w[0].to_s, state]
+            malkov = malkovs[[w[0].to_s, state]]
             if malkov.blank?
               currents = tri_group[w[0].to_s] || []
               malkov = currents.detect{|c| MarkovTrigram.states[c.state] == state }
@@ -198,7 +198,7 @@ namespace :batch do
               end
             end
             malkov.others = {"second_word" => w[1], "third_word" => w[2]}
-            malkovs[w[0], state] = malkov
+            malkovs[[w[0], state]] = malkov
           end
         end
         MarkovTrigram.import!(malkovs.values, on_duplicate_key_update: [:others_json])

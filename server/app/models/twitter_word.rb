@@ -20,8 +20,6 @@
 #
 
 class TwitterWord < TwitterRecord
-  has_many :twitter_word_appears
-  has_many :appears, through: :twitter_word_appears, source: :appear_word
-  has_many :word_to_markovs, as: :source
-  has_many :markovs, through: :word_to_markovs, source: :markov_trigram
+  belongs_to :parent, class_name: 'TwitterWord', foreign_key: :reply_to_tweet_id, primary_key: :twitter_tweet_id, optional: true
+  has_many :children, class_name: 'TwitterWord', foreign_key: :reply_to_tweet_id, primary_key: :twitter_tweet_id
 end

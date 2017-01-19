@@ -26,11 +26,6 @@ class MarkovTrigram < ApplicationRecord
 
   enum state: [:normal, :bos, :eos]
 
-  has_many :word_to_markovs
-  has_many :lyrics, through: :word_to_markovs, source: :source, source_type: 'Lyric'
-  has_many :twitter_words, through: :word_to_markovs, source: :source, source_type: 'TwitterWord'
-  has_many :wikipedia_articles, through: :word_to_markovs, source: :source, source_type: 'WikipediaArticle'
-
   def others
     #cache
     @others_array ||= others_json

@@ -16,10 +16,6 @@
 #
 
 class WikipediaArticle < ApplicationRecord
-  has_many :wikipedia_article_appear_words
-  has_many :appears, through: :wikipedia_article_appear_words, source: :appear_word
-  has_many :word_to_markovs, as: :source
-  has_many :markovs, through: :word_to_markovs, source: :markov_trigram
 
   WIKIPEDIA_API_URL = "https://ja.wikipedia.org/w/api.php"
 

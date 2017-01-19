@@ -1,0 +1,27 @@
+# == Schema Information
+#
+# Table name: line_stickers
+#
+#  id       :integer          not null, primary key
+#  stkid    :integer          not null
+#  stkpkgid :integer          not null
+#  meaning  :string(255)      not null
+#  stkver   :integer          not null
+#
+# Indexes
+#
+#  index_line_stickers_on_meaning  (meaning)
+#  index_line_stickers_on_stkid    (stkid)
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# This model initially had no columns defined. If you add columns to the
+# model remove the '{}' from the fixture names and add the columns immediately
+# below each fixture, per the syntax in the comments below
+#
+one: {}
+# column: value
+#
+two: {}
+# column: value

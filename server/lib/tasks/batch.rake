@@ -108,7 +108,7 @@ namespace :batch do
     limit_span = (15.minutes.second / 300).to_i
     TwitterWord.where("id > 5805000").find_in_batches do |words|
       words.each_slice(100) do |w|
-        begin
+        ApplicationRecord.batch_execution_and_retry(sleep_second: 60) do
           t_words = []
           tweets = client.statuses(w.map(&:twitter_tweet_id))
           tweets.each do |status|
@@ -120,9 +120,6 @@ namespace :batch do
           end
           TwitterWord.import(t_words, on_duplicate_key_update: [:reply_to_tweet_id])
           sleep limit_span
-        rescue
-          sleep 60
-          retry
         end
       end
     end

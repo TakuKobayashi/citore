@@ -19,4 +19,16 @@
 
 class ExpressionCategorisedWord < CategorisedWord
   JAPANESE_HYOGEN_URL = "http://hyogen.info/"
+
+  def self.generate_taget!
+    url = Addressable::URI.parse(ExpressionCategorisedWord::JAPANESE_HYOGEN_URL)
+    urls = ExpressionCategorisedWord.request_and_get_links_from_html(url).select{|u| u.include?(url.to_s + "/cate/") }
+    break if urls.blank?
+    transaction do
+      urls.each do |u|
+        CrawlTargetUrl.setting_target!(CategorisedWord.to_s, u.to_s, url.to_s)
+        sleep 0.1
+      end
+    end
+  end
 end

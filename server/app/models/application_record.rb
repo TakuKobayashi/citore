@@ -130,4 +130,21 @@ class ApplicationRecord < ActiveRecord::Base
       CacheStore::CACHE.write(self.class.table_name, records)
     end
   end
+
+  def self.batch_execution_and_retry(sleep_second: nil)
+    begin
+      yield
+    rescue Exception => e
+      logger = ActiveSupport::Logger.new("log/batch_error.log")
+      console = ActiveSupport::Logger.new(STDOUT)
+      logger.extend ActiveSupport::Logger.broadcast(console)
+      message = "error #{e.backtrace} \n message:#{message.to_s}"
+      logger.info(message)
+      puts message
+      if sleep_second.present?
+        sleep sleep_second
+      end
+      retry
+    end
+  end
 end

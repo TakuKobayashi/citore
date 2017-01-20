@@ -85,18 +85,12 @@ namespace :batch do
     }.each do |activerecord_clazz, dynamodb_tablename|
       activerecord_clazz.find_in_batches do |clazzes|
         clazzes.each_slice(25) do |records|
-          begin
+          ApplicationRecord.batch_execution_and_retry do
             client.batch_write_item({
               request_items: {
                 dynamodb_tablename => records.map{|r| {put_request: {item: r.attributes} } }
               }
             })
-          rescue Exception => e
-            logger = ActiveSupport::Logger.new("log/batch_error.log")
-            console = ActiveSupport::Logger.new(STDOUT)
-            logger.extend ActiveSupport::Logger.broadcast(console)
-            logger.info("error message:#{e.message.to_s}")
-            puts e.message
           end
         end
       end
@@ -166,7 +160,7 @@ namespace :batch do
 
       clazz.where("id > 169000").find_in_batches do |cs|
         batch_words = []
-        begin
+        ApplicationRecord.batch_execution_and_retry do
           cs.each do |c|
             arr = []
             sanitaized_word = TwitterRecord.sanitized(c.send(word))
@@ -204,13 +198,6 @@ namespace :batch do
             end
           end
           MarkovTrigram.import!(malkovs.values, on_duplicate_key_update: [:others_json])
-        rescue Exception => e
-          logger = ActiveSupport::Logger.new("log/batch_error.log")
-          console = ActiveSupport::Logger.new(STDOUT)
-          logger.extend ActiveSupport::Logger.broadcast(console)
-          logger.info("error message:#{e.message.to_s}")
-          puts e.message
-          retry
         end
       end
     end

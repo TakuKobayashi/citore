@@ -18,6 +18,11 @@ class ApplicationRecord < ActiveRecord::Base
     return doc
   end
 
+  def self.request_and_get_links_from_html(url)
+    doc = request_and_parse_html(url)
+    return doc.css('a').select{|anchor| anchor[:href].present? && anchor[:href] != "/" }.map{|anchor| anchor[:href] }
+  end
+
   def self.basic_sanitize(text)
     #絵文字を除去
     sanitized_word = text.each_char.select{|c| c.bytes.count < 4 }.join('')

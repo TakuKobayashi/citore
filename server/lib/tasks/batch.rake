@@ -161,10 +161,10 @@ namespace :batch do
 
     {
       TwitterWord => "tweet",
-      Lyric => "body"
+#      Lyric => "body"
     }.each do |clazz, word|
 
-      clazz.find_in_batches do |cs|
+      clazz.where("id > 169000").find_in_batches do |cs|
         batch_words = []
         begin
           cs.each do |c|

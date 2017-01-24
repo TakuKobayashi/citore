@@ -199,4 +199,15 @@ namespace :batch do
       end
     end
   end
+
+  task resanitized: :environment do
+    TwitterWord.find_in_batches do |ts|
+      TwitterWord.transaction do
+        ts.each do |t|
+          t.update(tweet: ApplicationRecord.basic_sanitize(t.tweet))
+        end
+      end
+    end
+  end
+
 end

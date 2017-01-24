@@ -105,7 +105,7 @@ namespace :batch do
       config.access_token        = apiconfig["twitter"]["access_token_key"]
       config.access_token_secret = apiconfig["twitter"]["access_token_secret"]
     end
-    limit_span = (15.minutes.second / 300).to_i
+    limit_span = (15.minutes.second / 120).to_i
     TwitterWord.where("id > 6628000").find_in_batches do |words|
       words.each_slice(100) do |w|
         ApplicationRecord.batch_execution_and_retry(sleep_second: 60) do

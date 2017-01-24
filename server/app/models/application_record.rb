@@ -25,7 +25,7 @@ class ApplicationRecord < ActiveRecord::Base
 
   def self.basic_sanitize(text)
     #絵文字を除去
-    sanitized_word = text.each_char.select{|c| c.bytes.count < 4 }.join('')
+    sanitized_word = text.encode('SJIS', 'UTF-8', invalid: :replace, undef: :replace, replace: '').encode('UTF-8')
     #全角半角をいい感じに整える
     sanitized_word = Charwidth.normalize(sanitized_word)
     

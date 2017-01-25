@@ -44,8 +44,15 @@ class MarkovTrigram < ApplicationRecord
     else
       array << hash.merge("appear_count" => 1)
     end
-    self.others_json = array
-    @others_array = array
+    # 候補がいっぱいある時は頻出単語以外は抽選していくスタイル
+    if array.size > 25000
+      major, minor = array.partition{|a| a["appear_count"] > 1 }
+      result = major + minor.sample(25000 - major.size)
+    else
+      result = array
+    end
+    self.others_json = result
+    @others_array = result
   end
 
   def joint

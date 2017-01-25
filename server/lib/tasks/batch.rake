@@ -155,7 +155,7 @@ namespace :batch do
 #      Lyric => "body"
     }.each do |clazz, word|
 
-      clazz.where("id > 302000").find_in_batches do |cs|
+      clazz.where("id > 309000").find_in_batches do |cs|
         batch_words = []
         ApplicationRecord.batch_execution_and_retry do
           cs.each do |c|

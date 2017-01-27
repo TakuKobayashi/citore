@@ -125,6 +125,62 @@ namespace :batch do
     end
   end
 
+  task delete_double_tweet: :environment do
+    logger = ActiveSupport::Logger.new("log/deleted.log")
+    console = ActiveSupport::Logger.new(STDOUT)
+    logger.extend ActiveSupport::Logger.broadcast(console)
+    TwitterWord.find_each do |word|
+      tweets = TwitterWord.where(twitter_tweet_id: word.twitter_tweet_id).to_a
+      if tweets.size > 1
+        message = CSV.generate do |csv|
+          tweets.each do |t|
+            csv << t.attributes.values
+          end
+        end
+        logger.info(message)
+        TwitterWord.where(twitter_tweet_id: word.twitter_tweet_id).where.not(id: word.id).delete_all
+      end
+    end
+  end
+
+  task get_reply_tweet: :environment do
+    apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
+    client = Twitter::REST::Client.new do |config|
+      config.consumer_key        = apiconfig["twitter"]["consumer_key"]
+      config.consumer_secret     = apiconfig["twitter"]["consumer_secret"]
+      config.access_token        = apiconfig["twitter"]["access_token_key"]
+      config.access_token_secret = apiconfig["twitter"]["access_token_secret"]
+    end
+    limit_span = (15.minutes.second / 120).to_i
+    TwitterWord.find_in_batches do |words|
+      reply_tweet_ids = []
+      words.each do |w|
+        if w.reply_to_tweet_id.present?
+          reply_tweet_ids << w.reply_to_tweet_id
+        end
+      end
+      ApplicationRecord.batch_execution_and_retry(sleep_second: 900) do
+        tws = []
+        tweets = client.statuses(reply_tweet_ids)
+        tweets.each do |status|
+          sanitaized_word = TwitterRecord.sanitized(status.text)
+          without_url_tweet, urls = ApplicationRecord.separate_urls(sanitaized_word)
+          t = TwitterWord.new(
+            twitter_user_id: status.user.id.to_s,
+            twitter_user_name: status.user.screen_name.to_s,
+            twitter_tweet_id: status.id.to_s,
+            tweet: without_url_tweet,
+            csv_url: urls.join(","),
+            tweet_created_at: status.created_at
+          )
+          tws << t
+        end
+        TwitterWord.import(tws)
+      end
+      sleep limit_span
+    end
+  end
+
   task import_sql_from_wikipedia: :environment do
     [
         [WikipediaTopicCategory, "jawiki-latest-category.sql.gz"],

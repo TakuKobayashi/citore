@@ -8,7 +8,7 @@ EM.run do
   timers = Timers::Group.new 
   conn.on :open do |e|
     puts "connection success."
-    timer = timers.every(1) do
+    timer = timers.now_and_every(1) do
       live = MoiVoice::LiveStream.playing.first
       if live.present?
         http_client = HTTPClient.new
@@ -21,7 +21,9 @@ EM.run do
         conn.send(response.body)
       end
     end
-    timers.fire
+    loop do
+      timers.wait
+    end
   end
  
   conn.on :error do |e|

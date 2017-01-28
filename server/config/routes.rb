@@ -39,16 +39,17 @@ Rails.application.routes.draw do
   end
 
   namespace :moi_voice do
-    resource :oauth, controller: :oauth, only: [:index] do
-      get 'index'
+    resource :oauth, controller: :oauth, only: [] do
+      get 'twitcas_auth'
+      get 'twitcas_callback'
     end
 
-    resource :top, controller: :top, only: [:index] do
-      get 'index'
+    resource :top, controller: :top, only: [] do
+      get 'page'
     end
 
-    resource :streaming, controller: :streaming, only: [:index] do
-      get 'index'
+    resource :streaming, controller: :streaming, only: [] do
+      get 'play'
     end
   end
 

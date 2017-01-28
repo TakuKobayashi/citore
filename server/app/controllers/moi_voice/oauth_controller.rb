@@ -1,4 +1,7 @@
 class MoiVoice::OauthController < BaseController
-  def index
+  def twitcas_auth
+  end
+
+  def twitcas_callback
   end
 end

@@ -1,4 +1,4 @@
 class MoiVoice::StreamingController < BaseController
-  def index
+  def play
   end
 end

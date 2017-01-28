@@ -1,4 +1,4 @@
 class MoiVoice::TopController < BaseController
-  def index
+  def page
   end
 end

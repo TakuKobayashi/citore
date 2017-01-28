@@ -8,7 +8,7 @@ class MoiVoice::StreamingController < BaseController
   end
 
   def hook
-    payload = JSON.parse(param[:payload])
+    payload = JSON.parse(params[:payload])
     @twitcast_user = MoiVoice::TwitcasUser.find_by(twitcast_uesr_screen_id: payload["userid"])
     live_straem = load_or_create
     if payload["action"] == "live_start"

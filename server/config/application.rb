@@ -22,7 +22,7 @@ module Server
     config.after_initialize do
       if defined?(Rails::Server) || (defined?(Puma))
         # アプリキャッシュにマスター情報を入れておくことでスピードを稼ぐ
-        CacheStore.cache_to_memory!
+        # CacheStore.cache_to_memory!
       end
     end
   end

@@ -6,6 +6,7 @@
 #  moi_voice_twitcas_user_id :integer          not null
 #  moi_voice_live_stream_id  :integer          not null
 #  comment                   :text(65535)
+#  voice_path                :string(255)
 #  created_at                :datetime         not null
 #  updated_at                :datetime         not null
 #

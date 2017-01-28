@@ -15,4 +15,5 @@
 #
 
 class MoiVoice::LiveStream < ApplicationRecord
+  enum state: [:stay, :playing, :finish]
 end

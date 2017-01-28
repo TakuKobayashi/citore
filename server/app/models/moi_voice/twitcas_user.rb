@@ -3,7 +3,7 @@
 # Table name: moi_voice_twitcas_users
 #
 #  id              :integer          not null, primary key
-#  client_id       :string(255)      not null
+#  twitcas_user_id :string(255)      not null
 #  name            :string(255)
 #  access_token    :text(65535)
 #  expires_in      :integer          default(0), not null
@@ -13,10 +13,12 @@
 #
 # Indexes
 #
-#  index_moi_voice_twitcas_users_on_client_id  (client_id) UNIQUE
+#  index_moi_voice_twitcas_users_on_twitcas_user_id  (twitcas_user_id) UNIQUE
 #
 
 class MoiVoice::TwitcasUser < ApplicationRecord
+  has_many :live_straems, class_name: 'MoiVoice::LiveStream', foreign_key: :moi_voice_twitcas_user_id
+
   TWITCAS_API_URL_ROOT = "https://apiv2.twitcasting.tv"
 
   def self.get_oauth_url

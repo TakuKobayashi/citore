@@ -4,14 +4,16 @@
 #
 #  id                        :integer          not null, primary key
 #  moi_voice_twitcas_user_id :integer          not null
-#  start_at                  :datetime         not null
+#  started_at                :datetime
+#  finished_at               :datetime
 #  state                     :integer          not null
 #  created_at                :datetime         not null
 #  updated_at                :datetime         not null
 #
 # Indexes
 #
-#  moi_voice_live_streams_user_id_index  (moi_voice_twitcas_user_id)
+#  moi_voice_live_finished_at_index      (started_at,finished_at)
+#  moi_voice_live_streams_user_id_index  (moi_voice_twitcas_user_id,state)
 #
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html

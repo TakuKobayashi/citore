@@ -45,7 +45,7 @@ class MoiVoice::TwitcasUser < ApplicationRecord
     }
     response_user = http_client.get(TWITCAS_API_URL_ROOT + "/verify_credentials", {}, request_user_header)
     user_hash = JSON.parse(response_user.body)
-    user = MoiVoice::TwitcasUser.find_or_initialize_by(twitcas_user_id: user_hash["user"]["id"])
+    user = MoiVoice::TwitcasUser.find_or_initialize_by(twitcas_user_id: user_hash["user"]["screen_id"])
     user.update!(access_token: user_hash["access_token"], name: user_hash["user"]["name"], last_logined_at: Time.now, expires_in: hash["expires_in"])
     return user
   end

@@ -31,11 +31,14 @@ class MoiVoice::TwitcasUser < ApplicationRecord
     apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
     http_client = HTTPClient.new
     request_params = apiconfig["twitcas"].merge({
-      "code" => code,
-      "grant_type" => "authorization_code",
-      "redirect_uri" => redirect_url
+      code: code,
+      grant_type: "authorization_code",
+      redirect_uri: redirect_url
     })
-    response_oauth = http_client.post(TWITCAS_API_URL_ROOT + "/oauth2/access_token", request_params, {'Content-Type' => 'application/json;charset=UTF-8'})
+    url = Addressable::URI.parse(TWITCAS_API_URL_ROOT + "/oauth2/access_token")
+    url.query_values = request_params
+
+    response_oauth = http_client.post(url.to_s, {}, {'Content-Type' => 'application/json;charset=UTF-8'})
     hash = JSON.parse(response_oauth.body)
     request_user_header = {
       'Content-Type' => 'application/json;charset=UTF-8',

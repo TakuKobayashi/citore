@@ -38,6 +38,20 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace :moi_voice do
+    resource :oauth, controller: :oauth, only: [:index] do
+      get 'index'
+    end
+
+    resource :top, controller: :top, only: [:index] do
+      get 'index'
+    end
+
+    resource :streaming, controller: :streaming, only: [:index] do
+      get 'index'
+    end
+  end
+
   namespace :citore do
     resource :voice, controller: :voice, only: [] do
       get 'download'

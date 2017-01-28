@@ -31,8 +31,6 @@ EM.run do
   end
  
   conn.on :message do |msg|
-    puts "message receive."
-    result = JSON::parse(msg.data.to_s)
-    puts result
+    puts "message receive." + msg.data.to_s
   end
 end

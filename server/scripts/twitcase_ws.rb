@@ -10,15 +10,18 @@ EM.run do
     puts "connection success."
     timer = timers.every(1) do
       live = MoiVoice::LiveStream.playing.first
-      http_client = HTTPClient.new
-      request_user_header = {
-        'Content-Type' => 'application/json;charset=UTF-8',
-        'Authorization' => 'Bearer ' + live.user.access_token
-      }
-      url = MoiVoice::TwitcasUser::TWITCAS_API_URL_ROOT + "/movies/#{live.video_id}/comments"
-      response = http_client.get(url, {}, request_user_header)
-      conn.send(response.body)
+      if live.present?
+        http_client = HTTPClient.new
+        request_user_header = {
+          'Content-Type' => 'application/json;charset=UTF-8',
+          'Authorization' => 'Bearer ' + live.user.access_token
+        }
+        url = MoiVoice::TwitcasUser::TWITCAS_API_URL_ROOT + "/movies/#{live.video_id}/comments"
+        response = http_client.get(url, {}, request_user_header)
+        conn.send(response.body)
+      end
     end
+    timers.fire
   end
  
   conn.on :error do |e|

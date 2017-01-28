@@ -4,4 +4,8 @@ class MoiVoice::StreamingController < BaseController
     logger.info twitcast_user.try(:attributes)
     live_straem = twitcast_user.live_straems.find_or_create_by(state: [MoiVoice::LiveStream.states[:stay], MoiVoice::LiveStream.states[:playing]])
   end
+
+  def hook
+    head(:ok)
+  end
 end

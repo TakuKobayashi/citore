@@ -2,19 +2,13 @@
   var ws = new WebSocket('wss://websocketapisample.herokuapp.com');
   ws.onmessage = function (event) {
     console.log(event);
+    $("#list").append($('<li>').text(event.data));
   };
 </script>
     
 <div class="contener">
   <h2>配信中</h2>
-  <ul class="list">
-    <li>あああ</li>
-    <li>あああ</li>
-    <li>あああ</li>
-    <li>あああ</li>
-    <li>あああ</li>
-    <li>あああ</li>
-  </ul>
+  <ul id="list"></ul>
   <ul class="btn_s">
     <li><%= link_to("エンド", page_moi_voice_top_path) %></li>
   </ul>

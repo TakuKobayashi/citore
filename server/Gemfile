@@ -66,6 +66,7 @@ gem 'wp2txt'
 
 gem 'eventmachine'
 gem 'faye-websocket'
+gem "timers"
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development

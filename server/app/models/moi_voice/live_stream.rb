@@ -17,6 +17,8 @@
 #
 
 class MoiVoice::LiveStream < ApplicationRecord
+  belongs_to :user, class_name: 'MoiVoice::TwitcasUser', foreign_key: :moi_voice_twitcas_user_id
+
   enum state: [:stay, :playing, :finish]
   has_many :comments, class_name: 'MoiVoice::LiveStreamComment', foreign_key: :moi_voice_live_stream_id
 end

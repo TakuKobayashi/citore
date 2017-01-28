@@ -30,15 +30,15 @@ class MoiVoice::TwitcasUser < ApplicationRecord
   def self.oauth!(code, redirect_url)
     apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
     http_client = HTTPClient.new
-#    request_params = apiconfig["twitcas"].merge({
-#      code: code,
-#      grant_type: "authorization_code",
-#      redirect_uri: redirect_url
-#    })
+    request_params = apiconfig["twitcas"].merge({
+      code: code,
+      grant_type: "authorization_code",
+      redirect_uri: redirect_url
+    })
     url = TWITCAS_API_URL_ROOT + "/oauth2/access_token"
-    query = "?code=" + code + "&grant_type=authorization_code&redirect_uri=" + redirect_url + "&client_id=" + apiconfig["twitcas"]["client_id"] + "&client_secret=" + apiconfig["twitcas"]["client_secret"]
+    #query = "?code=" + code + "&grant_type=authorization_code&redirect_uri=" + redirect_url + "&client_id=" + apiconfig["twitcas"]["client_id"] + "&client_secret=" + apiconfig["twitcas"]["client_secret"]
 
-    response_oauth = http_client.post(url + query, {}, {'Content-Type' => 'application/json;charset=UTF-8'})
+    response_oauth = http_client.post(url, request_params)
     hash = JSON.parse(response_oauth.body)
     request_user_header = {
       'Content-Type' => 'application/json;charset=UTF-8',

@@ -64,6 +64,9 @@ gem 'omniauth-google-oauth2'
 
 gem 'wp2txt'
 
+gem 'eventmachine'
+gem 'faye-websocket'
+
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 

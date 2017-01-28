@@ -1,3 +1,10 @@
+<script>
+  var ws = new WebSocket('wss://websocketapisample.herokuapp.com');
+  ws.onmessage = function (event) {
+    console.log(event);
+  };
+</script>
+    
 <div class="contener">
   <h2>配信中</h2>
   <ul class="list">

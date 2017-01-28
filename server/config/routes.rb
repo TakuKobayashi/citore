@@ -50,7 +50,7 @@ Rails.application.routes.draw do
 
     resource :streaming, controller: :streaming, only: [] do
       get 'play'
-      get 'hook'
+      post 'hook'
     end
   end
 

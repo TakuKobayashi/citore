@@ -2,18 +2,20 @@
 #
 # Table name: moi_voice_twitcas_users
 #
-#  id              :integer          not null, primary key
-#  twitcas_user_id :string(255)      not null
-#  name            :string(255)
-#  access_token    :text(65535)
-#  expires_in      :integer          default(0), not null
-#  last_logined_at :datetime         not null
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
+#  id                      :integer          not null, primary key
+#  twitcas_user_id         :string(255)      not null
+#  twitcast_uesr_screen_id :string(255)      not null
+#  name                    :string(255)
+#  access_token            :text(65535)
+#  expires_in              :integer          default(0), not null
+#  last_logined_at         :datetime         not null
+#  created_at              :datetime         not null
+#  updated_at              :datetime         not null
 #
 # Indexes
 #
-#  index_moi_voice_twitcas_users_on_twitcas_user_id  (twitcas_user_id) UNIQUE
+#  index_moi_voice_twitcas_users_on_twitcas_user_id          (twitcas_user_id) UNIQUE
+#  index_moi_voice_twitcas_users_on_twitcast_uesr_screen_id  (twitcast_uesr_screen_id) UNIQUE
 #
 
 class MoiVoice::TwitcasUser < ApplicationRecord
@@ -45,8 +47,8 @@ class MoiVoice::TwitcasUser < ApplicationRecord
     }
     response_user = http_client.get(TWITCAS_API_URL_ROOT + "/verify_credentials", {}, request_user_header)
     user_hash = JSON.parse(response_user.body)
-    user = MoiVoice::TwitcasUser.find_or_initialize_by(twitcas_user_id: user_hash["user"]["screen_id"])
-    user.update!(access_token: user_hash["access_token"], name: user_hash["user"]["name"], last_logined_at: Time.now, expires_in: hash["expires_in"])
+    user = MoiVoice::TwitcasUser.find_or_initialize_by(twitcas_user_id: user_hash["user"]["id"])
+    user.update!(twitcast_uesr_screen_id: user_hash["user"]["screen_id"], access_token: user_hash["access_token"], name: user_hash["user"]["name"], last_logined_at: Time.now, expires_in: hash["expires_in"])
     return user
   end
 end

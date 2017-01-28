@@ -49,8 +49,6 @@ gem 'aws-sdk', '~> 2'
 gem 'aws-sdk-rails'
 gem 'aws-record', '~> 1.0'
 
-gem 'cabocha'
-
 gem 'whenever', :require => false
 
 gem 'addressable'

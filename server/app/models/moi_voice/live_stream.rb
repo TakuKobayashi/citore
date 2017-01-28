@@ -18,4 +18,5 @@
 
 class MoiVoice::LiveStream < ApplicationRecord
   enum state: [:stay, :playing, :finish]
+  has_many :comments, class_name: 'MoiVoice::LiveStreamComment', foreign_key: :moi_voice_live_stream_id
 end

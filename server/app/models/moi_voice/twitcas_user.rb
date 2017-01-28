@@ -18,6 +18,7 @@
 
 class MoiVoice::TwitcasUser < ApplicationRecord
   has_many :live_straems, class_name: 'MoiVoice::LiveStream', foreign_key: :moi_voice_twitcas_user_id
+  has_many :comments, class_name: 'MoiVoice::LiveStreamComment', foreign_key: :moi_voice_twitcas_user_id
 
   TWITCAS_API_URL_ROOT = "https://apiv2.twitcasting.tv"
 

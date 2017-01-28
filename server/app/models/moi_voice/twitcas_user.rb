@@ -36,7 +36,6 @@ class MoiVoice::TwitcasUser < ApplicationRecord
       redirect_uri: redirect_url
     })
     url = TWITCAS_API_URL_ROOT + "/oauth2/access_token"
-    #query = "?code=" + code + "&grant_type=authorization_code&redirect_uri=" + redirect_url + "&client_id=" + apiconfig["twitcas"]["client_id"] + "&client_secret=" + apiconfig["twitcas"]["client_secret"]
 
     response_oauth = http_client.post(url, request_params)
     hash = JSON.parse(response_oauth.body)

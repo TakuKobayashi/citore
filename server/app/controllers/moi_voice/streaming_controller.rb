@@ -1,4 +1,7 @@
 class MoiVoice::StreamingController < BaseController
+  protect_from_forgery
+  layout "moi_voice"
+
   def play
     twitcast_user = MoiVoice::TwitcasUser.find_by(id: params[:user_id])
     logger.info twitcast_user.try(:attributes)
@@ -9,6 +12,7 @@ class MoiVoice::StreamingController < BaseController
   end
 
   def hook
+    payload = JSON.parse(param[:payload])
     head(:ok)
   end
 end

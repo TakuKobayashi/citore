@@ -36,9 +36,9 @@ class MoiVoice::TwitcasUser < ApplicationRecord
       redirect_uri: redirect_url
     })
     url = Addressable::URI.parse(TWITCAS_API_URL_ROOT + "/oauth2/access_token")
-    url.query_values = request_params
+#    url.query_values = request_params
 
-    response_oauth = http_client.post(url.to_s, {}, {'Content-Type' => 'application/json;charset=UTF-8'})
+    response_oauth = http_client.post(url.to_s, request_params, {'Content-Type' => 'application/json;charset=UTF-8'})
     hash = JSON.parse(response_oauth.body)
     request_user_header = {
       'Content-Type' => 'application/json;charset=UTF-8',

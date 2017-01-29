@@ -4,7 +4,7 @@ class MoiVoice::StreamingController < BaseController
 
   def play
     @twitcas_user = MoiVoice::TwitcasUser.find_by(id: params[:user_id])
-    load_or_create
+    @live_straem = load_or_create
   end
 
   def hook

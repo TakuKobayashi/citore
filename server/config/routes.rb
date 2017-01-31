@@ -38,22 +38,6 @@ Rails.application.routes.draw do
     end
   end
 
-  namespace :moi_voice do
-    resource :oauth, controller: :oauth, only: [] do
-      get 'twitcas_auth'
-      get 'twitcas_callback'
-    end
-
-    resource :top, controller: :top, only: [] do
-      get 'page'
-    end
-
-    resource :streaming, controller: :streaming, only: [] do
-      get 'play'
-      post 'hook'
-    end
-  end
-
   namespace :citore do
     resource :voice, controller: :voice, only: [] do
       get 'download'

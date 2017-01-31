@@ -4,8 +4,8 @@
 #
 #  id              :integer          not null, primary key
 #  type            :string(255)      not null
-#  large_category  :integer          not null
-#  medium_category :string(255)      not null
+#  large_category  :integer          default(NULL), not null
+#  medium_category :integer          default(NULL), not null
 #  detail_category :string(255)      not null
 #  degree          :integer          default("unknown"), not null
 #  body            :string(255)      not null
@@ -19,11 +19,15 @@
 
 class CategorisedWord < ApplicationRecord
   enum large_category: {
-    0 => "感情",
-    1 => "感覚",
-    2 => "人物",
-    3 => "風景",
-    4 => "食べ物",
+    0 => "unknown",
+    1 => "感情",
+    2 => "感覚",
+    3 => "人物",
+    4 => "風景",
+    5 => "食べ物",
+  }
+
+  enum medium_category: {
   }
 
   enum degree: [:unknown, :very_low, :low, :normal, :high, :ver_high]

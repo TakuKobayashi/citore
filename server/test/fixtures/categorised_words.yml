@@ -4,8 +4,8 @@
 #
 #  id              :integer          not null, primary key
 #  type            :string(255)      not null
-#  large_category  :integer          not null
-#  medium_category :string(255)      not null
+#  large_category  :integer          default(NULL), not null
+#  medium_category :integer          default(NULL), not null
 #  detail_category :string(255)      not null
 #  degree          :integer          default("unknown"), not null
 #  body            :string(255)      not null

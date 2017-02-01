@@ -20,7 +20,9 @@ class ApplicationRecord < ActiveRecord::Base
 
   def self.request_and_get_links_from_html(url)
     doc = request_and_parse_html(url)
-    return doc.css('a').select{|anchor| anchor[:href].present? && anchor[:href] != "/" }.map{|anchor| anchor[:href] }
+    result = {}
+    doc.css('a').select{|anchor| anchor[:href].present? && anchor[:href] != "/" }.each{|anchor| result[anchor[:href]] = anchor.text }
+    return result
   end
 
   def self.basic_sanitize(text)

@@ -27,7 +27,7 @@
 #
 
 class CrawlTargetUrl < ApplicationRecord
-  belongs_to :source, polymorphic: true
+  #belongs_to :source, polymorphic: true
 
   def self.setting_target!(target_class_name, url_string, from_keyword)
     url = Addressable::URI.parse(url_string)

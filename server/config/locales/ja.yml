@@ -50,7 +50,7 @@ ja:
           smell: におい・香り
           taste: 味・歯触り・舌触り
           sensation: 感触
-          temperature: 温度
+          feeling_temperature: 温度
           stimulation: 刺激
           distance: 距離
           space: 空間
@@ -91,6 +91,115 @@ ja:
           in_head: 思考・頭の中の状態
           talk: 口調・話し方
           shoulder: 肩
+          arm: 腕
+          hand: 手・指・爪
+          chest: 背中・脇・乳房・胸
+          belly: 胴・腹・へそ
+          waist: 腰・尻・性器
+          leg: 足
+          sex: 男性・女性
+          make_up: 化粧
+          child: 若い・子供
+          skin: 肌の印象
+          skin_condition: 肌の状態
+          body_shape: 体つき・体型・体全体の様子
+          human_impression: 人の印象
+          bone: 骨・内臓
+          body_smell: 体臭・体のにおい
+          clothing: 服装・身なり
+          personality: 性格
+          attitude: 態度
+          watch: 見る
+          walk: 歩く・歩き方
+          attack: 攻撃
+          behaviour: 動作・仕草・クセ
+          pose: 姿勢・ポーズ
+          breath: 呼吸
+          sleep: 睡眠・眠る・寝る
+          exchange_word: 言葉を交わす
+          word: 言葉
+          convey_satisfaction: 満足を伝える
+          inform_dissatisfaction: 不満を伝える
+          communication: 心の交流・意思の疎通
+          love: 恋愛
+          person_unknown: 人物未指定
+          phone: 電話
+          consumer_electronics: 家電
+          weapon: 武器
+          item: 道具・アイテム
+          learning: 学問
+          accident: 事件・事故
+          occupation: 職業・仕事
+          economy: 経済
+          world: 世間・世界・社会
+          human_relations: 人間関係
+          health: 健康・体調・病気
+          sport: スポーツ
+          faith: 信仰
+          life: 人生
+          life_and_death: 生と死
+          living_unknown: 暮らし未指定
+          spring: 春
+          summer: 夏
+          autumn: 秋
+          winter: 冬
+          timezone: 時間帯(朝・昼・夜)
+          land: 地上・陸地
+          plant: 植物
+          underwater: 水面・水中
+          hollow: 空・中空
+          road: 道・道路
+          room_atmosphere: 室内の雰囲気
+          artifacts: 設備(人工物)
+          building: 家・建物
+          facility: 施設
+          vehicle: 乗り物
+          entertainment: 娯楽
+          sunny: 晴れ・曇り
+          thunder: 雷
+          frost: 雪・霜・あられ
+          natural_disaster: 天災・荒れた天気
+          rain: 雨・霧
+          temperature: 気温
+          wind: 風
+          animal: 動物
+          insect: 昆虫・虫
+          fire: 火
+          phenomenon: 現象・事態
+          landscape_unknown: 風景未指定
+          rice: 米
+          noodle: 麺類
+          bread: パン・お餅
+          texture: 味・歯触り・舌触り
+          vegetable: 野菜
+          bean: 豆類
+          potato: いも類
+          wild_vegetable: 山菜
+          fruit: 果物(フルーツ)
+          nut_and_seed: 種実類
+          mushroom: きのこ
+          seaweed: 海藻・海苔
+          fish: 魚類
+          shellfish: 貝類
+          other_seafood: その他の魚介類
+          fish_dishes: 魚料理・加工品
+          meat: 肉(素材)
+          meat_dishes: 肉料理・加工品
+          egg: 卵
+          milk: 乳
+          seasoning: 調味料
+          sweetener: 甘味料
+          spice: 香辛料・スパイス
+          japanese_confectionery: 和菓子
+          confectionery: 洋菓子・デザート
+          alcoholic_beverage: アルコール飲料
+          soft_drink: ジュース・清涼飲料・栄養ドリンク
+          tea: お茶・紅茶・コーヒー・水
+          japanese_cuisine: 和食・日本料理
+          chinese_cuisine: 中華・中国、韓国料理
+          western_cuisine: 洋食・西洋料理
+          cooking: 料理(その他)
+          food_unknown: 食べ物未指定
   date:
     abbr_day_names:
     - 日

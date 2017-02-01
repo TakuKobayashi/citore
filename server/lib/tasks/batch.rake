@@ -205,13 +205,12 @@ namespace :batch do
 
   task generate_to_malkov: :environment do
     natto = Natto::MeCab.new(dicdir: ApplicationRecord::MECAB_NEOLOGD_DIC_PATH)
-
     {
       TwitterWord => "tweet",
-#      Lyric => "body"
+      Lyric => "body"
     }.each do |clazz, word|
-
-      clazz.where("id > 401000").find_in_batches(batch_size: 500) do |cs|
+      last_saved_id = ExtraInfo.read_extra_info[(clazz.to_s + "_malkov")]
+      clazz.where("id > ?", last_saved_id.to_i).find_in_batches(batch_size: 500) do |cs|
         batch_words = []
         ApplicationRecord.batch_execution_and_retry do
           cs.each do |c|
@@ -252,6 +251,7 @@ namespace :batch do
           end
           MarkovTrigram.import!(malkovs.values, on_duplicate_key_update: [:others_json])
         end
+        ExtraInfo.update({(clazz.to_s + "_malkov") => cs.last.try(:id)})
       end
     end
   end

@@ -7,6 +7,90 @@ ja:
         restrict_dependent_destroy:
           has_one: "%{record}が存在しているので削除できません"
           has_many: "%{record}が存在しているので削除できません"
+    enum:
+      categorised_word:
+        large_category:
+          large_unknown: 不明
+          feeling: 感情
+          sense: 感覚
+          person: 人物
+          living: 暮らし
+          landscape: 風景
+          food: 食べ物
+        medium_category:
+          medium_unknown: 不明
+          joy: 喜び
+          anger: 怒り
+          sorrow: 悲しみ
+          loneliness: 寂しい・喪失感
+          fear: 恐怖・不安
+          embarrassed: 恥ずかしい
+          like: 好き
+          hate: 嫌い
+          depressed: 気分が晴れない・落ち込む
+          endure: 我慢・諦め
+          regret: 悔やむ
+          heartburn: 心が傷つく
+          agitation: 興奮・気持ちが高ぶる
+          excitement: 感動
+          tension: 緊張
+          disturbed: 心が乱れる
+          relieved: 安心する
+          surprise: 驚き
+          smile: 笑う・笑み
+          facial_expression: 表情・顔に表れた気持ち
+          complex_feeling: 複雑な気持ち
+          other_mood: その他の気分
+          feeling_unknown: 感情未指定
+          color: 色彩
+          light_and_shadow: 光と影
+          shape: 形状
+          voice: 声
+          sound: 音の響き
+          smell: におい・香り
+          taste: 味・歯触り・舌触り
+          sensation: 感触
+          temperature: 温度
+          stimulation: 刺激
+          distance: 距離
+          space: 空間
+          time: 時間・スピード
+          identical: 同一・差異
+          amount: 量
+          degree: 程度
+          thinking: 思考・頭の中の状態
+          danger: 危険
+          atmosphere: 空気(雰囲気も)
+          failure: 失敗・損失
+          impression: 印象
+          how_to_feel: 感じ方
+          popularity: 評判・人気
+          conflict: 対立・敵対
+          movement: 動き・変化
+          situation: 状態・状況
+          other_sense: その他の感覚
+          sense_unknown: 感覚未指定
+          head: 頭
+          hair: 髪
+          forehead: 額・おでこ・こめかみ
+          eyebrow: まゆ・眉間
+          eyelid: まぶた・まつ毛
+          eye: 目・瞳
+          ear: 耳
+          nose: 鼻
+          cheek: 頬・ほっぺ
+          lip: 唇
+          tooth: 歯・舌
+          mouth: 口・顎
+          beard: ひげ
+          face: 顔
+          neck: 喉・首・うなじ
+          laugh: 笑う・笑み
+          feeling_face: 表情・顔に表れた気持ち
+          memory: 記憶
+          in_head: 思考・頭の中の状態
+          talk: 口調・話し方
+          shoulder: 肩
   date:
     abbr_day_names:
     - 日

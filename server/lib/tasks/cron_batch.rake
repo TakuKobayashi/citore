@@ -70,6 +70,10 @@ namespace :cron_batch do
           puts "#{table} compressed complete"
         end
       end
+
+      zip.get_output_stream(now_str + "/extra_info.json" ){|s|
+        s.write(ExtraInfo.read_extra_info.to_json)
+      end
     end
 
     puts "compress completed"

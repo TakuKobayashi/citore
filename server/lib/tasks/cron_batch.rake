@@ -71,7 +71,7 @@ namespace :cron_batch do
         end
       end
 
-      zip.get_output_stream(now_str + "/extra_info.json" ){|s|
+      zip.get_output_stream(now_str + "/extra_info.json") do |s|
         s.write(ExtraInfo.read_extra_info.to_json)
       end
     end

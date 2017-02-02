@@ -8,7 +8,7 @@
 #  medium_category :integer          default("medium_unknown"), not null
 #  detail_category :string(255)      not null
 #  body            :text(65535)      not null
-#  relation_id_csv :text(65535)
+#  description     :text(65535)
 #
 # Indexes
 #

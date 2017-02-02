@@ -127,6 +127,38 @@ namespace :batch do
     end
   end
 
+  task import_emotional_word: :environment do
+    EmotionalWord.connection.execute("TRUNCATE TABLE #{EmotionalWord.table_name}")
+    dics = []
+    en = File.read(Rails.root.to_s + "/db/master_data/pn_en.dic")
+    ens = en.split("\n")
+    ews = ens.map do |e|
+      es = e.split(":")
+      EmotionalWord.new(word: es[0], reading: es[0], part: es[1],score: es[2].to_f, language: 1)
+    end
+    p "es import start"
+    EmotionalWord.import(ews, on_duplicate_key_update: [:word, :reading, :part])
+    ens_average_score = EmotionalWord.english.average(:score)
+
+    
+    parts = EmotionalWordDynamo::PARTS
+    ja = File.read(Rails.root.to_s + "/db/master_data/pn_ja.dic")
+    jas = ja.split("\r\n")
+    jws = jas.map do |j|
+      js = j.split(":")
+      word = ApplicationRecord.basic_sanitize(js[0])
+      reading = js[1]
+      EmotionalWord.new(word: word, reading: reading, part: parts[js[2]],score: js[3].to_f, language: 0)
+    end
+    p "js import start"
+    EmotionalWord.import(jws, on_duplicate_key_update: [:word, :reading, :part])
+    jas_average_score = EmotionalWord.japanese.average(:score)
+    hash = {}
+    hash[:en_average_score] = ens_average_score
+    hash[:ja_average_score] = jas_average_score
+    ExtraInfo.update(hash)
+  end
+
   task delete_double_tweet: :environment do
     logger = ActiveSupport::Logger.new("log/deleted.log")
     console = ActiveSupport::Logger.new(STDOUT)

@@ -5,7 +5,6 @@ class CreateCategorisedWords < ActiveRecord::Migration[5.0]
       t.integer :large_category, null: false, default: 0
       t.integer :medium_category, null: false, default: 0
       t.string :detail_category, null: false
-      t.integer :degree, null: false, default: 0
       t.text :body, null: false
       t.string :from_url
     end

@@ -17,4 +17,26 @@
 #
 
 class DicExpressionWord < CategorisedWord
+  WEBLIO_DIC_URL = "http://www.weblio.jp/cat/dictionary/jtnhj"
+
+  def self.generate_record!
+    host_url = Addressable::URI.parse(DicExpressionWord::WEBLIO_DIC_URL)
+    url_docs = DicExpressionWord.request_and_parse_html(host_url.to_s)
+    urls = url_docs.css(".mainWL").css("a").map{ |anchor| anchor[:href] }
+
+#    text = nokogiri_doc.css("#lyricBody").text
+#    lyric_block = nokogiri_doc.css("#lyricBlock").children
+#    artist = lyric_block.css("td").text
+#    title = lyric_block.css("h2").text
+#    words = Lyric.basic_sanitize(artist)
+#    music_by = words.split(/(歌:|作詞:|作曲:)/).select{|w| w.strip.present? }
+#    lyric = Lyric.create!({
+#      title: title.to_s.strip,
+#      artist_name: music_by[1].to_s.strip,
+#      word_by: music_by[3].to_s.strip,
+#      music_by: music_by[5].to_s.strip,
+#      body: text
+#    })
+#    return lyric
+  end
 end

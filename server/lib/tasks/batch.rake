@@ -98,6 +98,7 @@ namespace :batch do
   end
 
   task rebuild_twitter_replay_id: :environment do
+    tweet_id = ExtraInfo.read_extra_info["rebuild_tweet_id"]
     apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
     client = Twitter::REST::Client.new do |config|
       config.consumer_key        = apiconfig["twitter"]["consumer_key"]
@@ -106,7 +107,7 @@ namespace :batch do
       config.access_token_secret = apiconfig["twitter"]["access_token_secret"]
     end
     limit_span = (15.minutes.second / 120).to_i
-    TwitterWord.where("id > 7111000").find_in_batches do |words|
+    TwitterWord.where("id > ?", tweet_id.to_i).find_in_batches do |words|
       words.each_slice(100) do |w|
         ApplicationRecord.batch_execution_and_retry(sleep_second: 900) do
           t_words = []
@@ -122,6 +123,7 @@ namespace :batch do
           sleep limit_span
         end
       end
+      ExtraInfo.update({"rebuild_tweet_id" => words.last.id})
     end
   end
 

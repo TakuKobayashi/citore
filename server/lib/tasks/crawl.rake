@@ -26,7 +26,7 @@ namespace :crawl do
   end
 
   task lyric_html: :environment do
-    CrawlTargetUrl.execute_html_crawl! do |crawl_target, doc|
+    CrawlTargetUrl.execute_html_crawl!(Lyric.to_s) do |crawl_target, doc|
 #      lyric = Lyric.generate_by_utanet!(crawl_target.crawl_from_keyword, doc)
       lyric = Lyric.generate_by_jlyric!(doc)
       crawl_target.source_id = lyric.id

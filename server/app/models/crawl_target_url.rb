@@ -41,8 +41,8 @@ class CrawlTargetUrl < ApplicationRecord
     })
   end
 
-  def self.execute_html_crawl!(&block)
-    CrawlTargetUrl.where(source_type: Lyric.to_s, crawled_at: nil).find_each do |crawl_target|
+  def self.execute_html_crawl!(clazz)
+    CrawlTargetUrl.where(source_type: clazz.to_s, crawled_at: nil).find_each do |crawl_target|
       begin
         url = Addressable::URI.new({host: crawl_target.host,port: crawl_target.port,path: crawl_target.path})
         url.scheme = crawl_target.protocol
@@ -54,7 +54,7 @@ class CrawlTargetUrl < ApplicationRecord
         crawl_target.content_type = response.headers["Content-Type"]
         doc = Nokogiri::HTML.parse(response.body)
         transaction do
-          block.call(crawl_target, doc)
+          yield(crawl_target, doc)
           crawl_target.crawled_at = Time.now
           crawl_target.save!
         end

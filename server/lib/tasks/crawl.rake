@@ -33,6 +33,41 @@ namespace :crawl do
     end
   end
 
+  task categorised_word_html: :environment do
+    large_jas = {}
+    medium_jas = {}
+    larges = CategorisedWord.large_categories
+    larges.each do |k, v|
+      large_jas[I18n.t("activerecord.enum.categorised_word.large_category.#{k}")] = v
+    end
+
+    mediums = CategorisedWord.medium_categories
+    mediums.each do |k, v|
+      medium_jas[I18n.t("activerecord.enum.categorised_word.medium_category.#{k}")] = v
+    end
+    url_text = ExpressionCategorisedWord.request_and_get_links_from_html(ExpressionCategorisedWord::JAPANESE_HYOGEN_URL)
+    CrawlTargetUrl.execute_html_crawl!(ExpressionCategorisedWord.to_s) do |crawl_target, doc|
+      from_doc = ExpressionCategorisedWord.request_and_parse_html(crawl_target.crawl_from_keyword)
+      detail = from_doc.css("a").detect{|h| h[:href] == crawl_target.crawl_from_keyword }
+      large_text = from_doc.css(".pan_anchor")[1].try(:text).to_s
+      t, value = large_jas.detect{|k, v| large_text.include?(k.to_s) }
+      
+      words = doc.css(".item2").map{|i| i.text }
+      models = words.map do |w|
+        ExpressionCategorisedWord.new({
+          type: ExpressionCategorisedWord.to_s,
+          large_category: value,
+          medium_category: medium_jas[url_text[crawl_target.crawl_from_keyword]],
+          detail_category: detail.try(:text).to_s,
+          body: ExpressionCategorisedWord.basic_sanitize(w)
+        })
+      end
+      ExpressionCategorisedWord.import(models)
+      crawl_target.source_id = ExpressionCategorisedWord.last.id
+    end
+    DicExpressionWord.generate_record!
+  end
+
   task youtube: :environment do
 #    apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
 #    youtube = Google::Apis::YoutubeV3::YouTubeService.new

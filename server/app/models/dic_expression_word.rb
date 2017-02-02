@@ -8,7 +8,7 @@
 #  medium_category :integer          default("medium_unknown"), not null
 #  detail_category :string(255)      not null
 #  body            :text(65535)      not null
-#  relation_id_csv :text(65535)
+#  description     :text(65535)
 #
 # Indexes
 #
@@ -22,20 +22,23 @@ class DicExpressionWord < CategorisedWord
     host_url = Addressable::URI.parse(DicExpressionWord::WEBLIO_DIC_URL)
     url_docs = DicExpressionWord.request_and_parse_html(host_url.to_s)
     urls = url_docs.css(".mainWL").css("a").map{ |anchor| anchor[:href] }
-
-#    text = nokogiri_doc.css("#lyricBody").text
-#    lyric_block = nokogiri_doc.css("#lyricBlock").children
-#    artist = lyric_block.css("td").text
-#    title = lyric_block.css("h2").text
-#    words = Lyric.basic_sanitize(artist)
-#    music_by = words.split(/(歌:|作詞:|作曲:)/).select{|w| w.strip.present? }
-#    lyric = Lyric.create!({
-#      title: title.to_s.strip,
-#      artist_name: music_by[1].to_s.strip,
-#      word_by: music_by[3].to_s.strip,
-#      music_by: music_by[5].to_s.strip,
-#      body: text
-#    })
-#    return lyric
+    urls.each do |url|
+      (1...1000).each do |i|
+        word_docs = DicExpressionWord.request_and_parse_html(url.to_s + "/" + i.to_s)
+        docs = word_docs.css(".crosslink").map{|d| {d[:href] => d.text} }
+        break if docs.blank?
+        docs.each do |doc|
+          doc.each do |url, text|
+            dc = DicExpressionWord.request_and_parse_html(url)
+            descriptions = dc.css(".Jtnhj").map{|t| t.text.split("\n").select{|t| t.present? }.last }
+            DicExpressionWord.transaction do
+              descriptions.each do |des|
+                DicExpressionWord.create!(type: DicExpressionWord.to_s, detail_category: "", body: ExpressionCategorisedWord.basic_sanitize(text),description: des)
+              end
+            end
+          end
+        end
+      end
+    end
   end
 end

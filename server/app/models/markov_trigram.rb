@@ -45,12 +45,12 @@ class MarkovTrigram < ApplicationRecord
       array << hash.merge("appear_count" => 1)
     end
     # 候補がいっぱいある時は頻出単語以外は抽選していくスタイル
-    #if array.size > 25000
-    #  major, minor = array.partition{|a| a["appear_count"] > 1 }
-    #  result = major + minor.sample(25000 - major.size)
-    #else
+    if array.size > 50000
+      major, minor = array.partition{|a| a["appear_count"] > 1 }
+      result = major + minor.sample(50000 - major.size)
+    else
       result = array
-    #end
+    end
     self.others_json = result
     @others_array = result
   end

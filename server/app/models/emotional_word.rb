@@ -16,4 +16,30 @@
 
 class EmotionalWord < ApplicationRecord
   enum language: [:japanese, :english]
+  PARTS = {
+    "動詞" => "v",
+    "形容詞" => "a",
+    "名詞" => "n",
+    "副詞" => "r",
+    "助動詞" =>"av"
+  }
+
+  KAOMOJI_PART = "kao"
+
+  def self.calc_score(text)
+    hash = ExtraInfo.read_extra_info
+    hash["en_average_score"].to_f
+    hash["ja_average_score"].to_f
+    natto = ApplicationRecord.get_natto
+    word_parts = {}
+    natto.parse(word) do |n|
+      next if n.surface.blank?
+      csv = n.feature.split(",")
+      part = EmotionalWord::PARTS[csv[0]]
+      next if part.blank? || part == "av"
+      word_parts[n.surface] = part
+    end
+    words = EmotionalWord.where(word: word_parts.keys)
+    words.sum{|w| w.score }
+  end
 end

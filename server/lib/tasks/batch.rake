@@ -244,7 +244,7 @@ namespace :batch do
       Lyric => "body"
     }.each do |clazz, word|
       last_saved_id = ExtraInfo.read_extra_info[(clazz.to_s + "_malkov")]
-      clazz.where("id > ?", last_saved_id.to_i).find_in_batches(batch_size: 500) do |cs|
+      clazz.where("id > ?", last_saved_id.to_i).find_in_batches do |cs|
         batch_words = []
         ApplicationRecord.batch_execution_and_retry do
           cs.each do |c|

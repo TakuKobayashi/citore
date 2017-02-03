@@ -7,7 +7,7 @@ TweetStream.configure do |config|
   config.auth_method        = :oauth
 end
 
-natto = Natto::MeCab.new(dicdir: ApplicationRecord::MECAB_NEOLOGD_DIC_PATH)
+natto = ApplicationRecord.get_natto
 
 extra_info = ExtraInfo.read_extra_info
 

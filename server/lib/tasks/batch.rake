@@ -35,7 +35,7 @@ namespace :batch do
   end
 
   task import_to_appear_word: :environment do
-    natto = Natto::MeCab.new(dicdir: ApplicationRecord::MECAB_NEOLOGD_DIC_PATH)
+    natto = ApplicationRecord.get_natto
     {
       TwitterWordMention => "tweet",
       Lyric => "body",
@@ -238,7 +238,7 @@ namespace :batch do
   end
 
   task generate_to_malkov: :environment do
-    natto = Natto::MeCab.new(dicdir: ApplicationRecord::MECAB_NEOLOGD_DIC_PATH)
+    natto = ApplicationRecord.get_natto
     {
       TwitterWord => "tweet",
       Lyric => "body"

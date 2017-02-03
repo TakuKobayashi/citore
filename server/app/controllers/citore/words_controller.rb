@@ -5,7 +5,7 @@ class Citore::WordsController < BaseController
   end
 
   def search
-    natto = Natto::MeCab.new(dicdir: ApplicationRecord::MECAB_NEOLOGD_DIC_PATH)
+    natto = ApplicationRecord.get_natto
     sanitaized_word = ApplicationRecord.basic_sanitize(params[:text].to_s)
     reading = ApplicationRecord.reading(sanitaized_word)
     split_words = ApplicationRecord.ngram(reading, 2).uniq

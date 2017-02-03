@@ -11,6 +11,11 @@ class ApplicationRecord < ActiveRecord::Base
 
   MECAB_NEOLOGD_DIC_PATH = "/usr/local/lib/mecab/dic/mecab-ipadic-neologd"
 
+  def self.get_natto
+    @@natto ||= Natto::MeCab.new(dicdir: ApplicationRecord::MECAB_NEOLOGD_DIC_PATH)
+    return @@natto
+  end
+
   def self.request_and_parse_html(url)
     http_client = HTTPClient.new
     response = http_client.get(url, {}, {})
@@ -65,7 +70,7 @@ class ApplicationRecord < ActiveRecord::Base
     sanitaized_word = delete_symbols(text)
     word, urls = separate_urls(sanitaized_word)
     reading_array = []
-    natto = Natto::MeCab.new(dicdir: MECAB_NEOLOGD_DIC_PATH)
+    natto = self.get_natto
     natto.parse(word) do |n|
       next if n.surface.blank?
       csv = n.feature.split(",")

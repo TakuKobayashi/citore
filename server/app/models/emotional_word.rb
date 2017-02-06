@@ -28,18 +28,40 @@ class EmotionalWord < ApplicationRecord
 
   def self.calc_score(text)
     hash = ExtraInfo.read_extra_info
-    hash["en_average_score"].to_f
-    hash["ja_average_score"].to_f
+    
     natto = ApplicationRecord.get_natto
     word_parts = {}
-    natto.parse(word) do |n|
+    natto.parse(text) do |n|
       next if n.surface.blank?
       csv = n.feature.split(",")
       part = EmotionalWord::PARTS[csv[0]]
       next if part.blank? || part == "av"
-      word_parts[n.surface] = part
+      word_parts[csv[6]] = [part, csv[7]]
     end
     words = EmotionalWord.where(word: word_parts.keys)
-    words.sum{|w| w.score }
+    sum_score = words.sum do |w|
+      if w.japanese?
+        if word_parts[w.word][0] == w.part && word_parts[w.word][1] == w.reading
+          if w.score < hash["ja_average_score"].to_f && hash["ja_average_score"].to_f != -1.0
+            -(w.score - hash["ja_average_score"].to_f) / (-1.0 - hash["ja_average_score"].to_f)
+          elsif w.score > hash["ja_average_score"].to_f && hash["ja_average_score"].to_f != 1.0
+            (w.score - hash["ja_average_score"].to_f) / (1.0 - hash["ja_average_score"].to_f)
+          else
+            w.score
+          end
+        else
+          0
+        end
+      else
+        if w.score < hash["en_average_score"].to_f && hash["en_average_score"].to_f != -1.0
+          -(w.score - hash["en_average_score"].to_f) / (-1.0 - hash["en_average_score"].to_f)
+        elsif w.score > hash["en_average_score"].to_f && hash["en_average_score"].to_f != 1.0
+          (w.score - hash["en_average_score"].to_f) / (1.0 - hash["en_average_score"].to_f)
+        else
+          w.score
+        end
+      end
+    end
+    return sum_score
   end
 end

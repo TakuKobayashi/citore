@@ -238,7 +238,10 @@ namespace :batch do
   end
 
   task generate_to_malkov: :environment do
+    old_logger = ActiveRecord::Base.logger
+    ActiveRecord::Base.logger = nil
     natto = ApplicationRecord.get_natto
+    cache_tri_group = {}
     {
       TwitterWord => "tweet",
       Lyric => "body"
@@ -260,8 +263,25 @@ namespace :batch do
             next if words.blank?
             batch_words << words
           end
-          tri_group = MarkovTrigram.where(prefix: batch_words.map{|words| words.map{|tri| tri[0] } }.flatten.uniq).group_by(&:prefix)
-          malkovs = {}
+          tri_group = {}
+          select_prefixes = []
+          prefixes = batch_words.map{|words| words.map{|tri| tri[0] } }.flatten.uniq
+          prefixes.each do |p|
+            if cache_tri_group[p].present?
+              tri_group[p] = cache_tri_group[p]
+            else
+              select_prefixes << p
+            end
+          end
+          if select_prefixes.present?
+            groups = MarkovTrigram.where(prefix: select_prefixes).group_by(&:prefix)
+            groups.each do |p, ms|
+              cache_tri_group[p] = ms
+              tri_group[p] = ms
+            end
+          end
+
+          malkovs = []
           batch_words.each do |words|
             words.each_with_index do |w, index|
               if index == 0
@@ -271,16 +291,17 @@ namespace :batch do
               else
                 state = MarkovTrigram.states[:normal]
               end
-              malkov = malkovs[[w[0].to_s, state]]
+              currents = tri_group[w[0].to_s] || []
+              malkov = currents.detect{|c| MarkovTrigram.states[c.state] == state }
               if malkov.blank?
-                currents = tri_group[w[0].to_s] || []
-                malkov = currents.detect{|c| MarkovTrigram.states[c.state] == state }
-                if malkov.blank?
-                  malkov = MarkovTrigram.new(source_type: clazz.to_s, prefix: w[0].to_s, state: state)
+                malkov = MarkovTrigram.new(source_type: clazz.to_s, prefix: w[0].to_s, state: state)
+                if tri_group[w[0].to_s].blank?
+                  tri_group[w[0].to_s] = []
                 end
+                tri_group[w[0].to_s] << malkov
               end
               malkov.others = {"second_word" => w[1], "third_word" => w[2]}
-              malkovs[[w[0].to_s, state]] = malkov
+              malkovs << malkov
             end
           end
           MarkovTrigram.import!(malkovs.values, on_duplicate_key_update: [:others_json])
@@ -288,6 +309,7 @@ namespace :batch do
         ExtraInfo.update({(clazz.to_s + "_malkov") => cs.last.try(:id)})
       end
     end
+    ActiveRecord::Base.logger = old_logger
   end
 
   task resanitized: :environment do

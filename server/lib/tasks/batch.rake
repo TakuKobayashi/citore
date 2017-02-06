@@ -238,6 +238,9 @@ namespace :batch do
   end
 
   task generate_to_malkov: :environment do
+    old_logger = ActiveRecord::Base.logger
+    ActiveRecord::Base.logger = nil
+
     natto = ApplicationRecord.get_natto
     {
       TwitterWord => "tweet",
@@ -288,6 +291,7 @@ namespace :batch do
         ExtraInfo.update({(clazz.to_s + "_malkov") => cs.last.try(:id)})
       end
     end
+    ActiveRecord::Base.logger = old_logger
   end
 
   task resanitized: :environment do

@@ -147,7 +147,7 @@ namespace :batch do
     jws = jas.map do |j|
       js = j.split(":")
       word = ApplicationRecord.basic_sanitize(js[0])
-      reading = js[1]
+      reading = js[1].tr('ぁ-ん','ァ-ン')
       EmotionalWord.new(word: word, reading: reading, part: parts[js[2]],score: js[3].to_f, language: 0)
     end
     p "js import start"

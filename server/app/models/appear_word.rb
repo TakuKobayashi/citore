@@ -31,24 +31,26 @@ class AppearWord < ApplicationRecord
     grouping_words = word_parts.group_by{|w| w }
     index_words = AppearWord.where(word: grouping_words.keys.map{|w| w[0] }).index_by{|a| [a.word, a.part] }
     sorted_words = grouping_words.sort_by do |g, w|
+      result = 0
       if index_words[g].blank?
-        Float::INFINITY
+        result = Float::INFINITY
       else
       	# tfを算出
         tf = w.size / word_parts.size
         sum_count = ExtraInfo.read_extra_info["sum_appear_word_count"] || AppearWord.sum(:appear_count)
         #idf (厳密には文章数ではないが。無作為に選んだ文章から頻出する単語を抜き出している中の総数なのでこれでも要件は満たせるのかなと)
         idf = Math.log(index_words[g].appear_count.to_f / sum_count.to_i)
-        tf * idf
+        result = tf * idf
       end
+      result
     end
-    results sorted_words.slice(0..(word_num - 1)).map do |sw|
-      if index_words[sw].blank?
-        AppearWord.new(appear_count: 1, word: sw[0], part: sw[1])
+    results = sorted_words.slice(0..(word_num - 1)).map do |w, swg|
+      if index_words[w].blank?
+        AppearWord.new(appear_count: 1, word: w[0], part: w[1])
       else
-        index_words[sw]
+        index_words[w]
       end
-    end
+    end.flatten
     return results
   end
 end

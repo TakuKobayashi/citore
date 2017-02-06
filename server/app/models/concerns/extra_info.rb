@@ -1,5 +1,6 @@
 module ExtraInfo
   EXTRA_INFO_FILE_PATH = Rails.root.to_s + "/tmp/extra_info.json"
+  @@extra_info_hash = nil
 
   def self.read_extra_info
     return @@extra_info_hash unless @@extra_info_hash.nil?

@@ -36,7 +36,11 @@ class EmotionalWord < ApplicationRecord
       csv = n.feature.split(",")
       part = EmotionalWord::PARTS[csv[0]]
       next if part.blank? || part == "av"
-      word_parts[csv[6]] = [part, csv[7]]
+      if csv[6] == "*"
+        word_parts[n.surface] = [part, csv[7]]
+      else
+        word_parts[csv[6]] = [part, csv[7]]
+      end
     end
     words = EmotionalWord.where(word: word_parts.keys)
     sum_score = words.sum do |w|

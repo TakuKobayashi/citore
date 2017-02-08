@@ -51,12 +51,12 @@ class Sugarcoat::Seed < TwitterRecord
   end
 
   def self.get_word_score(cverb, word)
-    verbs = EmotionalWordDynamo::PARTS.keys
+    verbs = EmotionalWord::PARTS.keys
     verb = verbs.detect{|v| cverb.include?(v) }
     return nil if verb.blank?
-    v = EmotionalWordDynamo::PARTS[verb]
+    v = EmotionalWord::PARTS[verb]
     reading_word = ApplicationRecord.reading(word)
-    emotion = EmotionalWordDynamo.find(word: word, reading: reading_word, part: v)
+    emotion = EmotionalWord.find_by(word: word, reading: reading_word, part: v)
     return nil if emotion.blank?
     return emotion.score.to_f
   end

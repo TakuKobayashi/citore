@@ -35,14 +35,14 @@ client.sample do |status|
       if appears.present?
         count = appears[:appear_count]
       end
-      appear_imports[kaomoji] = {word: kaomoji, part: EmotionalWordDynamo::KAOMOJI_PART, appear_count: count.to_i + 1}
+      appear_imports[kaomoji] = {word: kaomoji, part: EmotionalWord::KAOMOJI_PART, appear_count: count.to_i + 1}
     end
 
     tweet_words.each do |tweet_word|
       natto.parse(tweet_word) do |n|
         next if n.surface.blank?
         features = n.feature.split(",")
-        part = EmotionalWordDynamo::PARTS[features[0]]
+        part = EmotionalWord::PARTS[features[0]]
         next if part.blank? || part == "av"
         word = features[6]
         if word.blank? || word == "*"

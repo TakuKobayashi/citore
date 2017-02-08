@@ -52,7 +52,7 @@ namespace :batch do
           natto.parse(word) do |n|
             next if n.surface.blank?
             features = n.feature.split(",")
-            part = EmotionalWordDynamo::PARTS[features[0]]
+            part = EmotionalWord::PARTS[features[0]]
             next if part.blank? || part == "av"
             word = features[6]
             if word.blank? || word == "*"
@@ -141,7 +141,7 @@ namespace :batch do
     ens_average_score = EmotionalWord.english.average(:score)
 
     
-    parts = EmotionalWordDynamo::PARTS
+    parts = EmotionalWord::PARTS
     ja = File.read(Rails.root.to_s + "/db/master_data/pn_ja.dic")
     jas = ja.split("\r\n")
     jws = jas.map do |j|

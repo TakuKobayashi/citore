@@ -54,5 +54,9 @@ Rails.application.routes.draw do
     resource :chat, controller: :chat, only: [:index] do
       get :index
     end
+
+    resource :threed_model, controller: :threed_model, only: [:index] do
+      get :index
+    end
   end
 end

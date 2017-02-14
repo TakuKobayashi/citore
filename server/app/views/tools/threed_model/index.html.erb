@@ -1,1 +1,43 @@
 <%= javascript_include_tag 'three.min.js' %>
+<script>
+  var width = window.innerWidth;
+  var height = window.innerHeight;
+  document.addEventListener( 'DOMContentLoaded', function(){
+    // シーンの用意
+    scene = new THREE.Scene();
+
+    // Cube
+    var geometry = new THREE.BoxGeometry( 200, 200, 200 );
+    for ( var i = 0; i < geometry.faces.length; i += 2 ) {
+        var hex = Math.random() * 0xffffff;
+        geometry.faces[i].color.setHex(hex);
+        geometry.faces[i + 1].color.setHex(hex);
+    }
+    var material = new THREE.MeshBasicMaterial( { vertexColors: THREE.FaceColors, overdraw: 0.5 } );
+    cube = new THREE.Mesh( geometry, material );
+    cube.position.y = 150;
+    scene.add(cube);
+ 
+    // カメラの設定
+    var fov = 45, // 画角
+        aspect = width / height, // アスペクト比
+        near = 1, // 手前
+        far = 700; // 奥行き
+    camera = new THREE.PerspectiveCamera( fov, aspect, near, far ); // カメラの準備
+    camera.position.set( 0, 0, 50 ); // カメラ位置の設定
+ 
+    // レンダラーの設定
+    renderer = new THREE.WebGLRenderer(); // レンダラーの用意
+    renderer.setSize( width, height ); // サイズを指定
+    var bgColor = 0x000000;
+    renderer.setClearColor(bgColor, 1); // 背景色を指定
+    document.body.appendChild( renderer.domElement ); // bodyへ追加
+ 
+    // ライトの設定
+    var lightColor = 0xffffff; // ライトの色
+    var directionalLight = new THREE.DirectionalLight( lightColor ); // ライトの色を指定
+    directionalLight.position.set( 1, 1, 1 ); // ライトの位置の設定
+    scene.add( directionalLight ); // ライトの追加
+    renderer.render(scene, camera);
+  });
+</script>

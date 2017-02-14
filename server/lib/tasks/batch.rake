@@ -247,6 +247,7 @@ namespace :batch do
       Lyric => "body"
     }.each do |clazz, word|
       last_saved_id = ExtraInfo.read_extra_info[(clazz.to_s + "_malkov")]
+      cached_hash_id = {}
       clazz.where("id > ?", last_saved_id.to_i).find_in_batches do |cs|
         batch_words = []
         ApplicationRecord.batch_execution_and_retry do
@@ -265,6 +266,7 @@ namespace :batch do
           end
           malkov_prefixes = {}
           malkov_words = {}
+          is_load_words = false
           batch_words.each do |words|
             words.each_with_index do |w, index|
               if index == 0
@@ -289,15 +291,25 @@ namespace :batch do
               end
               malkov_word.appear_count += 1
               malkov_words[key] = malkov_word
+              if cached_hash_id[key].blank?
+                is_load_words = true
+              end
             end
           end
+          key_prefixes = {}
           MarkovTrigramPrefix.import!(malkov_prefixes.values, on_duplicate_key_update: [:unique_count, :sum_count])
-          prefixes = MarkovTrigramPrefix.where(source_type: clazz.to_s, prefix: malkov_prefixes.keys.map{|w, s| w })
-          prefixes.each do |pref|
-            key = [pref.prefix, MarkovTrigramPrefix.states[pref.state]]
+          if is_load_words
+            key_prefixes = MarkovTrigramPrefix.where(source_type: clazz.to_s, prefix: malkov_prefixes.keys.map{|w, s| w }).index_by{|pref| [pref.prefix, MarkovTrigramPrefix.states[pref.state]] }
+          else
+            malkov_prefixes.each do |k, v|
+              key_prefixes[k] = cached_hash_id[k]
+            end
+          end
+          key_prefixes.each do |key, pref|
+            r_id = pref.try(:id) || pref
             malkov_w = malkov_words[key]
             next if malkov_w.blank?
-            malkov_w.markov_trigram_prefix_id = pref.id
+            malkov_w.markov_trigram_prefix_id = r_id
             malkov_words[key] = malkov_w
           end
           MarkovTrigramWord.import!(malkov_words.values.select{|m| m.markov_trigram_prefix_id.present? }, on_duplicate_key_update: [:appear_count])

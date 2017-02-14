@@ -14,4 +14,7 @@
 #
 
 class MarkovTrigramWord < ApplicationRecord
+  def joint
+    return self.second_word + self.third_word
+  end
 end

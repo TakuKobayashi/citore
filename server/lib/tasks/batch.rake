@@ -205,11 +205,12 @@ namespace :batch do
             twitter_tweet_id: status.id.to_s,
             tweet: without_url_tweet,
             csv_url: urls.join(","),
-            tweet_created_at: status.created_at
+            tweet_created_at: status.created_at,
+            reply_to_tweet_id: status.in_reply_to_status_id.to_s
           )
           tws << t
         end
-        TwitterWord.import(tws)
+        TwitterWord.import(tws, on_duplicate_key_update: [:in_reply_to_status_id])
       end
       sleep limit_span
     end

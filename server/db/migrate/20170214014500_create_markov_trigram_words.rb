@@ -6,6 +6,6 @@ class CreateMarkovTrigramWords < ActiveRecord::Migration[5.0]
       t.string :third_word, null: false, default: ""
       t.integer :appear_count, null: false, default: 0
     end
-    add_index :markov_trigram_words, :markov_trigram_prefix_id
+    add_index :markov_trigram_words, [:markov_trigram_prefix_id, :second_word, :third_word], unique: true, name: "markov_trigram_words_indexes"
   end
 end

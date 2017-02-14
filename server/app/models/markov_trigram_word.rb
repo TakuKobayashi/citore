@@ -10,7 +10,7 @@
 #
 # Indexes
 #
-#  index_markov_trigram_words_on_markov_trigram_prefix_id  (markov_trigram_prefix_id)
+#  markov_trigram_words_indexes  (markov_trigram_prefix_id,second_word,third_word) UNIQUE
 #
 
 class MarkovTrigramWord < ApplicationRecord

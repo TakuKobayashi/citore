@@ -255,7 +255,7 @@ namespace :batch do
             sanitaized_word = TwitterRecord.sanitized(c.send(word))
             without_url_tweet, urls = ApplicationRecord.separate_urls(sanitaized_word)
             without_kaomoji_tweet, kaomojis = ApplicationRecord.separate_kaomoji(without_url_tweet)
-            natto.parse(without_kaomoji_tweet) do |n|
+            natto.parse(without_kaomoji_tweet.downcase) do |n|
               next if n.surface.blank?
               arr << n.surface
             end
@@ -263,30 +263,44 @@ namespace :batch do
             next if words.blank?
             batch_words << words
           end
-          tri_group = MarkovTrigram.where(prefix: batch_words.map{|words| words.map{|tri| tri[0] } }.flatten.uniq).group_by(&:prefix)
-          malkovs = {}
+          malkov_prefixes = {}
+          malkov_words = {}
           batch_words.each do |words|
             words.each_with_index do |w, index|
               if index == 0
-                state = MarkovTrigram.states[:bos]
+                state = MarkovTrigramPrefix.states[:bos]
               elsif index == words.size - 1
-                state = MarkovTrigram.states[:eos]
+                state = MarkovTrigramPrefix.states[:eos]
               else
-                state = MarkovTrigram.states[:normal]
+                state = MarkovTrigramPrefix.states[:normal]
               end
-              malkov = malkovs[[w[0].to_s, state]]
+
+              key = [w[0].to_s, state]
+              malkov = malkov_prefixes[key]
               if malkov.blank?
-                currents = tri_group[w[0].to_s] || []
-                malkov = currents.detect{|c| MarkovTrigram.states[c.state] == state }
-                if malkov.blank?
-                  malkov = MarkovTrigram.new(source_type: clazz.to_s, prefix: w[0].to_s, state: state)
-                end
+                malkov = MarkovTrigramPrefix.new(source_type: clazz.to_s, prefix: w[0].to_s, state: state, unique_count: 1)
               end
-              malkov.others = {"second_word" => w[1], "third_word" => w[2]}
-              malkovs[[w[0].to_s, state]] = malkov
+              malkov.sum_count += 1
+              malkov_prefixes[key] = malkov
+
+              malkov_word = malkov_words[key]
+              if malkov_word.blank?
+                malkov_word = MarkovTrigramWord.new(second_word: w[1], third_word: w[2])
+              end
+              malkov_word.appear_count += 1
+              malkov_words[key] = malkov_word
             end
           end
-          MarkovTrigram.import!(malkovs.values, on_duplicate_key_update: [:others_json])
+          MarkovTrigramPrefix.import!(malkov_prefixes.values, on_duplicate_key_update: [:unique_count, :sum_count])
+          prefixes = MarkovTrigramPrefix.where(source_type: clazz.to_s, prefix: malkov_prefixes.keys.map{|w, s| w })
+          prefixes.each do |pref|
+            key = [pref.prefix, MarkovTrigramPrefix.states[pref.state]]
+            malkov_w = malkov_words[key]
+            next if malkov_w.blank?
+            malkov_w.markov_trigram_prefix_id = pref.id
+            malkov_words[key] = malkov_w
+          end
+          MarkovTrigramWord.import!(malkov_words.values.select{|m| m.markov_trigram_prefix_id.present? }, on_duplicate_key_update: [:appear_count])
         end
         ExtraInfo.update({(clazz.to_s + "_malkov") => cs.last.try(:id)})
       end

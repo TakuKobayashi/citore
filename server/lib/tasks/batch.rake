@@ -127,6 +127,17 @@ namespace :batch do
     end
   end
 
+  task import_line_sticker: :environment do
+    LineSticker.connection.execute("TRUNCATE TABLE #{LineSticker.table_name}")
+    stickers = []
+    p "generate start"
+    CSV.foreach(Rails.root.to_s + "/db/master_data/line_sticker.csv", headers: true) do |data|
+      stickers << LineSticker.new(stkid: data["STKID"], stkpkgid: data["STKPKGID"], stkver: data["STKVER"], meaning: "")
+    end
+    p "data row #{stickers.size}"
+    LineSticker.import(stickers)
+  end
+
   task import_emotional_word: :environment do
     EmotionalWord.connection.execute("TRUNCATE TABLE #{EmotionalWord.table_name}")
     dics = []

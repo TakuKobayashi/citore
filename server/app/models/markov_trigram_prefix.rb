@@ -29,24 +29,42 @@ class MarkovTrigramPrefix < ApplicationRecord
       markov = markovs.to_a.sample
       select_source_type = markov.try(:source_type)
     end
+    if markov.blank?
+      lot_id = rand(MarkovTrigramPrefix.bos.last.id)
+      markov = MarkovTrigramPrefix.bos.where("id >= ?", lot_id).first
+      select_source_type = markov.try(:source_type)
+    end
 
-    counter = 0
     begin
       word_id_count = markov.other_words.pluck(:id, :appear_count)
-      lot_value = rand(markov.sum_count)
-      counter = 0
+      lot_value = rand(word_id_count.sum{|id, count| count})
+      #lot_value = rand(markov.sum_count)
+      lot_counter = 0
       select_word_id = nil
       word_id_count.each do |id, appear_count|
-        counter += appear_count.to_i
-        if counter > lot_value
+        lot_counter += appear_count.to_i
+        if lot_counter > lot_value
       	  select_word_id = id
           break
         end
       end
       other_word = markov.other_words.find_by(id: select_word_id)
       sentence_array << other_word.joint
-      markov = MarkovTrigram.where(prefix: other_word.third_word.to_s, source_type: select_source_type).sample
-    end while markov.blank? || markov.eos?
+      markovs = MarkovTrigramPrefix.where(prefix: other_word.third_word.to_s, source_type: select_source_type, state: [MarkovTrigramPrefix.states[:normal], MarkovTrigramPrefix.states[:eos]])
+      if sentence_array.sum(&:size) > 100
+        markov = markovs.detect{|m| m.eos? }
+        markov = markovs.sample if markov.blank?
+      else
+        markov = markovs.sample
+      end
+
+#      eos_words, continue_words = markovs.partition{|m| m.eos? }
+#      if eos_words.present? && rand < 0.9
+#        markov = eos_words.first
+#      else
+#        markov = continue_words.sample
+#      end
+    end while markov.present? && !markov.eos?
 
     return sentence_array.join("")
   end

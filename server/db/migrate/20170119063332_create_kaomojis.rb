@@ -4,7 +4,6 @@ class CreateKaomojis < ActiveRecord::Migration[5.0]
       t.string :category, null: false
       t.string :meaning, null: false
       t.string :body, null: false
-      t.string :from
     end
     add_index :kaomojis, :category
     add_index :kaomojis, :meaning

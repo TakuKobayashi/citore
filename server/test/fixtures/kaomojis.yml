@@ -6,7 +6,6 @@
 #  category :string(255)      not null
 #  meaning  :string(255)      not null
 #  body     :string(255)      not null
-#  from     :string(255)
 #
 # Indexes
 #

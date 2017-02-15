@@ -29,6 +29,7 @@ class MarkovTrigramPrefix < ApplicationRecord
       markov = markovs.to_a.sample
       select_source_type = markov.try(:source_type)
     end
+    # 必ず何か引っ掛ける
     if markov.blank?
       lot_id = rand(MarkovTrigramPrefix.bos.last.id)
       markov = MarkovTrigramPrefix.bos.where("id >= ?", lot_id).first

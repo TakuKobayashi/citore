@@ -26,8 +26,11 @@ namespace :cron_batch do
       "citore_aegigoe_words",
       "voice_words",
       "ngram_words",
-      "markov_trigrams",
-      "categorised_words"
+      "categorised_words",
+      "line_stickers",
+      "markov_trigram_prefixes",
+      "markov_trigram_words",
+      "kaomojis"
     ]
     now_str = Time.now.strftime("%Y%m%d_%H%M%S")
     dir_path = Rails.root.to_s + "/tmp/dbdump/" + now_str

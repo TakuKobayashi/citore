@@ -264,17 +264,24 @@ namespace :batch do
         batch_words = []
         ApplicationRecord.batch_execution_and_retry do
           cs.each do |c|
-            arr = []
-            sanitaized_word = TwitterRecord.sanitized(c.send(word))
-            without_url_tweet, urls = ApplicationRecord.separate_urls(sanitaized_word)
-            without_kaomoji_tweet, kaomojis = ApplicationRecord.separate_kaomoji(without_url_tweet)
-            natto.parse(without_kaomoji_tweet.downcase) do |n|
-              next if n.surface.blank?
-              arr << n.surface
+            if clazz == Lyric
+              split_list = c.send(word).to_s.split("\n").map(&:strip)
+            else
+              split_list = [c.send(word).to_s]
             end
-            words = arr.map{|t| ApplicationRecord.delete_symbols(t) }.select{|t| t.present? }.each_cons(3).map.to_a
-            next if words.blank?
-            batch_words << words
+            split_list.each do |cell|
+              arr = []
+              sanitaized_word = TwitterRecord.sanitized(cell)
+              without_url_tweet, urls = ApplicationRecord.separate_urls(sanitaized_word)
+              without_kaomoji_tweet, kaomojis = ApplicationRecord.separate_kaomoji(without_url_tweet)
+              natto.parse(without_kaomoji_tweet.downcase) do |n|
+                next if n.surface.blank?
+                arr << n.surface
+              end
+              words = arr.map{|t| ApplicationRecord.delete_symbols(t) }.select{|t| t.present? }.each_cons(3).map.to_a
+              next if words.blank?
+              batch_words << words
+            end
           end
           malkov_prefixes = {}
           malkov_words = {}

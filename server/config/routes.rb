@@ -50,6 +50,25 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace :bots do
+    resource :line, controller: :line, only: [] do
+      get :sugarcoat
+      post :sugarcoat
+      get :citore
+      post :citore
+      get :spotgacha
+      post :spotgacha
+      get :job_with_life
+      post :job_with_life
+      get :shiritori
+      post :shiritori
+    end
+
+    resource :facebook, controller: :facebook, only: [] do
+      get :index
+    end
+  end
+
   namespace :tools do
     resource :chat, controller: :chat, only: [:index] do
       get :index

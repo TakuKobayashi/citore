@@ -19,11 +19,11 @@ class Bots::LineController < BaseController
             text: event.message['text']
           }
           logger.info event["source"]
-          user = client.get_profile(event["source"]["userId"])
+          user = @client.get_profile(event["source"]["userId"])
           logger.info user.body
-          res = client.reply_message(event['replyToken'], message)
+          res = @client.reply_message(event['replyToken'], message)
         when Line::Bot::Event::MessageType::Image, Line::Bot::Event::MessageType::Video, Line::Bot::Event::MessageType::Audio
-          response = client.get_message_content(event.message['id'])
+          response = @client.get_message_content(event.message['id'])
           File.open(Rails.root.to_s +"/tmp/" + SecureRandom.hex, 'wb'){|f| f.write(response.body) }
         end
       when Line::Bot::Event::Follow
@@ -65,7 +65,7 @@ class Bots::LineController < BaseController
     logger.info "-----------------------------------"
     logger.info body
     signature = request.env['HTTP_X_LINE_SIGNATURE']
-    unless client.validate_signature(body, signature)
+    unless @client.validate_signature(body, signature)
       render status: 400, json: { message: "BadRequest" }.to_json and return
     end
     @events = @client.parse_events_from(body)

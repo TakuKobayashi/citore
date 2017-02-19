@@ -1,4 +1,6 @@
 class Bots::FacebookController < BaseController
+  protect_from_forgery
+
   def sugarcoat
     case request.method_symbol
     when :get

@@ -1,6 +1,7 @@
 require 'line/bot'
 
 class Bots::LineController < BaseController
+  protect_from_forgery
   before_action :load_line_bot_client
   before_action :received_user_events
 

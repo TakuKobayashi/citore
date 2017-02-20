@@ -6,7 +6,7 @@ class Bots::LineController < BaseController
   before_action :received_user_events
 
   def sugarcoat
-    @events.each do |event|
+    each_line_event do |event|
       case event
       when Line::Bot::Event::Message
         line_user_id = event["source"]["userId"]
@@ -26,28 +26,112 @@ class Bots::LineController < BaseController
           response = @client.get_message_content(event.message['id'])
           File.open(Rails.root.to_s +"/tmp/" + SecureRandom.hex, 'wb'){|f| f.write(response.body) }
         end
-      when Line::Bot::Event::Follow
-        Sugarcoat::LinebotFollowerUser.generate_profile!(line_client: @client, line_user_id: event["source"]["userId"], isfollow: true)
-      when Line::Bot::Event::Unfollow
-        Sugarcoat::LinebotFollowerUser.generate_profile!(line_client: @client, line_user_id: event["source"]["userId"], isfollow: false)
       end
     end
     head(:ok)
   end
 
   def citore
+    each_line_event do |event|
+      case event
+      when Line::Bot::Event::Message
+        line_user_id = event["source"]["userId"]
+        case event.type
+        when Line::Bot::Event::MessageType::Text
+          logger.info event.message
+          logger.info event['replyToken']
+          message = {
+            type: 'text',
+            text: event.message['text']
+          }
+          logger.info event["source"]
+          user = @client.get_profile(event["source"]["userId"])
+          logger.info user.body
+          res = @client.reply_message(event['replyToken'], message)
+        when Line::Bot::Event::MessageType::Image, Line::Bot::Event::MessageType::Video, Line::Bot::Event::MessageType::Audio
+          response = @client.get_message_content(event.message['id'])
+          File.open(Rails.root.to_s +"/tmp/" + SecureRandom.hex, 'wb'){|f| f.write(response.body) }
+        end
+      end
+    end
     head(:ok)
   end
 
   def spotgacha
+    each_line_event do |event|
+      case event
+      when Line::Bot::Event::Message
+        line_user_id = event["source"]["userId"]
+        case event.type
+        when Line::Bot::Event::MessageType::Text
+          logger.info event.message
+          logger.info event['replyToken']
+          message = {
+            type: 'text',
+            text: event.message['text']
+          }
+          logger.info event["source"]
+          user = @client.get_profile(event["source"]["userId"])
+          logger.info user.body
+          res = @client.reply_message(event['replyToken'], message)
+        when Line::Bot::Event::MessageType::Image, Line::Bot::Event::MessageType::Video, Line::Bot::Event::MessageType::Audio
+          response = @client.get_message_content(event.message['id'])
+          File.open(Rails.root.to_s +"/tmp/" + SecureRandom.hex, 'wb'){|f| f.write(response.body) }
+        end
+      end
+    end
     head(:ok)
   end
 
   def job_with_life
+    each_line_event do |event|
+      case event
+      when Line::Bot::Event::Message
+        line_user_id = event["source"]["userId"]
+        case event.type
+        when Line::Bot::Event::MessageType::Text
+          logger.info event.message
+          logger.info event['replyToken']
+          message = {
+            type: 'text',
+            text: event.message['text']
+          }
+          logger.info event["source"]
+          user = @client.get_profile(event["source"]["userId"])
+          logger.info user.body
+          res = @client.reply_message(event['replyToken'], message)
+        when Line::Bot::Event::MessageType::Image, Line::Bot::Event::MessageType::Video, Line::Bot::Event::MessageType::Audio
+          response = @client.get_message_content(event.message['id'])
+          File.open(Rails.root.to_s +"/tmp/" + SecureRandom.hex, 'wb'){|f| f.write(response.body) }
+        end
+      end
+    end
     head(:ok)
   end
 
   def shiritori
+    each_line_event do |event|
+      case event
+      when Line::Bot::Event::Message
+        line_user_id = event["source"]["userId"]
+        case event.type
+        when Line::Bot::Event::MessageType::Text
+          logger.info event.message
+          logger.info event['replyToken']
+          message = {
+            type: 'text',
+            text: event.message['text']
+          }
+          logger.info event["source"]
+          user = @client.get_profile(event["source"]["userId"])
+          logger.info user.body
+          res = @client.reply_message(event['replyToken'], message)
+        when Line::Bot::Event::MessageType::Image, Line::Bot::Event::MessageType::Video, Line::Bot::Event::MessageType::Audio
+          response = @client.get_message_content(event.message['id'])
+          File.open(Rails.root.to_s +"/tmp/" + SecureRandom.hex, 'wb'){|f| f.write(response.body) }
+        end
+      end
+    end
     head(:ok)
   end
 
@@ -71,5 +155,39 @@ class Bots::LineController < BaseController
     @events = @client.parse_events_from(body)
     logger.info "-----------------------------------"
     logger.info @events
+  end
+
+  def each_line_event(&block)
+    route_action_name = params[:action]
+    @events.each do |event|
+      case event
+      when Line::Bot::Event::Message
+        line_user_id = event["source"]["userId"]
+        case event.type
+        when Line::Bot::Event::MessageType::Text
+          logger.info event.message
+          logger.info event['replyToken']
+          message = {
+            type: 'text',
+            text: event.message['text']
+          }
+          logger.info event["source"]
+          user = @client.get_profile(event["source"]["userId"])
+          logger.info user.body
+          res = @client.reply_message(event['replyToken'], message)
+        when Line::Bot::Event::MessageType::Image, Line::Bot::Event::MessageType::Video, Line::Bot::Event::MessageType::Audio
+          response = @client.get_message_content(event.message['id'])
+          File.open(Rails.root.to_s +"/tmp/" + SecureRandom.hex, 'wb'){|f| f.write(response.body) }
+        end
+      when Line::Bot::Event::Follow
+        linebot_follower_user = (route_action_name + "/linebot_follower_user").camelize.classify
+        linebot_follower_user.generate_profile!(line_client: @client, line_user_id: event["source"]["userId"], isfollow: true)
+      when Line::Bot::Event::Unfollow
+        linebot_follower_user = (route_action_name + "/linebot_follower_user").camelize.classify
+        linebot_follower_user.generate_profile!(line_client: @client, line_user_id: event["source"]["userId"], isfollow: false)
+      else
+        block.call(event)
+      end
+    end
   end
 end

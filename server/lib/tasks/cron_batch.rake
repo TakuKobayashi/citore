@@ -119,6 +119,11 @@ namespace :cron_batch do
     File.open(dir_path, 'rb') do |zip_file|
       s3.put_object(bucket: "taptappun",body: zip_file,key: "project/sugarcoat/tweet_csv/#{now_str}.zip", acl: "public-read")
     end
+    puts "uploaded"
+    File.delete(dir_path)
+    Dir.glob(Rails.root.to_s + "/tmp/tweet_csv/*") do |dir_file|
+      File.delete(dir_file)
+    end
     puts "batch completed"
   end
 

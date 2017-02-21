@@ -46,8 +46,8 @@ client.sample do |status|
     rep_ids << status.in_reply_to_status_id
   end
   if status.geo?
-    csv_arr += status.geo[:coordinates]
-    csv_arr << status.place[:full_name]
+    csv_arr += status.geo.coordinates
+    csv_arr << status.place.full_name
     location_file.puts(csv_arr.join(","))
   end
 

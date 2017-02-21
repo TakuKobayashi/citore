@@ -92,6 +92,36 @@ namespace :cron_batch do
     puts "batch completed"
   end
 
+  task tweet_master_csv_upload: :environment do
+    cmd = nil
+    environment = Rails.env
+    configuration = ActiveRecord::Base.configurations[environment]
+    now_str = Time.now.strftime("%Y%m%d_%H%M%S")
+    dir_path = Rails.root.to_s + "/tmp/tweet_csv/" + now_str + ".zip"
+
+    
+    Zip::File.open(dir_path, Zip::File::CREATE) do |zip|
+      Dir.glob(Rails.root.to_s + "/tmp/tweet_csv/*") do |dir_file|
+        # (2) 作ったディレクトリにファイルを書き込む１
+        File.open(dir_file, 'rb') do |file|
+          zip.get_output_stream("#{now_str}/#{File.basename(file.path)}"){|s|
+            file.each_line do |line|
+              s.write(line)
+            end
+          }
+        end
+        puts "#{file} compressed complete"
+      end
+    end
+
+    puts "compress completed"
+    s3 = Aws::S3::Client.new
+    File.open(dir_path, 'rb') do |zip_file|
+      s3.put_object(bucket: "taptappun",body: zip_file,key: "project/sugarcoat/tweet_csv/#{now_str}.zip", acl: "public-read")
+    end
+    puts "batch completed"
+  end
+
   task sugarcoat_bot_tweet: :environment do
     apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
 #    facebook_sugarcoat = Koala::Facebook::API.new(apiconfig["facebook_bot"]["access_token"])

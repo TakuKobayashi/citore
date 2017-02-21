@@ -6,10 +6,11 @@
 #  appear_count :integer          default(0), not null
 #  word         :string(255)      not null
 #  part         :string(255)      not null
+#  reading      :string(255)      default(""), not null
 #
 # Indexes
 #
-#  index_tweet_appear_words_on_word_and_part  (word,part) UNIQUE
+#  index_appear_words_on_word_and_part_and_reading  (word,part,reading) UNIQUE
 #
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html

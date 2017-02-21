@@ -65,14 +65,14 @@ client.sample do |status|
       csv_arr = [reply_status.user.id.to_s, reply_status.user.screen_name.to_s, reply_status.id.to_s, without_url_tweet, urls.to_json, reply_status.created_at, reply_status.in_reply_to_status_id.to_s]
       if reply_status.in_reply_to_status_id?
         reply_file.puts(csv_arr.join(","))
+        rep_ids << reply_status.in_reply_to_status_id
       end
       if reply_status.geo?
-        csv_arr += reply_status.geo[:coordinates]
-        csv_arr << reply_status.place[:full_name]
+        csv_arr += reply_status.geo.coordinates
+        csv_arr << reply_status.place.full_name
         location_file.puts(csv_arr.join(","))
       end
     end
-    rep_ids = reply_statuses.map{|s| s.in_reply_to_status_id }.compact
     p "after:#{rep_ids.size}"
   end
 end

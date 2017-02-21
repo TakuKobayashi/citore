@@ -159,4 +159,17 @@ class ApplicationRecord < ActiveRecord::Base
       retry
     end
   end
+
+  def self.get_location_words(text)
+    place_names = []
+    natto = ApplicationRecord.get_natto
+    natto.parse(text) do |n|
+      next if n.surface.blank?
+      features = n.feature.split(",")
+      if features[1] == "固有名詞" && features[2] == "地域"
+        place_names << n.surface
+      end
+    end
+    return place_names
+  end
 end

@@ -44,6 +44,18 @@ class TwitterRecord < ApplicationRecord
     end
   end
 
+  def self.get_tweets(*twitter_ids)
+    apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
+    client = Twitter::REST::Client.new do |config|
+      config.consumer_key        = apiconfig["twitter"]["consumer_key"]
+      config.consumer_secret     = apiconfig["twitter"]["consumer_secret"]
+      config.access_token        = apiconfig["twitter"]["access_token_key"]
+      config.access_token_secret = apiconfig["twitter"]["access_token_secret"]
+    end
+    tweets = client.statuses(twitter_ids)
+    return tweets
+  end
+
   def self.twitter_crawl(prefix_key: "", crawl_options: {})
     apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
     client = Twitter::REST::Client.new do |config|

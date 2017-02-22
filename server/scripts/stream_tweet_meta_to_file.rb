@@ -37,7 +37,7 @@ client.sample do |status|
   next if !status.in_reply_to_status_id? && !status.geo?
   p "#{status.in_reply_to_status_id}:#{status.geo}"
   sanitaized_word = TwitterRecord.sanitized(status.text)
-  sanitaized_word = sanitaized_word.gsub("\n"," ").gsub(",","、")
+  sanitaized_word = sanitaized_word.gsub("\n"," ").gsub(",",".")
   without_url_tweet, urls = ApplicationRecord.separate_urls(sanitaized_word)
 
   csv_arr = [status.user.id.to_s, status.user.screen_name.to_s, status.id.to_s, without_url_tweet, urls.to_json, status.created_at, status.in_reply_to_status_id.to_s]

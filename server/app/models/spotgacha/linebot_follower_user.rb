@@ -18,6 +18,15 @@
 #
 
 class SpotGacha::LinebotFollowerUser < LinebotFollowerUser
+  #http://webservice.recruit.co.jp/hotpepper/reference.html
+  HOTPEPPER_API_URL = "http://webservice.recruit.co.jp/hotpepper/gourmet/v1/"
+
+  #http://api.gnavi.co.jp/api/manual/restsearch/
+  GNAVI_API_URL = "http://api.gnavi.co.jp/api/manual/restsearch/"
+
+  #https://developers.google.com/places/web-service/search?hl=ja
+　GOOGLE_PLACE_API_URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/output?parameters"
+
   def search_spots
     request_hash = {
       key: "",

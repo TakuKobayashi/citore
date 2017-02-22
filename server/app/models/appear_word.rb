@@ -54,4 +54,8 @@ class AppearWord < ApplicationRecord
     end.flatten
     return results
   end
+
+  def word_and_read
+    return self.word + "\n(" + self.reading.tr('ァ-ン','ぁ-ん') + ")"
+  end
 end

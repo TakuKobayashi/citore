@@ -18,36 +18,29 @@
 class CharacterSerif < CategorisedWord
   def self.import_serif
     columns = CharacterSerif.column_names
-    (1..4).each do |i|
-      url = "http://meigen.keiziban-jp.com/anime"
-      if i > 1
-        url += "/page/" + i.to_s
-      end
-      doc = ApplicationRecord.request_and_parse_html(url)
-      link_list = doc.css("#post_list").css("li.clearfix").css(".title")
-      break if link_list.blank?
-      link_list.each do |ld|
-      	import_list = []
-        ld.css("a").each do |lh|
-          (1..10).each do |j|
-            url2 = lh[:href]
-            if j > 1
-              url2 += "?wpcrp=" + j.to_s
-            end
-            puts "#{i}:#{j}:#{url}:#{url2}"
-            inner_doc = ApplicationRecord.request_and_parse_html(url2)
-            said = inner_doc.css(".header")
-            break if said.blank?
-            messages = inner_doc.css(".description")
-            said.each_with_index do |s, index|
-              import_list << CharacterSerif.new(
-              	large_category: :large_unknown,
-              	medium_category: lh.text.gsub("の名言", ""),
-              	detail_category: s.text,
-              	body: messages[index].try(:text).to_s
-              )
-            end
-          end
+    doc = ApplicationRecord.request_and_parse_html("http://40s-animeigen.com/sakuhin/")
+    link_list = doc.css(".so-panel").css("li.cat-item")
+    link_list.css("a").each do |link|
+      (1..100).each do |i|
+      	url = link[:href]
+      	if i > 1
+      	  url += "page/#{i}/"
+      	end
+      	p url
+        content_doc = ApplicationRecord.request_and_parse_html(url)
+        break if content_doc.css("dd").blank?
+        import_list = []
+        content_doc.css("dd").each do |dd|
+          tag_doms = dd.css(".pcone")
+          cats = tag_doms[0].css("b").text.split(",")
+          tags = tag_doms[1].css("b").text.split(",").map(&:strip)
+          import_list << CharacterSerif.new(
+            large_category: :large_unknown,
+            medium_category: cats[0].to_s.strip,
+            detail_category: cats[1].to_s.strip,
+            body: dd.css("h3").text.strip,
+            description: tags.join(" ")
+          )
         end
         CharacterSerif.import(import_list)
       end

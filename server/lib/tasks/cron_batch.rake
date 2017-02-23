@@ -10,7 +10,6 @@ namespace :cron_batch do
       "appear_words",
       "twitter_words",
       "twitter_word_appears",
-      "twitter_word_mentions",
       "lyrics",
       "crawl_target_urls",
       "wikipedia_pages",
@@ -29,8 +28,7 @@ namespace :cron_batch do
       "categorised_words",
       "line_stickers",
       "markov_trigram_prefixes",
-      "markov_trigram_words",
-      "kaomojis"
+      "markov_trigram_words"
     ]
     now_str = Time.now.strftime("%Y%m%d_%H%M%S")
     dir_path = Rails.root.to_s + "/tmp/dbdump/" + now_str

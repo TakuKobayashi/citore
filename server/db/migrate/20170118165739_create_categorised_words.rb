@@ -3,7 +3,7 @@ class CreateCategorisedWords < ActiveRecord::Migration[5.0]
     create_table :categorised_words do |t|
       t.string :type, null: false
       t.integer :large_category, null: false, default: 0
-      t.integer :medium_category, null: false, default: 0
+      t.string :medium_category, null: false, default: ""
       t.string :detail_category, null: false
       t.text :body, null: false
       t.text :description

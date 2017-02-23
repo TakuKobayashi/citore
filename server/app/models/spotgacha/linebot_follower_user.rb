@@ -17,7 +17,7 @@
 #  index_linebot_follower_users_on_line_user_id_and_type  (line_user_id,type) UNIQUE
 #
 
-class SpotGacha::LinebotFollowerUser < LinebotFollowerUser
+class Spotgacha::LinebotFollowerUser < LinebotFollowerUser
   #http://webservice.recruit.co.jp/hotpepper/reference.html
   HOTPEPPER_API_URL = "http://webservice.recruit.co.jp/hotpepper/gourmet/v1/"
 

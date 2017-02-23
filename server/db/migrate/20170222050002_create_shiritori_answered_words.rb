@@ -7,6 +7,7 @@ class CreateShiritoriAnsweredWords < ActiveRecord::Migration[5.0]
       t.string :output_word, null: false
       t.integer :answered_word_id, null: false
       t.integer :shiritori_round_id, null: false
+      t.string :next_prefix, null: false, default: ""
       t.timestamps
     end
     add_index :shiritori_answered_words, [:answer_user_type,:answer_user_id], name: "shiritori_answer_user_index"

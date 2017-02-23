@@ -1,9 +1,43 @@
 ---
 ja:
   admin:
+    flash:
+      successful: 更新しました
+      noaction: キャンセルしました
+    form:
+      basic_info: データ表示
+      optional: 入力項目
+      char_length_up_to: 上限文字数
     actions:
+      show:
+        title: データ表示
+        menu: データ表示
+        breadcrumb: 表示
+      edit:
+        title: データ更新
+        menu: データ更新
+        breadcrumb: 更新
+      delete:
+        title: データ削除
+        menu: データ削除
+        breadcrumb: 削除
+      index:
+        title: データ一覧
+        menu: データ一覧
+        breadcrumb: 一覧
+      export:
+        title: エクスポートメニュー
+        link: エクスポート
+        menu: エクスポートメニュー
+        breadcrumb: エクスポート
       dashboard:
         title: Citoreの管理ツール
+        menu: テーブル一覧
+        breadcrumb: ダッシュボード
+      new:
+        title: 新規作成
+        menu: データ新規作成
+        breadcrumb: 新規作成
   activerecord:
     errors:
       messages:

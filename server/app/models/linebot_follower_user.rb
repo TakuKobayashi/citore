@@ -44,23 +44,4 @@ class LinebotFollowerUser < ApplicationRecord
   def unfollow!
     update!(unfollow: false)
   end
-
-  def generate_event_and_reply!(line_client: , line_event:)
-    event = events.new(message_type:line_event.type, line_user_id: event["source"]["userId"])
-    case line_event.type
-    when Line::Bot::Event::MessageType::Text
-      message = {
-        type: 'text',
-        text: line_event.message['text']
-      }
-      event.input_text = line_event.message['text']
-      line_client.reply_message(event['replyToken'], message)
-    when Line::Bot::Event::MessageType::Image, Line::Bot::Event::MessageType::Video, Line::Bot::Event::MessageType::Audio
-      response = line_client.get_message_content(line_event.message['id'])
-      filepath = Rails.root.to_s +"/tmp/" + SecureRandom.hex
-      File.open(filepath, 'wb'){|f| f.write(response.body) }
-      event.input_file_path = line_event.filepath
-    end
-    event.save!
-  end
 end

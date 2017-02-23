@@ -1,5 +1,9 @@
 ---
 ja:
+  admin:
+    actions:
+      dashboard:
+        title: Citoreの管理ツール
   activerecord:
     errors:
       messages:

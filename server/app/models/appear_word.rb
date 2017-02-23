@@ -10,6 +10,7 @@
 #
 # Indexes
 #
+#  index_appear_words_on_reading                    (reading)
 #  index_appear_words_on_word_and_part_and_reading  (word,part,reading) UNIQUE
 #
 

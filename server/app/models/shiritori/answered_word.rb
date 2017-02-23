@@ -9,6 +9,7 @@
 #  output_word        :string(255)      not null
 #  answered_word_id   :integer          not null
 #  shiritori_round_id :integer          not null
+#  next_prefix        :string(255)      default(""), not null
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
 #

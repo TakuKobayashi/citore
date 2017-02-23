@@ -5,6 +5,8 @@
 #  id                   :integer          not null, primary key
 #  exam_examination_id  :integer          not null
 #  exam_explaination_id :integer
+#  answer_category      :integer          default(0), not null
+#  point                :float(24)        default(0.0), not null
 #  number_word          :string(255)      default(""), not null
 #  title                :text(65535)
 #  body                 :text(65535)      not null

@@ -18,8 +18,6 @@
 #
 
 class LinebotFollowerUser < ApplicationRecord
-  has_many :events, class_name: 'LinebotEvent', foreign_key: :linebot_follower_user_id
-
   def self.generate_profile!(line_client: , line_user_id:, isfollow: true)
     follower = self.find_or_initialize_by(type: self.class.base_class.name, line_user_id: line_user_id)
     if follower.new_record?

@@ -24,5 +24,7 @@ class CategorisedWord < ApplicationRecord
     living: 4,
     landscape: 5,
     food: 6,
+    greeting: 7,
+    behavior: 8,
   }
 end

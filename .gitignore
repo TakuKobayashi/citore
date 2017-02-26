@@ -86,3 +86,14 @@ server/public/assets/
 
 server/.byebug_history
 server/config/aws.yml
+
+.Python
+[Bb]in
+[Ii]nclude
+[Ll]ib
+[Ll]ib64
+[Ll]ocal
+[Ss]cripts
+pyvenv.cfg
+.venv
+pip-selfcheck.json

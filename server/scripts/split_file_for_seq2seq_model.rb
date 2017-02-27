@@ -35,6 +35,7 @@ TwitterWord.preload(:parent).find_each do |tw|
         ins << ni.surface
       end
     end
+    next if outs.blank? || ins.blank?
     output_file.puts(outs.join(" "))
     input_file.puts(ins.join(" "))
   end

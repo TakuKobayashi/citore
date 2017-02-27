@@ -11,7 +11,7 @@ unless File.exists?(input_file_path)
 end
 input_file = File.new(input_file_path,"a")
 
-output_file_path = Rails.root.to_s + "/tmp/seq2seq_data/tweet_input.txt"
+output_file_path = Rails.root.to_s + "/tmp/seq2seq_data/tweet_output.txt"
 unless File.exists?(output_file_path)
   out_file = File.new(output_file_path,"w")
   out_file.puts("")

@@ -34,11 +34,10 @@ csv_file.each do |csv|
   cs = csv.split(",")
   label = "__label__" + cs[0].to_s
   values = []
-  p cs[1].to_s.strip
-  natto.parse(cs[1].to_s.strip) do |na|
-    values << na.surhace
+  natto.parse(cs[1].to_s) do |n|
+    values << n.surface
   end
-  arr << [label, values.join(" ")].hoin(",")
+  arr << [label, values.join(" ")].join(",")
 end
 train_arr, test_arr = arr.partition{|a| 0.9 > rand }
 

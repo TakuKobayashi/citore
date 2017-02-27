@@ -34,9 +34,9 @@ csv_file.each do |csv|
   cs = csv.split(",")
   label = "__label__" + cs[0].to_s
   values = []
-  p csv
-  natto.parse(cs[1].to_s) do |n|
-    values << n.surhace
+  p cs[1].to_s.strip
+  natto.parse(cs[1].to_s.strip) do |na|
+    values << na.surhace
   end
   arr << [label, values.join(" ")].hoin(",")
 end

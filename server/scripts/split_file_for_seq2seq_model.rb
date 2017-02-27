@@ -22,13 +22,15 @@ output_file = File.new(output_file_path,"a")
 TwitterWord.preload(:parent).find_each do |tw|
   if tw.parent.present?
     outs = []
-    natto.parse(tw.tweet) do |no|
+    out_tweet = tw.tweet.gsub("\n", " ").gsub(",",".")
+    natto.parse(out_tweet) do |no|
       if no.surface.present?
         outs << no.surface
       end
     end
     ins = []
-    natto.parse(tw.parent.tweet) do |ni|
+    in_tweet = tw.parent.tweet.gsub("\n", " ").gsub(",",".")
+    natto.parse(in_tweet) do |ni|
       if ni.surface.present?
         ins << ni.surface
       end

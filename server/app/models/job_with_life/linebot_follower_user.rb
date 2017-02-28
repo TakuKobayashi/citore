@@ -18,17 +18,17 @@
 #
 
 class JobWithLife::LinebotFollowerUser < LinebotFollowerUser
-  has_many :job_with_life_beacon_access_logs, as: :answer_user
+  has_many :access_logs, as: :answer_user, class_name: 'JobWithLife::BeaconAccessLog'
 
   def record_and_answer!(event:)
-    last_access = self.job_with_life_beacon_access_logs.where(hwid: event["beacon"]["hwid"],beacon_type: event["beacon"]["type"]).last
+    last_access = self.access_logs.where(hwid: event["beacon"]["hwid"],beacon_type: event["beacon"]["type"]).last
     #TODO 登録した時間を基準にする(0時とは限らない)
     if last_access.present? && last_access.record_time.today?
       daily_number = last_access.daily_record_number + 1
     else
       daily_number = 1
     end
-    log = self.job_with_life_beacon_access_logs.create!(
+    log = self.access_logs.create!(
       timestamp: event["timestamp"],
       beacon_type: event["beacon"]["type"],
       hwid: event["beacon"]["hwid"],

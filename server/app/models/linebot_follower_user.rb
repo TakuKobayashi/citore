@@ -36,7 +36,7 @@ class LinebotFollowerUser < ApplicationRecord
   end
 
   def follow!
-    update!(unfollow: false)
+    update!(unfollow: true)
   end
 
   def unfollow!

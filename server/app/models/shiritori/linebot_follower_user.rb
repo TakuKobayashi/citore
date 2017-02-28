@@ -22,9 +22,9 @@ class Shiritori::LinebotFollowerUser < LinebotFollowerUser
 
   def generate_return_message!(message: )
   	#半角カナとかをいい感じに
-  	sanitaized_word = basic_sanitize(message)
+  	sanitaized_word = ApplicationRecord.basic_sanitize(message)
   	#記号を除去
-    sanitaized_word = delete_symbols(sanitaized_word)
+    sanitaized_word = ApplicationRecord.delete_symbols(sanitaized_word)
     if sanitaized_word.match(/(?:\p{Hiragana}|\p{Katakana}|[一-龠々])+/).nil?
       return "日本語でOK?"
     elsif !sanitaized_word.match(/(\p{Hiragana}|\p{Katakana})+/).nil? && sanitaized_word <= 1

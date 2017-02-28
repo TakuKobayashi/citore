@@ -284,8 +284,9 @@ namespace :batch do
 
     natto = ApplicationRecord.get_natto
     {
-      TwitterWord => "tweet",
-      Lyric => "body"
+      #TwitterWord => "tweet",
+      #Lyric => "body"
+      CharacterSerif => "body"
     }.each do |clazz, word|
       last_saved_id = ExtraInfo.read_extra_info[(clazz.to_s + "_malkov")]
       cached_hash_id = {}

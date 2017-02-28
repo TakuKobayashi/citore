@@ -41,7 +41,7 @@ class Shiritori::LinebotFollowerUser < LinebotFollowerUser
       return answered.output_word
     end
     next_prefix = self.answers.where(shiritori_round_id: current_round.id).last.try(:next_prefix) || "リ"
-    if reading_word[0] == next_prefix
+    if reading_word[0] != next_prefix
       return "しりとりをしてくれないか？#{next_prefix}から始めてくれ。"
     end
     candidates = AppearWord.where("reading LIKE ?", reading_word.last.to_s + "%")
@@ -57,7 +57,7 @@ class Shiritori::LinebotFollowerUser < LinebotFollowerUser
       end
       return ngword.word_and_read + "\n\n...\nOh...\n負けました。"
     else
-      current_round.answers.create!(answer_user: self, input_word: sanitaized_word, output_word: return_word.word, answered_word_id: return_word.id, next_prefix: return_word.last)
+      current_round.answers.create!(answer_user: self, input_word: sanitaized_word, output_word: return_word.word, answered_word_id: return_word.id, next_prefix: return_word[return_word.size - 2])
       return return_word.word_and_read
     end
   end

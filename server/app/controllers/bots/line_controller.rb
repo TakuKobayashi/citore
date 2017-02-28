@@ -198,13 +198,13 @@ class Bots::LineController < BaseController
           File.open(Rails.root.to_s +"/tmp/" + SecureRandom.hex, 'wb'){|f| f.write(response.body) }
         end
       when Line::Bot::Event::Follow
-        linebot_follower_user = (route_action_name + "/linebot_follower_user").camelize.classify.capitalize
+        linebot_follower_user = (route_action_name + "/linebot_follower_user").camelize.classify.constantize
         linebot_follower_user.generate_profile!(line_client: @client, line_user_id: event["source"]["userId"], isfollow: true)
       when Line::Bot::Event::Unfollow
-        linebot_follower_user = (route_action_name + "/linebot_follower_user").camelize.classify.capitalize
+        linebot_follower_user = (route_action_name + "/linebot_follower_user").camelize.classify.constantize
         linebot_follower_user.generate_profile!(line_client: @client, line_user_id: event["source"]["userId"], isfollow: false)
       else
-        linebot_follower_user = (route_action_name + "/linebot_follower_user").camelize.classify.capitalize
+        linebot_follower_user = (route_action_name + "/linebot_follower_user").camelize.classify.constantize
         line_user = linebot_follower_user.find_by!(line_user_id: event["source"]["userId"])
         block.call(event, line_user)
       end

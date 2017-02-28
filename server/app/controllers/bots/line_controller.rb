@@ -89,7 +89,7 @@ class Bots::LineController < BaseController
       when Line::Bot::Event::Beacon
         logger.info event
         logger.info event['replyToken']
-        message_text = line_user.record_and_answer!(event)
+        message_text = line_user.record_and_answer!(event: event)
         message = {
           type: 'text',
           text: message_text

@@ -27,7 +27,7 @@ class Shiritori::LinebotFollowerUser < LinebotFollowerUser
     sanitaized_word = ApplicationRecord.delete_symbols(sanitaized_word)
     if sanitaized_word.match(/(?:\p{Hiragana}|\p{Katakana}|[一-龠々])+/).nil?
       return "日本語でOK?"
-    elsif !sanitaized_word.match(/(\p{Hiragana}|\p{Katakana})+/).nil? && sanitaized_word <= 1
+    elsif !sanitaized_word.match(/(\p{Hiragana}|\p{Katakana})+/).nil? && sanitaized_word.size <= 1
       return "えーと...なにを言っているのかよくわからんなぁ..."
     end
     reading_array = []

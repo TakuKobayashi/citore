@@ -21,4 +21,5 @@
 #
 
 class Shiritori::AnsweredWord < ApplicationRecord
+  belongs_to :answer_user, polymorphic: true
 end

@@ -18,6 +18,8 @@
 #
 
 class Shiritori::LinebotFollowerUser < LinebotFollowerUser
+  has_many :answers, as: :answer_user, class_name: 'Shiritori::AnsweredWord'
+
   def generate_return_message!(message: )
   	#半角カナとかをいい感じに
   	sanitaized_word = basic_sanitize(message)

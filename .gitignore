@@ -96,3 +96,8 @@ server/config/aws.yml
 pyvenv.cfg
 .venv
 pip-selfcheck.json
+
+python/fasttext/
+python/keras/
+python/models/
+python/tensorflow/

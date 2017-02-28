@@ -19,7 +19,7 @@
 
 class LinebotFollowerUser < ApplicationRecord
   def self.generate_profile!(line_client: , line_user_id:, isfollow: true)
-    follower = self.find_or_initialize_by(type: self.base_class.name, line_user_id: line_user_id)
+    follower = self.find_or_initialize_by(type: self.class.name, line_user_id: line_user_id)
     if follower.new_record?
       response = line_client.get_profile(line_user_id)
       profile = response.body

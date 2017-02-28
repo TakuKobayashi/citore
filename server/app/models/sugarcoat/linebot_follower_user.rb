@@ -29,7 +29,7 @@ class Sugarcoat::LinebotFollowerUser < LinebotFollowerUser
   end
 
   def self.get_output(message)
-    prefix_rand_id = rand(MMarkovTrigramPrefix.where(type: "TwitterWord").last.id)
+    prefix_rand_id = rand(MarkovTrigramPrefix.where(type: "TwitterWord").last.id)
     prefix = MarkovTrigramPrefix.where(type: "TwitterWord").where("id > ?", prefix_rand_id).first
     return MarkovTrigramPrefix.generate_sentence(seed: prefix.prefix, source_type: "TwitterWord")
   end

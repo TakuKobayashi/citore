@@ -21,7 +21,7 @@ class MarkovTrigramPrefix < ApplicationRecord
   def self.generate_sentence(seed: , source_type: nil)
     word_records = {}
     sentence_array = [seed]
-    markovs = MarkovTrigramPrefix.bos.where(prefix: seed)
+    markovs = MarkovTrigramPrefix.where(prefix: seed)
     if source_type.present?
       select_source_type = source_type
       markov = markovs.find_by(source_type: source_type)
@@ -31,8 +31,8 @@ class MarkovTrigramPrefix < ApplicationRecord
     end
     # 必ず何か引っ掛ける
     if markov.blank?
-      lot_id = rand(MarkovTrigramPrefix.bos.last.id)
-      markov = MarkovTrigramPrefix.bos.where("id >= ?", lot_id).first
+      lot_id = rand(MarkovTrigramPrefix.last.id)
+      markov = MarkovTrigramPrefix.where("id >= ?", lot_id).first
       select_source_type = markov.try(:source_type)
     end
 

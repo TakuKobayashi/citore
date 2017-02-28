@@ -11,7 +11,6 @@ class Bots::LineController < BaseController
       when Line::Bot::Event::Message
         case event.type
         when Line::Bot::Event::MessageType::Text
-          logger.info event.message
           message_text = line_user.say!(event: event)
           message = {
             type: 'text',
@@ -122,8 +121,6 @@ class Bots::LineController < BaseController
       when Line::Bot::Event::Message
         case event.type
         when Line::Bot::Event::MessageType::Text
-          logger.info "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-          logger.info event.message
           message_text = line_user.say!(event: event)
           message = {
             type: 'text',

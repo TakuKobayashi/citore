@@ -128,19 +128,16 @@ class Bots::LineController < BaseController
     each_line_event do |event, line_user|
       case event
       when Line::Bot::Event::Message
-        line_user_id = event["source"]["userId"]
         case event.type
         when Line::Bot::Event::MessageType::Text
           logger.info event.message
           logger.info event['replyToken']
+          message_text = line_user.say!(event: event)
           message = {
             type: 'text',
-            text: event.message['text']
+            text: message_text
           }
-          logger.info event["source"]
-          user = @client.get_profile(event["source"]["userId"])
-          logger.info user.body
-          res = @client.reply_message(event['replyToken'], message)
+          @client.reply_message(event['replyToken'], message)
         end
       end
     end

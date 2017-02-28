@@ -9,22 +9,15 @@ class Bots::LineController < BaseController
     each_line_event do |event, line_user|
       case event
       when Line::Bot::Event::Message
-        line_user_id = event["source"]["userId"]
         case event.type
         when Line::Bot::Event::MessageType::Text
           logger.info event.message
-          logger.info event['replyToken']
+          message_text = line_user.say!(event: event)
           message = {
             type: 'text',
-            text: event.message['text']
+            text: message_text
           }
-          logger.info event["source"]
-          user = @client.get_profile(event["source"]["userId"])
-          logger.info user.body
-          res = @client.reply_message(event['replyToken'], message)
-        when Line::Bot::Event::MessageType::Image, Line::Bot::Event::MessageType::Video, Line::Bot::Event::MessageType::Audio
-          response = @client.get_message_content(event.message['id'])
-          File.open(Rails.root.to_s +"/tmp/" + SecureRandom.hex, 'wb'){|f| f.write(response.body) }
+          @client.reply_message(event['replyToken'], message)
         end
       end
     end
@@ -64,12 +57,18 @@ class Bots::LineController < BaseController
         case event.type
         when Line::Bot::Event::MessageType::Text
           logger.info event.message
-          message_text = line_user.say!(event: event)
+          logger.info event['replyToken']
           message = {
             type: 'text',
-            text: message_text
+            text: event.message['text']
           }
-          @client.reply_message(event['replyToken'], message)
+          logger.info event["source"]
+          user = @client.get_profile(event["source"]["userId"])
+          logger.info user.body
+          res = @client.reply_message(event['replyToken'], message)
+        when Line::Bot::Event::MessageType::Image, Line::Bot::Event::MessageType::Video, Line::Bot::Event::MessageType::Audio
+          response = @client.get_message_content(event.message['id'])
+          File.open(Rails.root.to_s +"/tmp/" + SecureRandom.hex, 'wb'){|f| f.write(response.body) }
         end
       end
     end
@@ -123,6 +122,7 @@ class Bots::LineController < BaseController
       when Line::Bot::Event::Message
         case event.type
         when Line::Bot::Event::MessageType::Text
+          logger.info "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
           logger.info event.message
           message_text = line_user.say!(event: event)
           message = {

@@ -63,10 +63,23 @@ Rails.application.routes.draw do
       post :job_with_life
       get :shiritori
       post :shiritori
+      get :mone
+      post :mone
     end
 
     resource :facebook, controller: :facebook, only: [] do
-      get :index
+      get :sugarcoat
+      post :sugarcoat
+      get :citore
+      post :citore
+      get :spotgacha
+      post :spotgacha
+      get :job_with_life
+      post :job_with_life
+      get :shiritori
+      post :shiritori
+      get :mone
+      post :mone
     end
   end
 

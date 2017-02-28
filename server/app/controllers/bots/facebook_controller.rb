@@ -72,4 +72,8 @@ class Bots::FacebookController < BaseController
   def shiritori
     head(:ok)
   end
+
+  def mone
+    head(:ok)
+  end
 end

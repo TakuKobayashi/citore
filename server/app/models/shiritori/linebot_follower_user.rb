@@ -31,20 +31,7 @@ class Shiritori::LinebotFollowerUser < LinebotFollowerUser
       return "えーと...なにを言っているのかよくわからんなぁ..."
     end
     reading_array = []
-    natto = ApplicationRecord.get_natto
-    natto.parse(sanitaized_word) do |n|
-      next if n.surface.blank?
-      csv = n.feature.split(",")
-      reading = csv[7]
-      if reading.blank?
-        reading = n.surface
-      end
-      reading_array << reading
-    end
-    if reading_array.size > 1
-      return "単語でOK?"
-    end
-    reading_word = reading_array.join
+    reading_word = ApplicationRecord.reading(sanitaized_word)
     if reading_word.blank?
       return "どうした?無言か?"
     end
@@ -53,6 +40,10 @@ class Shiritori::LinebotFollowerUser < LinebotFollowerUser
     if answered.present?
       return answered.output_word
     end
+    next_prefix = self.answers.where(shiritori_round_id: current_round.id).last.try(:next_prefix) || "リ"
+    if reading_word[0] == next_prefix
+      return "しりとりをしてくれないか？#{next_prefix}から始めてくれ。"
+    end
     candidates = AppearWord.where("reading LIKE ?", reading_word.last.to_s + "%")
     rightwords , ngwords = candidates.partition{|w| w.reading.last != "ン" }
     answered_word_ids = current_round.answers.where(output_word: rightwords.map(&:word)).pluck(:answered_word_id)
@@ -60,13 +51,13 @@ class Shiritori::LinebotFollowerUser < LinebotFollowerUser
     if return_word.blank?
       ngword = ngwords.sample
       current_round.transaction do
-        current_round.answers.create!(answer_user: self, input_word: sanitaized_word, output_word: ngword.word, answered_word_id: ngword.id)
+        current_round.answers.create!(answer_user: self, input_word: sanitaized_word, output_word: ngword.word, answered_word_id: ngword.id, next_prefix: "ン")
         current_round.update!(activate: false, winner_user: self)
         Shiritori::Round.create!(current_round.number + 1, activate: true)
       end
       return ngword.word_and_read + "\n\n...\nOh...\n負けました。"
     else
-      current_round.answers.create!(answer_user: self, input_word: sanitaized_word, output_word: return_word.word, answered_word_id: return_word.id)
+      current_round.answers.create!(answer_user: self, input_word: sanitaized_word, output_word: return_word.word, answered_word_id: return_word.id, next_prefix: return_word.last)
       return return_word.word_and_read
     end
   end

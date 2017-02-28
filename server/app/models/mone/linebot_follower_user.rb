@@ -29,8 +29,8 @@ class Mone::LinebotFollowerUser < LinebotFollowerUser
   end
 
   def self.get_output(message)
-    prefix_rand_id = rand(MarkovTrigramPrefix.where(type: "CharacterSerif").first.id..MarkovTrigramPrefix.where(type: "CharacterSerif").last.id)
-    prefix = MarkovTrigramPrefix.where(type: "CharacterSerif").where("id > ?", prefix_rand_id).first
+    prefix_rand_id = rand(MarkovTrigramPrefix.where(source_type: "CharacterSerif").first.id..MarkovTrigramPrefix.where(source_type: "CharacterSerif").last.id)
+    prefix = MarkovTrigramPrefix.where(source_type: "CharacterSerif").where("id > ?", prefix_rand_id).first
     return MarkovTrigramPrefix.generate_sentence(seed: prefix.prefix, source_type: "CharacterSerif")
   end
 end

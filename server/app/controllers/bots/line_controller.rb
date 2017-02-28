@@ -162,23 +162,6 @@ class Bots::LineController < BaseController
     route_action_name = params[:action]
     @events.each do |event|
       case event
-      when Line::Bot::Event::Message
-        case event.type
-        when Line::Bot::Event::MessageType::Text
-          logger.info event.message
-          logger.info event['replyToken']
-          message = {
-            type: 'text',
-            text: event.message['text']
-          }
-          logger.info event["source"]
-          user = @client.get_profile(event["source"]["userId"])
-          logger.info user.body
-          res = @client.reply_message(event['replyToken'], message)
-        when Line::Bot::Event::MessageType::Image, Line::Bot::Event::MessageType::Video, Line::Bot::Event::MessageType::Audio
-          response = @client.get_message_content(event.message['id'])
-          File.open(Rails.root.to_s +"/tmp/" + SecureRandom.hex, 'wb'){|f| f.write(response.body) }
-        end
       when Line::Bot::Event::Follow
         linebot_follower_user = (route_action_name + "/linebot_follower_user").camelize.classify.constantize
         linebot_follower_user.generate_profile!(line_client: @client, line_user_id: event["source"]["userId"], isfollow: true)

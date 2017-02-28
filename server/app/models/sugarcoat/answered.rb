@@ -20,4 +20,5 @@
 #
 
 class Sugarcoat::Answered < ApplicationRecord
+  belongs_to :answer_user, polymorphic: true
 end

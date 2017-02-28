@@ -4,6 +4,8 @@ class CreateJobWithLifeBeaconAccessLogs < ActiveRecord::Migration[5.0]
       t.string :answer_user_type, null: false
       t.integer :answer_user_id, null: false
       t.datetime :record_time, null: false
+      t.string :beacon_type, null: false
+      t.integer :timestamp, :limit => 8
       t.integer :daily_record_number, null: false, default: 0
       t.string :hwid, null: false
       t.timestamps

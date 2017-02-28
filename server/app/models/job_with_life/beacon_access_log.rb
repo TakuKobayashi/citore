@@ -6,6 +6,8 @@
 #  answer_user_type    :string(255)      not null
 #  answer_user_id      :integer          not null
 #  record_time         :datetime         not null
+#  beacon_type         :string(255)      not null
+#  timestamp           :integer
 #  daily_record_number :integer          default(0), not null
 #  hwid                :string(255)      not null
 #  created_at          :datetime         not null
@@ -19,4 +21,5 @@
 #
 
 class JobWithLife::BeaconAccessLog < ApplicationRecord
+  belongs_to :answer_user, polymorphic: true
 end

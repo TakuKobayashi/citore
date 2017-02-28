@@ -6,7 +6,7 @@ class Bots::LineController < BaseController
   before_action :received_user_events
 
   def sugarcoat
-    each_line_event do |event|
+    each_line_event do |event, line_user|
       case event
       when Line::Bot::Event::Message
         line_user_id = event["source"]["userId"]
@@ -32,7 +32,7 @@ class Bots::LineController < BaseController
   end
 
   def citore
-    each_line_event do |event|
+    each_line_event do |event, line_user|
       case event
       when Line::Bot::Event::Message
         line_user_id = event["source"]["userId"]
@@ -58,7 +58,7 @@ class Bots::LineController < BaseController
   end
 
   def spotgacha
-    each_line_event do |event|
+    each_line_event do |event, line_user|
       case event
       when Line::Bot::Event::Message
         line_user_id = event["source"]["userId"]
@@ -84,33 +84,26 @@ class Bots::LineController < BaseController
   end
 
   def job_with_life
-    each_line_event do |event|
+    each_line_event do |event, line_user|
       case event
-      when Line::Bot::Event::Message
-        line_user_id = event["source"]["userId"]
-        case event.type
-        when Line::Bot::Event::MessageType::Text
-          logger.info event.message
-          logger.info event['replyToken']
-          message = {
-            type: 'text',
-            text: event.message['text']
-          }
-          logger.info event["source"]
-          user = @client.get_profile(event["source"]["userId"])
-          logger.info user.body
-          res = @client.reply_message(event['replyToken'], message)
-        when Line::Bot::Event::MessageType::Image, Line::Bot::Event::MessageType::Video, Line::Bot::Event::MessageType::Audio
-          response = @client.get_message_content(event.message['id'])
-          File.open(Rails.root.to_s +"/tmp/" + SecureRandom.hex, 'wb'){|f| f.write(response.body) }
-        end
+      when Line::Bot::Event::Beacon
+        logger.info event
+        logger.info event['replyToken']
+        message_text = line_user.record_and_answer!(event)
+        message = {
+          type: 'text',
+          text: message_text
+        }
+        res = @client.reply_message(event['replyToken'], message)
+        logger.info event["source"]
+        logger.info res
       end
     end
     head(:ok)
   end
 
   def shiritori
-    each_line_event do |event|
+    each_line_event do |event, line_user|
       case event
       when Line::Bot::Event::Message
         line_user_id = event["source"]["userId"]
@@ -136,7 +129,7 @@ class Bots::LineController < BaseController
   end
 
   def mone
-    each_line_event do |event|
+    each_line_event do |event, line_user|
       case event
       when Line::Bot::Event::Message
         line_user_id = event["source"]["userId"]
@@ -188,7 +181,6 @@ class Bots::LineController < BaseController
     @events.each do |event|
       case event
       when Line::Bot::Event::Message
-        line_user_id = event["source"]["userId"]
         case event.type
         when Line::Bot::Event::MessageType::Text
           logger.info event.message
@@ -212,7 +204,9 @@ class Bots::LineController < BaseController
         linebot_follower_user = (route_action_name + "/linebot_follower_user").camelize.classify
         linebot_follower_user.generate_profile!(line_client: @client, line_user_id: event["source"]["userId"], isfollow: false)
       else
-        block.call(event)
+        linebot_follower_user = (route_action_name + "/linebot_follower_user").camelize.classify
+        line_user = linebot_follower_user.find_by!(line_user_id: event["source"]["userId"])
+        block.call(event, line_user)
       end
     end
   end

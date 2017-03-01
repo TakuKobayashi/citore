@@ -42,7 +42,7 @@ class Bots::LineController < BaseController
               duration: 240000
             }
             voice_res = @client.reply_message(event['replyToken'], voice_message)
-            logger.info voice_res.to_json
+            logger.info voice_res.code + ":" + voice_res.message + ":" + voice_res.body
           end
           if answer.image_id.present?
             image_message = {
@@ -51,7 +51,7 @@ class Bots::LineController < BaseController
               "previewImageUrl": answer.image.preview_file_url
             }
             image_res = @client.reply_message(event['replyToken'], image_message)
-            logger.info image_res.to_json
+            logger.info image_res.code + ":" + image_res.message + ":" + image_res.body
           end
         end
       end

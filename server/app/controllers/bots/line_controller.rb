@@ -30,7 +30,6 @@ class Bots::LineController < BaseController
         case event.type
         when Line::Bot::Event::MessageType::Text
           answer = line_user.search_and_generate_answer!(event: event)
-          p answer
           message = {
             type: 'text',
             text: answer.output_word

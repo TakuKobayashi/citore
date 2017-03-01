@@ -41,7 +41,8 @@ class Bots::LineController < BaseController
               originalContentUrl: answer.voice.s3_file_url,
               duration: 240000
             }
-            @client.reply_message(event['replyToken'], voice_message)
+            voice_res = @client.reply_message(event['replyToken'], voice_message)
+            p voice_res
           end
           if answer.image_id.present?
             image_message = {
@@ -49,7 +50,8 @@ class Bots::LineController < BaseController
               "originalContentUrl": answer.image.file_url,
               "previewImageUrl": answer.image.preview_file_url
             }
-            @client.reply_message(event['replyToken'], image_message)
+            image_res = @client.reply_message(event['replyToken'], image_message)
+            p image_res
           end
         end
       end

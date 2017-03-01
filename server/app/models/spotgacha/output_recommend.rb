@@ -28,4 +28,5 @@
 #
 
 class Spotgacha::OutputRecommend < ApplicationRecord
+  belongs_to :output_user, polymorphic: true
 end

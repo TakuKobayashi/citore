@@ -18,27 +18,69 @@
 #
 
 class Spotgacha::LinebotFollowerUser < LinebotFollowerUser
+  has_many :input_locations, as: :input_user, class_name: 'Spotgacha::InputLocation'
+  has_many :output_recommends, as: :output_user, class_name: 'Spotgacha::OutputRecommend'
+
   #http://webservice.recruit.co.jp/hotpepper/reference.html
   HOTPEPPER_API_URL = "http://webservice.recruit.co.jp/hotpepper/gourmet/v1/"
 
   #http://api.gnavi.co.jp/api/manual/restsearch/
-  GNAVI_API_URL = "http://api.gnavi.co.jp/api/manual/restsearch/"
+  GNAVI_API_URL = "https://api.gnavi.co.jp/RestSearchAPI/20150630/"
 
   #https://developers.google.com/places/web-service/search?hl=ja
 　GOOGLE_PLACE_API_URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/output?parameters"
 
-  def search_spots
-    request_hash = {
-      key: "",
-      lat: 0,
-      lng: 0,
-      range: 3,
-      lunch: 1,
-      midnight_meal: 1,
-      midnight: 1,
-      format: "JSON",
-      count: 100
-    }
+  def self.search_spots_from_location(latitude:, longitude:, api: :gnavi)
+    apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
+    http_client = HTTPClient.new
+    if api.to_s == "gnavi"
+      request_hash = {
+        keyid: apiconfig["gnavi"]["apikey"],
+        latitude: latitude,
+        longitude: longitude,
+        range: 3,
+        #lunch: 1,
+        #late_lunch: 1,
+        #midnight: 1,
+        format: "json",
+        #offset: 1,
+        #no_smoking: 1,
+        #mobilephone: 1,
+        #parking: 1,
+        #deliverly 1 デリバリーあり
+        #special_holiday_lunch: 1 土日特別ランチあり 0
+        #breakfast: 1
+        #until_morning: 1
+      }
+      response = http_client.get(GNAVI_API_URL, request_hash, {})
+    elsif api.to_s == "recruit"
+      request_hash = {
+        key: apiconfig["recruit"]["apikey"],
+        lat: latitude,
+        lng: longitude,
+        range: 3,
+        lunch: 1,
+        midnight_meal: 1,
+        midnight: 1,
+        format: "json",
+        count: 100
+      }
+      response = http_client.get(HOTPEPPER_API_URL, request_hash, {})
+    else
+      response = http_client.get(GOOGLE_PLACE_API_URL, request_hash, {})
+    end
+    return JSON.parse(response.body)
+  end
+
+  def search_spots(event:)
+    location_message = event["message"]
+    response_hash = Spotgacha::LinebotFollowerUser.search_spots_from_location(latitude: location_message["latitude"], longitude: location_message["longitude"])
+    input = self.input_locations.create!(
+      latitude: location_message["latitude"],
+      longitude: location_message["longitude"],
+      address: location_message["address"]
+    )
+
 #range	検索範囲	ある地点からの範囲内のお店の検索を行う場合の範囲を5段階で指定できます。たとえば300m以内の検索ならrange=1を指定します	1: 300m
 #2: 500m
 #3: 1000m (初期値)

@@ -64,7 +64,7 @@ class Bots::LineController < BaseController
       case event
       when Line::Bot::Event::Message
         case event.type
-        when Line::Bot::Event::MessageType::Text
+        when Line::Bot::Event::MessageType::Location
           logger.info event.message
           logger.info event['replyToken']
           message = {

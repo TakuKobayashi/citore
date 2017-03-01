@@ -18,4 +18,5 @@
 #
 
 class Spotgacha::InputLocation < ApplicationRecord
+  belongs_to :input_user, polymorphic: true
 end

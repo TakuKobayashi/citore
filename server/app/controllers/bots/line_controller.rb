@@ -36,6 +36,22 @@ class Bots::LineController < BaseController
             text: answer.output_word
           }
           @client.reply_message(event['replyToken'], message)
+          if answer.voice_id.present?
+            voice_message = {
+              type: 'audio',
+              originalContentUrl: answer.voice.s3_file_url,
+              duration: 240000
+            }
+            @client.reply_message(event['replyToken'], voice_message)
+          end
+          if answer.image_id.present?
+            image_message = {
+              "type": "image",
+              "originalContentUrl": answer.image.file_url,
+              "previewImageUrl": answer.image.preview_file_url
+            }
+            @client.reply_message(event['replyToken'], image_message)
+          end
         end
       end
     end

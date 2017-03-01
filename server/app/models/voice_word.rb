@@ -40,6 +40,10 @@ class VoiceWord < ApplicationRecord
   VOICE_S3_FILE_ROOT = "project/citore/voices/"
   VOICE_S3_SUGARCOAT_FILE_ROOT = "project/sugarcoat/voices/"
 
+  def s3_file_url
+    return "https://taptappun.s3.amazonaws.com/" + VoiceWord::VOICE_S3_FILE_ROOT + self.file_name
+  end
+
   def self.voice_file_root_path
     return Rails.root.to_s + VOICE_FILE_ROOT
   end

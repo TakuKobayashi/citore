@@ -2,11 +2,14 @@
 #
 # Table name: citore_erotic_images
 #
-#  id         :integer          not null, primary key
-#  keyword    :string(255)      not null
-#  file_name  :string(255)      not null
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id                :integer          not null, primary key
+#  keyword           :string(255)      not null
+#  file_name         :string(255)
+#  url               :string(255)
+#  preview_file_name :string(255)
+#  preview_url       :string(255)
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
 #
 # Indexes
 #

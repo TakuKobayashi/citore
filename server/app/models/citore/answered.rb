@@ -19,6 +19,6 @@
 
 class Citore::Answered < ApplicationRecord
   belongs_to :answer_user, polymorphic: true
-  belongs_to :voice, class_name: 'VoiceWord', foreign_key: :voice_id
-  belongs_to :image, class_name: 'Citore::EroticImage', foreign_key: :image_id
+  has_one :voice, class_name: 'VoiceWord', foreign_key: :voice_id
+  has_one :image, class_name: 'Citore::EroticImage', foreign_key: :image_id
 end

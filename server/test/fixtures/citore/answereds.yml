@@ -1,0 +1,30 @@
+# == Schema Information
+#
+# Table name: citore_answereds
+#
+#  id               :integer          not null, primary key
+#  answer_user_type :string(255)      not null
+#  answer_user_id   :integer          not null
+#  input_word       :text(65535)      not null
+#  output_word      :string(255)      not null
+#  voice_id         :integer
+#  image_id         :integer
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#
+# Indexes
+#
+#  citore_answered_user_index  (answer_user_type,answer_user_id)
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# This model initially had no columns defined. If you add columns to the
+# model remove the '{}' from the fixture names and add the columns immediately
+# below each fixture, per the syntax in the comments below
+#
+one: {}
+# column: value
+#
+two: {}
+# column: value

@@ -27,22 +27,15 @@ class Bots::LineController < BaseController
     each_line_event do |event, line_user|
       case event
       when Line::Bot::Event::Message
-        line_user_id = event["source"]["userId"]
         case event.type
         when Line::Bot::Event::MessageType::Text
-          logger.info event.message
-          logger.info event['replyToken']
+          answer = line_user.search_and_generate_answer!(event: event)
+          p answer
           message = {
             type: 'text',
-            text: event.message['text']
+            text: answer.output_word
           }
-          logger.info event["source"]
-          user = @client.get_profile(event["source"]["userId"])
-          logger.info user.body
-          res = @client.reply_message(event['replyToken'], message)
-        when Line::Bot::Event::MessageType::Image, Line::Bot::Event::MessageType::Video, Line::Bot::Event::MessageType::Audio
-          response = @client.get_message_content(event.message['id'])
-          File.open(Rails.root.to_s +"/tmp/" + SecureRandom.hex, 'wb'){|f| f.write(response.body) }
+          @client.reply_message(event['replyToken'], message)
         end
       end
     end

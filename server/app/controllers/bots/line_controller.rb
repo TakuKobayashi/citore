@@ -65,7 +65,7 @@ class Bots::LineController < BaseController
       when Line::Bot::Event::Message
         case event.type
         when Line::Bot::Event::MessageType::Location
-          recommends = line_user.search_and_recommend_spots!(event)
+          recommends = line_user.search_and_recommend_spots!(event: event)
           carousels = recommends.map do |recommend|
             actions = [
               {

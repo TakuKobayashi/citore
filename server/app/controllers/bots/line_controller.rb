@@ -69,7 +69,7 @@ class Bots::LineController < BaseController
           carousels = recommends.map do |recommend|
             actions = [
               {
-                type: "url",
+                type: "uri",
                 label: "予約する",
                 uri: "tel:" + recommend.phone_number,
               },

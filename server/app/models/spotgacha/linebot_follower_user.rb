@@ -78,7 +78,7 @@ class Spotgacha::LinebotFollowerUser < LinebotFollowerUser
 
   def search_and_recommend_spots!(event:)
     location_message = event["message"]
-    information_type = "recruit"
+    information_type = "gnavi"
     response_hash = Spotgacha::LinebotFollowerUser.search_spots_from_location(
       latitude: location_message["latitude"],
       longitude: location_message["longitude"],

@@ -59,9 +59,9 @@ class Spotgacha::LinebotFollowerUser < LinebotFollowerUser
         lat: latitude,
         lng: longitude,
         range: 3,
-        lunch: 1,
-        midnight_meal: 1,
-        midnight: 1,
+#        lunch: 1,
+#        midnight_meal: 1,
+#        midnight: 1,
         format: "json",
         count: 100
       }
@@ -72,14 +72,46 @@ class Spotgacha::LinebotFollowerUser < LinebotFollowerUser
     return JSON.parse(response.body)
   end
 
-  def search_spots(event:)
+  def self.search_phone_number(text)
+    return text.match(/[0-9]{10,11}|\d{2,4}-\d{2,4}-\d{4}/).to_s
+  end
+
+  def search_and_recommend_spots!(event:)
     location_message = event["message"]
-    response_hash = Spotgacha::LinebotFollowerUser.search_spots_from_location(latitude: location_message["latitude"], longitude: location_message["longitude"])
+    information_type = "recruit"
+    response_hash = Spotgacha::LinebotFollowerUser.search_spots_from_location(
+      latitude: location_message["latitude"],
+      longitude: location_message["longitude"],
+      api: information_type
+    )
+
     input = self.input_locations.create!(
       latitude: location_message["latitude"],
       longitude: location_message["longitude"],
       address: location_message["address"]
     )
+    recommends = []
+    response_hash["results"]["shop"].sample(3).each do |hash|
+      output = self.output_recommends.create!(
+        input_location_id: input.id,
+        information_type: information_type,
+        latitude: hash["lat"],
+        longitude: hash["lng"],
+        address: hash["address"],
+        phone_number: Spotgacha::LinebotFollowerUser.search_phone_number(hash["shop_detail_memo"]),
+        open_info: hash["open"],
+        place_id: hash["id"],
+        place_name: hash["name"],
+        place_name_reading: hash["name_kana"],
+        place_description: hash["shop_detail_memo"],
+        image_url: hash["photo"]["mobile"]["l"],
+        url: hash["urls"]["mobile"],
+        coupon_url: hash["coupon_urls"]["sp"],
+        recommended_at: Time.current,
+      )
+      recommends << output
+    end
+    return recommends
 
 #range	検索範囲	ある地点からの範囲内のお店の検索を行う場合の範囲を5段階で指定できます。たとえば300m以内の検索ならrange=1を指定します	1: 300m
 #2: 500m

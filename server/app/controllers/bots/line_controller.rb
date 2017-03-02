@@ -65,19 +65,46 @@ class Bots::LineController < BaseController
       when Line::Bot::Event::Message
         case event.type
         when Line::Bot::Event::MessageType::Location
-          logger.info event.message
-          logger.info event['replyToken']
+          recommends = line_user.search_and_recommend_spots!(event)
+          carousels = recommends.map do |recommend|
+            actions = [
+              {
+                "type": "url",
+                "label": "予約する",
+                "data": "tel:" + recommend.phone_number,
+              },
+              {
+                "type": "uri",
+                "label": "詳細を見る",
+                "uri": recommend.url
+              }
+            ]
+            if recommend.coupon_url.present?
+              actions << {
+                "type": "uri",
+                "label": "クーポンを使う",
+                "uri": recommend.coupon_url
+              }
+            end
+
+            {
+              "thumbnailImageUrl": recommend.image_url,
+              "title": recommend.place_name,
+              "text": recommend.place_description,
+              "actions": actions
+            }
+          end
           message = {
-            type: 'text',
-            text: event.message['text']
+            type: 'template',
+            altText: 'お店の候補はこちら!!',
+            template: {
+              "type": "carousel",
+              "columns": carousels
+            }
           }
-          logger.info event["source"]
-          user = @client.get_profile(event["source"]["userId"])
-          logger.info user.body
+          logger.info message
           res = @client.reply_message(event['replyToken'], message)
-        when Line::Bot::Event::MessageType::Image, Line::Bot::Event::MessageType::Video, Line::Bot::Event::MessageType::Audio
-          response = @client.get_message_content(event.message['id'])
-          File.open(Rails.root.to_s +"/tmp/" + SecureRandom.hex, 'wb'){|f| f.write(response.body) }
+          logger.info res.code + ":" + res.message + ":" + res.body
         end
       end
     end

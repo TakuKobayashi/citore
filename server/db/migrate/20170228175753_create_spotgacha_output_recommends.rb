@@ -9,10 +9,16 @@ class CreateSpotgachaOutputRecommends < ActiveRecord::Migration[5.0]
       t.float :longitude, null: false, default: 0
       t.string :address
       t.string :phone_number
-      t.string :place_name, null: false
       t.string :place_id, null: false
+      t.string :place_name, null: false
+      t.string :place_name_reading, null: false
+      t.text :place_description, null: false
+      t.string :url, null: false
+      t.string :image_url
+      t.string :coupon_url
       t.datetime :recommended_at, null: false
       t.boolean :is_select, null: false, default: false
+      t.text :options
       t.timestamps
     end
     add_index :spotgacha_output_recommends, :input_location_id

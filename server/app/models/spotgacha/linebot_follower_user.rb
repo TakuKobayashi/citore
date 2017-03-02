@@ -91,7 +91,7 @@ class Spotgacha::LinebotFollowerUser < LinebotFollowerUser
       address: location_message["address"]
     )
     recommends = []
-    if api.to_s == "gnavi"
+    if information_type.to_s == "gnavi"
       response_hash["rest"].sample(3).each do |hash|
         common = {
           input_location_id: input.id,
@@ -116,7 +116,7 @@ class Spotgacha::LinebotFollowerUser < LinebotFollowerUser
         )
         recommends << output
       end
-    elsif api.to_s == "recruit"
+    elsif information_type.to_s == "recruit"
       response_hash["results"]["shop"].sample(3).each do |hash|
         common = {
           input_location_id: input.id,

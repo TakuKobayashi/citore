@@ -102,7 +102,7 @@ class Spotgacha::LinebotFollowerUser < LinebotFollowerUser
         place_id: hash["id"],
         place_name: hash["name"],
         place_name_reading: hash["name_kana"],
-        place_description: hash["shop_detail_memo"],
+        place_description: hash["genre"]["catch"] || hash["name"],
         image_url: hash["photo"]["mobile"]["l"],
         url: hash["urls"]["mobile"],
         coupon_url: hash["coupon_urls"]["sp"],

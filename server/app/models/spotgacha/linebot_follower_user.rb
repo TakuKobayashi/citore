@@ -99,7 +99,6 @@ class Spotgacha::LinebotFollowerUser < LinebotFollowerUser
         longitude: hash["lng"],
         address: hash["address"],
         phone_number: Spotgacha::LinebotFollowerUser.search_phone_number(hash["shop_detail_memo"]),
-        open_info: hash["open"],
         place_id: hash["id"],
         place_name: hash["name"],
         place_name_reading: hash["name_kana"],

@@ -78,13 +78,13 @@ class Spotgacha::LinebotFollowerUser < LinebotFollowerUser
 
   def self.search_and_mix_and_shuffle(latitude:, longitude:)
     gnavi_hash = Spotgacha::LinebotFollowerUser.search_spots_from_location(
-      latitude: location_message["latitude"],
-      longitude: location_message["longitude"],
+      latitude: latitude,
+      longitude: longitude,
       api: "gnavi"
     )
     recruit_hash = Spotgacha::LinebotFollowerUser.search_spots_from_location(
-      latitude: location_message["latitude"],
-      longitude: location_message["longitude"],
+      latitude: latitude,
+      longitude: longitude,
       api: "recruit"
     )
     gnavi_array = gnavi_hash["rest"].map do |hash|

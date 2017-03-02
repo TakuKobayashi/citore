@@ -129,7 +129,11 @@ class Spotgacha::LinebotFollowerUser < LinebotFollowerUser
         request_hash["latitude"] = hash["latitude"] if hash["latitude"].present?
         request_hash["longitude"] = hash["longitude"] if hash["longitude"].present?
         if hash["pr"]["pr_long"].present?
-          request_hash["place_description"] = hash["pr"]["pr_long"]
+          description = hash["pr"]["pr_short"]
+          if description.size > 60
+            description = description[0..57] + "..."
+          end
+          request_hash["place_description"] = description
         else
           request_hash["place_description"] = hash["name"]
         end

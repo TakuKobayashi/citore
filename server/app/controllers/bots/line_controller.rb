@@ -71,7 +71,7 @@ class Bots::LineController < BaseController
               {
                 type: "url",
                 label: "予約する",
-                data: "tel:" + recommend.phone_number,
+                uri: "tel:" + recommend.phone_number,
               },
               {
                 type: "uri",

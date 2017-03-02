@@ -91,24 +91,55 @@ class Spotgacha::LinebotFollowerUser < LinebotFollowerUser
       address: location_message["address"]
     )
     recommends = []
-    response_hash["results"]["shop"].sample(3).each do |hash|
-      output = self.output_recommends.create!(
-        input_location_id: input.id,
-        information_type: information_type,
-        latitude: hash["lat"],
-        longitude: hash["lng"],
-        address: hash["address"],
-        phone_number: Spotgacha::LinebotFollowerUser.search_phone_number(hash["shop_detail_memo"]),
-        place_id: hash["id"],
-        place_name: hash["name"],
-        place_name_reading: hash["name_kana"],
-        place_description: hash["genre"]["catch"] || hash["name"],
-        image_url: hash["photo"]["mobile"]["l"],
-        url: hash["urls"]["pc"],
-        coupon_url: hash["coupon_urls"]["sp"],
-        recommended_at: Time.current,
-      )
-      recommends << output
+    if api.to_s == "gnavi"
+      response_hash["rest"].sample(3).each do |hash|
+        common = {
+          input_location_id: input.id,
+          information_type: information_type,
+          place_id: hash["id"],
+          place_name: hash["name"],
+          place_name_reading: hash["name_kana"],
+          address: hash["address"],
+          recommended_at: Time.current,
+        }
+
+        output = self.output_recommends.create!(
+          common.merge({
+            latitude: hash["latitude"],
+            longitude: hash["longitude"],
+            phone_number: hash["tel"],
+            place_description: hash["pr"]["pr_long"] || hash["name"],
+            image_url: hash["image_url"]["shop_image1"],
+            url: hash["url"],
+            coupon_url: hash["coupon_url"]["pc"],
+          })
+        )
+        recommends << output
+      end
+    elsif api.to_s == "recruit"
+      response_hash["results"]["shop"].sample(3).each do |hash|
+        common = {
+          input_location_id: input.id,
+          information_type: information_type,
+          place_id: hash["id"],
+          place_name: hash["name"],
+          place_name_reading: hash["name_kana"],
+          address: hash["address"],
+          recommended_at: Time.current,
+        }
+        output = self.output_recommends.create!(
+          common.merge({
+            latitude: hash["lat"],
+            longitude: hash["lng"],
+            phone_number: Spotgacha::LinebotFollowerUser.search_phone_number(hash["shop_detail_memo"]),
+            place_description: hash["genre"]["catch"] || hash["name"],
+            image_url: hash["photo"]["mobile"]["l"],
+            url: hash["urls"]["pc"],
+            coupon_url: hash["coupon_urls"]["sp"],
+          })
+        )
+        recommends << output
+      end
     end
     return recommends
 

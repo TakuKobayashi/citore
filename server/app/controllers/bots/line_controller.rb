@@ -79,7 +79,7 @@ class Bots::LineController < BaseController
                 {
                   type: "uri",
                   label: "予約する",
-                  uri: "tel://" + recommend.phone_number,
+                  uri: "tel://" + recommend.phone_number.gsub("-", ""),
                 }
               )
             end

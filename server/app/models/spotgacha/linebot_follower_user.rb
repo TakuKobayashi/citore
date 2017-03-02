@@ -104,7 +104,7 @@ class Spotgacha::LinebotFollowerUser < LinebotFollowerUser
         place_name_reading: hash["name_kana"],
         place_description: hash["genre"]["catch"] || hash["name"],
         image_url: hash["photo"]["mobile"]["l"],
-        url: hash["urls"]["mobile"],
+        url: hash["urls"]["pc"],
         coupon_url: hash["coupon_urls"]["sp"],
         recommended_at: Time.current,
       )

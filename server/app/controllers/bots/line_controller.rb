@@ -103,7 +103,7 @@ class Bots::LineController < BaseController
             }
           }
           logger.info message
-          res = @client.reply_message(event['replyToken'], message.to_json)
+          res = @client.reply_message(event['replyToken'], message)
           logger.info res.code + ":" + res.message + ":" + res.body
         end
       end

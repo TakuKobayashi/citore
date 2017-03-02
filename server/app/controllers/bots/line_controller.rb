@@ -69,37 +69,37 @@ class Bots::LineController < BaseController
           carousels = recommends.map do |recommend|
             actions = [
               {
-                "type": "url",
-                "label": "予約する",
-                "data": "tel:" + recommend.phone_number,
+                type: "url",
+                label: "予約する",
+                data: "tel:" + recommend.phone_number,
               },
               {
-                "type": "uri",
-                "label": "詳細を見る",
-                "uri": recommend.url
+                type: "uri",
+                label: "詳細を見る",
+                uri: recommend.url
               }
             ]
             if recommend.coupon_url.present?
               actions << {
-                "type": "uri",
-                "label": "クーポンを使う",
-                "uri": recommend.coupon_url
+                type: "uri",
+                label: "クーポンを使う",
+                uri: recommend.coupon_url
               }
             end
 
             {
-              "thumbnailImageUrl": recommend.image_url,
-              "title": recommend.place_name,
-              "text": recommend.place_description,
-              "actions": actions
+              thumbnailImageUrl: recommend.image_url,
+              title: recommend.place_name,
+              text: recommend.place_description,
+              actions: actions
             }
           end
           message = {
             type: 'template',
             altText: 'お店の候補はこちら!!',
             template: {
-              "type": "carousel",
-              "columns": carousels
+              type: "carousel",
+              columns: carousels
             }
           }
           logger.info message

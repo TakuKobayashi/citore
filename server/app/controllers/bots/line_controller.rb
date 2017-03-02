@@ -70,15 +70,19 @@ class Bots::LineController < BaseController
             actions = [
               {
                 type: "uri",
-                label: "予約する",
-                uri: "tel:" + recommend.phone_number,
-              },
-              {
-                type: "uri",
                 label: "詳細を見る",
                 uri: recommend.url
               }
             ]
+            if recommend.phone_number.present?
+              actions.insert(0,
+                {
+                  type: "uri",
+                  label: "予約する",
+                  uri: "tel:" + recommend.phone_number,
+                }
+              )
+            end
             if recommend.coupon_url.present?
               actions << {
                 type: "uri",

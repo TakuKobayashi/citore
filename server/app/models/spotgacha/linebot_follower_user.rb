@@ -149,7 +149,7 @@ class Spotgacha::LinebotFollowerUser < LinebotFollowerUser
           latitude: hash["lat"],
           longitude: hash["lng"],
           phone_number: Spotgacha::LinebotFollowerUser.search_phone_number(hash["shop_detail_memo"]),
-          place_description: hash["genre"]["catch"] || hash["name"],
+          place_description: hash["catch"] || hash["name"],
           image_url: hash["photo"]["mobile"]["l"],
           url: hash["urls"]["pc"],
           coupon_url: hash["coupon_urls"]["sp"],

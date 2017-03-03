@@ -34,6 +34,18 @@ class Spotgacha::LinebotFollowerUser < LinebotFollowerUser
     return "https://taptappun.s3.amazonaws.com/project/spotgacha/icon/spotgacha_icon.jpg"
   end
 
+  def self.search_photo_url(keyword:)
+    http_client = HTTPClient.new
+    response = http_client.get("https://api.photozou.jp/rest/search_public.json", {keyword: keyword}, {})
+    photozoures = JSON.parse(response.body)
+    photoes = photozoures["info"]["photo"] || []
+    if photoes.present?
+      return photoes.sample["image_url"]
+    else
+      return ""
+    end
+  end
+
   def self.search_spots_from_location(latitude:, longitude:, api: :gnavi)
     apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
     http_client = HTTPClient.new

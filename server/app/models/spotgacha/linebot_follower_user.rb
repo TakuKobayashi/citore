@@ -140,7 +140,7 @@ class Spotgacha::LinebotFollowerUser < LinebotFollowerUser
         if hash["image_url"]["shop_image1"].present?
           request_hash["image_url"] = hash["image_url"]["shop_image1"]
         else
-          request_hash["image_url"] = ActionController::Base.helpers.image_url("icon/spotgacha_icon.jpg")
+          request_hash["image_url"] = "https://taptappun.net" + ActionController::Base.helpers.image_url("icon/spotgacha_icon.jpg")
         end
         request_hash["url"] = hash["url"] if hash["url"].present?
         request_hash["coupon_url"] = hash["coupon_url"]["pc"] if hash["coupon_url"]["pc"].present?

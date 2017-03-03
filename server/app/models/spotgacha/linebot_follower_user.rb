@@ -131,7 +131,7 @@ class Spotgacha::LinebotFollowerUser < LinebotFollowerUser
         if hash["pr"]["pr_long"].present?
           description = hash["pr"]["pr_short"]
           if description.size > 60
-            description = description[0..57] + "..."
+            description = description[0..56] + "..."
           end
           request_hash["place_description"] = description
         else

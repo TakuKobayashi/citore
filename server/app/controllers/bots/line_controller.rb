@@ -71,7 +71,7 @@ class Bots::LineController < BaseController
               {
                 type: "uri",
                 label: "詳細を見る",
-                uri: recommend.url
+                uri: spotgacha_bots_selection_url(recommend_id: recommend.id)
               }
             ]
             if recommend.phone_number.present?
@@ -87,7 +87,7 @@ class Bots::LineController < BaseController
               actions << {
                 type: "uri",
                 label: "クーポンを使う",
-                uri: recommend.coupon_url
+                uri: spotgacha_bots_selection_url(recommend_id: recommend.id, coupon: true)
               }
             end
 

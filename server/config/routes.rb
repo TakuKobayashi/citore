@@ -81,6 +81,10 @@ Rails.application.routes.draw do
       get :mone
       post :mone
     end
+
+    resource :selection, controller: :selection, only: [] do
+      get :spotgacha
+    end
   end
 
   namespace :tools do

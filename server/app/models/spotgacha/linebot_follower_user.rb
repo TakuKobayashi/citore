@@ -72,10 +72,6 @@ class Spotgacha::LinebotFollowerUser < LinebotFollowerUser
     return JSON.parse(response.body)
   end
 
-  def self.search_phone_number(text)
-    return text.match(/[0-9]{10,11}|\d{2,4}-\d{2,4}-\d{4}/).to_s
-  end
-
   def self.search_and_mix_and_shuffle(latitude:, longitude:)
     gnavi_hash = Spotgacha::LinebotFollowerUser.search_spots_from_location(
       latitude: latitude,

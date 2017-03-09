@@ -1,14 +1,9 @@
 class Bots::FacebookController < BaseController
   protect_from_forgery
+  before_action :check_verify
 
   def sugarcoat
     case request.method_symbol
-    when :get
-      if params["hub.verify_token"] == "taptappun"
-        render json: params["hub.challenge"]
-      else
-        render json: "Error, wrong validation token"
-      end
     when :post
       apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
       message = params["entry"][0]["messaging"][0]
@@ -18,28 +13,14 @@ class Bots::FacebookController < BaseController
         text = message["message"]["text"]
 
         endpoint_uri = "https://graph.facebook.com/v2.6/me/messages?access_token=" + apiconfig["facebook_bot"]["access_token"]
-        sugarcoated = Sugarcoat::Seed.to_sugarcoat(text).join("")
-        voice = VoiceWord.generate_and_upload_voice(nil, ApplicationRecord.reading(sugarcoated), "aoi", VoiceWord::VOICE_S3_SUGARCOAT_FILE_ROOT, "public-read", VoiceWord::SUGARCOAT_VOICE_PARAMS)
+        #sugarcoated = Sugarcoat::Seed.to_sugarcoat(text).join("")
+        #voice = VoiceWord.generate_and_upload_voice(nil, ApplicationRecord.reading(sugarcoated), "aoi", VoiceWord::VOICE_S3_SUGARCOAT_FILE_ROOT, "public-read", VoiceWord::SUGARCOAT_VOICE_PARAMS)
         request_content = {
           recipient: {
             id:sender
           },
           message: {
-            text: sugarcoated
-          }
-        }
-
-        request_voice_content = {
-          recipient: {
-            id:sender
-          },
-          message: {
-            attachment: {
-              type: "audio",
-              payload: {
-                url: "https://taptappun.s3.amazonaws.com/" + VoiceWord::VOICE_S3_SUGARCOAT_FILE_ROOT + voice.file_name
-              }
-            }
+            text: text
           }
         }
 
@@ -75,5 +56,17 @@ class Bots::FacebookController < BaseController
 
   def mone
     head(:ok)
+  end
+
+  private
+  def check_verify
+    case request.method_symbol
+    when :get
+      if params["hub.verify_token"] == "taptappun"
+        render json: params["hub.challenge"]
+      else
+        render json: "Error, wrong validation token"
+      end
+    end
   end
 end

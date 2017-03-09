@@ -22,7 +22,7 @@ class LinebotFollowerUser < ApplicationRecord
     follower = self.find_or_initialize_by(line_user_id: line_user_id)
     if follower.new_record?
       response = line_client.get_profile(line_user_id)
-      profile = response.body
+      profile = JSON.parse(response.body)
       follower.display_name = profile["displayName"]
       follower.picture_url = profile["pictureUrl"]
       follower.status_message = profile["statusMessage"]

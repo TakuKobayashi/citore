@@ -97,4 +97,6 @@ Rails.application.routes.draw do
       get :index
     end
   end
+
+  root to: "top#index"
 end

@@ -48,17 +48,28 @@ class Spotgacha::LinebotFollowerUser < LinebotFollowerUser
 
   def self.search_spots_from_location(latitude:, longitude:, api: :gnavi)
     apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
+    now = Time.now
+    request_hash_common = {
+      range: 3,
+      format: "json",
+    }
+    if (11..13).cover?(now.hour)
+      #ランチやっているか
+      request_hash_common[:lunch] = 1
+    elsif (0..2).cover?(now.hour) || now.hour == 23
+      #深夜営業しているか
+      request_hash_common[:midnight] = 1
+    end
+
     http_client = HTTPClient.new
     if api.to_s == "gnavi"
-      request_hash = {
+      request_hash = request_hash_common.merge({
         keyid: apiconfig["gnavi"]["apikey"],
+        input_coordinates_mode: 2,
+        coordinates_mode: 2,
         latitude: latitude,
         longitude: longitude,
-        range: 3,
-        #lunch: 1,
-        #late_lunch: 1,
-        #midnight: 1,
-        format: "json",
+        hit_per_page: 100
         #offset: 1,
         #no_smoking: 1,
         #mobilephone: 1,
@@ -67,20 +78,26 @@ class Spotgacha::LinebotFollowerUser < LinebotFollowerUser
         #special_holiday_lunch: 1 土日特別ランチあり 0
         #breakfast: 1
         #until_morning: 1
-      }
+      })
+      if (7..10).cover?(now.hour)
+        #朝食をやっているか
+        request_hash[:breakfast] = 1
+      elsif (14..16).cover?(now.hour)
+        #遅めのランチをやっているか
+        request_hash[:late_lunch] = 1
+      elsif (3..5).cover?(now.hour)
+        #朝までやっているか
+        request_hash[:until_morning] = 1
+      end
       response = http_client.get(GNAVI_API_URL, request_hash, {})
     elsif api.to_s == "recruit"
-      request_hash = {
+      request_hash = request_hash_common.merge({
         key: apiconfig["recruit"]["apikey"],
         lat: latitude,
         lng: longitude,
-        range: 3,
-#        lunch: 1,
-#        midnight_meal: 1,
-#        midnight: 1,
-        format: "json",
+        datum: "world",
         count: 100
-      }
+      })
       response = http_client.get(HOTPEPPER_API_URL, request_hash, {})
     else
       response = http_client.get(GOOGLE_PLACE_API_URL, request_hash, {})
@@ -88,7 +105,7 @@ class Spotgacha::LinebotFollowerUser < LinebotFollowerUser
     return JSON.parse(response.body)
   end
 
-  def self.search_and_mix_and_shuffle(latitude:, longitude:)
+  def search_and_mix_and_shuffle(latitude:, longitude:)
     gnavi_hash = Spotgacha::LinebotFollowerUser.search_spots_from_location(
       latitude: latitude,
       longitude: longitude,
@@ -109,13 +126,23 @@ class Spotgacha::LinebotFollowerUser < LinebotFollowerUser
       hash
     end
 
-    return (gnavi_array + recruit_array).sample(5)
+    result_array = (gnavi_array + recruit_array)
+
+    appeared_places = self.output_recommends.pluck(:information_type, :place_id, :is_select)
+    candidates = result_array.reject do |hash|
+      appeared_places.any?{|information_type, place_id, is_select| information_type == hash["information_type"].to_s && place_id == hash["id"].to_s }
+    end
+    if candidates.blank?
+      candidates = result_array
+    end
+
+    return candidates.sample(5)
   end
 
   def search_and_recommend_spots!(event:)
     location_message = event["message"]
     information_type = "recruit"
-    recommend_array = Spotgacha::LinebotFollowerUser.search_and_mix_and_shuffle(
+    recommend_array = self.search_and_mix_and_shuffle(
       latitude: location_message["latitude"],
       longitude: location_message["longitude"]
     )

@@ -23,6 +23,9 @@
 #  options            :text(65535)
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
+#  opentime           :string(255)      default(""), not null
+#  holiday            :string(255)      default(""), not null
+#  page_number        :integer          default(0), not null
 #
 # Indexes
 #

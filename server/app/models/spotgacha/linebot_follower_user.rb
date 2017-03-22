@@ -163,6 +163,7 @@ class Spotgacha::LinebotFollowerUser < LinebotFollowerUser
           place_name_reading: hash["name_kana"],
           address: hash["address"],
           recommended_at: Time.current,
+          page_number: 0
         }
         if hash["information_type"].to_s == "gnavi"
           request_hash["phone_number"] = hash["tel"] if hash["tel"].present?
@@ -184,6 +185,8 @@ class Spotgacha::LinebotFollowerUser < LinebotFollowerUser
           end
           request_hash["url"] = hash["url"] if hash["url"].present?
           request_hash["coupon_url"] = hash["coupon_url"]["pc"] if hash["coupon_url"]["pc"].present?
+          request_hash["opentime"] = hash["opentime"] if hash["opentime"].present?
+          request_hash["holiday"] = hash["holiday"] if hash["holiday"].present?
         elsif hash["information_type"].to_s == "recruit"
           request_hash.merge!({
             latitude: hash["lat"],
@@ -193,6 +196,8 @@ class Spotgacha::LinebotFollowerUser < LinebotFollowerUser
             image_url: hash["photo"]["mobile"]["l"],
             url: hash["urls"]["pc"],
             coupon_url: hash["coupon_urls"]["sp"],
+            opentime: hash["open"],
+            holiday: hash["close"]
           })
         end
         output = self.output_recommends.create!(request_hash)

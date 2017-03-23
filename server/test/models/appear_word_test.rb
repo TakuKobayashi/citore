@@ -2,11 +2,12 @@
 #
 # Table name: appear_words
 #
-#  id           :integer          not null, primary key
-#  appear_count :integer          default(0), not null
-#  word         :string(255)      not null
-#  part         :string(255)      not null
-#  reading      :string(255)      default(""), not null
+#  id             :integer          not null, primary key
+#  appear_count   :integer          default(0), not null
+#  word           :string(255)      not null
+#  part           :string(255)      not null
+#  reading        :string(255)      default(""), not null
+#  sentence_count :integer          default(0), not null
 #
 # Indexes
 #

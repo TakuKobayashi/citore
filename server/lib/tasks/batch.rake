@@ -35,11 +35,10 @@ namespace :batch do
   end
 
   task import_to_appear_word: :environment do
+    sum_count = ExtraInfo.read_extra_info["sum_sentence_count"].to_i
     natto = ApplicationRecord.get_natto
     {
-      TwitterWordMention => "tweet",
-      Lyric => "body",
-      WikipediaArticle => "body"
+      TwitterWord => "tweet"
     }.each do |activerecord_clazz, field_name|
       activerecord_clazz.find_in_batches do |clazzes|
         import_words = []
@@ -47,9 +46,9 @@ namespace :batch do
         clazzes.each do |clazz|
           sanitaized_word = ApplicationRecord.basic_sanitize(clazz.send(field_name))
           without_url, urls = ApplicationRecord.separate_urls(sanitaized_word)
-          word = ApplicationRecord.delete_symbols(without_url)
 
-          natto.parse(word) do |n|
+          words = []
+          natto.parse(without_url) do |n|
             next if n.surface.blank?
             features = n.feature.split(",")
             part = EmotionalWord::PARTS[features[0]]
@@ -63,6 +62,11 @@ namespace :batch do
               count = appears[:appear_count]
             end
             appear_imports[word] = {word: word, part: part, appear_count: count.to_i + 1}
+            words << word
+          end
+
+          words.uniq.each do |w|
+            appear_imports[w][:sentence_count] = appear_imports[w][:sentence_count].to_i + 1
           end
         end
 
@@ -70,7 +74,9 @@ namespace :batch do
           appear_word = AppearWord.new(hash)
           import_words << appear_word
         end
-        AppearWord.import(import_words, on_duplicate_key_update: "appear_count = appear_count + VALUES(appear_count)")
+        AppearWord.import(import_words, on_duplicate_key_update: "appear_count = appear_count + VALUES(appear_count), sentence_count = VALUES(sentence_count)")
+        sum_count = sum_count + import_words.size
+        ExtraInfo.update({"sum_sentence_count" => sum_count})
       end
     end
   end

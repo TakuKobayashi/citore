@@ -1,3 +1,5 @@
+require 'xmlsimple'
+
 class ApplicationRecord < ActiveRecord::Base
   self.abstract_class = true
 
@@ -14,6 +16,13 @@ class ApplicationRecord < ActiveRecord::Base
   def self.get_natto
     @@natto ||= Natto::MeCab.new(dicdir: ApplicationRecord::MECAB_NEOLOGD_DIC_PATH)
     return @@natto
+  end
+
+  def self.parsed_from_cabocha(text)
+    @@cabocha ||= CaboCha::Parser.new(MECAB_NEOLOGD_DIC_PATH)
+    tree = @@cabocha.parse(text)
+    xml_to_hash = XmlSimple.xml_in(tree.toString(CaboCha::FORMAT_XML))
+    return xml_to_hash
   end
 
   def self.request_and_parse_html(url)

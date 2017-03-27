@@ -1,0 +1,28 @@
+# == Schema Information
+#
+# Table name: twitter_bot_approaches
+#
+#  id                :integer          not null, primary key
+#  twitter_user_id   :string(255)      not null
+#  twitter_user_name :string(255)      not null
+#  action            :integer          not null
+#  twitter_tweet_id  :string(255)
+#  tweet             :string(255)
+#
+# Indexes
+#
+#  index_twitter_bot_approaches_on_twitter_tweet_id  (twitter_tweet_id)
+#  index_twitter_bot_approaches_on_twitter_user_id   (twitter_user_id)
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# This model initially had no columns defined. If you add columns to the
+# model remove the '{}' from the fixture names and add the columns immediately
+# below each fixture, per the syntax in the comments below
+#
+one: {}
+# column: value
+#
+two: {}
+# column: value

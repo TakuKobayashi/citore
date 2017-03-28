@@ -21,11 +21,29 @@
 class TwitterBot < TwitterRecord
   enum action: [:tweet, :follow, :reply, :retweet, :resource_post]
 
-  def self.tweet_routines
+  def self.tweet_routines!
     #[Mone::TwitterBot, Shiritori::TwitterBot, Sugarcoat::TwitterBot, Citore::TwitterBot].each do |clazz|
     [Mone::TwitterBot].each do |clazz|
       bot = clazz.new(action: :tweet)
       bot.tweet!(clazz.get_tweet)
+    end
+  end
+
+  def self.bots_activate
+    #[Mone::TwitterBot, Shiritori::TwitterBot, Sugarcoat::TwitterBot, Citore::TwitterBot].each do |clazz|
+    [Mone::TwitterBot].each do |clazz|
+      stream = clazz.get_twitter_stream_client
+      #フォローされたらフォロー返し
+      stream.on_event(:favorite) do |event|
+        p event[:source]
+        bot = clazz.new(action: :follow)
+        bot.follow!(twitter_user_id: event[:source][:id], twitter_screen_name: event[:source][:screen_name])
+      end
+      client.on_event(:follow) do |event|
+        p event[:source]
+        bot = clazz.new(action: :follow)
+        bot.follow!(twitter_user_id: event[:source][:id], twitter_screen_name: event[:source][:screen_name])
+      end
     end
   end
 
@@ -59,5 +77,11 @@ class TwitterBot < TwitterRecord
     twitter_client = self.class.get_twitter_rest_client
     tweeted = twitter_client.update(text)
     update!(action_id: tweeted.id,action_value: text, action_time: tweeted.created_at)
+  end
+
+  def follow!(twitter_user_id:, twitter_screen_name:)
+    twitter_client = self.class.get_twitter_rest_client
+    followed = twitter_client.follow(twitter_screen_name)
+    p followed
   end
 end

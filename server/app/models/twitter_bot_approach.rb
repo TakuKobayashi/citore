@@ -16,5 +16,7 @@
 #
 
 class TwitterBotApproach < ApplicationRecord
+  enum action: TwitterRecord.actions
+
   has_many :bot_actions, class_name: 'TwitterBot', foreign_key: :action_from_id
 end

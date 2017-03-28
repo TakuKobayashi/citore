@@ -19,40 +19,12 @@
 #
 
 class Mone::TwitterBot < TwitterBot
-  def self.routine_tweet!
-    bot = Mone::TwitterBot.new(action: :tweet)
-    bot.tweet!(get_tweet)
-  end
-
   def self.get_twitter_rest_client
-    apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
-
-    extra_info = ExtraInfo.read_extra_info
-    client = Twitter::REST::Client.new do |config|
-      config.consumer_key        = apiconfig["twitter"]["consumer_key"]
-      config.consumer_secret     = apiconfig["twitter"]["consumer_secret"]
-      config.access_token        = extra_info["twitter_129772274"]["token"]
-      config.access_token_secret = extra_info["twitter_129772274"]["token_secret"]
-    end
-    return client
+    return TwitterBot.get_twitter_rest_client("129772274")
   end
 
   def self.get_twitter_stream_client
-    apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
-    extra_info = ExtraInfo.read_extra_info
-    stream_client = TweetStream::Client.new
-    stream_client.consumer_key       = apiconfig["twitter"]["consumer_key"]
-    stream_client.consumer_secret    = apiconfig["twitter"]["consumer_secret"]
-    stream_client.oauth_token        = extra_info["twitter_129772274"]["token"]
-    stream_client.oauth_token_secret = extra_info["twitter_129772274"]["token_secret"]
-    stream_client.auth_method        = :oauth
-    return stream_client
-  end
-
-  def tweet!(text)
-    mone_client = Mone::TwitterBot.get_twitter_rest_client
-    tweeted = mone_client.update(text)
-    update!(action_id: tweeted.id,action_value: text, action_time: tweeted.created_at)
+    return TwitterBot.get_twitter_stream_client("129772274")
   end
 
   def self.get_tweet

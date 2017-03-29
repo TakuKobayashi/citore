@@ -41,14 +41,18 @@ class CrawlTargetUrl < ApplicationRecord
     })
   end
 
+  def target_url
+    url = Addressable::URI.new({host: self.host,port: self.port,path: self.path})
+    url.scheme = self.protocol
+    url.query = self.query
+    return url.to_s
+  end
+
   def self.execute_html_crawl!(clazz)
     CrawlTargetUrl.where(source_type: clazz.to_s, crawled_at: nil).find_each do |crawl_target|
       begin
-        url = Addressable::URI.new({host: crawl_target.host,port: crawl_target.port,path: crawl_target.path})
-        url.scheme = crawl_target.protocol
-        url.query = crawl_target.query
         http_client = HTTPClient.new
-        response = http_client.get(url.to_s, {}, {})
+        response = http_client.get(crawl_target.target_url, {}, {})
         next if response.status.to_i >= 400
         crawl_target.status_code = response.status
         crawl_target.content_type = response.headers["Content-Type"]

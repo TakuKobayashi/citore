@@ -37,7 +37,6 @@ ActiveAdmin.register_page "Crawler" do
     doc.css("img").each do |d|
       images << ImageMetum.new(type: params[:image][:target_class], title: d[:title].to_s, url: d[:src])
     end
-    p images
     ImageMetum.import(images)
     redirect_to(admin_crawler_path, notice: "#{url}から #{images.size}件の画像を取得しました")
   end
@@ -47,15 +46,18 @@ ActiveAdmin.register_page "Crawler" do
     address_url = Addressable::URI.parse(url)
     doc = ApplicationRecord.request_and_parse_html(url, params[:url][:request_method])
     targets = []
-    doc.css("a").select{|anchor| anchor[:href].present? && anchor[:href] != "/" }.each do |d|
-      link = Addressable::URI.parse(d[:href])
-      if link.host.blank?
-        if link.path.blank? || link.to_s.include?("javascript:")
-          next
+    CrawlTargetUrl.transaction do
+      doc.css("a").select{|anchor| anchor[:href].present? && anchor[:href] != "/" }.each do |d|
+        link = Addressable::URI.parse(d[:href])
+        if link.host.blank?
+          if link.path.blank? || link.to_s.include?("javascript:")
+            next
+          end
+          link.host = address_url.host
+          link.scheme = address_url.scheme
         end
-        link.host = address_url.host
+        targets << CrawlTargetUrl.setting_target!(params[:url][:target_class].to_s, link.to_s, d[:title].to_s)
       end
-      targets << CrawlTargetUrl.setting_target!(params[:url][:target_class].to_s, link.to_s, d[:title].to_s)
     end
     redirect_to(admin_crawler_path, notice: "#{url}から #{targets.size}件のリンクを取得しました")
   end

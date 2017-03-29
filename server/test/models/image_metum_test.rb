@@ -15,10 +15,10 @@
 #  index_image_meta_on_type   (type)
 #
 
-class Citore::EroticImage < ImageMetum
-  IMAGE_S3_FILE_ROOT = "project/citore/images/"
+require 'test_helper'
 
-  def s3_file_url
-    return "https://taptappun.s3.amazonaws.com/" + Citore::EroticImage::IMAGE_S3_FILE_ROOT + self.filename
-  end
+class ImageMetumTest < ActiveSupport::TestCase
+  # test "the truth" do
+  #   assert true
+  # end
 end

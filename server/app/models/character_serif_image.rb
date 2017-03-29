@@ -15,10 +15,10 @@
 #  index_image_meta_on_type   (type)
 #
 
-class Citore::EroticImage < ImageMetum
-  IMAGE_S3_FILE_ROOT = "project/citore/images/"
+class CharacterSerifImage < ImageMetum
+  IMAGE_S3_FILE_ROOT = "project/characterserif/images/"
 
   def s3_file_url
-    return "https://taptappun.s3.amazonaws.com/" + Citore::EroticImage::IMAGE_S3_FILE_ROOT + self.filename
+    return "https://taptappun.s3.amazonaws.com/" + CharacterSerifImage::IMAGE_S3_FILE_ROOT + self.filename
   end
 end

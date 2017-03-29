@@ -1,0 +1,28 @@
+# == Schema Information
+#
+# Table name: character_serif_meta
+#
+#  id                 :integer          not null, primary key
+#  character_serif_id :integer          not null
+#  title              :string(255)      not null
+#  character_name     :string(255)      not null
+#  image_metum_id     :integer
+#  reply_serif_id     :integer
+#
+# Indexes
+#
+#  index_character_serif_meta_on_character_serif_id        (character_serif_id)
+#  index_character_serif_meta_on_title_and_character_name  (title,character_name)
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# This model initially had no columns defined. If you add columns to the
+# model remove the '{}' from the fixture names and add the columns immediately
+# below each fixture, per the syntax in the comments below
+#
+one: {}
+# column: value
+#
+two: {}
+# column: value

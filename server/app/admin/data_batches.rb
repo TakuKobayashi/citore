@@ -5,7 +5,7 @@ ActiveAdmin.register_page "DataBatches" do
     panel "エクセルまたはCSVのデータをインポート" do
       active_admin_form_for(:import, url: active_admin_masters_upload_path) do |f|
         f.inputs do
-          f.input :import_file, as: :file, label: "ファイルを選択"
+          f.input :file, as: :file, label: "ファイルを選択"
           f.submit
         end
       end
@@ -21,7 +21,7 @@ ActiveAdmin.register_page "DataBatches" do
   end
 
   page_action :import_data, method: :post do
-    file = params[:upload][:excel_file]
+    file = params[:import][:file]
     clazz = (File.basename(file.original_filename, ".xls").
       singularize.
       gsub(/citore_/, 'citore/').

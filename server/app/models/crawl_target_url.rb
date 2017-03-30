@@ -17,6 +17,10 @@
 #  created_at                         :datetime         not null
 #  updated_at                         :datetime         not null
 #  source_id                          :integer
+#  title                              :string(255)      default(""), not null
+#  append_to_url_page_variable        :string(255)
+#  start_page_num                     :integer          default(0), not null
+#  end_page_num                       :integer          default(0), not null
 #  request_method_category            :integer          default("get"), not null
 #  target_class_column_extension_json :text(65535)
 #
@@ -34,7 +38,7 @@ class CrawlTargetUrl < ApplicationRecord
   serialize :target_class_column_extension_json, JSON
   #belongs_to :source, polymorphic: true
 
-  def self.setting_target!(target_class_name, url_string, from_keyword)
+  def self.setting_target!(target_class_name:, url: , from_url:, request_method: :get, target_class_column_extension_json: {})
     url = Addressable::URI.parse(url_string)
     return CrawlTargetUrl.create!({
       source_type: target_class_name,
@@ -42,7 +46,9 @@ class CrawlTargetUrl < ApplicationRecord
       protocol: url.scheme,
       host: url.host,
       path: url.path,
-      query: url.query.to_s
+      query: url.query.to_s,
+      request_method_category: :get,
+      target_class_column_extension_json: target_class_column_extension_json
     })
   end
 

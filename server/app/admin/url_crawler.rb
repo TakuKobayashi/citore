@@ -27,47 +27,40 @@ ActiveAdmin.register_page "UrlCrawler" do
     end
     columns do
       column do
+        Rails.application.eager_load!
+        models = ActiveRecord::Base.descendants.reject{|m| m.to_s.include?("Admin") || m.to_s.include?("ActiveRecord::") || m.abstract_class? }
+        models_hash = {}
+        models.each{|model| models_hash[model.to_s] = model.column_names.reject{|name| name == "id" || name == "created_at" || name == "updated_at" } }
         active_admin_form_for(:url, url: admin_urlcrawler_crawl_path) do |f|
           f.inputs do
             f.input :crawl_url, label: "クロールするサイトのURL"
             f.input :request_method, label: "リクエストメソッド", as: :select, collection: [:get, :post].map{|m| [m.to_s, m.to_s]}, selected: :get, include_blank: false
             f.input :filter, label: "該当の場所を絞りこむためのDOM要素"
-            f.input :target_class, label: "後でどのModelのデータに活用させるか"
+            f.input :target_class, as: :select, collection: models.map{|m| [m.to_s, m.to_s]}, include_blank: false, label: "後でどのModelのデータに活用させるか"
+            div(id: "target_class_column_field")
             f.submit("クロールする")
           end
           f.script do
             %Q{
+              var model_columns = #{models_hash.to_json}
+              console.log(model_columns);
               $(document).ready(function(){
-                area_change();
-                disable_category();
-              });
-
-              $('[id^=opr_coupon_category]').on("change", function(){
-                area_change();
-              });
-
-              var area_change = function(){
-                $("#opr_coupon_shared_code_input").hide();
-                $("#opr_coupon_limit_input").hide();
-                $("#unique_code_input").hide();
-                $("#opr_coupon_import_serial_input").hide();
-
-                if ($("#opr_coupon_category_shared").prop("checked")){
-                  $("#opr_coupon_shared_code_input").show();
-                } else if($("#opr_coupon_category_unique").prop("checked")) {
-                  $("#opr_coupon_limit_input").show();
-                  $("#unique_code_input").show();
-                  if ("#{action_name}" == "new") {
-                    $("#opr_coupon_import_serial_input").show();
+                var column_list_field = $("#target_class_column_field");
+                console.log(column_list_field);
+                $('#url_target_class').change(function(obj){
+                  var selectClassName = $(this).val();
+                  var list = model_columns[selectClassName];
+                  column_list_field.empty();
+                  for(var i = 0;i < list.length;++i){
+                    column_list_field.append(
+                      $('<li class="select input required" id="url_' + list[i] + '_input">').append(
+                        '<label for="' + list[i] + '" class="label">' + list[i] + '</label>',
+                        '<input id="url_' + list[i] + '" type="text" name="url[columns][' + list[i] + ']">'
+                      )
+                    );
                   }
-                }
-              }
-
-              var disable_category = function(){
-                if ("#{action_name}" == "edit"){
-                  $('[id^=opr_coupon_category]').prop("disabled", true);
-                }
-              }
+                });
+              });
             }.html_safe
           end
         end
@@ -77,6 +70,7 @@ ActiveAdmin.register_page "UrlCrawler" do
 
   page_action :crawl, method: :post do
     url = params[:url][:crawl_url]
+    columns_dom = params[:url][:columns] || {}
     address_url = Addressable::URI.parse(url)
     doc = ApplicationRecord.request_and_parse_html(url, params[:url][:request_method])
     targets = []

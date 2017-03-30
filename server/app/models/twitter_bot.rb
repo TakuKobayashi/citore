@@ -19,6 +19,7 @@
 #
 
 class TwitterBot < TwitterRecord
+  belongs_to :approached, class_name: 'TwitterBotApproach', foreign_key: :action_from_id
   enum action: [:tweet, :follow, :reply, :retweet, :resource_post]
 
   def self.tweet_routines!

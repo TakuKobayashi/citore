@@ -18,10 +18,6 @@
 #  updated_at                         :datetime         not null
 #  source_id                          :integer
 #  title                              :string(255)      default(""), not null
-#  append_to_url_page_variable        :string(255)
-#  start_page_num                     :integer          default(0), not null
-#  end_page_num                       :integer          default(0), not null
-#  request_method_category            :integer          default("get"), not null
 #  target_class_column_extension_json :text(65535)
 #
 # Indexes

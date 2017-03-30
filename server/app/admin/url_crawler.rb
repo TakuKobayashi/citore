@@ -36,21 +36,24 @@ ActiveAdmin.register_page "UrlCrawler" do
             f.input :crawl_url, label: "クロールするサイトのURL"
             f.input :request_method, label: "リクエストメソッド", as: :select, collection: [:get, :post].map{|m| [m.to_s, m.to_s]}, selected: :get, include_blank: false
             f.input :filter, label: "該当の場所を絞りこむためのDOM要素"
-            f.input :target_class, as: :select, collection: models.map{|m| [m.to_s, m.to_s]}, include_blank: false, label: "後でどのModelのデータに活用させるか"
+            f.input :target_class, as: :select, collection: models.map{|m| [m.to_s, m.to_s]}, include_blank: true, label: "後でどのModelのデータに活用させるか"
+            f.input :start_page_num, as: :number, label: "クロール開始ページ番号"
+            f.input :end_page_num, as: :number, label: "クロール終了ページ番号"
             div(id: "target_class_column_field")
             f.submit("クロールする")
           end
           f.script do
             %Q{
               var model_columns = #{models_hash.to_json}
-              console.log(model_columns);
               $(document).ready(function(){
                 var column_list_field = $("#target_class_column_field");
-                console.log(column_list_field);
                 $('#url_target_class').change(function(obj){
                   var selectClassName = $(this).val();
                   var list = model_columns[selectClassName];
                   column_list_field.empty();
+                  if(!list){
+                    return;
+                  }
                   for(var i = 0;i < list.length;++i){
                     column_list_field.append(
                       $('<li class="select input required" id="url_' + list[i] + '_input">').append(
@@ -71,22 +74,32 @@ ActiveAdmin.register_page "UrlCrawler" do
   page_action :crawl, method: :post do
     url = params[:url][:crawl_url]
     columns_dom = params[:url][:columns] || {}
-    address_url = Addressable::URI.parse(url)
-    doc = ApplicationRecord.request_and_parse_html(url, params[:url][:request_method])
+    start_page = params[:url][:start_page_num].to_i
+    end_page = params[:url][:end_page_num].to_i
     targets = []
-    CrawlTargetUrl.transaction do
-      doc.css("a").select{|anchor| anchor[:href].present? && anchor[:href] != "/" }.each do |d|
-        link = Addressable::URI.parse(d[:href])
-        if link.host.blank?
-          if link.path.blank? || link.to_s.include?("javascript:")
-            next
+    (start_page.to_i..end_page.to_i).each do |page|
+      address_url = Addressable::URI.parse(url % page.to_s)
+      doc = ApplicationRecord.request_and_parse_html(url, params[:url][:request_method])
+      CrawlTargetUrl.transaction do
+        doc.css("a").select{|anchor| anchor[:href].present? && anchor[:href] != "/" }.each do |d|
+          link = Addressable::URI.parse(d[:href])
+          if link.host.blank?
+            if link.path.blank? || link.to_s.include?("javascript:")
+              next
+            end
+            link.host = address_url.host
+            link.scheme = address_url.scheme
           end
-          link.host = address_url.host
-          link.scheme = address_url.scheme
+          targets << CrawlTargetUrl.setting_target!(
+            target_class_name: params[:url][:target_class].to_s,
+            url: link.to_s,
+            from_url: url,
+            column_extension: columns_dom,
+            title: ApplicationRecord.basic_sanitize(d[:title].to_s)
+          )
         end
-        targets << CrawlTargetUrl.setting_target!(params[:url][:target_class].to_s, link.to_s, url)
       end
     end
-    redirect_to(admin_urlcrawler_path, notice: "#{url}から #{targets.size}件のリンクを取得しました")
+    redirect_to(admin_urlcrawler_path, notice: "#{url}から #{start_page}〜#{end_page}ページで 合計#{targets.size}件のリンクを取得しました")
   end
 end

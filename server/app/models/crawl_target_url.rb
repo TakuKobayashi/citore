@@ -2,21 +2,23 @@
 #
 # Table name: crawl_target_urls
 #
-#  id                 :integer          not null, primary key
-#  source_type        :string(255)      not null
-#  crawl_from_keyword :string(255)
-#  protocol           :string(255)      not null
-#  host               :string(255)      not null
-#  port               :integer
-#  path               :string(255)      default(""), not null
-#  query              :text(65535)      not null
-#  crawled_at         :datetime
-#  content_type       :string(255)
-#  status_code        :integer
-#  message            :string(255)
-#  created_at         :datetime         not null
-#  updated_at         :datetime         not null
-#  source_id          :integer
+#  id                                 :integer          not null, primary key
+#  source_type                        :string(255)      not null
+#  crawl_from_keyword                 :string(255)
+#  protocol                           :string(255)      not null
+#  host                               :string(255)      not null
+#  port                               :integer
+#  path                               :string(255)      default(""), not null
+#  query                              :text(65535)      not null
+#  crawled_at                         :datetime
+#  content_type                       :string(255)
+#  status_code                        :integer
+#  message                            :string(255)
+#  created_at                         :datetime         not null
+#  updated_at                         :datetime         not null
+#  source_id                          :integer
+#  request_method_category            :integer          default("get"), not null
+#  target_class_column_extension_json :text(65535)
 #
 # Indexes
 #
@@ -27,6 +29,9 @@
 #
 
 class CrawlTargetUrl < ApplicationRecord
+  enum request_method_category: [:get, :post]
+
+  serialize :target_class_column_extension_json, JSON
   #belongs_to :source, polymorphic: true
 
   def self.setting_target!(target_class_name, url_string, from_keyword)
@@ -52,7 +57,7 @@ class CrawlTargetUrl < ApplicationRecord
     CrawlTargetUrl.where(source_type: clazz.to_s, crawled_at: nil).find_each do |crawl_target|
       begin
         http_client = HTTPClient.new
-        response = http_client.get(crawl_target.target_url, {}, {})
+        response = http_client.send(crawl_target.request_method_category, crawl_target.target_url, {}, {})
         next if response.status.to_i >= 400
         crawl_target.status_code = response.status
         crawl_target.content_type = response.headers["Content-Type"]

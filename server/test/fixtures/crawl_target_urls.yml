@@ -2,21 +2,23 @@
 #
 # Table name: crawl_target_urls
 #
-#  id                 :integer          not null, primary key
-#  source_type        :string(255)      not null
-#  crawl_from_keyword :string(255)
-#  protocol           :string(255)      not null
-#  host               :string(255)      not null
-#  port               :integer
-#  path               :string(255)      default(""), not null
-#  query              :text(65535)      not null
-#  crawled_at         :datetime
-#  content_type       :string(255)
-#  status_code        :integer
-#  message            :string(255)
-#  created_at         :datetime         not null
-#  updated_at         :datetime         not null
-#  source_id          :integer
+#  id                                 :integer          not null, primary key
+#  source_type                        :string(255)      not null
+#  crawl_from_keyword                 :string(255)
+#  protocol                           :string(255)      not null
+#  host                               :string(255)      not null
+#  port                               :integer
+#  path                               :string(255)      default(""), not null
+#  query                              :text(65535)      not null
+#  crawled_at                         :datetime
+#  content_type                       :string(255)
+#  status_code                        :integer
+#  message                            :string(255)
+#  created_at                         :datetime         not null
+#  updated_at                         :datetime         not null
+#  source_id                          :integer
+#  request_method_category            :integer          default("get"), not null
+#  target_class_column_extension_json :text(65535)
 #
 # Indexes
 #

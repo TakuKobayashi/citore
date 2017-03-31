@@ -27,12 +27,18 @@ ActiveAdmin.register_page "ImageCrawler" do
     end
     columns do
       column do
+        Rails.application.eager_load!
+        models = ImageMetum.descendants.reject{|m| m.to_s.include?("Admin") || m.to_s.include?("ActiveRecord::") || m.abstract_class? }
+        models_hash = {}
+        models.each{|model| models_hash[model.to_s] = model.column_names.reject{|name| name == "id" || name == "created_at" || name == "updated_at" } }
         active_admin_form_for(:image, url: admin_imagecrawler_crawl_path) do |f|
           f.inputs do
             f.input :crawl_url, label: "クロールするサイトのURL"
             f.input :request_method, label: "リクエストメソッド", as: :select, collection: [:get, :post].map{|m| [m.to_s, m.to_s]}, selected: :get, include_blank: false
             f.input :filter, label: "該当の場所を絞りこむためのDOM要素"
-            f.input :target_class, label: "保存する対象のclassがあれば選ぶ"
+            f.input :target_class, as: :select, collection: models.map{|m| [m.to_s, m.to_s]}, include_blank: true, label: "保存する対象のclassがあれば選ぶ"
+            f.input :start_page_num, as: :number, label: "クロール開始ページ番号"
+            f.input :end_page_num, as: :number, label: "クロール終了ページ番号"
             f.submit("クロールする")
           end
         end
@@ -42,13 +48,16 @@ ActiveAdmin.register_page "ImageCrawler" do
 
   page_action :crawl, method: :post do
     url = params[:image][:crawl_url]
-    doc = ApplicationRecord.request_and_parse_html(url, params[:image][:request_method])
-    if params[:image][:filter].present?
-      doc = doc.css(params[:image][:filter])
-    end
     images = []
-    doc.css("img").each do |d|
-      images << ImageMetum.new(type: params[:image][:target_class], title: d[:title].to_s, url: d[:src])
+    (start_page.to_i..end_page.to_i).each do |page|
+      address_url = Addressable::URI.parse(url % page.to_s)
+      doc = ApplicationRecord.request_and_parse_html(address_url.to_s, params[:image][:request_method])
+      if params[:image][:filter].present?
+        doc = doc.css(params[:image][:filter])
+      end
+      doc.css("img").each do |d|
+        images << ImageMetum.new(type: params[:image][:target_class], title: d[:title].to_s, url: d[:src], from_site_url: address_url.to_s)
+      end
     end
     ImageMetum.import(images)
     redirect_to(admin_imagecrawler_path, notice: "#{url}から #{images.size}件の画像を取得しました")

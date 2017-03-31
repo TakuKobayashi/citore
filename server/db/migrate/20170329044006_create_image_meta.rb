@@ -6,8 +6,10 @@ class CreateImageMeta < ActiveRecord::Migration[5.0]
       t.string :original_filename
       t.string :filename
       t.string :url
+      t.string :from_site_url
     end
     add_index :image_meta, :title
     add_index :image_meta, :type
+    add_index :image_meta, :from_site_url
   end
 end

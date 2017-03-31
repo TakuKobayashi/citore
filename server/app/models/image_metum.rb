@@ -8,11 +8,13 @@
 #  original_filename :string(255)
 #  filename          :string(255)
 #  url               :string(255)
+#  from_site_url     :string(255)
 #
 # Indexes
 #
-#  index_image_meta_on_title  (title)
-#  index_image_meta_on_type   (type)
+#  index_image_meta_on_from_site_url  (from_site_url)
+#  index_image_meta_on_title          (title)
+#  index_image_meta_on_type           (type)
 #
 
 class ImageMetum < ApplicationRecord

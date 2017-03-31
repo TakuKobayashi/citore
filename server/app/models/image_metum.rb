@@ -12,9 +12,9 @@
 #
 # Indexes
 #
-#  index_image_meta_on_from_site_url  (from_site_url)
-#  index_image_meta_on_title          (title)
-#  index_image_meta_on_type           (type)
+#  index_image_meta_on_from_site_url_and_url           (from_site_url,url) UNIQUE
+#  index_image_meta_on_original_filename_and_filename  (original_filename,filename) UNIQUE
+#  index_image_meta_on_title                           (title)
 #
 
 class ImageMetum < ApplicationRecord

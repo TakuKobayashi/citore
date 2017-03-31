@@ -48,6 +48,8 @@ ActiveAdmin.register_page "ImageCrawler" do
 
   page_action :crawl, method: :post do
     url = params[:image][:crawl_url]
+    start_page = params[:image][:start_page_num].to_i
+    end_page = params[:image][:end_page_num].to_i
     images = []
     (start_page.to_i..end_page.to_i).each do |page|
       address_url = Addressable::URI.parse(url % page.to_s)

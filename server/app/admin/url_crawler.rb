@@ -10,7 +10,7 @@ ActiveAdmin.register CrawlTargetUrl  do
     div link_to("クロールする", admin_urlcrawler_path, class: "table_tools_button")
     br
     id_column
-    column("リンク") {|a| link_to(a.target_url, a.target_url) }
+    column("リンク") {|a| link_to(a.title.present? ? a.title : a.target_url, a.target_url) }
     column("クラス名") {|a| a.source_type }
     column("クロール済み?") {|a| a.crawled_at.present? }
   end
@@ -79,7 +79,10 @@ ActiveAdmin.register_page "UrlCrawler" do
     targets = []
     (start_page.to_i..end_page.to_i).each do |page|
       address_url = Addressable::URI.parse(url % page.to_s)
-      doc = ApplicationRecord.request_and_parse_html(url, params[:url][:request_method])
+      doc = ApplicationRecord.request_and_parse_html(address_url.to_s, params[:url][:request_method])
+      if params[:url][:filter].present?
+        doc = doc.css(params[:url][:filter])
+      end
       CrawlTargetUrl.transaction do
         doc.css("a").select{|anchor| anchor[:href].present? && anchor[:href] != "/" }.each do |d|
           link = Addressable::URI.parse(d[:href])
@@ -90,12 +93,13 @@ ActiveAdmin.register_page "UrlCrawler" do
             link.host = address_url.host
             link.scheme = address_url.scheme
           end
+          title = d[:title] || d.text
           targets << CrawlTargetUrl.setting_target!(
             target_class_name: params[:url][:target_class].to_s,
             url: link.to_s,
-            from_url: url,
+            from_url: address_url.to_s,
             column_extension: columns_dom,
-            title: ApplicationRecord.basic_sanitize(d[:title].to_s)
+            title: ApplicationRecord.basic_sanitize(title.to_s) 
           )
         end
       end

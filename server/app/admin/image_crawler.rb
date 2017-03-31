@@ -61,7 +61,7 @@ ActiveAdmin.register_page "ImageCrawler" do
         images << ImageMetum.new(type: params[:image][:target_class], title: d[:title].to_s, url: d[:src], from_site_url: address_url.to_s)
       end
     end
-    ImageMetum.import(images)
+    ImageMetum.import(images, on_duplicate_key_update: [:type, :title])
     redirect_to(admin_imagecrawler_path, notice: "#{url}から #{images.size}件の画像を取得しました")
   end
 end

@@ -1,13 +1,9 @@
 ActiveAdmin.register TwitterBot  do
   menu priority: 0, label: "TwitterBot", parent: "サービス"
 
-  actions :index, :show
+  includes :approached
 
-  controller do
-    def scoped_collection
-      TwitterBot.includes(:approached)
-    end
-  end
+  actions :index, :show
 
   index do
     id_column

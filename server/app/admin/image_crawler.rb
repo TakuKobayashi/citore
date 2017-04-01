@@ -6,9 +6,11 @@ ActiveAdmin.register ImageMetum  do
 
   actions :index
 
+  action_item(:index, only: :index) do
+    link_to("クロールする", admin_imagecrawler_path, class: "table_tools_button")
+  end
+
   index do
-    div link_to("クロールする", admin_imagecrawler_path, class: "table_tools_button")
-    br
     id_column
     column("タイトル") {|a| a.title }
     column("クラス名") {|a| a.type }

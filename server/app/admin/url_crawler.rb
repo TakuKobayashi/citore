@@ -6,9 +6,11 @@ ActiveAdmin.register CrawlTargetUrl  do
 
   actions :index
 
+  action_item(:index, only: :index) do
+    link_to("クロールする", admin_urlcrawler_path, class: "table_tools_button")
+  end
+
   index do
-    div link_to("クロールする", admin_urlcrawler_path, class: "table_tools_button")
-    br
     id_column
     column("リンク") {|a| link_to(a.title.present? ? a.title : a.target_url, a.target_url) }
     column("クラス名") {|a| a.source_type }

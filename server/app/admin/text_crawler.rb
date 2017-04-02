@@ -15,8 +15,11 @@ ActiveAdmin.register_page "TextCrawler" do
             f.input :filter, label: "該当の場所を絞りこむためのDOM要素"
             f.input :target_class, as: :select, collection: models.map{|m| [m.to_s, m.to_s]}, include_blank: true, label: "後でどのModelのデータに活用させるか"
             f.input :start_page_num, as: :number, label: "クロール開始ページ番号"
-            f.input :end_page_num, as: :number, label: "クロール終了ページ番号"
-            div(id: "target_class_column_field")
+            f.input :end_page_num, as: :number, label: "クロール終了ページ番号", id: "hogehoge"
+            panel("以下には指定したModelのカラムに入れるデータのDOMを指定してください") do
+              ol(id: "target_class_column_field") do
+              end
+            end
             f.submit("クロールする")
           end
           f.script do

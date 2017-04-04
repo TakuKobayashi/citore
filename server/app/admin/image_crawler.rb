@@ -1,4 +1,4 @@
-ActiveAdmin.register ImageMetum  do
+ActiveAdmin.register ImageMetum do
   menu priority: 1, label: "画像クローラー", parent: "data"
 
   config.batch_actions = true

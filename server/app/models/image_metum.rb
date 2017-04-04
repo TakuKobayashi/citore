@@ -19,11 +19,11 @@
 
 class ImageMetum < ApplicationRecord
   def s3_file_image_root
-    return Citore::EroticImage::IMAGE_S3_FILE_ROOT
+    return ""
   end
 
   def s3_file_url
-    return "https://taptappun.s3.amazonaws.com/" + self.s3_file_image_root + self.file_name
+    return "https://taptappun.s3.amazonaws.com/" + self.s3_file_image_root + self.filename
   end
 
   def file_url
@@ -34,17 +34,17 @@ class ImageMetum < ApplicationRecord
     end
   end
 
-　def save_to_s3!
+  def save_to_s3!
     if filename.present?
       return false
     end
     http_client = HTTPClient.new
     response = http_client.get_content(self.url, {}, {})
-    
+
     s3 = Aws::S3::Client.new
     filename = SecureRandom.hex + File.extname(self.url)
     filepath = self.s3_file_image_root + filename
-    s3.put_object(bucket: "taptappun",body: response,key: filepath, acl: "public-read")
+    s3.put_object(bucket: "taptappun",body: response, key: filepath, acl: "public-read")
     self.update!(original_filename: File.basename(self.url), filename: filename)
   end
 end

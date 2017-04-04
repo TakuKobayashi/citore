@@ -20,7 +20,7 @@
 class CharacterSerifImage < ImageMetum
   IMAGE_S3_FILE_ROOT = "project/characterserif/images/"
 
-  def s3_file_url
-    return "https://taptappun.s3.amazonaws.com/" + CharacterSerifImage::IMAGE_S3_FILE_ROOT + self.filename
+  def s3_file_image_root
+    return CharacterSerifImage::IMAGE_S3_FILE_ROOT
   end
 end

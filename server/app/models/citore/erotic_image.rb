@@ -20,7 +20,7 @@
 class Citore::EroticImage < ImageMetum
   IMAGE_S3_FILE_ROOT = "project/citore/images/"
 
-  def s3_file_url
-    return "https://taptappun.s3.amazonaws.com/" + Citore::EroticImage::IMAGE_S3_FILE_ROOT + self.filename
+  def s3_file_image_root
+    return Citore::EroticImage::IMAGE_S3_FILE_ROOT
   end
 end

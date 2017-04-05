@@ -46,6 +46,14 @@ class ImageMetum < ApplicationRecord
     ".bmp", #BMP
   ]
 
+  def match_image_filename(filepath)
+    paths = filepath.split("/")
+    imagefile_name = paths.detect{|p| IMAGE_FILE_EXTENSIONS.any?{|ie| p.include?(ie)} }
+    return "" if imagefile_name.blank?
+    ext = IMAGE_FILE_EXTENSIONS.detect{|ie| imagefile_name.include?(ie) }
+    return imagefile_name.match(/(.+?#{ext})/).to_s
+  end
+
   def s3_file_image_root
     return ""
   end
@@ -66,13 +74,15 @@ class ImageMetum < ApplicationRecord
     if filename.present?
       return false
     end
+    aurl = Addressable::URI.parse(URI.unescape(self.url))
     http_client = HTTPClient.new
-    response = http_client.get_content(self.url, {}, {})
+    response = http_client.get_content(aurl.to_s, {}, {})
 
+    self.original_filename = self.match_image_filename(aurl.to_s)
+    self.filename = SecureRandom.hex + File.extname(self.original_filename)
     s3 = Aws::S3::Client.new
-    filename = SecureRandom.hex + File.extname(self.url)
-    filepath = self.s3_file_image_root + filename
+    filepath = self.s3_file_image_root + self.filename
     s3.put_object(bucket: "taptappun",body: response, key: filepath, acl: "public-read")
-    self.update!(original_filename: File.basename(self.url), filename: filename)
+    save!
   end
 end

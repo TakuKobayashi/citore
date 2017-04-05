@@ -13,6 +13,7 @@ ActiveAdmin.register_page "TextCrawler" do
             f.input :crawl_url, label: "クロールするサイトのURL"
             f.input :request_method, label: "リクエストメソッド", as: :select, collection: [:get, :post].map{|m| [m.to_s, m.to_s]}, selected: :get, include_blank: false
             f.input :filter, label: "該当の場所を絞りこむためのDOM要素"
+            f.input :loop_filter, label: "該当のDOMでループを回すためのDOM要素"
             f.input :target_class, as: :select, collection: models.map{|m| [m.to_s, m.to_s]}, include_blank: true, label: "後でどのModelのデータに活用させるか"
             f.input :start_page_num, as: :number, label: "クロール開始ページ番号"
             f.input :end_page_num, as: :number, label: "クロール終了ページ番号", id: "hogehoge"
@@ -56,31 +57,20 @@ ActiveAdmin.register_page "TextCrawler" do
     columns_dom = params[:text][:columns] || {}
     start_page = params[:text][:start_page_num].to_i
     end_page = params[:text][:end_page_num].to_i
-    targets = []
+    loop_filter = params[:text][:loop_filter].to_s
     clazz = (params[:text][:target_class].to_s).constantize
-    clazz.transaction do
-      (start_page.to_i..end_page.to_i).each do |page|
-        address_url = Addressable::URI.parse(url % page.to_s)
-        doc = ApplicationRecord.request_and_parse_html(address_url.to_s, params[:text][:request_method])
-        if params[:text][:filter].present?
-          doc = doc.css(params[:text][:filter])
-        end
-        doc.each do |d|
-          clazz_instance = clazz.new
-          columns_dom.each do |key, dom|
-            if dom.present?
-              crawl_text = d.css(dom).text
-            else
-              next
-            end
-            logger.info dom.text
-            clazz_instance.send(key + "=", ApplicationRecord.basic_sanitize(crawl_text))
-          end
-          targets << clazz_instance
-        end
+    import_count = 0
+    (start_page.to_i..end_page.to_i).each do |page|
+      address_url = Addressable::URI.parse(url % page.to_s)
+      doc = ApplicationRecord.request_and_parse_html(address_url.to_s, params[:text][:request_method])
+      if params[:text][:filter].present?
+        doc = doc.css(params[:text][:filter])
       end
-      clazz.import(targets)
+      doc.css(loop_filter).each do |d|
+        CrawlTargetUrl.import_crawl_data!(html_dom: d,target_class: clazz,column_dom: columns_dom, request_method: params[:text][:request_method])
+        import_count += 1
+      end
     end
-    redirect_to(admin_textcrawler_path, notice: "#{url}から #{start_page}〜#{end_page}ページで 合計#{targets.size}件のリンクを取得しました")
+    redirect_to(admin_textcrawler_path, notice: "#{url}から #{start_page}〜#{end_page}ページで 合計#{import_count}件の文章を取得しました")
   end
 end

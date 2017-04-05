@@ -76,33 +76,26 @@ class CrawlTargetUrl < ApplicationRecord
 
   def self.import_crawl_data!(html_dom:,target_class:,column_dom:, request_method: :get)
     clazz = target_class.to_s.constantize
-    last_id = clazz.connection.select_one("show table status like '" + clazz.table_name + "'")["Auto_increment"]
     columns_h = clazz.columns_hash
     d_enums = clazz.defined_enums
-    targets = []
-    html_dom.each do |d|
-      clazz_instance = clazz.new
-      column_dom.each do |key, dom|
-        if d_enums[key].present?
-          clazz_instance.send(key + "=", dom)
-          next
-        end
-        if dom.present?
-          crawl_text = d.css(dom).text
-        else
-          next
-        end
-
-        if columns_h[key].type.to_s == "integer" || columns_h[key].type.to_s == "float"
-          clazz_instance.send(key + "=", dom)
-        elsif columns_h[key].type.to_s == "string" || columns_h[key].type.to_s == "text"
-          clazz_instance.send(key + "=", ApplicationRecord.basic_sanitize(crawl_text))
-        end
+    clazz_instance = clazz.new
+    column_dom.each do |key, dom|
+      if d_enums[key].present?
+        clazz_instance.send(key + "=", dom)
+        next
       end
-      targets << clazz_instance
+      if dom.present?
+        crawl_text = html_dom.css(dom).text
+      else
+        crawl_text = html_dom.text
+      end
+
+      if columns_h[key].type.to_s == "integer" || columns_h[key].type.to_s == "float"
+        clazz_instance.send(key + "=", dom)
+      elsif columns_h[key].type.to_s == "string" || columns_h[key].type.to_s == "text"
+        clazz_instance.send(key + "=", ApplicationRecord.basic_sanitize(crawl_text))
+      end
     end
-    clazz.import(targets)
-    new_last_id = clazz.connection.select_one("show table status like '" + clazz.table_name + "'")["Auto_increment"]
-    return new_last_id.to_i - last_id.to_i
+    clazz_instance.save!
   end
 end

@@ -6,7 +6,11 @@ ActiveAdmin.register ImageMetum do
 
   actions :index
 
-  action_item(:index, only: :index) do
+  action_item(:backup, only: :index) do
+    link_to("画像をS3にバックアップを取る", admin_imagecrawler_backup_path, method: :post, class: "table_tools_button")
+  end
+
+  action_item(:crawl, only: :index) do
     link_to("クロールする", admin_imagecrawler_path, class: "table_tools_button")
   end
 
@@ -65,5 +69,12 @@ ActiveAdmin.register_page "ImageCrawler" do
     end
     ImageMetum.import(images, on_duplicate_key_update: [:type, :title])
     redirect_to(admin_imagecrawler_path, notice: "#{url}から #{images.size}件の画像を取得しました")
+  end
+
+  page_action :backup, method: :post do
+    ImageMetum.where(filename: nil).find_each do |image|
+      image.save_to_s3!
+    end
+    redirect_to(admin_image_meta_path, notice: "バックアップ完了!!")
   end
 end

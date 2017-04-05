@@ -18,6 +18,34 @@
 #
 
 class ImageMetum < ApplicationRecord
+  IMAGE_FILE_EXTENSIONS = [
+    ".agp",
+    ".ai", #Illustrator
+    ".cdr",
+    ".cpc", ".cpi",
+    ".eps",
+    ".eri",
+    ".gif", #GIF
+    ".iff", ".ilbm", ".lbm",
+    ".ima",
+    ".jpg", ".jpeg", #JPEG
+    ".jxr", ".hdp", ".wdp",
+    ".jp2", ".j2c",
+    ".mki",
+    ".mag",
+    ".pi",
+    ".pict", ".pic", ".pct",
+    ".pdf", #PDF
+    ".png", #PNG
+    ".psd", ".psb", ".pdd", #PSD
+    ".psp",
+    ".svg", #SVG
+    ".tga", ".tpic", #TGA 3Dモデルのテクスチャーとかによく使われる
+    ".tif", #tif 文字とかフォントとか
+    ".webp",
+    ".bmp", #BMP
+  ]
+
   def s3_file_image_root
     return ""
   end

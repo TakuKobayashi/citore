@@ -1,16 +1,16 @@
-<%= javascript_include_tag 'jquery.min.js' %>
-<canvas id="imageCanvas" width="300" height="600"></canvas>
 <script>
-  jQuery(document).ready(function() {
+  $(document).on('turbolinks:load', function() {
     var canvas = $("#imageCanvas");
     var ctx = canvas[0].getContext("2d");
     $.ajax({
       type: "GET",
+      dataType: "text",
+      cache: true,
       url: "<%= base64_tools_graphics_url %>",
       data: {hoge: "fuga"},
       success: function(base64Img){
         var img = new Image();
-        img.src = "data:image/jpg;base64," + base64Img;
+        img.src = base64Img;
         img.onload = function() {
         /* 画像を描画 */
           ctx.drawImage(img, 0, 0);
@@ -19,3 +19,4 @@
     });
   });
 </script>
+<canvas id="imageCanvas" width="300" height="600"></canvas>

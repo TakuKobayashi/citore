@@ -88,8 +88,10 @@ class ImageMetum < ApplicationRecord
 
   def convert_to_base64
     filepath = self.s3_file_image_root + self.filename
+    ext = File.extname(self.filename)
     s3 = Aws::S3::Client.new
     binary = s3.get_object(bucket: "taptappun",key: filepath)
-    return Base64.strict_encode64(binary.body.read)
+    base64_image = Base64.strict_encode64(binary.body.read)
+    return "data:image/" + ext[1..ext.size] + ";base64," + base64_image
   end
 end

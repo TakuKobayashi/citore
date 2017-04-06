@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class Tools::ThreedModelControllerTest < ActionDispatch::IntegrationTest
+class Tools::GraphicsControllerTest < ActionDispatch::IntegrationTest
   # test "the truth" do
   #   assert true
   # end

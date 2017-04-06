@@ -93,8 +93,10 @@ Rails.application.routes.draw do
       get :index
     end
 
-    resource :threed_model, controller: :threed_model, only: [:index] do
-      get :index
+    resource :graphics, controller: :graphics, only: [] do
+      get :canvas
+      get :threed
+      get :base64
     end
   end
 

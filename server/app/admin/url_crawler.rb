@@ -60,34 +60,54 @@ ActiveAdmin.register_page "UrlCrawler" do
     columns_dom = params[:url][:columns] || {}
     start_page = params[:url][:start_page_num].to_i
     end_page = params[:url][:end_page_num].to_i
-    targets = []
+    insert_count = 0
     (start_page.to_i..end_page.to_i).each do |page|
       address_url = Addressable::URI.parse(url % page.to_s)
       doc = ApplicationRecord.request_and_parse_html(address_url.to_s, params[:url][:request_method])
       if params[:url][:filter].present?
         doc = doc.css(params[:url][:filter])
       end
-      CrawlTargetUrl.transaction do
-        doc.css("a").select{|anchor| anchor[:href].present? && anchor[:href] != "/" }.each do |d|
-          link = Addressable::URI.parse(d[:href])
-          if link.host.blank?
-            if link.path.blank? || link.to_s.include?("javascript:")
-              next
-            end
-            link.host = address_url.host
-            link.scheme = address_url.scheme
-          end
-          title = d[:title] || d.text
-          targets << CrawlTargetUrl.setting_target!(
-            target_class_name: params[:url][:target_class].to_s,
-            url: link.to_s,
-            from_url: address_url.to_s,
-            column_extension: columns_dom,
-            title: ApplicationRecord.basic_sanitize(title.to_s) 
-          )
-        end
-      end
+      insert_count += parse_and_save_dom_data(dom: doc, target_class: params[:url][:target_class].to_s)
     end
-    redirect_to(admin_urlcrawler_path, notice: "#{url}から #{start_page}〜#{end_page}ページで 合計#{targets.size}件のリンクを取得しました")
+    redirect_to(admin_urlcrawler_path, notice: "#{url}から #{start_page}〜#{end_page}ページで 合計#{insert_count}件のリンクを取得しました")
   end
+
+  page_action :parse_and_save_html_file, method: :post do
+    html_file = params[:url][:html_file]
+    columns_dom = params[:url][:columns] || {}
+    insert_count = 0
+    doc = doc = Nokogiri::HTML.parse(html_file.read.to_s)
+    if params[:url][:filter].present?
+      doc = doc.css(params[:url][:filter])
+    end
+    insert_count = parse_and_save_dom_data(dom: doc, target_class: params[:url][:target_class].to_s)
+    redirect_to(admin_urlcrawler_path, notice: "#{html_file.original_filename}から 合計#{insert_count}件のリンクを取得しました")
+  end
+end
+
+private
+def parse_and_save_dom_data(dom:, target_class:)
+  insert_count = 0
+  CrawlTargetUrl.transaction do
+    doc.css("a").select{|anchor| anchor[:href].present? && anchor[:href] != "/" }.each do |d|
+      link = Addressable::URI.parse(d[:href])
+      if link.host.blank?
+        if link.path.blank? || link.to_s.include?("javascript:")
+          next
+        end
+        link.host = address_url.host
+        link.scheme = address_url.scheme
+      end
+      title = d[:title] || d.text
+      CrawlTargetUrl.setting_target!(
+        target_class_name: target_class,
+        url: link.to_s,
+        from_url: address_url.to_s,
+        column_extension: columns_dom,
+        title: ApplicationRecord.basic_sanitize(title.to_s) 
+      )
+      insert_count += 1
+    end
+  end
+  return insert_count
 end

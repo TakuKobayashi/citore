@@ -71,6 +71,21 @@ ActiveAdmin.register_page "ImageCrawler" do
     redirect_to(admin_imagecrawler_path, notice: "#{url}から #{images.size}件の画像を取得しました")
   end
 
+  page_action :parse_and_save_html_file, method: :post do
+    html_file = params[:image][:html_file]
+    columns_dom = params[:image][:columns] || {}
+    doc = doc = Nokogiri::HTML.parse(html_file.read.to_s)
+    if params[:image][:filter].present?
+      doc = doc.css(params[:image][:filter])
+    end
+    images = []
+    doc.css("img").each do |d|
+      images << ImageMetum.new(type: params[:image][:target_class], title: d[:title].to_s, url: d[:src])
+    end
+    ImageMetum.import(images, on_duplicate_key_update: [:type, :title])
+    redirect_to(admin_imagecrawler_path, notice: "#{html_file.original_filename}から #{images.size}件の画像を取得しました")
+  end
+
   page_action :backup, method: :post do
     ImageMetum.where(filename: nil).find_each do |image|
       image.save_to_s3!

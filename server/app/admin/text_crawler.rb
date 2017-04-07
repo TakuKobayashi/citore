@@ -24,28 +24,7 @@ ActiveAdmin.register_page "TextCrawler" do
             f.submit("クロールする")
           end
           f.script do
-            %Q{
-              var model_columns = #{models_hash.to_json}
-              $(document).ready(function(){
-                var column_list_field = $("#target_class_column_field");
-                $('#text_target_class').change(function(obj){
-                  var selectClassName = $(this).val();
-                  var list = model_columns[selectClassName];
-                  column_list_field.empty();
-                  if(!list){
-                    return;
-                  }
-                  for(var i = 0;i < list.length;++i){
-                    column_list_field.append(
-                      $('<li class="select input required" id="url_' + list[i] + '_input">').append(
-                        '<label for="' + list[i] + '" class="label">' + list[i] + '</label>',
-                        '<input id="text_' + list[i] + '" type="text" name="text[columns][' + list[i] + ']">'
-                      )
-                    );
-                  }
-                });
-              });
-            }.html_safe
+            crawl_pull_down_script(models_hash)
           end
         end
       end
@@ -72,5 +51,22 @@ ActiveAdmin.register_page "TextCrawler" do
       end
     end
     redirect_to(admin_textcrawler_path, notice: "#{url}から #{start_page}〜#{end_page}ページで 合計#{import_count}件の文章を取得しました")
+  end
+
+  page_action :parse_and_save_html_file, method: :post do
+    html_file = params[:text][:html_file]
+    columns_dom = params[:text][:columns] || {}
+    loop_filter = params[:text][:loop_filter].to_s
+    insert_count = 0
+    doc = doc = Nokogiri::HTML.parse(html_file.read.to_s)
+    if params[:text][:filter].present?
+      doc = doc.css(params[:text][:filter])
+    end
+    import_count = 0
+    doc.css(loop_filter).each do |d|
+      CrawlTargetUrl.import_crawl_data!(html_dom: d,target_class: clazz,column_dom: columns_dom, request_method: params[:text][:request_method])
+      import_count += 1
+    end
+    redirect_to(admin_textcrawler_path, notice: "#{html_file.original_filename}から 合計#{import_count}件の文章を取得しました")
   end
 end

@@ -76,6 +76,8 @@ gem 'inherited_resources', git: 'https://github.com/activeadmin/inherited_resour
 gem 'cabocha'
 gem 'xml-simple'
 
+gem 'puma_worker_killer'
+
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 

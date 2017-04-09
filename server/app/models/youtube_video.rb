@@ -47,11 +47,11 @@ class YoutubeVideo < YoutubeRecord
         description: YoutubeVideo.basic_sanitize(item.snippet.description),
         published_at: item.snippet.published_at,
         thumnail_image_url: item.snippet.thumbnails.default.url,
-        comment_count: item.statistics.comment_count.to_i,
-        dislike_count: item.statistics.dislike_count.to_i,
-        like_count: item.statistics.like_count.to_i,
-        favorite_count: item.statistics.favorite_count.to_i,
-        view_count: item.statistics.view_count.to_i
+        comment_count: item.statistics.try(:comment_count).to_i,
+        dislike_count: item.statistics.try(:dislike_count).to_i,
+        like_count: item.statistics.try(:like_count).to_i,
+        favorite_count: item.statistics.try(:favorite_count).to_i,
+        view_count: item.statistics.try(:view_count).to_i
       )
       id_and_tags[item.id] = item.snippet.tags
       videos << video

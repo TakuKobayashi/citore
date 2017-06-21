@@ -1,9 +1,9 @@
 apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
 TweetStream.configure do |config|
-  config.consumer_key       = apiconfig["twitter"]["consumer_key"]
-  config.consumer_secret    = apiconfig["twitter"]["consumer_secret"]
-  config.oauth_token        = apiconfig["twitter"]["access_token_key"]
-  config.oauth_token_secret = apiconfig["twitter"]["access_token_secret"]
+  config.consumer_key       = apiconfig["twitter"]["citore"]["consumer_key"]
+  config.consumer_secret    = apiconfig["twitter"]["citore"]["consumer_secret"]
+  config.oauth_token        = apiconfig["twitter"]["citore"]["bot"]["access_token_key"]
+  config.oauth_token_secret = apiconfig["twitter"]["citore"]["bot"]["access_token_secret"]
   config.auth_method        = :oauth
 end
 
@@ -12,17 +12,17 @@ natto = ApplicationRecord.get_natto
 extra_info = ExtraInfo.read_extra_info
 
 citore_client = Twitter::REST::Client.new do |config|
-  config.consumer_key        = apiconfig["twitter"]["consumer_key"]
-  config.consumer_secret     = apiconfig["twitter"]["consumer_secret"]
-  config.access_token        = extra_info["twitter_811029389575979008"]["token"]
-  config.access_token_secret = extra_info["twitter_811029389575979008"]["token_secret"]
+  config.consumer_key        = apiconfig["twitter"]["citore"]["consumer_key"]
+  config.consumer_secret     = apiconfig["twitter"]["citore"]["consumer_secret"]
+  config.access_token        = apiconfig["twitter"]["citore"]["bot"]["access_token_key"]
+  config.access_token_secret = apiconfig["twitter"]["citore"]["bot"]["access_token_secret"]
 end
 
 sugarcoat_client = Twitter::REST::Client.new do |config|
-  config.consumer_key        = apiconfig["twitter"]["consumer_key"]
-  config.consumer_secret     = apiconfig["twitter"]["consumer_secret"]
-  config.access_token        = extra_info["twitter_811024427487936512"]["token"]
-  config.access_token_secret = extra_info["twitter_811024427487936512"]["token_secret"]
+  config.consumer_key        = apiconfig["twitter"]["sugarcoat"]["consumer_key"]
+  config.consumer_secret     = apiconfig["twitter"]["sugarcoat"]["consumer_secret"]
+  config.access_token        = apiconfig["twitter"]["sugarcoat"]["bot"]["access_token_key"]
+  config.access_token_secret = apiconfig["twitter"]["sugarcoat"]["bot"]["access_token_secret"]
 end
 
 sugarcoat_keywords = ['@sugarcoat_bot', '#sugarcoat']

@@ -1,9 +1,9 @@
 apiconfig = YAML.load(File.open("config/apiconfig.yml"))
 TweetStream.configure do |config|
-  config.consumer_key       = apiconfig["twitter"]["consumer_key"]
-  config.consumer_secret    = apiconfig["twitter"]["consumer_secret"]
-  config.oauth_token        = apiconfig["twitter"]["access_token_key"]
-  config.oauth_token_secret = apiconfig["twitter"]["access_token_secret"]
+  config.consumer_key       = apiconfig["twitter"]["citore"]["consumer_key"]
+  config.consumer_secret    = apiconfig["twitter"]["citore"]["consumer_secret"]
+  config.oauth_token        = apiconfig["twitter"]["citore"]["bot"]["access_token_key"]
+  config.oauth_token_secret = apiconfig["twitter"]["citore"]["bot"]["access_token_secret"]
   config.auth_method        = :oauth
 end
 

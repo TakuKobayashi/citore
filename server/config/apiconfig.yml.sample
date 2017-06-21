@@ -1,9 +1,16 @@
 twitter:
-  consumer_key:
-  consumer_secret:
-  access_token_key:
-  access_token_secret:
-
+  citore:
+    consumer_key:
+    consumer_secret:
+    bot:
+      access_token_key:
+      access_token_secret:
+  sugarcoat:
+    consumer_key:
+    consumer_secret:
+    bot:
+      access_token_key:
+      access_token_secret:
 
 aitalk:
   username:
@@ -17,14 +24,12 @@ microsoft:
   client_id:
   client_secret:
 
-
 yahoo:
   appId:
 
 metadata_wordassociator:
   username:
   password:
-
 
 metadata_general:
   apikey:
@@ -33,3 +38,42 @@ facebook_bot:
   access_token:
   validation_token:
   secret_token:
+
+google_api:
+  key:
+
+line_bot:
+  sugarcoat:
+    channel_id:
+    channel_token:
+    channel_secret:
+  spotgacha:
+    channel_id:
+    channel_token:
+    channel_secret:
+  citore:
+    channel_id:
+    channel_token:
+    channel_secret:
+  job_with_life:
+    channel_id:
+    channel_token:
+    channel_secret:
+  shiritori:
+    channel_id:
+    channel_token:
+    channel_secret:
+  mone:
+    channel_id:
+    channel_token:
+    channel_secret:
+
+recruit:
+  apikey:
+
+gnavi:
+  apikey:
+
+twitcas:
+  client_id:
+  client_secret:

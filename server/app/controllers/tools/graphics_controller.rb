@@ -1,4 +1,4 @@
-class Tools::GraphicsController < ApplicationController
+class Tools::GraphicsController < BaseController
   def canvas
   end
 

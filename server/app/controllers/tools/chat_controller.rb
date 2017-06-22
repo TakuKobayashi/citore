@@ -1,4 +1,4 @@
-class Tools::ChatController < ApplicationController
+class Tools::ChatController < BaseController
   def index
   end
 end

@@ -98,6 +98,25 @@ Rails.application.routes.draw do
       get :threed
       get :base64
     end
+
+    resource :top, controller: :top, only: [] do
+      get :index
+    end
+
+    resource :texture_packer, controller: :texture_packer, only: [] do
+      get :index
+      post :pack
+    end
+
+    resource :image_crawl, controller: :image_crawl, only: [] do
+      get :index
+      post :crawl
+    end
+
+    resource :excel_converter, controller: :excel_converter, only: [] do
+      get :index
+      post :convert_to_json
+    end
   end
 
   root to: "top#index"

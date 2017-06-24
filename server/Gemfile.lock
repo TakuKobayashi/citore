@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/activeadmin/activeadmin
-  revision: 8541a5deeedf48d470ab8c5e93eafdb95d8def1b
+  revision: d456006cf2cffa6886452c653e216d7fb23d1ae7
   specs:
     activeadmin (1.0.0)
       arbre (>= 1.1.1)
@@ -79,16 +79,16 @@ GEM
     arel (8.0.0)
     aws-record (1.1.1)
       aws-sdk-resources (~> 2.0)
-    aws-sdk (2.10.1)
-      aws-sdk-resources (= 2.10.1)
-    aws-sdk-core (2.10.1)
+    aws-sdk (2.10.3)
+      aws-sdk-resources (= 2.10.3)
+    aws-sdk-core (2.10.3)
       aws-sigv4 (~> 1.0)
       jmespath (~> 1.0)
     aws-sdk-rails (1.0.1)
       aws-sdk-resources (~> 2)
       railties (>= 3)
-    aws-sdk-resources (2.10.1)
-      aws-sdk-core (= 2.10.1)
+    aws-sdk-resources (2.10.3)
+      aws-sdk-core (= 2.10.3)
     aws-sigv4 (1.0.0)
     bcrypt (3.1.11)
     bindex (0.5.0)

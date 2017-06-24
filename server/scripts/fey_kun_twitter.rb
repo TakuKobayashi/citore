@@ -11,8 +11,6 @@ natto = ApplicationRecord.get_natto
 
 extra_info = ExtraInfo.read_extra_info
 
-OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
-
 rest_client = Twitter::REST::Client.new do |config|
   config.consumer_key        = apiconfig["twitter"]["fey_kun_ai"]["consumer_key"]
   config.consumer_secret     = apiconfig["twitter"]["fey_kun_ai"]["consumer_secret"]
@@ -22,8 +20,10 @@ end
 
 stream_client = TweetStream::Client.new
 stream_client.userstream do |status|
+  p status.to_h
   if status.in_reply_to_screen_name == "fey_kun_ai" && status.user.screen_name != "fey_kun_ai"
-    sanitized_text = TwitterRecord.sanitized(status.text)
-    rest_client.update("@#{status.user.screen_name}\n#{sanitized_text}", options = {in_reply_to_status_id: status.id})
+    inquiry_tweet = FeyKunAi::InquiryTweet.generate_tweet!(tweet: status)
+    sanitized_text = TwitterRecord.sanitized(inquiry_tweet.tweet)
+    rest_client.update("@#{status.user.screen_name}\n#{sanitized_text}", {in_reply_to_status_id: status.id})
   end
 end

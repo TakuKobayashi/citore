@@ -5,7 +5,6 @@
 #  id               :integer          not null, primary key
 #  inquiry_tweet_id :string(255)      not null
 #  image_url        :string(255)      not null
-#  file_path        :string(255)
 #  exifs            :text(65535)
 #  checksum         :string(255)      not null
 #  output           :text(65535)
@@ -20,4 +19,24 @@ class FeyKunAi::InquiryTweetImage < TwitterRecord
   serialize :output, JSON
 
   belongs_to :tweet, class_name: 'FeyKunAi::InquiryTweet', foreign_key: :inquiry_tweet_id, required: false
+
+  def set_image_meta_data
+    file_ext = File.extname(self.image_url).downcase
+    aurl = Addressable::URI.parse(URI.unescape(self.image_url))
+    uri = URI.parse(aurl.to_s)
+    filepath = Rails.root.to_s + "/tmp/" + SecureRandom.hex + file_ext
+    File.open(filepath, 'wb'){|f| f.write(uri.open.read) }
+    if file_ext == ".jpg" || file_ext == ".jpeg"
+      data = EXIFR::JPEG.new(filepath)
+      self.exifs = data.to_hash
+    elsif file_ext == ".tif" || file_ext == ".tiff"
+      data = EXIFR::TIFF.new(filepath)
+      self.exifs = data.to_hash
+    else
+      data = FastImage.new(filepath)
+      self.exifs = {width: data.size[0], height: data.size[1], comment: nil}
+    end
+    self.checksum = Digest::MD5.file(filepath)
+    File.delete(filepath)
+  end
 end

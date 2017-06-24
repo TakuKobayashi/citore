@@ -150,11 +150,13 @@ GEM
     erubi (1.6.0)
     eventmachine (1.2.3)
     execjs (2.7.0)
+    exifr (1.2.5)
     facebook-messenger (1.0.0)
       httparty (~> 0.13, >= 0.13.7)
       rack (>= 1.6.4)
     faraday (0.9.2)
       multipart-post (>= 1.2, < 3)
+    fastimage (2.1.0)
     faye-websocket (0.10.7)
       eventmachine (>= 0.12.0)
       websocket-driver (>= 0.5.1)
@@ -454,7 +456,9 @@ DEPENDENCIES
   coffee-rails (~> 4.2)
   devise
   eventmachine
+  exifr
   facebook-messenger
+  fastimage
   faye-websocket
   google-api-client (~> 0.9)
   httpclient

@@ -3,7 +3,6 @@ class CreateFeyKunAiInquiryTweetImages < ActiveRecord::Migration[5.1]
     create_table :fey_kun_ai_inquiry_tweet_images do |t|
       t.string :inquiry_tweet_id, null: false
       t.string :image_url, null: false
-      t.string :file_path
       t.text :exifs
       t.string :checksum, null: false
       t.text :output

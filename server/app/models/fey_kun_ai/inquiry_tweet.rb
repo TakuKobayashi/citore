@@ -69,7 +69,12 @@ class FeyKunAi::InquiryTweet < TwitterRecord
         []
       end
     end
-    images = image_urls.map{|url| FeyKunAi::InquiryTweetImage.new(inquiry_tweet_id: self.id, image_url: url, checksum: "") }
+    images = image_urls.map do |url|
+      image = FeyKunAi::InquiryTweetImage.new(inquiry_tweet_id: self.id, image_url: url)
+      Rails.logger.debug url
+      image.set_image_meta_data
+      image
+    end
     FeyKunAi::InquiryTweetImage.import!(images)
   end
 end

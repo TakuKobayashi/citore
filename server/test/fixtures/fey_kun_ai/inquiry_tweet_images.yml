@@ -5,7 +5,6 @@
 #  id               :integer          not null, primary key
 #  inquiry_tweet_id :string(255)      not null
 #  image_url        :string(255)      not null
-#  file_path        :string(255)
 #  exifs            :text(65535)
 #  checksum         :string(255)      not null
 #  output           :text(65535)

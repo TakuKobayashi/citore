@@ -48,7 +48,7 @@ class ImageMetum < ApplicationRecord
     ".bmp", #BMP
   ]
 
-  def match_image_filename(filepath)
+  def self.match_image_filename(filepath)
     paths = filepath.split("/")
     imagefile_name = paths.detect{|p| IMAGE_FILE_EXTENSIONS.any?{|ie| p.include?(ie)} }
     return "" if imagefile_name.blank?
@@ -70,6 +70,13 @@ class ImageMetum < ApplicationRecord
     else
       return self.src
     end
+  end
+
+  def save_filename
+    if original_filename.present?
+      return original_filename
+    end
+    return SecureRandom.hex
   end
 
   def self.crawl_images!(url:, start_page: 1, end_page: 1, filter: nil, request_method: :get)
@@ -100,19 +107,27 @@ class ImageMetum < ApplicationRecord
         title = d.text
       end
       image_url = Addressable::URI.parse(d[:src])
-      if image_url.host.blank?
-        from_url = Addressable::URI.parse(from_site_url.to_s)
-        image_url.host = from_url.host.to_s
+      from_url = Addressable::URI.parse(from_site_url.to_s)
+      if image_url.scheme.blank?
+        image_url.scheme = from_url.scheme.to_s
       end
-      images << self.new(src: image_url.to_s, title: title.to_s, from_site_url: from_site_url)
+      if image_url.host.blank?
+        image_url.host = from_url.host
+      end
+      images << self.new(src: image_url.to_s, title: title.to_s, original_filename: self.match_image_filename(image_url.to_s), from_site_url: from_site_url)
     end
     return images
   end
 
-  def download_tempfile
+  def download_binary
     aurl = Addressable::URI.parse(URI.unescape(self.src))
     uri = URI.parse(aurl.to_s)
-    return uri.open
+    return uri.open.read
+  end
+
+  def can_download?
+    aurl = Addressable::URI.parse(URI.unescape(self.src))
+    return aurl.scheme.present? && aurl.host.present?
   end
 
   def save_to_s3!
@@ -121,7 +136,7 @@ class ImageMetum < ApplicationRecord
     end
     aurl = Addressable::URI.parse(URI.unescape(self.src))
     uri = URI.parse(aurl.to_s)
-    self.original_filename = self.match_image_filename(aurl.to_s)
+    self.original_filename = self.class.match_image_filename(aurl.to_s)
     self.filename = SecureRandom.hex + File.extname(self.original_filename)
     s3 = Aws::S3::Client.new
     filepath = self.s3_file_image_root + self.filename

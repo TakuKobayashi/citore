@@ -56,33 +56,25 @@ ActiveAdmin.register_page "ImageCrawler" do
     url = params[:image][:crawl_url]
     start_page = params[:image][:start_page_num].to_i
     end_page = params[:image][:end_page_num].to_i
-    images = []
-    (start_page.to_i..end_page.to_i).each do |page|
-      address_url = Addressable::URI.parse(url % page.to_s)
-      doc = ApplicationRecord.request_and_parse_html(address_url.to_s, params[:image][:request_method])
-      if params[:image][:filter].present?
-        doc = doc.css(params[:image][:filter])
-      end
-      doc.css("img").each do |d|
-        images << ImageMetum.new(type: params[:image][:target_class], title: d[:title].to_s, url: d[:src], from_site_url: address_url.to_s)
-      end
+    if params[:image][:target_class].blank?
+      clazz = ImageMetum
+    else
+      clazz = params[:image][:target_class].constantize
     end
-    ImageMetum.import(images, on_duplicate_key_update: [:type, :title])
+    images = clazz.crawl_images!(url: url, start_page: start_page, end_page: end_page, filter: params[:image][:filter], request_method: params[:image][:request_method])
     redirect_to(admin_imagecrawler_path, notice: "#{url}から #{images.size}件の画像を取得しました")
   end
 
   page_action :parse_and_save_html_file, method: :post do
     html_file = params[:image][:html_file]
-    columns_dom = params[:image][:columns] || {}
-    doc = doc = Nokogiri::HTML.parse(html_file.read.to_s)
-    if params[:image][:filter].present?
-      doc = doc.css(params[:image][:filter])
+    doc = Nokogiri::HTML.parse(html_file.read.to_s)
+    if params[:image][:target_class].blank?
+      clazz = ImageMetum
+    else
+      clazz = params[:image][:target_class].constantize
     end
-    images = []
-    doc.css("img").each do |d|
-      images << ImageMetum.new(type: params[:image][:target_class], title: d[:title].to_s, url: d[:src])
-    end
-    ImageMetum.import(images, on_duplicate_key_update: [:type, :title])
+    images = clazz.generate_objects_from_parsed_html(doc: doc, filter: params[:image][:filter])
+    clazz.import(images, on_duplicate_key_update: [:title])
     redirect_to(admin_imagecrawler_path, notice: "#{html_file.original_filename}から #{images.size}件の画像を取得しました")
   end
 

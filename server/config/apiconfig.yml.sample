@@ -11,6 +11,12 @@ twitter:
     bot:
       access_token_key:
       access_token_secret:
+  fey_kun_ai:
+    consumer_key:
+    consumer_secret:
+    bot:
+      access_token_key:
+      access_token_secret:
 
 aitalk:
   username:

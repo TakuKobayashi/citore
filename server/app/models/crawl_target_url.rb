@@ -36,7 +36,6 @@ class CrawlTargetUrl < ApplicationRecord
     aurl = Addressable::URI.parse(url)
     return CrawlTargetUrl.create!({
       source_type: target_class_name,
-      path: aurl.path,
       title: title.to_s,
       crawl_from_keyword: from_url,
       protocol: aurl.scheme.to_s,

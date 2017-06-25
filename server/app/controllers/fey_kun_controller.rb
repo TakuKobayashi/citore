@@ -1,5 +1,6 @@
 class FeyKunController < BaseController
   protect_from_forgery
+  layout "fey_kun_layout"
 
   def report
   end

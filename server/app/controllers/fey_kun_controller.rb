@@ -1,4 +1,6 @@
 class FeyKunController < BaseController
+  protect_from_forgery
+
   def report
   end
 

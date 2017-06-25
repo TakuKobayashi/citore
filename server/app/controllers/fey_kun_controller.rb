@@ -22,7 +22,11 @@ class FeyKunController < BaseController
       config.access_token_secret = apiconfig["twitter"]["fey_kun_ai"]["bot"]["access_token_secret"]
     end
 
-    rest_client.update_with_media("@#{image.tweet.twitter_user_name}\n#{image.tweet_text}", [image.s3_object_file_url, image.s3_error_file_url], {in_reply_to_status_id: image.tweet.tweet_id})
+    [image.s3_object_file_url, image.s3_error_file_url].each do |img|
+      open(img) do |tmp|
+        rest_client.update_with_media("@#{image.tweet.twitter_user_name}\n#{image.tweet_text}", tmp, {in_reply_to_status_id: image.tweet.tweet_id})
+      end
+    end
     head(:ok)
   end
 end

@@ -8,6 +8,7 @@
 #  exifs            :text(65535)
 #  checksum         :string(255)      not null
 #  output           :text(65535)
+#  state            :integer          default("standby"), not null
 #
 # Indexes
 #
@@ -15,10 +16,20 @@
 #
 
 class FeyKunAi::InquiryTweetImage < TwitterRecord
+  enum state: [:standby, :analizing, :complete]
   serialize :exifs, JSON
   serialize :output, JSON
 
   belongs_to :tweet, class_name: 'FeyKunAi::InquiryTweet', foreign_key: :inquiry_tweet_id, required: false
+
+  def request_analize!
+    client = HTTPClient.new
+    client.set_auth("http://52.191.168.217:80", "mehdi", "test")
+    response = client.post("http://52.191.168.217:80/request_analysis/api", {"image_id" => self.id.to_s, "image_url" => self.image_url.to_s}.to_json, {"Content-Type" => "application/json"})
+    if response.ok?
+      self.analizing!
+    end
+  end
 
   def set_image_meta_data
     file_ext = File.extname(self.image_url).downcase

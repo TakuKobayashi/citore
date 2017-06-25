@@ -8,6 +8,7 @@
 #  exifs            :text(65535)
 #  checksum         :string(255)      not null
 #  output           :text(65535)
+#  state            :integer          default("standby"), not null
 #
 # Indexes
 #

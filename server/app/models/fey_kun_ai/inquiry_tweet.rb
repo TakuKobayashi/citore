@@ -77,4 +77,23 @@ class FeyKunAi::InquiryTweet < TwitterRecord
     end
     FeyKunAi::InquiryTweetImage.import!(images)
   end
+
+  def check_and_request_analize
+    if FeyKunAi::InquiryTweetImage.analizing.exists?
+      return false
+    end
+    is_exist_analize = false
+    standby_image = self.images.standby.first
+    if standby_image.present?
+      is_exist_analize = true
+      standby_image.request_analize!
+    else
+      quoted_standby = quoted_source.images.standby.first
+      if quoted_standby.present?
+        is_exist_analize = true
+        quoted_standby.request_analize!
+      end
+    end
+    return is_exist_analize
+  end
 end

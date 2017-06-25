@@ -18,9 +18,11 @@ class Tools::ImageCrawlController < BaseController
     Zip::OutputStream.open(tempfile.path) do |stream|
       images.each do |image|
         next unless image.can_download?
+        response = image.download_image
+        next if (response.status >= 300 && response.status != 304) || !response.headers["Content-Type"].to_s.include?("image")
         stream.put_next_entry("image/#{image.save_filename}")
-        stream.print(image.download_binary)
-      end  
+        stream.print(response.body)
+      end
     end
 
     send_file tempfile.path, :type => 'application/zip',:disposition => 'attachment', :filename => "#{Time.now.strftime("%Y%m%d_%H%M%S")}.zip"

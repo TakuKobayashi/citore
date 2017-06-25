@@ -114,15 +114,17 @@ class ImageMetum < ApplicationRecord
       if image_url.host.blank?
         image_url.host = from_url.host
       end
+      next if image_url.scheme.blank? && image_url.host.blank? && image_url.to_s.size > 256
       images << self.new(src: image_url.to_s, title: title.to_s, original_filename: self.match_image_filename(image_url.to_s), from_site_url: from_site_url)
     end
     return images
   end
 
-  def download_binary
+  def download_image
     aurl = Addressable::URI.parse(URI.unescape(self.src))
-    uri = URI.parse(aurl.to_s)
-    return uri.open.read
+    client = HTTPClient.new
+    response = client.get(aurl.to_s)
+    return response
   end
 
   def can_download?

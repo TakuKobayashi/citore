@@ -34,8 +34,12 @@ class FeyKunAi::InquiryTweetImage < TwitterRecord
     self.complete!
   end
 
-  def tweet_text
-    return "Fake Rate:" + self.output["error_ratio"].to_s + " " + self.output["caption"].to_s + "\n"
+  def tweet_text(key, index)
+    hash = {
+      "error_ratio" => "Fey-kun Analysis Result (#{index}/2):\nNoise Ratio:" + self.output[key].to_s,
+      "caption" => "Fey-kun Analysis Result (#{index}/2):\nCaption:" + self.output[key].to_s
+    }
+    return hash[key]
   end
 
   def set_image_meta_data

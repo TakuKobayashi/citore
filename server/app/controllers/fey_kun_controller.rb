@@ -2,7 +2,7 @@ class FeyKunController < BaseController
   def report
   end
 
-  def analize
+  def analized
     result = JSON.parse(request.body.read, {:symbolize_names => true})
 
     logger.info result

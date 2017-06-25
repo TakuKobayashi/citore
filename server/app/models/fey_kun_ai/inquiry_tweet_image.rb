@@ -39,4 +39,18 @@ class FeyKunAi::InquiryTweetImage < TwitterRecord
     self.checksum = Digest::MD5.file(filepath)
     File.delete(filepath)
   end
+
+  IMAGE_S3_FILE_ROOT = "project/fey_kun/images/"
+
+  def self.upload_s3(file)
+    s3 = Aws::S3::Client.new
+    filename = SecureRandom.hex + ".png"
+    filepath = IMAGE_S3_FILE_ROOT + filename
+    s3.put_object(bucket: "taptappun",body: file.read, key: filepath, acl: "public-read")
+    return filename
+  end
+
+  def s3_file_url
+    return "https://taptappun.s3.amazonaws.com/" + IMAGE_S3_FILE_ROOT + self.out_put.object_image_name
+  end
 end

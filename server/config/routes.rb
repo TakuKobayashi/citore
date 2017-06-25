@@ -14,6 +14,11 @@ Rails.application.routes.draw do
     get 'citore'
   end
 
+  resource :fey_kun, controller: :fey_kun, only: [] do
+    get 'report'
+    post 'analized'
+  end
+
   resource :variable_template, controller: :variable_template, only: [] do
     get 'warakatsu_apk_download'
     get 'citore_apk_download'

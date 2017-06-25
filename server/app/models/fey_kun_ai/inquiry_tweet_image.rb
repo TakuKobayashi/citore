@@ -68,7 +68,11 @@ class FeyKunAi::InquiryTweetImage < TwitterRecord
     return filename
   end
 
-  def s3_file_url
-    return "https://taptappun.s3.amazonaws.com/" + IMAGE_S3_FILE_ROOT + self.out_put.object_image_name
+  def s3_object_file_url
+    return "https://taptappun.s3.amazonaws.com/" + IMAGE_S3_FILE_ROOT + self.out_put["object_image_name"]
+  end
+
+  def s3_error_file_url
+    return "https://taptappun.s3.amazonaws.com/" + IMAGE_S3_FILE_ROOT + self.out_put["err_image_name"]
   end
 end

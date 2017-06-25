@@ -14,6 +14,14 @@ class FeyKunController < BaseController
     image.output = image.output.merge(JSON.parse(params[:result]).merge(object_image_name: object_image_name, err_image_name: err_image_name))
     image.update!(state: :complete)
 
+    rest_client = Twitter::REST::Client.new do |config|
+      config.consumer_key        = apiconfig["twitter"]["fey_kun_ai"]["consumer_key"]
+      config.consumer_secret     = apiconfig["twitter"]["fey_kun_ai"]["consumer_secret"]
+      config.access_token        = apiconfig["twitter"]["fey_kun_ai"]["bot"]["access_token_key"]
+      config.access_token_secret = apiconfig["twitter"]["fey_kun_ai"]["bot"]["access_token_secret"]
+    end
+
+    rest_client.update("@#{image.tweet.twitter_user_name}\n#{image.tweet_text}", {in_reply_to_status_id: image.tweet.tweet_id})
     head(:ok)
   end
 end

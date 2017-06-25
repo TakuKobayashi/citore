@@ -25,10 +25,9 @@ class FeyKunAi::InquiryTweetImage < TwitterRecord
   def request_analize!
     client = HTTPClient.new
     client.set_auth("http://52.191.168.217:80", "mehdi", "test")
+    self.analizing!
     response = client.post("http://52.191.168.217:80/request_analysis/api", {"image_id" => self.id.to_s, "image_url" => self.image_url.to_s}.to_json, {"Content-Type" => "application/json"})
-    if response.ok?
-      self.analizing!
-    end
+    self.complete!
   end
 
   def set_image_meta_data

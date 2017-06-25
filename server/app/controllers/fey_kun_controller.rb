@@ -5,9 +5,6 @@ class FeyKunController < BaseController
   end
 
   def analized
-  	body = request.body.read
-  	logger.info body
-
     logger.info params
     image = FeyKunAi::InquiryTweetImage.find_or_initialize_by(id: params[:image_id])
     image.output ||= {}

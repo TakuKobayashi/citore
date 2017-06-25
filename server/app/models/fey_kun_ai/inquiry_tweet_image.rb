@@ -24,10 +24,18 @@ class FeyKunAi::InquiryTweetImage < TwitterRecord
 
   def request_analize!
     client = HTTPClient.new
+    client.connect_timeout = 600
+    client.send_timeout    = 600
+    client.receive_timeout = 600
+
     client.set_auth("http://52.191.168.217:80", "mehdi", "test")
     self.analizing!
     response = client.post("http://52.191.168.217:80/request_analysis/api", {"image_id" => self.id.to_s, "image_url" => self.image_url.to_s}.to_json, {"Content-Type" => "application/json"})
     self.complete!
+  end
+
+  def tweet_text
+    return "Fake Rate:" + self.output["error_ratio"].to_s + " " + self.output["caption"].to_s + "\n"
   end
 
   def set_image_meta_data

@@ -14,9 +14,14 @@ Rails.application.routes.draw do
     get 'citore'
   end
 
-  resource :fey_kun, controller: :fey_kun, only: [] do
-    get 'report'
-    post 'analized'
+  resources :fey_kun, controller: :fey_kun, only: [] do
+    member do
+      get 'report'
+    end
+
+    collection do
+      post 'analized'
+    end
   end
 
   resource :variable_template, controller: :variable_template, only: [] do

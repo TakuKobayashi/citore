@@ -30,33 +30,35 @@
   <!-- One -->
   <section id="two">
     <div class="inner">
-      <!-- Request Pic -->
-      <section id="one" class="tiles">
-        <span class="image">
-          <header class="major">
-            <h3><a>投稿画像</a></h3>
-            <p>【ユーザー名】が投稿した結果</p>
-          </header>
-          <%= image_tag("feykun/fake1.jpg") %>
-        </span></br>
-        <span class="image">
-          <header class="major">
-            <h3><a >Object認識画像</a></h3>
-            <p>ニューラルネットワークを使用したDeep learningでの結果</p>
-          </header>
-          <%= image_tag("feykun/fake2.png") %>
-        </span>
-        <span class="image">
-          <header class="major">
-            <h3><a>ElA（Error level analysis）画像</a></h3>
-            <p>Open CVを使用したエラーレベル分析結果。Object認識画像</p>
-          </header>
-          <%= image_tag("feykun/fake3.jpg") %>
-        </span>
-        <span class="image">
-          <header class="major">
-          <%= image_tag("feykun/logo_noname.png") %>
-        </span>
+      <% @tweet.images.each do |image| %>
+        <!-- Request Pic -->
+        <section id="one" class="tiles">
+          <span class="image">
+            <header class="major">
+              <h3><a>投稿画像</a></h3>
+              <p>【<%= @tweet.try(:twitter_user_name) %>】が投稿した結果</p>
+            </header>
+            <%= image_tag(image.image_url) %>
+          </span></br>
+          <span class="image">
+            <header class="major">
+              <h3><a >Object認識画像</a></h3>
+              <p>ニューラルネットワークを使用したDeep learningでの結果</p>
+            </header>
+            <%= image_tag(image.s3_object_file_url) %>
+          </span>
+          <span class="image">
+            <header class="major">
+              <h3><a>ElA（Error level analysis）画像</a></h3>
+              <p>Open CVを使用したエラーレベル分析結果。Object認識画像</p>
+            </header>
+            <%= image_tag(image.s3_error_file_url) %>
+          </span>
+          <span class="image">
+            <header class="major">
+            <%= image_tag("feykun/logo_noname.png") %>
+          </span>
+        <% end %>
       </section>
     </div>
 
@@ -77,7 +79,7 @@
            <td>Ante turpis integer aliquet porttitor.</td>
            <td>29.99</td>
          </tr>
-	   </tbody>
+	     </tbody>
        <tfoot>
          <tr>
            <td colspan="2"></td>

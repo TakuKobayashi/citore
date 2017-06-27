@@ -3,6 +3,7 @@ class FeyKunController < BaseController
   layout "fey_kun_layout"
 
   def report
+    @tweet = FeyKunAi::InquiryTweet.find_by(id: params[:id])
   end
 
   def analized

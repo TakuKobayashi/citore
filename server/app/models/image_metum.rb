@@ -48,6 +48,8 @@ class ImageMetum < ApplicationRecord
     ".bmp", #BMP
   ]
 
+  CRAWL_IMAGE_ROOT_PATH = "project/crawler/images/"
+
   def self.match_image_filename(filepath)
     paths = filepath.split("/")
     imagefile_name = paths.detect{|p| IMAGE_FILE_EXTENSIONS.any?{|ie| p.include?(ie)} }
@@ -56,12 +58,12 @@ class ImageMetum < ApplicationRecord
     return imagefile_name.match(/(.+?#{ext})/).to_s
   end
 
-  def s3_file_image_root
-    return ""
+  def self.s3_file_image_root
+    return CRAWL_IMAGE_ROOT_PATH
   end
 
   def s3_file_url
-    return "https://taptappun.s3.amazonaws.com/" + self.s3_file_image_root + self.filename
+    return "https://taptappun.s3.amazonaws.com/" + self.class.s3_file_image_root + self.filename
   end
 
   def file_url
@@ -73,8 +75,8 @@ class ImageMetum < ApplicationRecord
   end
 
   def save_filename
-    if original_filename.present?
-      return original_filename
+    if self.original_filename.present?
+      return self.original_filename
     end
     return SecureRandom.hex
   end
@@ -108,28 +110,45 @@ class ImageMetum < ApplicationRecord
       end
       image_url = Addressable::URI.parse(d[:src])
       from_url = Addressable::URI.parse(from_site_url.to_s)
-      if image_url.scheme.blank?
-        image_url.scheme = from_url.scheme.to_s
+      # base64encodeされたものはschemeがdataになる
+      if image_url.scheme != "data"
+        if image_url.blank?
+          image_url.scheme = from_url.scheme.to_s
+        end
+        if image_url.host.blank?
+          image_url.host = from_url.host
+        end
       end
-      if image_url.host.blank?
-        image_url.host = from_url.host
+      # 画像じゃないものも含まれていることもあるので分別する
+      fi = FastImage.new(image_url.to_s)
+      next if fi.type.blank?
+      image = self.new(title: title.to_s, from_site_url: from_site_url)
+      if image_url.scheme == "data"
+        image_binary =  Base64.decode64(image_url.to_s.gsub(/data:image\/.+;base64\,/, ""))
+        image.filename = SecureRandom.hex + ".#{fi.type.to_s}"
+        uploaded_path = self.upload_s3(image_binary, image.filename)
+        image.src = "https://taptappun.s3.amazonaws.com/" + uploaded_path
       end
-      next if image_url.scheme.blank? && image_url.host.blank? && image_url.to_s.size > 256
-      images << self.new(src: image_url.to_s, title: title.to_s, original_filename: self.match_image_filename(image_url.to_s), from_site_url: from_site_url)
+        image.src = image_url.to_s
+      end
+      image.original_filename = self.match_image_filename(image.src.to_s)
+      images << image
     end
     return images
   end
 
-  def download_image
+  def download_image_response
     aurl = Addressable::URI.parse(URI.unescape(self.src))
     client = HTTPClient.new
     response = client.get(aurl.to_s)
     return response
   end
 
-  def can_download?
-    aurl = Addressable::URI.parse(URI.unescape(self.src))
-    return aurl.scheme.present? && aurl.host.present?
+  def self.upload_s3(binary, filename)
+    s3 = Aws::S3::Client.new
+    filepath = self.s3_file_image_root + filename
+    s3.put_object(bucket: "taptappun",body: binary, key: filepath, acl: "public-read")
+    return filepath
   end
 
   def save_to_s3!
@@ -137,17 +156,15 @@ class ImageMetum < ApplicationRecord
       return false
     end
     aurl = Addressable::URI.parse(URI.unescape(self.src))
-    uri = URI.parse(aurl.to_s)
+    response = download_image_response
     self.original_filename = self.class.match_image_filename(aurl.to_s)
     self.filename = SecureRandom.hex + File.extname(self.original_filename)
-    s3 = Aws::S3::Client.new
-    filepath = self.s3_file_image_root + self.filename
-    s3.put_object(bucket: "taptappun",body: uri.open.read, key: filepath, acl: "public-read")
+    self.class.upload_s3(response.body, filename)
     save!
   end
 
   def convert_to_base64
-    filepath = self.s3_file_image_root + self.filename
+    filepath = self.class.s3_file_image_root + self.filename
     ext = File.extname(self.filename)
     s3 = Aws::S3::Client.new
     binary = s3.get_object(bucket: "taptappun",key: filepath)

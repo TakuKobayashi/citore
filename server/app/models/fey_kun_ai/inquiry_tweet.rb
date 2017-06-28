@@ -28,7 +28,7 @@
 class FeyKunAi::InquiryTweet < TwitterRecord
 
   belongs_to :quoted_source, class_name: 'FeyKunAi::InquiryTweet', foreign_key: :tweet_quoted_id, required: false
-  has_many :quoted, class_name: 'FeyKunAi::InquiryTweet', foreign_key: :tweet_quoted_id
+  has_many :quoted_tweets, class_name: 'FeyKunAi::InquiryTweet', foreign_key: :tweet_quoted_id
   has_many :images, class_name: 'FeyKunAi::InquiryTweetImage', foreign_key: :inquiry_tweet_id
 
   before_create do
@@ -39,14 +39,15 @@ class FeyKunAi::InquiryTweet < TwitterRecord
     inquiry_tweet = FeyKunAi::InquiryTweet.find_or_initialize_by(tweet_id: tweet.id)
     transaction do
       if tweet.quoted_tweet?
-        quoted_tweet = FeyKunAi::InquiryTweet.find_or_initialize_by(tweet_id: tweet.quoted_tweet.id)
+        quoted_tweet_status = tweet.quoted_tweet
+        quoted_tweet = FeyKunAi::InquiryTweet.find_or_initialize_by(tweet_id: quoted_tweet_status.id)
         quoted_tweet.update!({
-          twitter_user_id: tweet.quoted_tweet.user.id,
-          twitter_user_name: tweet.quoted_tweet.user.screen_name,
-          tweet: ApplicationRecord.basic_sanitize(tweet.quoted_tweet.text),
-          tweet_created_at: tweet.quoted_tweet.created_at
-        }.merge(self.extract_location_hash(tweet: tweet.quoted_tweet)))
-        quoted_tweet.generate_images!(tweet: tweet.quoted_tweet)
+          twitter_user_id: quoted_tweet_status.user.id,
+          twitter_user_name: quoted_tweet_status.user.screen_name,
+          tweet: ApplicationRecord.basic_sanitize(quoted_tweet_status.text),
+          tweet_created_at: quoted_tweet_status.created_at
+        }.merge(self.extract_location_hash(tweet: quoted_tweet_status)))
+        quoted_tweet.generate_images!(tweet: quoted_tweet_status)
       end
       inquiry_tweet.update!({
         twitter_user_id: tweet.user.id,
@@ -87,7 +88,6 @@ class FeyKunAi::InquiryTweet < TwitterRecord
     end
     images = image_urls.map do |url|
       image = FeyKunAi::InquiryTweetImage.new(inquiry_tweet_id: self.id, image_url: url)
-      Rails.logger.debug url
       image.set_image_meta_data
       image
     end
@@ -100,9 +100,9 @@ class FeyKunAi::InquiryTweet < TwitterRecord
       image.request_analize!
     end
     if self.quoted_source.present?
-      quoteds_standby = self.quoted_source.images.standby
-      quoteds_standby.each do |image|
-        image.request_analize!
+      quoted_standby_images = self.quoted_source.images.standby
+      quoted_standby_images.each do |quoted_image|
+        quoted_image.request_analize!
       end
     end
   end

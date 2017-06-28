@@ -40,24 +40,40 @@ class FeyKunAi::InquiryTweet < TwitterRecord
     transaction do
       if tweet.quoted_tweet?
         quoted_tweet = FeyKunAi::InquiryTweet.find_or_initialize_by(tweet_id: tweet.quoted_tweet.id)
-        quoted_tweet.update!(
+        quoted_tweet.update!({
           twitter_user_id: tweet.quoted_tweet.user.id,
           twitter_user_name: tweet.quoted_tweet.user.screen_name,
           tweet: ApplicationRecord.basic_sanitize(tweet.quoted_tweet.text),
           tweet_created_at: tweet.quoted_tweet.created_at
-        )
+        }.merge(self.extract_location_hash(tweet: tweet.quoted_tweet)))
         quoted_tweet.generate_images!(tweet: tweet.quoted_tweet)
       end
-      inquiry_tweet.update!(
+      inquiry_tweet.update!({
         twitter_user_id: tweet.user.id,
         twitter_user_name: tweet.user.screen_name,
         tweet: ApplicationRecord.basic_sanitize(tweet.text),
         tweet_created_at: tweet.created_at,
         tweet_quoted_id: quoted_tweet.try(:id)
-      )
+      }.merge(self.extract_location_hash(tweet: tweet)))
       inquiry_tweet.generate_images!(tweet: tweet)
     end
     return inquiry_tweet
+  end
+
+  def self.extract_location_hash(tweet:)
+    result = {}
+    if tweet.place?
+      lonlat_sum = tweet.place.bounding_box.coordinates.inject([0, 0]){|result, lonlat| result[0] += lonlat[0]; result[1] += lonlat[1]; }
+      result[:place_name] = tweet.place.full_name
+      result[:lat] = lonlat_sum[1] / lonlat_sum.size.to_f
+      result[:lon] = lonlat_sum[0] / lonlat_sum.size.to_f
+    end
+    if tweet.geo?
+      latlon_sum = tweet.geo.coordinates.inject([0, 0]){|result, latlon| result[0] += latlon[0]; result[1] += latlon[1]; }
+      result[:lat] = latlon_sum[0] / latlon_sum.size.to_f
+      result[:lon] = latlon_sum[1] / latlon_sum.size.to_f
+    end
+    return result
   end
 
   def generate_images!(tweet:)

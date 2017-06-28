@@ -128,7 +128,7 @@ class ImageMetum < ApplicationRecord
         image.filename = SecureRandom.hex + ".#{fi.type.to_s}"
         uploaded_path = self.upload_s3(image_binary, image.filename)
         image.src = "https://taptappun.s3.amazonaws.com/" + uploaded_path
-      end
+      else
         image.src = image_url.to_s
       end
       image.original_filename = self.match_image_filename(image.src.to_s)

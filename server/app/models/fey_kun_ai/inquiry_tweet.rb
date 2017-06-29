@@ -97,12 +97,12 @@ class FeyKunAi::InquiryTweet < TwitterRecord
   def check_and_request_analize
     standby_images = self.images.standby
     standby_images.each do |image|
-      image.request_analize!
+      FeyKunJob.perform_later(image)
     end
     if self.quoted_source.present?
       quoted_standby_images = self.quoted_source.images.standby
       quoted_standby_images.each do |quoted_image|
-        quoted_image.request_analize!
+        FeyKunJob.perform_later(quoted_image)
       end
     end
   end

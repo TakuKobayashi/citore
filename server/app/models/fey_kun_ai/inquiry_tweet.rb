@@ -38,6 +38,13 @@ class FeyKunAi::InquiryTweet < TwitterRecord
   def self.generate_tweet!(tweet:)
     inquiry_tweet = FeyKunAi::InquiryTweet.find_or_initialize_by(tweet_id: tweet.id)
     transaction do
+      inquiry_tweet.update!({
+        twitter_user_id: tweet.user.id,
+        twitter_user_name: tweet.user.screen_name,
+        tweet: ApplicationRecord.basic_sanitize(tweet.text),
+        tweet_created_at: tweet.created_at
+      }.merge(self.extract_location_hash(tweet: tweet)))
+      inquiry_tweet.generate_images!(tweet: tweet, reply_to_tweet: inquiry_tweet.id)
       if tweet.quoted_tweet?
         quoted_tweet_status = tweet.quoted_tweet
         quoted_tweet = FeyKunAi::InquiryTweet.find_or_initialize_by(tweet_id: quoted_tweet_status.id)
@@ -47,16 +54,9 @@ class FeyKunAi::InquiryTweet < TwitterRecord
           tweet: ApplicationRecord.basic_sanitize(quoted_tweet_status.text),
           tweet_created_at: quoted_tweet_status.created_at
         }.merge(self.extract_location_hash(tweet: quoted_tweet_status)))
-        quoted_tweet.generate_images!(tweet: quoted_tweet_status)
+        quoted_tweet.generate_images!(tweet: quoted_tweet_status, reply_to_tweet: inquiry_tweet.id)
       end
-      inquiry_tweet.update!({
-        twitter_user_id: tweet.user.id,
-        twitter_user_name: tweet.user.screen_name,
-        tweet: ApplicationRecord.basic_sanitize(tweet.text),
-        tweet_created_at: tweet.created_at,
-        tweet_quoted_id: quoted_tweet.try(:id)
-      }.merge(self.extract_location_hash(tweet: tweet)))
-      inquiry_tweet.generate_images!(tweet: tweet)
+      inquiry_tweet.update!(tweet_quoted_id: quoted_tweet.try(:id))
     end
     return inquiry_tweet
   end
@@ -77,7 +77,7 @@ class FeyKunAi::InquiryTweet < TwitterRecord
     return result
   end
 
-  def generate_images!(tweet:)
+  def generate_images!(tweet:, reply_to_tweet:)
     image_urls = tweet.media.flat_map do |m|
       case m
       when Twitter::Media::Photo
@@ -87,7 +87,7 @@ class FeyKunAi::InquiryTweet < TwitterRecord
       end
     end
     images = image_urls.map do |url|
-      image = FeyKunAi::InquiryTweetImage.new(inquiry_tweet_id: self.id, image_url: url)
+      image = FeyKunAi::InquiryTweetImage.new(inquiry_tweet_id: self.id, image_url: url, reply_to_tweet_id: reply_to_tweet.id)
       image.set_image_meta_data
       image
     end

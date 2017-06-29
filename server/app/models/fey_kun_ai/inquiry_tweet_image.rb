@@ -22,6 +22,7 @@ class FeyKunAi::InquiryTweetImage < TwitterRecord
   serialize :output, JSON
 
   belongs_to :tweet, class_name: 'FeyKunAi::InquiryTweet', foreign_key: :inquiry_tweet_id, required: false
+  belongs_to :reply_to_tweet, class_name: 'FeyKunAi::InquiryTweet', foreign_key: :reply_to_tweet_id, required: false
 
   def request_analize!
     client = HTTPClient.new

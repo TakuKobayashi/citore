@@ -434,3 +434,23 @@ ja:
       long: "%Y年%m月%d日(%a) %H時%M分%S秒 %z"
       short: "%y/%m/%d %H:%M"
     pm: 午後
+  homepage:
+    header:
+      title: タプンページ
+      profile: お前誰よ?
+      products: 制作物
+      community: コミュニティー
+      tools: WebツールやAPI
+      contact: お問い合わせ
+      application: アプリ系
+      web: Web系
+      iot: IoT系
+      vrarmr: VR・AR・MR系
+      bot: TwitterやLineなどのBot系
+      other: その他
+    top:
+
+    profile: 
+    tools:
+    products:
+    schesule:

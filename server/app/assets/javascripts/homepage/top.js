@@ -17,24 +17,33 @@ $(document).ready(function(){
   var canvas  = document.getElementById('bgimage');
   var ctx = canvas.getContext('2d');
   var imagepathes = $('.top-mv-visual-bg-item').data('imagepathes');
-  var width = $('#bgimage').width();
-  var height = $('#bgimage').height();
-  console.log(width);
-  console.log(height);
-  $('#bgimage').attr('width', width);
-  $('#bgimage').attr('height', height);
+
+  var resizeCanvas = function(){
+  	console.log(images.length);
+    var width = window.innerWidth;
+    var height = window.innerHeight;
+    $('#bgimage').attr('width', width);
+    $('#bgimage').attr('height', height);
+    if(images.length > 0){
+      drawImage(ctx, images[bgRenderIndex]);
+    }
+  }
+
+  resizeCanvas();
+
   for(var i = 0;i < imagepathes.length;++i){
   	imageLoad(imagepathes[i], function(image){
+  	  if(images.length == 0){
+  	    drawImage(ctx, image);
+  	  }
       images.push(image);
-      if(i == 0){
-        drawImage(ctx, image)
-      }
   	});
-      /* 画像を描画 */
   }
+  window.addEventListener('resize', resizeCanvas, false);
+
   setInterval(function(){
   	bgRenderIndex++;
   	bgRenderIndex = bgRenderIndex % images.length
-    ctx.drawImage(images[bgRenderIndex], 0, 0);
+    drawImage(ctx, images[bgRenderIndex]);
   }, 3000);
 });

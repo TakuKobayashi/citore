@@ -6,14 +6,14 @@
     <title>TappunPage</title>
     <%= csrf_meta_tags %>
     <%= stylesheet_link_tag 'homepage/foundation.css' %>
+    <%= stylesheet_link_tag 'homepage/main.css' %>
     <%= javascript_include_tag 'libraries/jquery.min.js' %>
   </head>
 
   <body>
     <div class="top-bar">
-      <div class="top-bar-left">
+      <div class="top-bar-right">
         <ul class="dropdown menu" data-dropdown-menu>
-          <li class="menu-text"><%= t("homepage.header.title") %></li>
           <li><a href="#"><%= t("homepage.header.profile") %></a></li>
           <li class="has-submenu">
             <a href="#"><%= t("homepage.header.products") %></a>

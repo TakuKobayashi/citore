@@ -1,0 +1,29 @@
+.top-mv {
+  position:
+  relative;
+  width: 100%;
+  max-width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.top-mv-visual-bg {
+  position:
+  relative;
+  height: 100%;
+  overflow: hidden;
+}
+
+.top-mv-visual-bg-item {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.top-mv-visual-logo{
+  position: absolute;
+  top: 50%;
+  z-index: 4;
+}

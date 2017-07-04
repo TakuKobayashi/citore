@@ -81,6 +81,16 @@ class FeyKunAi::InquiryTweet < TwitterRecord
       result[:lat] = latlon_sum[0] / latlon_sum.size.to_f
       result[:lon] = latlon_sum[1] / latlon_sum.size.to_f
     end
+    if result.blank?
+      arr = []
+      natto = Natto::MeCab.new
+      natto.parse(tweet.text) do |n|
+        if n.feature.split(",")[2] == "地域"
+          arr << n.surface
+        end
+      end
+      result[:place_name] = arr.join
+    end
     return result
   end
 

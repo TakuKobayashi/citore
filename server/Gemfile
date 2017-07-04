@@ -80,6 +80,8 @@ gem 'fastimage'
 
 gem 'puma_worker_killer'
 
+gem 'geocoder'
+
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 

@@ -31,7 +31,14 @@ class FeyKunAi::InquiryTweet < TwitterRecord
   has_many :quoted_tweets, class_name: 'FeyKunAi::InquiryTweet', foreign_key: :tweet_quoted_id
   has_many :images, class_name: 'FeyKunAi::InquiryTweetImage', foreign_key: :inquiry_tweet_id
 
+  geocoded_by :place_name, latitude: :lat, longitude: :lon
+  reverse_geocoded_by :place_name, latitude: :lat, longitude: :lon
+
+  after_validation :geocode
+  after_validation :reverse_geocode
+
   before_create do
+    self.place_name = Charwidth.normalize(self.place_name)
     self.token = SecureRandom.hex
   end
 

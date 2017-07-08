@@ -44,7 +44,7 @@ wss.on('connection', function (ws) {
 
 var twitterStream = twitterClient.stream('statuses/sample.json');
 twitterStream.on('data', function(event) {
-  if(event.user.lang == "ja"){
+  if(event.user.lang == "ja" && !event.retweeted && !event.favorited){
     connections.forEach(function (con, i) {
       con.send(event.text);
     });

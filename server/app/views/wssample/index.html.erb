@@ -25,14 +25,17 @@
     <script>
       var hostname = window.document.location.hostname;
       var port = 3110;
-      var pathname = window.document.location.pathname;
       var protocol = window.document.location.protocol;
       var url;
       if(protocol.startsWith("https")){
-        url = 'wss://' + hostname + ":" + port + pathname;
+        url = 'wss://' + hostname;
       }else{
-        url = 'ws://' + hostname + ":" + port + pathname;
+        url = 'ws://' + hostname;
       }
+      if(hostname.startsWith("localhost")){
+        url = url + ":" + port;
+      }
+      url = url + "/nodejs"
       var ws = new WebSocket(url);
 
       //socketioを使いserverにconnectする(socketioの場合)

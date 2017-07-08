@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class NodejsControllerTest < ActionDispatch::IntegrationTest
+class WssampleControllerTest < ActionDispatch::IntegrationTest
   # test "the truth" do
   #   assert true
   # end

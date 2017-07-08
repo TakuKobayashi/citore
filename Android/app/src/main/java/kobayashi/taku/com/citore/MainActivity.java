@@ -33,14 +33,20 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Objects;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.WebSocket;
 import okhttp3.ResponseBody;
+import okhttp3.WebSocketListener;
+import okio.ByteString;
 
 public class MainActivity extends Activity {
     private static int REQUEST_CODE = 1;
     private TweetVoice mVoice;
     private LoopSpeechRecognizer mLoopSpeechRecognizer;
     private TextToSpeech mTTS;
+    private WebSocket mWebSocket;
     //private EditText mEditText;
     //private TextView mRecordText;
 
@@ -51,6 +57,37 @@ public class MainActivity extends Activity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         ApplicationHelper.requestPermissions(this, REQUEST_CODE);
+
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder().url(Config.WS_ROOT_URL).build();
+        WebSocket ws = client.newWebSocket(request, new WebSocketListener() {
+            @Override
+            public void onOpen(WebSocket webSocket, Response response) {
+                super.onOpen(webSocket, response);
+                mWebSocket = webSocket;
+                Log.d(Config.TAG, "Opend");
+            }
+            @Override
+            public void onMessage(WebSocket webSocket, String text) {
+                Log.d(Config.TAG, "Receiving : " + text);
+            }
+            @Override
+            public void onMessage(WebSocket webSocket, ByteString bytes) {
+                Log.d(Config.TAG, "Receiving bytes : " + bytes.hex());
+            }
+            @Override
+            public void onClosing(WebSocket webSocket, int code, String reason) {
+                webSocket.close(1000, null);
+                mWebSocket = null;
+                Log.d(Config.TAG, "Closing : " + code + " / " + reason);
+            }
+            @Override
+            public void onFailure(WebSocket webSocket, Throwable t, Response response) {
+                Log.d(Config.TAG, "Error : " + t.getMessage());
+            }
+        });
+        client.dispatcher().executorService().shutdown();
+/*
         mTTS = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
@@ -74,6 +111,7 @@ public class MainActivity extends Activity {
                 }
             }
         });
+*/
 
         setContentView(R.layout.activity_main);
 
@@ -122,6 +160,9 @@ public class MainActivity extends Activity {
         if (mTTS != null) {
             // TextToSpeechのリソースを解放する
             mTTS.shutdown();
+        }
+        if(mWebSocket != null){
+            mWebSocket.close(1000, null);
         }
     }
 

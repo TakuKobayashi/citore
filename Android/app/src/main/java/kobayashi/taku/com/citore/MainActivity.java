@@ -58,60 +58,6 @@ public class MainActivity extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         ApplicationHelper.requestPermissions(this, REQUEST_CODE);
 
-        OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder().url(Config.WS_ROOT_URL).build();
-        client.newWebSocket(request, new WebSocketListener() {
-            @Override
-            public void onOpen(WebSocket webSocket, Response response) {
-                super.onOpen(webSocket, response);
-                mWebSocket = webSocket;
-                Log.d(Config.TAG, "Opend");
-            }
-            @Override
-            public void onMessage(WebSocket webSocket, String text) {
-                Log.d(Config.TAG, "Receiving : " + text);
-                if (mTTS.isSpeaking()) {
-                    // 読み上げ中なら特に何もしない。
-                    return;
-                }
-
-                // 読み上げ開始
-                String utteranceId = String.valueOf(this.hashCode());
-                mTTS.speak(text, TextToSpeech.QUEUE_FLUSH, null, utteranceId);
-            }
-            @Override
-            public void onMessage(WebSocket webSocket, ByteString bytes) {
-                Log.d(Config.TAG, "Receiving bytes : " + bytes.hex());
-            }
-            @Override
-            public void onClosing(WebSocket webSocket, int code, String reason) {
-                webSocket.close(1000, null);
-                mWebSocket = null;
-                Log.d(Config.TAG, "Closing : " + code + " / " + reason);
-            }
-            @Override
-            public void onFailure(WebSocket webSocket, Throwable t, Response response) {
-                Log.d(Config.TAG, "Error : " + t.getMessage());
-            }
-        });
-        client.dispatcher().executorService().shutdown();
-
-        mTTS = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if (TextToSpeech.SUCCESS == status) {
-                    Locale locale = Locale.JAPANESE;
-                    if (mTTS.isLanguageAvailable(locale) >= TextToSpeech.LANG_AVAILABLE) {
-                        mTTS.setLanguage(locale);
-                    } else {
-                        Log.d("", "Error SetLocale");
-                    }
-                } else {
-                    Log.d("", "Error Init");
-                }
-            }
-        });
-
         setContentView(R.layout.activity_main);
 
         /*
@@ -156,13 +102,6 @@ public class MainActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mTTS != null) {
-            // TextToSpeechのリソースを解放する
-            mTTS.shutdown();
-        }
-        if(mWebSocket != null){
-            mWebSocket.close(1000, null);
-        }
     }
 
     @Override
@@ -171,7 +110,7 @@ public class MainActivity extends Activity {
             Log.d(Config.TAG, String.valueOf(requestCode));
         }
     }
-
+/*
     private void setupRecordingButtonText(){
         Button recordingButton = (Button) findViewById(R.id.recording_button);
         SharedPreferences sp = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
@@ -181,7 +120,7 @@ public class MainActivity extends Activity {
             recordingButton.setText(getString(R.string.recoarding_start));
         }
     }
-
+*/
     private void changeRecordState(){
         SharedPreferences sp = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
@@ -227,15 +166,83 @@ public class MainActivity extends Activity {
         req.execute(builder.toString());
     }
 
+    private void connectionWebSocket(){
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder().url(Config.WS_ROOT_URL).build();
+        client.newWebSocket(request, new WebSocketListener() {
+            @Override
+            public void onOpen(WebSocket webSocket, Response response) {
+                super.onOpen(webSocket, response);
+                mWebSocket = webSocket;
+                Log.d(Config.TAG, "Opend");
+            }
+            @Override
+            public void onMessage(WebSocket webSocket, String text) {
+                Log.d(Config.TAG, "Receiving : " + text);
+                if (mTTS.isSpeaking()) {
+                    // 読み上げ中なら特に何もしない。
+                    return;
+                }
+
+                // 読み上げ開始
+                String utteranceId = String.valueOf(this.hashCode());
+                mTTS.speak(text, TextToSpeech.QUEUE_FLUSH, null, utteranceId);
+            }
+            @Override
+            public void onMessage(WebSocket webSocket, ByteString bytes) {
+                Log.d(Config.TAG, "Receiving bytes : " + bytes.hex());
+            }
+            @Override
+            public void onClosing(WebSocket webSocket, int code, String reason) {
+                webSocket.close(1000, null);
+                mWebSocket = null;
+                Log.d(Config.TAG, "Closing : " + code + " / " + reason);
+            }
+            @Override
+            public void onFailure(WebSocket webSocket, Throwable t, Response response) {
+                Log.d(Config.TAG, "Error : " + t.getMessage());
+            }
+        });
+        client.dispatcher().executorService().shutdown();
+    }
+
+    private void setupTTS(){
+        mTTS = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (TextToSpeech.SUCCESS == status) {
+                    Locale locale = Locale.JAPANESE;
+                    if (mTTS.isLanguageAvailable(locale) >= TextToSpeech.LANG_AVAILABLE) {
+                        mTTS.setLanguage(locale);
+                    } else {
+                        Log.d("", "Error SetLocale");
+                    }
+                } else {
+                    Log.d("", "Error Init");
+                }
+            }
+        });
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
+        setupTTS();
+        connectionWebSocket();
         //mLoopSpeechRecognizer.startListening();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        if(mWebSocket != null){
+            mWebSocket.close(1000, null);
+            mWebSocket = null;
+        }
+        if (mTTS != null) {
+            // TextToSpeechのリソースを解放する
+            mTTS.shutdown();
+        }
         //mLoopSpeechRecognizer.stopListening();
     }
 

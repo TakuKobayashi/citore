@@ -12,7 +12,9 @@
   "dependencies": {
     "express": "*",
     "ws": "*",
-    "nodemon":"*"
+    "nodemon":"*",
+    "twitter":"*",
+    "yamljs":"*"
   },
   "repository": {
     "type": "git",

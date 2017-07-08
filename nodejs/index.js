@@ -1,3 +1,11 @@
+var path = require('path');
+var railsRootPath = path.normalize(__dirname + "/../server");
+var fs = require("fs");
+var apiConfigString = fs.readFileSync(path.normalize(railsRootPath + "/config/apiconfig.yml"), "utf8");
+
+var YAML = require('yamljs');
+var apiConfig = YAML.parse(apiConfigString);
+
 var express = require('express');
 var app = express();
 
@@ -11,7 +19,13 @@ var server = http.createServer(app).listen(port, function () {
   console.log('Server listening at port %d', port);
 });
 
-var io = require('socket.io').listen(server);
+var Twitter = require('twitter');
+var twitterClient = new Twitter({
+  consumer_key: apiConfig.twitter.citore.consumer_key,
+  consumer_secret: apiConfig.twitter.citore.consumer_secret,
+  access_token_key: apiConfig.twitter.citore.bot.access_token_key,
+  access_token_secret: apiConfig.twitter.citore.bot.access_token_secret
+});
 
 var WebSocketServer = require('ws').Server;
 var wss = new WebSocketServer({server:server});
@@ -26,10 +40,17 @@ wss.on('connection', function (ws) {
       return (conn === ws) ? false : true;
     });
   });
-  ws.on('message', function (message) {
-    console.log('message:', message);
+});
+
+var twitterStream = twitterClient.stream('statuses/sample.json');
+twitterStream.on('data', function(event) {
+  if(event.user.lang == "ja"){
     connections.forEach(function (con, i) {
-      con.send(message);
+      con.send(event.text);
     });
-  });
+  }  
+});
+
+twitterStream.on('error', function(error) {
+  throw error;
 });

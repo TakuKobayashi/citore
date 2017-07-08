@@ -71,8 +71,8 @@ public class MainActivity extends Activity {
             public void onMessage(WebSocket webSocket, String text) {
                 Log.d(Config.TAG, "Receiving : " + text);
                 if (mTTS.isSpeaking()) {
-                    // 読み上げ中なら止める
-                    mTTS.stop();
+                    // 読み上げ中なら特に何もしない。
+                    return;
                 }
 
                 // 読み上げ開始

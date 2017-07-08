@@ -3,39 +3,39 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <!--
+        <Button
+            android:id="@+id/recording_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"/>
 
-    <Button
-        android:id="@+id/recording_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"/>
-<!--
-    <EditText
-        android:id="@+id/debug_text"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_alignBottom="@+id/debug_button"
-        android:background="#FFFFFFFF"
-        android:textColor="#FF000000"
-        android:layout_toLeftOf="@+id/debug_button"
-        />
+        <EditText
+            android:id="@+id/debug_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_alignBottom="@+id/debug_button"
+            android:background="#FFFFFFFF"
+            android:textColor="#FF000000"
+            android:layout_toLeftOf="@+id/debug_button"
+            />
 
-    <Button
-        android:id="@+id/debug_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:text="debug"/>
+        <Button
+            android:id="@+id/debug_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:text="debug"/>
 
-    <TextView
-        android:id="@+id/recognize_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/debug_button"
-        android:textColor="#FFFFFFFF"
-        android:layout_alignParentLeft="true"/>
--->
+        <TextView
+            android:id="@+id/recognize_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/debug_button"
+            android:textColor="#FFFFFFFF"
+            android:layout_alignParentLeft="true"/>
+    -->
 </RelativeLayout>

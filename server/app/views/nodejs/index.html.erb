@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+  <head>
+    <title>websocket sample</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font: 13px Helvetica, Arial; }
+      form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+      form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+      #messages { list-style-type: none; margin: 0; padding: 0; }
+      #messages li { padding: 5px 10px; }
+      #messages li:nth-child(odd) { background: #eee; }
+      .plugin-java_script{
+        text-align: right;
+       }
+    </style>
+  </head>
+  <body>
+    <ul id="messages"></ul>
+    <form action="">
+      <input id="m" autocomplete="off" /><button>Send</button>
+    </form>
+    <%= javascript_include_tag 'libraries/jquery.min.js' %>
+    <script>
+      var hostname = window.document.location.hostname;
+      var port = 3110;
+      var pathname = window.document.location.pathname;
+      var protocol = window.document.location.protocol;
+      var url;
+      if(protocol.startsWith("https")){
+        url = 'wss://' + hostname + ":" + port + pathname;
+      }else{
+        url = 'ws://' + hostname + ":" + port + pathname;
+      }
+      var ws = new WebSocket(url);
+
+      //socketioを使いserverにconnectする(socketioの場合)
+      //var socket = io.connect("ws://" + location.host);
+      $('form').submit(function(){
+        //サーバーに指定したイベント名にリクエストを送る(socketioの場合)
+        //socket.emit('message', $('#m').val());
+        ws.send($('#m').val());
+        $('#m').val('');
+        return false;
+      });
+
+      ws.onmessage = function (event) {
+         console.log(event);
+         $('#messages').append($('<li>').text(event.data));
+      };
+    </script>
+  </body>
+</html>

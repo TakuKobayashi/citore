@@ -11,10 +11,7 @@
   "license": "",
   "dependencies": {
     "express": "*",
-    "socket.io": "*",
     "ws": "*",
-    "ejs": "*",
-    "jquery":"*",
     "nodemon":"*"
   },
   "repository": {
@@ -24,8 +21,7 @@
   "keywords": [
     "node",
     "websocket",
-    "express",
-    "socket.io"
+    "express"
   ],
   "license": "MIT"
 }

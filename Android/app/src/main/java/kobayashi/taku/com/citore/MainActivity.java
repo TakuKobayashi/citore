@@ -1,13 +1,16 @@
 package kobayashi.taku.com.citore;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Environment;
 import android.preference.PreferenceActivity;
+import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,14 +30,17 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Objects;
 
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 public class MainActivity extends Activity {
+    private static int REQUEST_CODE = 1;
     private TweetVoice mVoice;
     private LoopSpeechRecognizer mLoopSpeechRecognizer;
+    private TextToSpeech mTTS;
     //private EditText mEditText;
     //private TextView mRecordText;
 
@@ -44,9 +50,34 @@ public class MainActivity extends Activity {
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+        ApplicationHelper.requestPermissions(this, REQUEST_CODE);
+        mTTS = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (TextToSpeech.SUCCESS == status) {
+                    Locale locale = Locale.JAPANESE;
+                    if (mTTS.isLanguageAvailable(locale) >= TextToSpeech.LANG_AVAILABLE) {
+                        mTTS.setLanguage(locale);
+                    } else {
+                        Log.d("", "Error SetLocale");
+                    }
+                    if (mTTS.isSpeaking()) {
+                        // 読み上げ中なら止める
+                        mTTS.stop();
+                    }
+
+                    // 読み上げ開始
+                    String utteranceId = String.valueOf(this.hashCode());
+                    mTTS.speak("オナモミ", TextToSpeech.QUEUE_FLUSH, null, utteranceId);
+                } else {
+                    Log.d("", "Error Init");
+                }
+            }
+        });
 
         setContentView(R.layout.activity_main);
 
+        /*
         mLoopSpeechRecognizer = new LoopSpeechRecognizer(this);
         setupRecordingButtonText();
         Button recordingButton = (Button) findViewById(R.id.recording_button);
@@ -57,6 +88,7 @@ public class MainActivity extends Activity {
                 setupRecordingButtonText();
             }
         });
+        */
         ApplicationHelper.requestPermissions(this, 1);
 
         /*
@@ -82,6 +114,22 @@ public class MainActivity extends Activity {
             }
         });
 */
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mTTS != null) {
+            // TextToSpeechのリソースを解放する
+            mTTS.shutdown();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if(REQUEST_CODE == requestCode){
+            Log.d(Config.TAG, String.valueOf(requestCode));
+        }
     }
 
     private void setupRecordingButtonText(){

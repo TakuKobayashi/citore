@@ -6,6 +6,8 @@ var apiConfigString = fs.readFileSync(path.normalize(railsRootPath + "/config/ap
 var YAML = require('yamljs');
 var apiConfig = YAML.parse(apiConfigString);
 
+var sanitizer = require('./sanitizer.js');
+
 var express = require('express');
 var app = express();
 
@@ -45,8 +47,11 @@ wss.on('connection', function (ws) {
 var twitterStream = twitterClient.stream('statuses/sample.json');
 twitterStream.on('data', function(event) {
   if(event.user.lang == "ja" && !event.retweeted && !event.favorited){
+    var sanitized_word = sanitizer.delete_reply_and_hashtag(event.text);
+    sanitized_word = sanitizer.delete_retweet(sanitized_word);
+    sanitized_word = sanitizer.delete_symbols(sanitized_word);
     connections.forEach(function (con, i) {
-      con.send(event.text);
+      con.send(sanitized_word);
     });
   }  
 });

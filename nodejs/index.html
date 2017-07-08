@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+  <head>
+    <title>websocket sample</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font: 13px Helvetica, Arial; }
+      form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+      form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+      #messages { list-style-type: none; margin: 0; padding: 0; }
+      #messages li { padding: 5px 10px; }
+      #messages li:nth-child(odd) { background: #eee; }
+      .plugin-java_script{
+        text-align: right;
+       }
+    </style>
+  </head>
+  <body>
+    <!-- 楽天のモーションウィジェット広告 -->
+    <div class="plugin-java_script sidewrapper">
+      <script type="text/javascript">
+        var ua = navigator.userAgent;
+        // スマホかどうか
+        if(ua.indexOf('iPhone') > 0 ||
+          　ua.indexOf('iPod') > 0 ||
+          　ua.indexOf('Android') > 0 && ua.indexOf('Mobile') > 0 ||
+            ua.indexOf("windows") > 0 && ua.indexOf("phone") > 0 ||
+            ua.indexOf("firefox") > 0 && ua.indexOf("mobile") > 0 ||
+            ua.indexOf("blackberry") > 0
+         ){
+          rakuten_design="slide";rakuten_affiliateId="1583c1be.a2524a4d.1583c1bf.50d63d09";rakuten_items="ranking";rakuten_genreId=0;rakuten_size="320x48";rakuten_target="_blank";rakuten_theme="gray";rakuten_border="off";rakuten_auto_mode="on";rakuten_genre_title="off";rakuten_recommend="on";
+        }else{
+          // それ以外
+          rakuten_design="slide";rakuten_affiliateId="1583c1be.a2524a4d.1583c1bf.50d63d09";rakuten_items="ranking";rakuten_genreId=0;rakuten_size="148x600";rakuten_target="_blank";rakuten_theme="gray";rakuten_border="off";rakuten_auto_mode="on";rakuten_genre_title="off";rakuten_recommend="on";
+        }
+      </script>
+    </div>
+    <ul id="messages"></ul>
+    <form action="">
+      <input id="m" autocomplete="off" /><button>Send</button>
+    </form>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/jquery/jquery.js"></script>
+    <script>
+      var url = window.location.href
+      var host = window.document.location.host;
+      var ws;
+      if(url.startsWith("https://")){
+        ws = new WebSocket('wss://' + host);
+      }else{
+        ws = new WebSocket('ws://' + host);
+      }
+      //socketioを使いserverにconnectする(socketioの場合)
+      //var socket = io.connect("ws://" + location.host);
+      $('form').submit(function(){
+        //サーバーに指定したイベント名にリクエストを送る(socketioの場合)
+        //socket.emit('message', $('#m').val());
+        ws.send($('#m').val());
+        $('#m').val('');
+        return false;
+      });
+
+      ws.onmessage = function (event) {
+         console.log(event);
+         $('#messages').append($('<li>').text(event.data));
+      };
+      //サーバーからの指定のイベントを受け取れるようにcallbackを登録する(socket.ioの場合)
+      /*
+      socket.on('message', function(msg){
+        console.log(msg);
+        $('#messages').append($('<li>').text(msg));
+      });
+*/
+    </script>
+  </body>
+</html>

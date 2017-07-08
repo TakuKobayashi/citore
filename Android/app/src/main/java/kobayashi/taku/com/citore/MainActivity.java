@@ -60,7 +60,7 @@ public class MainActivity extends Activity {
 
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder().url(Config.WS_ROOT_URL).build();
-        WebSocket ws = client.newWebSocket(request, new WebSocketListener() {
+        client.newWebSocket(request, new WebSocketListener() {
             @Override
             public void onOpen(WebSocket webSocket, Response response) {
                 super.onOpen(webSocket, response);
@@ -70,6 +70,14 @@ public class MainActivity extends Activity {
             @Override
             public void onMessage(WebSocket webSocket, String text) {
                 Log.d(Config.TAG, "Receiving : " + text);
+                if (mTTS.isSpeaking()) {
+                    // 読み上げ中なら止める
+                    mTTS.stop();
+                }
+
+                // 読み上げ開始
+                String utteranceId = String.valueOf(this.hashCode());
+                mTTS.speak(text, TextToSpeech.QUEUE_FLUSH, null, utteranceId);
             }
             @Override
             public void onMessage(WebSocket webSocket, ByteString bytes) {
@@ -87,7 +95,7 @@ public class MainActivity extends Activity {
             }
         });
         client.dispatcher().executorService().shutdown();
-/*
+
         mTTS = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
@@ -98,20 +106,11 @@ public class MainActivity extends Activity {
                     } else {
                         Log.d("", "Error SetLocale");
                     }
-                    if (mTTS.isSpeaking()) {
-                        // 読み上げ中なら止める
-                        mTTS.stop();
-                    }
-
-                    // 読み上げ開始
-                    String utteranceId = String.valueOf(this.hashCode());
-                    mTTS.speak("オナモミ", TextToSpeech.QUEUE_FLUSH, null, utteranceId);
                 } else {
                     Log.d("", "Error Init");
                 }
             }
         });
-*/
 
         setContentView(R.layout.activity_main);
 

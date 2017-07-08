@@ -33,9 +33,7 @@ Rails.application.routes.draw do
     get 'marionette_slide'
   end
 
-  resource :nodejs, controller: :nodejs, only: [] do
-    get 'index'
-  end
+  resources :nodejs, controller: :nodejs, only: [:index]
 
   namespace :sugarcoat do
     resource :bot, controller: :bot, only: [] do

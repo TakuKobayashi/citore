@@ -49,6 +49,7 @@ twitterStream.on('data', function(event) {
   if(event.user.lang == "ja" && !event.retweeted && !event.favorited){
     var sanitized_word = sanitizer.delete_reply_and_hashtag(event.text);
     sanitized_word = sanitizer.delete_retweet(sanitized_word);
+    sanitized_word = sanitizer.delete_url(sanitized_word);
     sanitized_word = sanitizer.delete_symbols(sanitized_word);
     connections.forEach(function (con, i) {
       con.send(sanitized_word);

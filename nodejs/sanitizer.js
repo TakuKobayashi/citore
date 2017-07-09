@@ -9,3 +9,7 @@ exports.delete_reply_and_hashtag = function(text) {
 exports.delete_retweet = function(text) {
   return text.replace(/RT[;: ]/g, "");
 }
+
+exports.delete_url = function(text) {
+  return text.replace(/(https?|ftp|wss?)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)/g, "");
+}

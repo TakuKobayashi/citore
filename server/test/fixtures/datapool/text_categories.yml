@@ -1,0 +1,24 @@
+# == Schema Information
+#
+# Table name: datapool_text_categories
+#
+#  id                   :integer          not null, primary key
+#  datapool_text_id     :integer          not null
+#  datapool_category_id :integer          not null
+#
+# Indexes
+#
+#  datapool_text_category_relation_index  (datapool_text_id,datapool_category_id) UNIQUE
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# This model initially had no columns defined. If you add columns to the
+# model remove the '{}' from the fixture names and add the columns immediately
+# below each fixture, per the syntax in the comments below
+#
+one: {}
+# column: value
+#
+two: {}
+# column: value

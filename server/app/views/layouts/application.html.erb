@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TappunPage</title>
     <%= csrf_meta_tags %>
-    <%= stylesheet_link_tag 'homepage/foundation.css' %>
+    <%= stylesheet_link_tag 'libraries/pure/pure-min.css' %>
     <%= stylesheet_link_tag 'homepage/main.css' %>
     <%= javascript_include_tag 'libraries/jquery.min.js' %>
   </head>
@@ -33,7 +33,6 @@
       </div>
     </div>
     <%= yield %>
-    <%= javascript_include_tag 'homepage/foundation.min.js' %>
     <script>
       $(document).foundation();
     </script>

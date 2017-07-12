@@ -15,4 +15,15 @@
 #
 
 class Datapool::Category < ApplicationRecord
+  enum defined_number: {
+    unknown: 0,
+    feeling: 1,
+    sense: 2,
+    person: 3,
+    living: 4,
+    landscape: 5,
+    food: 6,
+    greeting: 7,
+    behavior: 8,
+  }
 end

@@ -11,30 +11,17 @@
   </head>
 
   <body>
-    <div class="top-bar">
-      <div class="top-bar-right">
+    <div class="pure-menu pure-menu-horizontal pure-menu-fixed">
+      <ul class="pure-menu-list">
         <ul class="dropdown menu" data-dropdown-menu>
-          <li><a href="#"><%= t("homepage.header.profile") %></a></li>
-          <li class="has-submenu">
-            <a href="#"><%= t("homepage.header.products") %></a>
-            <ul class="submenu menu vertical" data-submenu>
-              <li><a href="#"><%= t("homepage.header.application") %></a></li>
-              <li><a href="#"><%= t("homepage.header.web") %></a></li>
-              <li><a href="#"><%= t("homepage.header.iot") %></a></li>
-              <li><a href="#"><%= t("homepage.header.vrarmr") %></a></li>
-              <li><a href="#"><%= t("homepage.header.bot") %></a></li>
-              <li><a href="#"><%= t("homepage.header.other") %></a></li>
-            </ul>
-          </li>
-          <li><a href="#"><%= t("homepage.header.community") %></a></li>
-          <li><a href="#"><%= t("homepage.header.tools") %></a></li>
-          <li><a href="#"><%= t("homepage.header.contact") %></a></li>
+          <li class="pure-menu-item"><a href="#" class="pure-menu-link"><%= t("homepage.header.profile") %></a></li>
+          <li class="pure-menu-item"><a href="#" class="pure-menu-link"><%= t("homepage.header.products") %></a></li>
+          <li class="pure-menu-item"><a href="#" class="pure-menu-link"><%= t("homepage.header.community") %></a></li>
+          <li class="pure-menu-item"><a href="#" class="pure-menu-link"><%= t("homepage.header.tools") %></a></li>
+          <li class="pure-menu-item"><a href="#" class="pure-menu-link"><%= t("homepage.header.contact") %></a></li>
         </ul>
       </div>
     </div>
     <%= yield %>
-    <script>
-      $(document).foundation();
-    </script>
   </body>
 </html>

@@ -11,10 +11,23 @@ canvas {
   display:block;
 } /* To remove the scrollbars */
 
-.top-bar {
+.home-menu {
   position: fixed;
   top: 0;
   left: 0;
   z-index: 1000;
   width: 100%;
 }
+
+.home-menu a {
+    color: #FFFFFF;
+}
+
+/*
+.home-menu li a:hover,
+.home-menu li a:focus {
+    background: none;
+    border: none;
+    color: #AECFE5;
+}
+*/

@@ -131,5 +131,20 @@ Rails.application.routes.draw do
     end
   end
 
+  resource :profile, controller: :profile, only: [] do
+    get :index
+  end
+
+  resources :products, only: [:index, :show] do
+  end
+
+  resource :community, controller: :community, only: [] do
+    get :index
+  end
+
+  resource :contact, controller: :contact, only: [] do
+    get :index
+  end
+
   root to: "top#index"
 end

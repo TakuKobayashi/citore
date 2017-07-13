@@ -14,11 +14,11 @@
     <div class="pure-menu pure-menu-horizontal pure-menu-fixed">
       <ul class="pure-menu-list">
         <ul class="dropdown menu" data-dropdown-menu>
-          <li class="pure-menu-item"><a href="#" class="pure-menu-link"><%= t("homepage.header.profile") %></a></li>
-          <li class="pure-menu-item"><a href="#" class="pure-menu-link"><%= t("homepage.header.products") %></a></li>
-          <li class="pure-menu-item"><a href="#" class="pure-menu-link"><%= t("homepage.header.community") %></a></li>
-          <li class="pure-menu-item"><a href="#" class="pure-menu-link"><%= t("homepage.header.tools") %></a></li>
-          <li class="pure-menu-item"><a href="#" class="pure-menu-link"><%= t("homepage.header.contact") %></a></li>
+          <li class="pure-menu-item"><%= link_to(t("homepage.header.profile"), profile_path, class: "pure-menu-link") %></li>
+          <li class="pure-menu-item"><%= link_to(t("homepage.header.products"), products_path, class: "pure-menu-link") %></li>
+          <li class="pure-menu-item"><%= link_to(t("homepage.header.community"), community_path, class: "pure-menu-link") %></li>
+          <li class="pure-menu-item"><%= link_to(t("homepage.header.tools"), tools_top_path, class: "pure-menu-link") %></li>
+          <li class="pure-menu-item"><%= link_to(t("homepage.header.contact"), contact_path, class: "pure-menu-link") %></li>
         </ul>
       </div>
     </div>

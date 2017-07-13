@@ -1,2 +1,4 @@
-class CommunityController < ApplicationController
+class CommunityController < BaseController
+  def index
+  end
 end

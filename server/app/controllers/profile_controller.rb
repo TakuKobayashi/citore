@@ -1,2 +1,4 @@
-class ProfileController < ApplicationController
+class ProfileController < BaseController
+  def index
+  end
 end

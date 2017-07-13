@@ -1,2 +1,4 @@
-class ProductsController < ApplicationController
+class ProductsController < BaseController
+  def index
+  end
 end

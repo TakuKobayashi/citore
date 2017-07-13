@@ -82,6 +82,8 @@ gem 'puma_worker_killer'
 
 gem 'geocoder'
 
+gem 'opengraph_parser'
+
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 

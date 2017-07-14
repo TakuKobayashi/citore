@@ -1,32 +1,48 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TappunPage</title>
-    <%= csrf_meta_tags %>
-    <%= stylesheet_link_tag 'libraries/pure/pure-min.css' %>
-    <%= stylesheet_link_tag 'homepage/main.css' %>
-    <%= javascript_include_tag 'libraries/jquery.min.js' %>
-    <%= javascript_include_tag 'libraries/jquery.easing.js' %>
-    <%= javascript_include_tag 'libraries/jquery.scrollfollow.js' %>
-    <script>
-      $('.pure-menu').scrollFollow();
-    </script>
-  </head>
 
-  <body>
-    <div class="home-menu pure-menu pure-menu-horizontal">
-      <ul class="pure-menu-list">
-        <ul class="dropdown menu" data-dropdown-menu>
-          <li class="pure-menu-item"><%= link_to(t("homepage.header.profile"), profile_path, class: "pure-menu-link") %></li>
-          <li class="pure-menu-item"><%= link_to(t("homepage.header.products"), products_path, class: "pure-menu-link") %></li>
-          <li class="pure-menu-item"><%= link_to(t("homepage.header.community"), community_path, class: "pure-menu-link") %></li>
-          <li class="pure-menu-item"><%= link_to(t("homepage.header.tools"), tools_top_path, class: "pure-menu-link") %></li>
-          <li class="pure-menu-item"><%= link_to(t("homepage.header.contact"), contact_path, class: "pure-menu-link") %></li>
-        </ul>
-      </div>
-    </div>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TappunPage</title>
+  <%= csrf_meta_tags %>
+  <%= stylesheet_link_tag 'libraries/pure/pure-min.css' %>
+  <%= stylesheet_link_tag 'homepage/main.css' %>
+  <%= javascript_include_tag 'libraries/jquery.min.js' %>
+  <%= javascript_include_tag 'libraries/jquery.pjax.js' %>
+  <%= javascript_include_tag 'libraries/jquery.easing.js' %>
+  <%= javascript_include_tag 'libraries/jquery.scrollfollow.js' %>
+  <script>
+    $('.pure-menu').scrollFollow();
+  </script>
+</head>
+
+<body>
+  <div class="home-menu pure-menu pure-menu-horizontal">
+    <ul class="pure-menu-list">
+      <li class="pure-menu-item">
+        <%= link_to(t("homepage.header.home"), root_path, class: "pure-menu-link") %>
+      </li>
+      <li class="pure-menu-item">
+        <%= link_to(t("homepage.header.profile"), profile_path, class: "pure-menu-link") %>
+      </li>
+      <li class="pure-menu-item">
+        <%= link_to(t("homepage.header.products"), products_path, class: "pure-menu-link") %>
+      </li>
+      <li class="pure-menu-item">
+        <%= link_to(t("homepage.header.community"), community_path, class: "pure-menu-link") %>
+      </li>
+      <li class="pure-menu-item">
+        <%= link_to(t("homepage.header.tools"), tools_top_path, class: "pure-menu-link") %>
+      </li>
+      <li class="pure-menu-item">
+        <%= link_to(t("homepage.header.contact"), contact_path, class: "pure-menu-link") %>
+      </li>
+    </ul>
+  </div>
+  <div id="pjax-container">
     <%= yield %>
-  </body>
+  </div>
+</body>
+
 </html>

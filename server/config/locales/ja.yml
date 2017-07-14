@@ -436,6 +436,7 @@ ja:
     pm: 午後
   homepage:
     header:
+      home: ホーム
       title: タプンページ
       profile: お前誰よ?
       products: 制作物
@@ -448,9 +449,3 @@ ja:
       vrarmr: VR・AR・MR系
       bot: TwitterやLineなどのBot系
       other: その他
-    top:
-
-    profile: 
-    tools:
-    products:
-    schesule:

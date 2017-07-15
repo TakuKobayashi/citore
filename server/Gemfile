@@ -83,6 +83,8 @@ gem 'puma_worker_killer'
 gem 'geocoder'
 
 gem 'opengraph_parser'
+gem 'meta-tags'
+gem 'canonical-rails', github: 'jumph4x/canonical-rails'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development

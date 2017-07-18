@@ -9,7 +9,7 @@ class FeyKunController < BaseController
   def analized
     image = FeyKunAi::InquiryTweetImage.find_by(id: params[:image_id])
     image.output ||= {}
-    image.output = image.output.merge(JSON.parse(params[:result])
+    image.output = image.output.merge(JSON.parse(params[:result]))
 
     rest_client = FeyKunAi::InquiryTweetImage.get_twitter_rest_client
     err_rep_tweet = rest_client.update_with_media("@#{image.reply_to_tweet.twitter_user_name}\nFey-kun Analysis Result (1/2):\nNoise Ratio:" + image.output["error_ratio"].to_s, params[:error_img])

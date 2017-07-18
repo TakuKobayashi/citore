@@ -84,8 +84,7 @@ gem 'geocoder'
 
 gem 'opengraph_parser'
 gem 'canonical-rails', github: 'jumph4x/canonical-rails'
-
-gem 'daemons-rails'
+gem 'foreman'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development

@@ -51,7 +51,7 @@ class FeyKunAi::InquiryTweet < TwitterRecord
         tweet: ApplicationRecord.basic_sanitize(tweet.text),
         tweet_created_at: tweet.created_at
       }.merge(self.extract_location_hash(tweet: tweet)))
-      inquiry_tweet.generate_images!(tweet: tweet, reply_to_tweet: inquiry_tweet.id)
+      inquiry_tweet.generate_images!(tweet: tweet, reply_to_tweet: inquiry_tweet)
       if tweet.quoted_tweet?
         quoted_tweet_status = tweet.quoted_tweet
         quoted_tweet = FeyKunAi::InquiryTweet.find_or_initialize_by(tweet_id: quoted_tweet_status.id)
@@ -61,7 +61,7 @@ class FeyKunAi::InquiryTweet < TwitterRecord
           tweet: ApplicationRecord.basic_sanitize(quoted_tweet_status.text),
           tweet_created_at: quoted_tweet_status.created_at
         }.merge(self.extract_location_hash(tweet: quoted_tweet_status)))
-        quoted_tweet.generate_images!(tweet: quoted_tweet_status, reply_to_tweet: inquiry_tweet.id)
+        quoted_tweet.generate_images!(tweet: quoted_tweet_status, reply_to_tweet: inquiry_tweet)
       end
       inquiry_tweet.update!(tweet_quoted_id: quoted_tweet.try(:id))
     end

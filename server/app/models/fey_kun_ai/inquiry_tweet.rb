@@ -37,14 +37,12 @@ class FeyKunAi::InquiryTweet < TwitterRecord
   after_validation :geocode
   after_validation :reverse_geocode
 
-  before_create do
-    self.place_name = Charwidth.normalize(self.place_name)
-    self.token = SecureRandom.hex
-  end
-
   def self.generate_tweet!(tweet:)
     inquiry_tweet = FeyKunAi::InquiryTweet.find_or_initialize_by(tweet_id: tweet.id)
     transaction do
+      if inquiry_tweet.new_record?
+        inquiry_tweet.token = SecureRandom.hex
+      end
       inquiry_tweet.update!({
         twitter_user_id: tweet.user.id,
         twitter_user_name: tweet.user.screen_name,
@@ -55,6 +53,9 @@ class FeyKunAi::InquiryTweet < TwitterRecord
       if tweet.quoted_tweet?
         quoted_tweet_status = tweet.quoted_tweet
         quoted_tweet = FeyKunAi::InquiryTweet.find_or_initialize_by(tweet_id: quoted_tweet_status.id)
+        if quoted_tweet.new_record?
+          quoted_tweet.token = SecureRandom.hex
+        end
         quoted_tweet.update!({
           twitter_user_id: quoted_tweet_status.user.id,
           twitter_user_name: quoted_tweet_status.user.screen_name,
@@ -79,7 +80,7 @@ class FeyKunAi::InquiryTweet < TwitterRecord
           result[:lat] = result[:lat].to_f + lonlat
         end
       end
-      result[:place_name] = tweet.place.full_name
+      result[:place_name] = Charwidth.normalize(tweet.place.full_name)
       result[:lon] = result[:lon].to_f / (lonlats.size / 2).to_f
       result[:lat] = result[:lat].to_f / (lonlats.size / 2).to_f
     end
@@ -103,7 +104,7 @@ class FeyKunAi::InquiryTweet < TwitterRecord
           arr << n.surface
         end
       end
-      result[:place_name] = arr.join
+      result[:place_name] = Charwidth.normalize(arr.join)
     end
     return result
   end

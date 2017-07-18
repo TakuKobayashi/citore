@@ -36,14 +36,6 @@ class FeyKunAi::InquiryTweetImage < TwitterRecord
     self.complete!
   end
 
-  def tweet_text(key, index)
-    hash = {
-      "error_ratio" => "Fey-kun Analysis Result (#{index}/2):\nNoise Ratio:" + self.output[key].to_s,
-      "caption" => "Fey-kun Analysis Result (#{index}/2):\nCaption:" + self.output[key].to_s
-    }
-    return hash[key]
-  end
-
   def set_image_meta_data
     file_ext = File.extname(self.image_url).downcase
     aurl = Addressable::URI.parse(URI.unescape(self.image_url))
@@ -74,6 +66,22 @@ class FeyKunAi::InquiryTweetImage < TwitterRecord
     return filename
   end
 
+  def object_image_url
+    if self.output["object_image_url"].present?
+      return self.output["object_image_url"]
+    else
+      return s3_object_file_url
+    end
+  end
+
+  def err_image_url
+    if self.output["err_image_url"].present?
+      return self.output["err_image_url"]
+    else
+      return s3_error_file_url
+    end
+  end
+
   def s3_object_file_url
     return "https://taptappun.s3.amazonaws.com/" + IMAGE_S3_FILE_ROOT + self.output["object_image_name"]
   end
@@ -91,5 +99,17 @@ class FeyKunAi::InquiryTweetImage < TwitterRecord
       config.access_token_secret = apiconfig["twitter"]["fey_kun_ai"]["bot"]["access_token_secret"]
     end
     return rest_client
+  end
+
+  def self.get_image_urls_from_tweet(tweet:)
+    image_urls = tweet.media.flat_map do |m|
+      case m
+      when Twitter::Media::Photo
+        m.media_url.to_s
+      else
+        []
+      end
+    end
+    return image_urls
   end
 end

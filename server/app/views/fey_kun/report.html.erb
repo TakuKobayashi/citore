@@ -45,14 +45,14 @@
               <h3><a >Object認識画像</a></h3>
               <p>ニューラルネットワークを使用したDeep learningでの結果</p>
             </header>
-            <%= image_tag(image.s3_object_file_url) %>
+            <%= image_tag(image.object_image_url) %>
           </span>
           <span class="image">
             <header class="major">
               <h3><a>ElA（Error level analysis）画像</a></h3>
               <p>Open CVを使用したエラーレベル分析結果。Object認識画像</p>
             </header>
-            <%= image_tag(image.s3_error_file_url) %>
+            <%= image_tag(image.err_image_url) %>
           </span>
           <span class="image">
             <header class="major">

@@ -71,15 +71,29 @@ class FeyKunAi::InquiryTweet < TwitterRecord
   def self.extract_location_hash(tweet:)
     result = {}
     if tweet.place?
-      lonlat_sum = tweet.place.bounding_box.coordinates.inject([0, 0]){|result, lonlat| result[0] += lonlat[0]; result[1] += lonlat[1]; }
+      lonlats = tweet.place.bounding_box.coordinates.flatten
+      lonlats.each_with_index do |lonlat, index|
+        if index % 2 == 0
+          result[:lon] = result[:lon].to_f + lonlat
+        else
+          result[:lat] = result[:lat].to_f + lonlat
+        end
+      end
       result[:place_name] = tweet.place.full_name
-      result[:lat] = lonlat_sum[1] / lonlat_sum.size.to_f
-      result[:lon] = lonlat_sum[0] / lonlat_sum.size.to_f
+      result[:lon] = result[:lon].to_f / (lonlats.size / 2).to_f
+      result[:lat] = result[:lat].to_f / (lonlats.size / 2).to_f
     end
     if tweet.geo?
-      latlon_sum = tweet.geo.coordinates.inject([0, 0]){|result, latlon| result[0] += latlon[0]; result[1] += latlon[1]; }
-      result[:lat] = latlon_sum[0] / latlon_sum.size.to_f
-      result[:lon] = latlon_sum[1] / latlon_sum.size.to_f
+      latlons = tweet.geo.coordinates.flatten
+      latlons.each_with_index do |latlon, index|
+        if index % 2 == 0
+          result[:lat] = result[:lat].to_f + latlon
+        else
+          result[:lon] = result[:lon].to_f + latlon
+        end
+      end
+      result[:lat] = result[:lat].to_f / (latlons.size / 2).to_f
+      result[:lon] = result[:lon].to_f / (latlons.size / 2).to_f
     end
     if result.blank?
       arr = []

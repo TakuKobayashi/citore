@@ -17,7 +17,7 @@ class FeyKunController < BaseController
 
     err_image_urls = FeyKunAi::InquiryTweetImage.get_image_urls_from_tweet(tweet: err_rep_tweet)
     obj_image_urls = FeyKunAi::InquiryTweetImage.get_image_urls_from_tweet(tweet: object_rep_tweet)
-    image.output = image.output.merge(object_image_url: obj_image_urls.first, err_image_url: err_image_urls.first))
+    image.output = image.output.merge(object_image_url: obj_image_urls.first, err_image_url: err_image_urls.first)
     image.update!(state: :complete, reply_to_tweet_id: nil)
     head(:ok)
   end

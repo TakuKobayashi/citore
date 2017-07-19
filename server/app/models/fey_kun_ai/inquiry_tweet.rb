@@ -38,8 +38,11 @@ class FeyKunAi::InquiryTweet < TwitterRecord
   reverse_geocoded_by :lat, :lon, address: :place_name, language: :ja
 
   before_create do
-    self.place_name = Charwidth.normalize(self.place_name.to_s)
     self.token = SecureRandom.hex
+  end
+
+  before_save do
+    self.place_name = Charwidth.normalize(self.place_name.to_s)
   end
 
   def self.generate_tweet!(tweet:)

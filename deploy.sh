@@ -5,6 +5,7 @@ cd ./nodejs/
 npm update
 forever restart index.js
 cd ../server/
+rvm rvmrc load ./.rvmrc
 bundle install
 RAILS_ENV=production rails db:migrate
 RAILS_ENV=production rails assets:clean

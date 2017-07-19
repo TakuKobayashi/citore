@@ -4,7 +4,7 @@
 #
 #  id                 :integer          not null, primary key
 #  name               :string(255)      not null
-#  defined_number     :integer          default(0), not null
+#  defined_number     :integer          default("unknown"), not null
 #  parent_category_id :integer
 #
 # Indexes

@@ -11,19 +11,9 @@ natto = ApplicationRecord.get_natto
 
 extra_info = ExtraInfo.read_extra_info
 
-citore_client = Twitter::REST::Client.new do |config|
-  config.consumer_key        = apiconfig["twitter"]["citore"]["consumer_key"]
-  config.consumer_secret     = apiconfig["twitter"]["citore"]["consumer_secret"]
-  config.access_token        = apiconfig["twitter"]["citore"]["bot"]["access_token_key"]
-  config.access_token_secret = apiconfig["twitter"]["citore"]["bot"]["access_token_secret"]
-end
+citore_client = TwitterRecord.get_twitter_rest_client("citore")
 
-sugarcoat_client = Twitter::REST::Client.new do |config|
-  config.consumer_key        = apiconfig["twitter"]["sugarcoat"]["consumer_key"]
-  config.consumer_secret     = apiconfig["twitter"]["sugarcoat"]["consumer_secret"]
-  config.access_token        = apiconfig["twitter"]["sugarcoat"]["bot"]["access_token_key"]
-  config.access_token_secret = apiconfig["twitter"]["sugarcoat"]["bot"]["access_token_secret"]
-end
+sugarcoat_client = TwitterRecord.get_twitter_rest_client("sugarcoat")
 
 sugarcoat_keywords = ['@sugarcoat_bot', '#sugarcoat']
 citore_keywords = ['#citore', '@citore_bot']

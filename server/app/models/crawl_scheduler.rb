@@ -38,12 +38,7 @@ class CrawlScheduler < ApplicationRecord
 
   def self.tweet_crawl(keyword, crawl_options, &block)
     apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
-    client = Twitter::REST::Client.new do |config|
-      config.consumer_key        = apiconfig["twitter"]["consumer_key"]
-      config.consumer_secret     = apiconfig["twitter"]["consumer_secret"]
-      config.access_token        = apiconfig["twitter"]["access_token_key"]
-      config.access_token_secret = apiconfig["twitter"]["access_token_secret"]
-    end
+    client = TwitterRecord.get_twitter_rest_client("citore")
     is_all = false
     start_time = Time.now
     limit_span = (15.minutes.second / 180).to_i

@@ -11,7 +11,7 @@ class FeyKunController < BaseController
     image.output ||= {}
     image.output = image.output.merge(JSON.parse(params[:result]))
 
-    rest_client = FeyKunAi::InquiryTweetImage.get_twitter_rest_client
+    rest_client =  TwitterRecord.get_twitter_rest_client("fey_kun_ai")
     err_rep_tweet = rest_client.update_with_media("@#{image.reply_to_tweet.twitter_user_name}\nFey-kun Analysis Result (1/2):\nNoise Ratio:" + image.output["error_ratio"].to_s, params[:error_img])
     object_rep_tweet = rest_client.update_with_media("@#{image.reply_to_tweet.twitter_user_name}\nFey-kun Analysis Result (2/2):\nCaption:" + image.output["error_ratio"].to_s, params[:object_img])
 

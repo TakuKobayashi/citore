@@ -20,7 +20,7 @@
 
 class Mone::TwitterBot < TwitterBot
   def self.get_twitter_rest_client
-    return TwitterBot.get_twitter_rest_client("129772274")
+    return TwitterRecord.get_twitter_rest_client("citore")
   end
 
   def self.get_twitter_stream_client

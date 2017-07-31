@@ -46,24 +46,14 @@ class TwitterRecord < ApplicationRecord
 
   def self.get_tweets(*twitter_ids)
     apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
-    client = Twitter::REST::Client.new do |config|
-      config.consumer_key        = apiconfig["twitter"]["consumer_key"]
-      config.consumer_secret     = apiconfig["twitter"]["consumer_secret"]
-      config.access_token        = apiconfig["twitter"]["access_token_key"]
-      config.access_token_secret = apiconfig["twitter"]["access_token_secret"]
-    end
+    client = self.get_twitter_rest_client("citore")
     tweets = client.statuses(twitter_ids)
     return tweets
   end
 
   def self.twitter_crawl(prefix_key: "", crawl_options: {})
     apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
-    client = Twitter::REST::Client.new do |config|
-      config.consumer_key        = apiconfig["twitter"]["consumer_key"]
-      config.consumer_secret     = apiconfig["twitter"]["consumer_secret"]
-      config.access_token        = apiconfig["twitter"]["access_token_key"]
-      config.access_token_secret = apiconfig["twitter"]["access_token_secret"]
-    end
+    client = self.get_twitter_rest_client("citore")
     is_all = false
     start_time = Time.now
     limit_span = (15.minutes.second / 180).to_i
@@ -98,5 +88,16 @@ class TwitterRecord < ApplicationRecord
     crawl_info["state"] = CRAWL_STATES[:completed]
     crawl_info["complete_time"] = Time.now
     ExtraInfo.update({self.table_name => crawl_info})
+  end
+
+  def self.get_twitter_rest_client(username)
+    apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
+    rest_client = Twitter::REST::Client.new do |config|
+      config.consumer_key        = apiconfig["twitter"][username]["consumer_key"]
+      config.consumer_secret     = apiconfig["twitter"][username]["consumer_secret"]
+      config.access_token        = apiconfig["twitter"][username]["bot"]["access_token_key"]
+      config.access_token_secret = apiconfig["twitter"][username]["bot"]["access_token_secret"]
+    end
+    return rest_client
   end
 end

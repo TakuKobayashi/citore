@@ -90,17 +90,6 @@ class FeyKunAi::InquiryTweetImage < TwitterRecord
     return "https://taptappun.s3.amazonaws.com/" + IMAGE_S3_FILE_ROOT + self.output["err_image_name"]
   end
 
-  def self.get_twitter_rest_client
-    apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
-    rest_client = Twitter::REST::Client.new do |config|
-      config.consumer_key        = apiconfig["twitter"]["fey_kun_ai"]["consumer_key"]
-      config.consumer_secret     = apiconfig["twitter"]["fey_kun_ai"]["consumer_secret"]
-      config.access_token        = apiconfig["twitter"]["fey_kun_ai"]["bot"]["access_token_key"]
-      config.access_token_secret = apiconfig["twitter"]["fey_kun_ai"]["bot"]["access_token_secret"]
-    end
-    return rest_client
-  end
-
   def self.get_image_urls_from_tweet(tweet:)
     image_urls = tweet.media.flat_map do |m|
       case m

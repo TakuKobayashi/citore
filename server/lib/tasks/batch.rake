@@ -135,12 +135,7 @@ namespace :batch do
   task rebuild_twitter_replay_id: :environment do
     tweet_id = ExtraInfo.read_extra_info["rebuild_tweet_id"]
     apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
-    client = Twitter::REST::Client.new do |config|
-      config.consumer_key        = apiconfig["twitter"]["consumer_key"]
-      config.consumer_secret     = apiconfig["twitter"]["consumer_secret"]
-      config.access_token        = apiconfig["twitter"]["access_token_key"]
-      config.access_token_secret = apiconfig["twitter"]["access_token_secret"]
-    end
+    client =  TwitterRecord.get_twitter_rest_client("citore")
     limit_span = (15.minutes.second / 120).to_i
     TwitterWord.where("id > ?", tweet_id.to_i).find_in_batches do |words|
       words.each_slice(100) do |w|
@@ -225,12 +220,7 @@ namespace :batch do
 
   task get_reply_tweet: :environment do
     apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
-    client = Twitter::REST::Client.new do |config|
-      config.consumer_key        = apiconfig["twitter"]["consumer_key"]
-      config.consumer_secret     = apiconfig["twitter"]["consumer_secret"]
-      config.access_token        = apiconfig["twitter"]["access_token_key"]
-      config.access_token_secret = apiconfig["twitter"]["access_token_secret"]
-    end
+    client =  TwitterRecord.get_twitter_rest_client("citore")
     limit_span = (15.minutes.second / 120).to_i
     TwitterWord.find_in_batches do |words|
       reply_tweet_ids = []

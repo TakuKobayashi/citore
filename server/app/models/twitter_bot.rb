@@ -48,19 +48,6 @@ class TwitterBot < TwitterRecord
     end
   end
 
-  def self.get_twitter_rest_client(twitter_client_id)
-    key = "twitter_" + twitter_client_id
-    apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
-    extra_info = ExtraInfo.read_extra_info
-    client = Twitter::REST::Client.new do |config|
-      config.consumer_key        = apiconfig["twitter"]["consumer_key"]
-      config.consumer_secret     = apiconfig["twitter"]["consumer_secret"]
-      config.access_token        = extra_info[key]["token"]
-      config.access_token_secret = extra_info[key]["token_secret"]
-    end
-    return client
-  end
-
   def self.get_twitter_stream_client(twitter_client_id)
     key = "twitter_" + twitter_client_id
     apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
@@ -75,13 +62,13 @@ class TwitterBot < TwitterRecord
   end
 
   def tweet!(text)
-    twitter_client = self.class.get_twitter_rest_client
+    twitter_client = TwitterRecord.get_twitter_rest_client("citore")
     tweeted = twitter_client.update(text)
-    update!(action_id: tweeted.id,action_value: text, action_time: tweeted.created_at)
+    update!(action_id: tweeted.id, action_value: text, action_time: tweeted.created_at)
   end
 
   def follow!(twitter_user_id:, twitter_screen_name:)
-    twitter_client = self.class.get_twitter_rest_client
+    twitter_client = TwitterRecord.get_twitter_rest_client("citore")
     followed = twitter_client.follow(twitter_screen_name)
     p followed
   end

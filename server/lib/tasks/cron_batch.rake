@@ -6,6 +6,10 @@ namespace :cron_batch do
     database = Regexp.escape(configuration['database'].to_s)
     username = Regexp.escape(configuration['username'].to_s)
     password = Regexp.escape(configuration['password'].to_s)
+    Rails.application.eager_load!
+    models = ActiveRecord::Base.descendants.reject{|m| m.to_s.include?("ActiveRecord::") || m.abstract_class? }
+    tables = models.map(&:table_name)
+=begin
     tables = [
       "appear_words",
       "twitter_words",
@@ -30,6 +34,7 @@ namespace :cron_batch do
       "markov_trigram_prefixes",
       "markov_trigram_words"
     ]
+=end
     now_str = Time.now.strftime("%Y%m%d_%H%M%S")
     dir_path = Rails.root.to_s + "/tmp/dbdump/" + now_str
     system("mkdir #{dir_path}")
@@ -42,21 +47,19 @@ namespace :cron_batch do
       system(cmd)
       puts "#{table} dump complete"
     end
-
 =begin
-    puts "compress start"
-    Zip::OutputStream.open(dir_path + ".zip") do |zos|
-      puts 'Creating zip file...'
+    Zip::OutputStream.open(dir_path + ".zip") do |stream|
       tables.each do |table|
-        zos.put_next_entry("#{table}.sql")
         File.open(dir_path + "/" + table + ".sql", 'rb') do |file|
+          stream.put_next_entry("db/#{table}.sql")
           file.each_line do |line|
-            zos.puts line
+            stream.write(line)
           end
         end
       end
     end
 =end
+
     Zip::File.open(dir_path + ".zip", Zip::File::CREATE) do |zip|
       # (1) ZIP内にディレクトリを作成
       zip.mkdir now_str

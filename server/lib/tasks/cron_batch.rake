@@ -39,10 +39,11 @@ namespace :cron_batch do
     dir_path = Rails.root.to_s + "/tmp/dbdump/" + now_str
     system("mkdir #{dir_path}")
     tables.each do |table|
-      cmd = "mysqldump -u #{username} "
+      cmd = ""
       if password.present?
-        cmd += "--password=#{password} "
+        cmd += "MYSQL_PWD=#{password} "
       end
+      cmd += "mysqldump -u #{username} "
       cmd += "--skip-lock-tables -t #{database} #{table} > #{dir_path}/#{table}.sql"
       system(cmd)
       puts "#{table} dump complete"

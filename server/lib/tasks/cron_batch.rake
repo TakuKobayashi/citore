@@ -3,9 +3,9 @@ namespace :cron_batch do
     cmd = nil
     environment = Rails.env
     configuration = ActiveRecord::Base.configurations[environment]
-    database = Regexp.escape(configuration['database'].to_s)
-    username = Regexp.escape(configuration['username'].to_s)
-    password = Regexp.escape(configuration['password'].to_s)
+    database = Shellwords.escape(Regexp.escape(configuration['database'].to_s))
+    username = Shellwords.escape(Regexp.escape(configuration['username'].to_s))
+    password = Shellwords.escape(Regexp.escape(configuration['password'].to_s))
     Rails.application.eager_load!
     models = ActiveRecord::Base.descendants.reject{|m| m.to_s.include?("ActiveRecord::") || m.abstract_class? }
     tables = models.map(&:table_name)

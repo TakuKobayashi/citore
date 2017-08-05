@@ -4,6 +4,6 @@ class FoodForecast::SettingsController < BaseController
   end
 
   def register
-    head(:ok)
+    redirect_to food_forecast_root_url
   end
 end

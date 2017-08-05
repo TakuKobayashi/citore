@@ -12,4 +12,6 @@
 #
 
 class FoodForecast::WeatherHealth < ApplicationRecord
+  belongs_to :weather, class_name: 'FoodForecast::MstWeather', foreign_key: :mst_weather_id, required: false
+  belongs_to :health, class_name: 'FoodForecast::MstHealth', foreign_key: :mst_health_id, required: false
 end

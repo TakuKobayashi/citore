@@ -8,4 +8,5 @@
 #
 
 class FoodForecast::MstHealth < ApplicationRecord
+  has_many :weather_healthes, class_name: 'FoodForecast::WeatherHealth', foreign_key: :mst_health_id
 end

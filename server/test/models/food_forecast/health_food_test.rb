@@ -2,14 +2,14 @@
 #
 # Table name: food_forecast_health_foods
 #
-#  id             :integer          not null, primary key
-#  mst_weather_id :integer          not null
-#  mst_food_id    :integer          not null
-#  weight         :float(24)        default(1.0), not null
+#  id            :integer          not null, primary key
+#  mst_health_id :integer          not null
+#  mst_food_id   :integer          not null
+#  weight        :float(24)        default(1.0), not null
 #
 # Indexes
 #
-#  food_health_relation_index  (mst_weather_id,mst_food_id)
+#  health_food_relation_index  (mst_health_id,mst_food_id)
 #
 
 require 'test_helper'

@@ -4,7 +4,7 @@
 #
 #  id       :integer          not null, primary key
 #  user_id  :integer          not null
-#  category :integer          default(0), not null
+#  category :integer          default("allergies"), not null
 #  word     :string(255)      not null
 #
 # Indexes
@@ -14,5 +14,10 @@
 #
 
 class FoodForecast::UserIndulgence < ApplicationRecord
+  enum category: [
+    :allergies,
+    :kitchenware
+  ]
+
   belongs_to :user, class_name: 'FoodForecast::User', foreign_key: :user_id, required: false
 end

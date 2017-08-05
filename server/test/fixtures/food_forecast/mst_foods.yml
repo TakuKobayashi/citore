@@ -5,7 +5,7 @@
 #  id             :integer          not null, primary key
 #  food_id        :string(255)      not null
 #  name           :string(255)      not null
-#  classification :integer          default(0), not null
+#  classification :integer          default("cereals"), not null
 #  disposal       :float(24)        default(0.0), not null
 #  kcal           :float(24)        default(0.0), not null
 #  corrected_kcal :float(24)        default(0.0), not null

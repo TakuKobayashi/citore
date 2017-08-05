@@ -4,7 +4,7 @@
 #
 #  id       :integer          not null, primary key
 #  user_id  :integer          not null
-#  category :integer          default(0), not null
+#  category :integer          default("allergies"), not null
 #  word     :string(255)      not null
 #
 # Indexes

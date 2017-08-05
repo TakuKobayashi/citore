@@ -13,4 +13,5 @@
 #
 
 class FoodForecast::MstFoodComponent < ApplicationRecord
+  belongs_to :food, class_name: 'FoodForecast::MstFood', foreign_key: :mst_food_id, required: false
 end

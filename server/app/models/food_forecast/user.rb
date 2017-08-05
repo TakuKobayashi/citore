@@ -17,4 +17,11 @@
 #
 
 class FoodForecast::User < ApplicationRecord
+  before_create do
+    self.last_login_at = Time.current
+    self.token = SecureRandom.hex
+  end
+
+  has_one :period, class_name: 'FoodForecast::UserPeriod', foreign_key: :user_id, required: false
+  has_many :indulgence, class_name: 'FoodForecast::UserIndulgence', foreign_key: :user_id
 end

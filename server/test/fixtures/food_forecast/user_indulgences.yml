@@ -2,9 +2,10 @@
 #
 # Table name: food_forecast_user_indulgences
 #
-#  id      :integer          not null, primary key
-#  user_id :integer          not null
-#  word    :string(255)      not null
+#  id       :integer          not null, primary key
+#  user_id  :integer          not null
+#  category :integer          default(0), not null
+#  word     :string(255)      not null
 #
 # Indexes
 #

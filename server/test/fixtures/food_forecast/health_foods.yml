@@ -1,0 +1,25 @@
+# == Schema Information
+#
+# Table name: food_forecast_health_foods
+#
+#  id             :integer          not null, primary key
+#  mst_weather_id :integer          not null
+#  mst_food_id    :integer          not null
+#  weight         :float(24)        default(1.0), not null
+#
+# Indexes
+#
+#  food_health_relation_index  (mst_weather_id,mst_food_id)
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# This model initially had no columns defined. If you add columns to the
+# model remove the '{}' from the fixture names and add the columns immediately
+# below each fixture, per the syntax in the comments below
+#
+one: {}
+# column: value
+#
+two: {}
+# column: value

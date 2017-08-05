@@ -23,5 +23,7 @@ class FoodForecast::User < ApplicationRecord
   end
 
   has_one :period, class_name: 'FoodForecast::UserPeriod', foreign_key: :user_id, required: false
-  has_many :indulgence, class_name: 'FoodForecast::UserIndulgence', foreign_key: :user_id
+  has_many :indulgences, class_name: 'FoodForecast::UserIndulgence', foreign_key: :user_id
+  has_many :locations, class_name: 'FoodForecast::UserWeatherLocation', foreign_key: :user_id
+  has_many :restaurant_outputs, class_name: 'FoodForecast::UserRestaurantOutput', foreign_key: :user_id
 end

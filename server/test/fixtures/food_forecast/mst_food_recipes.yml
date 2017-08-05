@@ -8,6 +8,10 @@
 #  url         :string(255)      not null
 #  content     :text(65535)
 #
+# Indexes
+#
+#  user_periods_user_id_index  (mst_food_id)
+#
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 

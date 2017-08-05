@@ -1,0 +1,2 @@
+module FoodForecast::SettingsHelper
+end

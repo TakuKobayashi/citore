@@ -1,0 +1,2 @@
+module FoodForecast::AuthHelper
+end

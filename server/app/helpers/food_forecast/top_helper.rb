@@ -1,0 +1,2 @@
+module FoodForecast::TopHelper
+end

@@ -131,6 +131,23 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace :food_forecast do
+    root to: "top#index"
+
+    resource :auth, controller: :auth, only: [] do
+      post :login
+      post :logout
+      post :signup
+    end
+
+    resources :settings, only: [] do
+      collection do
+        get :input
+        post :register
+      end
+    end
+  end
+
   resource :profile, controller: :profile, only: [] do
     get :index
   end

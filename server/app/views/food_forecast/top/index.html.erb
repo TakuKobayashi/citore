@@ -56,35 +56,39 @@
     }, options);
   }, false);
 
+  var request_food_info = function(){
+    $.ajax({
+      type: "POST",
+      url: "<%= send_location_food_forecast_top_url %>",
+      xhrFields: {
+        withCredentials: true
+      },
+      data: {
+        "token": "<%= cookies[:token] %>",
+        "lat": loc.coords.latitude,
+        "lon": loc.coords.longitude
+      },
+      success: function(j_data){
+        var field = $("#restaurant_field");
+        field.empty();
+        $.each(j_data.restaurants, function(index, restaurant){
+           field.append('<span class="shopeats_box_title">' + restaurant.place_name + '</span><br/>');
+           field.append('<a href="' + restaurant.url + '" target="_blank" class="shopeats_box">');
+           field.append('<img width="150" height="150" src="' + restaurant.image_url + '" class="shopeats_box_img">');
+           field.append('</a><br/>');
+         });
+       }
+    });
+  }
+
   $(function() {
      $.datepicker.setDefaults($.datepicker.regional["ja"]);
-    
+     request_food_info();
      $("#btn").click(function(){
        console.log(loc);
-       $.ajax({
-         type: "POST",
-         url: "<%= send_location_food_forecast_top_url %>",
-         xhrFields: {
-           withCredentials: true
-         },
-         data: {
-           "token": "<%= cookies[:token] %>",
-           "lat": loc.coords.latitude,
-           "lon": loc.coords.longitude
-         },
-         success: function(j_data){
-           var field = $("#restaurant_field");
-           field.empty();
-           $.each(j_data.restaurants, function(index, restaurant){
-           	 field.append('<span class="shopeats_box_title">' + restaurant.place_name + '</span><br/>');
-           	 field.append('<a href="' + restaurant.url + '" target="_blank" class="shopeats_box">');
-           	 field.append('<img width="150" height="150" src="' + restaurant.image_url + '" class="shopeats_box_img">');
-           	 field.append('</a><br/>');
-           });
-         }
-      });
-      return false;
-    });
+       request_food_info();
+     });
+     return false;
   });
 
   function ChangeTab(tabname) {
@@ -120,7 +124,7 @@
   </p>
   <div id="tab1" class="tab">
     <p>外食</p>
-    <div id="restaurant_field"></div>
+    <div id="restaurant_field">現在情報を取得中です</div>
   </div>
   <div id="tab2" class="tab">
     <p>自炊</p>

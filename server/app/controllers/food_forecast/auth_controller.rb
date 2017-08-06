@@ -1,4 +1,4 @@
-class FoodForecast::AuthController < BaseController
+class FoodForecast::AuthController < FoodForecast::BaseController
   def login
     user = FoodForecast::User.find_by(token: cookies[:token])
     if user.blank?

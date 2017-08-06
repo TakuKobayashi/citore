@@ -1,4 +1,4 @@
-class FoodForecast::TopController < BaseController
+class FoodForecast::TopController < FoodForecast::BaseController
   before_action :find_login_user
 
   def index

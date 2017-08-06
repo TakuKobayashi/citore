@@ -1,6 +1,5 @@
-class FoodForecast::SettingsController < BaseController
+class FoodForecast::SettingsController < FoodForecast::BaseController
   def input
-    head(:ok)
   end
 
   def register

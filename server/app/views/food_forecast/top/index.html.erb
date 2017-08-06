@@ -73,9 +73,14 @@
            "lon": loc.coords.longitude
          },
          success: function(j_data){
-    
-                    // 処理を記述
-    
+           var field = $("#restaurant_field");
+           field.empty();
+           $.each(j_data.restaurants, function(index, restaurant){
+           	 field.append('<span class="shopeats_box_title">' + restaurant.place_name + '</span><br/>');
+           	 field.append('<a href="' + restaurant.url + '" target="_blank" class="shopeats_box">');
+           	 field.append('<img width="150" height="150" src="' + restaurant.image_url + '" class="shopeats_box_img">');
+           	 field.append('</a><br/>');
+           });
          }
       });
       return false;
@@ -110,15 +115,12 @@
 
 <div class="tabbox">
   <p class="tabs">
-  	<%= link_to("#tab1", "外食", {class: "tab1", onclick: "ChangeTab('tab1'); return false;"}) %>
-  	<%= link_to("#tab2", "自炊", {class: "tab2", onclick: "ChangeTab('tab2'); return false;"}) %>
+  	<%= link_to("外食", "#tab1" , {class: "tab1", onclick: "ChangeTab('tab1'); return false;"}) %>
+  	<%= link_to("自炊", "#tab2", {class: "tab2", onclick: "ChangeTab('tab2'); return false;"}) %>
   </p>
   <div id="tab1" class="tab">
     <p>外食</p>
-      <a href="https://tabelog.com/tokyo/A1310/A131001/13172998/" target="_blank" class="shopeats_box">
-      <img src="https://tblg.k-img.com/restaurant/images/Rvw/31971/150x150_square_31971706.jpg" alt="インドネパール料理" width="" height="" class="shopeats_box_img">
-      <span class="shopeats_box_title">インドネパール料理SAPANA</span>
-    </a>
+    <div id="restaurant_field"></div>
   </div>
   <div id="tab2" class="tab">
     <p>自炊</p>

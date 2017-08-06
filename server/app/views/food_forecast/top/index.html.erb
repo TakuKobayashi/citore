@@ -78,10 +78,8 @@
 <div>
   <figure class="button_panel">
   <p>
-    <%= form_tag(send_location_food_forecast_top_url) do %>
-      <%= submit_tag("リロード", id: "btn") %>
-      <%= submit_tag("周期変更", id: "link") %>
-    <% end %>
+    <%= submit_tag("リロード", id: "btn") %>
+    <%= link_to("周期変更", input_food_forecast_settings_url, id: "link") %>
   </p>
   </figure>
 </div>

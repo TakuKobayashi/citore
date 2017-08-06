@@ -15,37 +15,20 @@
     $(function() {
         $.datepicker.setDefaults($.datepicker.regional["ja"]);
         $("#rhythm_start").datepicker({
-            changeYear: true, //年を表示
-        changeMonth: true //月を選択
+          changeYear: true, //年を表示
+          changeMonth: true //月を選択
         });
         $("#rhythm_first").datepicker({
-            changeYear: true, //年を表示
-        changeMonth: true //月を選択
+          changeYear: true, //年を表示
+          changeMonth: true //月を選択
         });
         $("#rhythm_center").datepicker({
-            changeYear: true, //年を表示
-        changeMonth: true //月を選択
+          changeYear: true, //年を表示
+          changeMonth: true //月を選択
         });
         $("#rhythm_after").datepicker({
-            changeYear: true, //年を表示
-        changeMonth: true //月を選択
-        });
-    
-        $("#btn").click(function(){
- 
-            $.ajax({
-                type: "POST",
-                url: "https://taptappun.net/food_forecast/top/send_location",
-                data: {
-                    "lat": pos.coords.latitude ,
-                    "lon": pos.coords.longitude
-                },
-                success: function(j_data){
-    
-                    // 処理を記述
-    
-                }
-            });
+          changeYear: true, //年を表示
+          changeMonth: true //月を選択
         });
     });
 
@@ -78,24 +61,13 @@
         $(base_select).prop('disabled', false);
     }
 
-document.addEventListener("DOMContentLoaded", function() {
-  var options = {
-    enableHighAccuracy: true,
-    timeout: 60000,
-    maximumAge: 0
-  };
-  window.navigator.geolocation.getCurrentPosition(success, error, options);
-}, false);
-
-function success(pos) {
-  document.getElementById('location_latitude').value = pos.coords.latitude;
-  document.getElementById('location_longitude').value = pos.coords.longitude;
-}
-
-function error(err) {
-  console.warn('ERROR(' + err.code + '): ' + err.message);
-}
-
+  document.addEventListener("DOMContentLoaded", function() {
+    var options = {
+      enableHighAccuracy: true,
+      timeout: 60000,
+      maximumAge: 0
+    };
+  }, false);
 </script>
 
 <h1>ごはんForecast</h1>
@@ -138,7 +110,7 @@ function error(err) {
     -->
   </div>
   <div id="each">
-    <p>
+    <p id="each_base">
       <%= radio_button_tag('rhythm_select', 'select_each', {onclick: "radioSelect(rhythm_base,each_base)"}) %>都度設定
       <p>前期<%= text_field_tag(:rhythm_first) %></p>
       <%= select_tag(:each_first_a, options_for_select((0..9).map{|i| [i, i] }), {onchange: "numconv_f(each_first_day)"}) %>

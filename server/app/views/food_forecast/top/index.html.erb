@@ -72,10 +72,8 @@
         var field = $("#restaurant_field");
         field.empty();
         $.each(j_data.restaurants, function(index, restaurant){
-           field.append('<span class="shopeats_box_title">' + restaurant.place_name + '</span><br/>');
-           field.append('<a href="' + restaurant.url + '" target="_blank" class="shopeats_box">');
-           field.append('<img width="150" height="150" src="' + restaurant.image_url + '" class="shopeats_box_img">');
-           field.append('</a><br/>');
+           field.append('<a target="_blank" class="shopeats_box" href="' + restaurant.url + '">' + restaurant.place_name + '</a><br/>');
+           field.append('<img width="150" height="150" src="' + restaurant.image_url + '" class="shopeats_box_img"><br/>');
          });
        }
     });
@@ -123,11 +121,10 @@
   	<%= link_to("自炊", "#tab2", {class: "tab2", onclick: "ChangeTab('tab2'); return false;"}) %>
   </p>
   <div id="tab1" class="tab">
-    <p>外食</p>
-    <div id="restaurant_field">現在情報を取得中です</div>
+    <div id="restaurant_field" style="text-align: center;">現在情報を取得中です</div>
   </div>
   <div id="tab2" class="tab">
-    <p>自炊</p>
+    <div id="recipe_field" style="text-align: center;">現在情報を取得中です</div>
   </div>
 <!--   <div id="tab3" class="tab">
       <p>特殊</p>

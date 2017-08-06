@@ -1,7 +1,7 @@
 <style type="text/css">
-  body {background-color:#999999}
-  div#notification {background-color:#f08080}
-  div#rhythm {background-color:#00fa9a}
+  div#notification {background-color:#a9eee6}
+  div#rhythm {background-color:#f38181}
+  div#each {background-color:#625772}
 </style>
 
 <script>
@@ -137,7 +137,7 @@ function error(err) {
     </script>
     -->
   </div>
-  <div>
+  <div id="each">
     <p>
       <%= radio_button_tag('rhythm_select', 'select_each', {onclick: "radioSelect(rhythm_base,each_base)"}) %>都度設定
       <p>前期<%= text_field_tag(:rhythm_first) %></p>
@@ -157,5 +157,7 @@ function error(err) {
     </p>
   </div>
   <%= hidden_field_tag(:token, @current_user.try(:token)) %>
-  <%= submit_tag("入力完了",{id: "btn"}) %>
+  <div>
+    <p><%= submit_tag("入力完了",{id: "btn"}) %></p>
+  </div>
 <% end %>

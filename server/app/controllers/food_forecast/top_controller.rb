@@ -1,5 +1,6 @@
 class FoodForecast::TopController < FoodForecast::BaseController
-  before_action :find_login_user
+  protect_from_forgery
+  before_action :find_login_user, only: [:index]
 
   def index
     # 天気をとる
@@ -7,6 +8,7 @@ class FoodForecast::TopController < FoodForecast::BaseController
   end
 
   def send_location
+    @current_user = FoodForecast::User.find_by(token: params[:token])
     location = @current_user.generate_weather_location!(lat: params[:lat], lon: params[:lon], ipaddress: request.remote_ip)
     restaurants = location.search_and_recommend_spots!
     render :json => {location: location, restaurants: restaurants}

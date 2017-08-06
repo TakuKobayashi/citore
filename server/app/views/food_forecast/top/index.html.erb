@@ -38,51 +38,71 @@
   }
 </style>
 <script>
-    var rhythm_day = 0;
-    var rhythm_date;
+  var loc = {coords: {}};
+  var rhythm_day = 0;
+  var rhythm_date;
+  document.addEventListener("DOMContentLoaded", function() {
+    var options = {
+      enableHighAccuracy: true,
+      timeout: 60000,
+      maximumAge: 0
+    };
+    window.navigator.geolocation.getCurrentPosition(function(pos){
+      console.log(pos);
+      loc = pos;
+    },
+    function(err){
+      console.warn('ERROR(' + err.code + '): ' + err.message);
+    }, options);
+  }, false);
 
-    $(function() {
-        $.datepicker.setDefaults($.datepicker.regional["ja"]);
+  $(function() {
+     $.datepicker.setDefaults($.datepicker.regional["ja"]);
     
-        $("#btn").click(function(){
- 
-            $.ajax({
-                type: "POST",
-                url: "<%= send_location_food_forecast_top_url %>",
-                data: {
-                    "lat": pos.coords.latitude ,
-                    "lon": pos.coords.longitude
-                },
-                success: function(j_data){
+     $("#btn").click(function(){
+       console.log(loc);
+       $.ajax({
+         type: "POST",
+         url: "<%= send_location_food_forecast_top_url %>",
+         xhrFields: {
+           withCredentials: true
+         },
+         data: {
+           "token": "<%= cookies[:token] %>",
+           "lat": loc.coords.latitude,
+           "lon": loc.coords.longitude
+         },
+         success: function(j_data){
     
                     // 処理を記述
     
-                }
-            });
-        });
+         }
+      });
+      return false;
     });
+  });
 
-    function ChangeTab(tabname) {
+  function ChangeTab(tabname) {
     // 全部消す
     document.getElementById('tab1').style.display = 'none';
     document.getElementById('tab2').style.display = 'none';
     //document.getElementById('tab3').style.display = 'none';
     // 指定箇所のみ表示
     document.getElementById(tabname).style.display = 'block';
-    }
+  }
 
 </script>
 
 <figure class="title_img">
-  <%= image_tag("food_forecast/service_title.png", {width: "150", height: "150", alt: "ごはんForecast", style: "text-align: center;"}) %>
+  <%= image_tag("food_forecast/service_title.png", {width: "160", height: "160", alt: "ごはんForecast", style: "text-align: center;"}) %>
 </figure>
 
 <div>
   <figure class="button_panel">
-  <p>
-    <%= submit_tag("リロード", id: "btn", class: "pure-button link-button") %>
+  <div style="vertical-align:baseline;">
+    <%= link_to(image_tag("food_forecast/reload.gif", {width: "100", height: "90"}), "#", id: "btn") %>
     <%= link_to("周期変更", input_food_forecast_settings_url, id: "link", class: "pure-button link-button") %>
-  </p>
+  </div>
   </figure>
 </div>
 

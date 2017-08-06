@@ -1,3 +1,27 @@
+<script>
+  $(function() {
+    $.datepicker.setDefaults($.datepicker.regional["ja"]);
+    $("#rhythm_start").datepicker({
+      changeYear: true, //年を表示
+	  changeMonth: true //月を選択
+    });
+    $("#rhythm_first").datepicker({
+      changeYear: true, //年を表示
+	  changeMonth: true //月を選択
+    });
+  });
+
+  function rhythmFunc(){
+    var rhythm_day=Number(document.rhythm_base.rhythm_a.value + document.rhythm_base.rhythm_b.value + document.rhythm_base.rhythm_c.value);
+    document.write(rhythm_day);
+  }
+
+  function radioSelect(base_noselect,base_select){
+    $(base_noselect).prop('disabled', true);
+    $(base_select).prop('disabled', false);
+  }
+</script>
+
 <h1>ごはんForecast</h1>
 <p>テストモック</p>
 <%= form_tag(register_food_forecast_settings_url) do %>
@@ -19,8 +43,6 @@
         -->
 
     <p>開始日<input type="text" id="rhythm_start" /></p>
-    <script type="text/javascript" src=rhythmFunc();>
-    </script>
     <!-- <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js">
         var rhythm_day=0;
         var str="";
@@ -41,4 +63,6 @@
       <p>前期<%= text_field_tag(:rhythm_first) %></p>
     </p>
   </div>
+  <%= hidden_field_tag(:token, @current_user.try(:token)) %>
+  <%= submit_tag("OK") %>
 <% end %>

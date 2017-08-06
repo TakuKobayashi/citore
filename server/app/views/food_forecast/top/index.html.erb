@@ -1,6 +1,117 @@
-ログイン中<br/>
-これはトップ画面です。<br/>
-<%= link_to("設定", input_food_forecast_settings_url) %>
-<%= form_tag(send_location_food_forecast_top_url) do %>
-  <%= submit_tag("確認") %>
-<% end %>
+<style type="text/css">
+  body {background-color:#999999}
+
+  div#notification {background-color:#f08080}
+  div#rhythm {background-color:#00fa9a}
+  /* 表示領域全体 */
+  div.tabbox {
+    margin: 0px; padding: 0px; width: 350px;
+  }
+
+  /* タブ部分 */
+  p.tabs { margin: 0px; padding: 0px; }
+  p.tabs a {
+    display: block; width: 5em; float: left;
+    margin: 0px 1px 0px 0px; padding: 3px;
+    text-align: center;
+    border-radius: 12px 12px 0px 0px; /* 角を丸くする */
+  }
+  p.tabs a.tab1 { background-color: blue; color: white; }
+  p.tabs a.tab2 { background-color: #aaaa00; color:white;}
+  p.tabs a.tab3 { background-color: red; color: white; }
+  p.tabs a:hover { color: yellow; }
+
+  /* タブ中身のボックス */
+  div.tab { height: 150px; overflow: auto; clear: left; }
+  div#tab1 {
+    border: 2px solid blue; background-color: #ccffff;
+  }
+  div#tab2 {
+    border: 2px solid #aaaa00; background-color: #ffffcc;
+  }
+  div#tab3 {
+    border: 2px solid red; background-color: #ffcccc;
+  }
+  div.tab p { margin: 0.5em; }
+</style>
+<script>
+    var rhythm_day = 0;
+    var rhythm_date;
+
+    $(function() {
+        $.datepicker.setDefaults($.datepicker.regional["ja"]);
+    
+        $("#btn").click(function(){
+ 
+            $.ajax({
+                type: "POST",
+                url: "<%= send_location_food_forecast_top_url %>",
+                data: {
+                    "lat": pos.coords.latitude ,
+                    "lon": pos.coords.longitude
+                },
+                success: function(j_data){
+    
+                    // 処理を記述
+    
+                }
+            });
+        });
+    });
+
+    function ChangeTab(tabname) {
+    // 全部消す
+    document.getElementById('tab1').style.display = 'none';
+    document.getElementById('tab2').style.display = 'none';
+    //document.getElementById('tab3').style.display = 'none';
+    // 指定箇所のみ表示
+    document.getElementById(tabname).style.display = 'block';
+    }
+
+</script>
+
+<h1>ごはんForecast</h1>
+<figure class="title_img">
+  <%= image_tag("food_forecast/service_title.png", {width: "300", height: "300", alt: "ごはんForecast"}) %>
+</figure>
+
+<div>
+  <figure class="button_panel">
+  <p>
+    <%= form_tag(send_location_food_forecast_top_url) do %>
+      <%= submit_tag("リロード", id: "btn") %>
+      <%= submit_tag("周期変更", id: "link") %>
+    <% end %>
+  </p>
+  </figure>
+</div>
+
+<div><p>今日のレコメンド</p></div>
+
+<div class="tabbox">
+  <p class="tabs">
+  	<%= link_to("#tab1", "外食", {class: "tab1", onclick: "ChangeTab('tab1'); return false;"}) %>
+  	<%= link_to("#tab2", "自炊", {class: "tab2", onclick: "ChangeTab('tab2'); return false;"}) %>
+<!--      <a href="#tab3" class="tab3" onclick="ChangeTab('tab3'); return false;">特殊</a>
+-->
+  </p>
+  <div id="tab1" class="tab">
+    <p>外食</p>
+      <a href="https://tabelog.com/tokyo/A1310/A131001/13172998/" target="_blank" class="shopeats_box">
+      <img src="https://tblg.k-img.com/restaurant/images/Rvw/31971/150x150_square_31971706.jpg" alt="インドネパール料理" width="" height="" class="shopeats_box_img">
+      <span class="shopeats_box_title">インドネパール料理SAPANA</span>
+    </a>
+  </div>
+  <div id="tab2" class="tab">
+    <p>自炊</p>
+  </div>
+<!--   <div id="tab3" class="tab">
+      <p>特殊</p>
+   </div>
+-->
+</div>
+
+<script type="text/javascript">
+  // デフォルトのタブを選択
+  ChangeTab('tab1');
+</script>

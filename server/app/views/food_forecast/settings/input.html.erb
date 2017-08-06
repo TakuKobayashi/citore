@@ -1,48 +1,128 @@
+<style type="text/css">
+  body {background-color:#999999}
+  div#notification {background-color:#f08080}
+  div#rhythm {background-color:#00fa9a}
+</style>
+
 <script>
-  $(function() {
-    $.datepicker.setDefaults($.datepicker.regional["ja"]);
-    $("#rhythm_start").datepicker({
-      changeYear: true, //年を表示
-	  changeMonth: true //月を選択
-    });
-    $("#rhythm_first").datepicker({
-      changeYear: true, //年を表示
-	  changeMonth: true //月を選択
-    });
-  });
+    var rhythm_day = 0;
+    var rhythm_date;
+    var each_first_day = 0;
+    var each_first_date;
+    var each_center_day = 0;
+    var each_after_day = 0;
 
-  function rhythmFunc(){
-    var rhythm_day=Number(document.rhythm_base.rhythm_a.value + document.rhythm_base.rhythm_b.value + document.rhythm_base.rhythm_c.value);
-    document.write(rhythm_day);
-  }
+    $(function() {
+        $.datepicker.setDefaults($.datepicker.regional["ja"]);
+        $("#rhythm_start").datepicker({
+            changeYear: true, //年を表示
+        changeMonth: true //月を選択
+        });
+        $("#rhythm_first").datepicker({
+            changeYear: true, //年を表示
+        changeMonth: true //月を選択
+        });
+        $("#rhythm_center").datepicker({
+            changeYear: true, //年を表示
+        changeMonth: true //月を選択
+        });
+        $("#rhythm_after").datepicker({
+            changeYear: true, //年を表示
+        changeMonth: true //月を選択
+        });
+    
+        $("#btn").click(function(){
+ 
+            $.ajax({
+                type: "POST",
+                url: "https://taptappun.net/food_forecast/top/send_location",
+                data: {
+                    "lat": pos.coords.latitude ,
+                    "lon": pos.coords.longitude
+                },
+                success: function(j_data){
+    
+                    // 処理を記述
+    
+                }
+            });
+        });
+    });
 
-  function radioSelect(base_noselect,base_select){
-    $(base_noselect).prop('disabled', true);
-    $(base_select).prop('disabled', false);
-  }
+    function numconv_s(total){
+        //var rhythm_day=Number(document.rhythm_base.rhythm_a.value + document.rhythm_base.rhythm_b.value + document.rhythm_base.rhythm_c.value);
+        total=Number(document.rhythm_base.rhythm_a.value + document.rhythm_base.rhythm_b.value + document.rhythm_base.rhythm_c.value);
+        document.write(total);
+    }
+
+    function numconv_f(total){
+        //var rhythm_day=Number(document.rhythm_base.rhythm_a.value + document.rhythm_base.rhythm_b.value + document.rhythm_base.rhythm_c.value);
+        total=Number(document.each_base.each_first_a.value + document.each_base.each_first_b.value + document.each_base.each_first_c.value);
+        document.write(total);
+    }
+    
+    function numconv_c(total){
+        //var rhythm_day=Number(document.rhythm_base.rhythm_a.value + document.rhythm_base.rhythm_b.value + document.rhythm_base.rhythm_c.value);
+        total=Number(document.each_base.each_center_a.value + document.each_base.each_center_b.value + document.each_base.each_center_c.value);
+        document.write(total);
+    }
+    
+    function numconv_a(total){
+        //var rhythm_day=Number(document.rhythm_base.rhythm_a.value + document.rhythm_base.rhythm_b.value + document.rhythm_base.rhythm_c.value);
+        total=Number(document.each_base.each_after_a.value + document.each_base.each_after_b.value + document.each_base.each_after_c.value);
+        document.write(total);
+    }
+
+    function radioSelect(base_noselect,base_select){
+        $(base_noselect).prop('disabled', true);
+        $(base_select).prop('disabled', false);
+    }
+
+document.addEventListener("DOMContentLoaded", function() {
+  var options = {
+    enableHighAccuracy: true,
+    timeout: 60000,
+    maximumAge: 0
+  };
+  window.navigator.geolocation.getCurrentPosition(success, error, options);
+}, false);
+
+function success(pos) {
+  document.getElementById('location_latitude').value = pos.coords.latitude;
+  document.getElementById('location_longitude').value = pos.coords.longitude;
+}
+
+function error(err) {
+  console.warn('ERROR(' + err.code + '): ' + err.message);
+}
+
 </script>
 
 <h1>ごはんForecast</h1>
 <p>テストモック</p>
+
 <%= form_tag(register_food_forecast_settings_url) do %>
   <div id="notification">
     <p>通知
       <%= select_tag(:notification, options_for_select((0..23).map{|i| ["#{i}時", i] })) %>
     </p>
   </div>
+  <script type="text/javascript">
+    window.onload = radioSelect(each_base,rhythm_base);
+  </script>
 
   <div id="rhythm">
     <p>
       <%= radio_button_tag('rhythm_select', 'select_rhythm', {onclick: "radioSelect(each_base,rhythm_base)", checked: true}) %>周期設定
-      <%= select_tag(:rhythm_a, options_for_select((0..9).map{|i| [i, i] }), {onchange: "rhythmFunc()"}) %>
-      <%= select_tag(:rhythm_b, options_for_select((0..9).map{|i| [i, i] }), {onchange: "rhythmFunc()"}) %>
-      <%= select_tag(:rhythm_c, options_for_select((0..9).map{|i| [i, i] }), {onchange: "rhythmFunc()"}) %>日間
+      <%= select_tag(:rhythm_a, options_for_select((0..9).map{|i| [i, i] }), {onchange: "numconv_s(rhythm_day)"}) %>
+      <%= select_tag(:rhythm_b, options_for_select((0..9).map{|i| [i, i] }), {onchange: "numconv_s(rhythm_day)"}) %>
+      <%= select_tag(:rhythm_c, options_for_select((0..9).map{|i| [i, i] }), {onchange: "numconv_s(rhythm_day)"}) %>日間
+      <p>開始日<%= text_field_tag(:rhythm_start) %></p>
     </p>
 
     <!-- var rhythm_day=Number(document.rhythm_base.rhythm_a.value + document.rhythm_base.rhythm_b.value + document.rhythm_base.rhythm_c.value);
         -->
-
-    <p>開始日<input type="text" id="rhythm_start" /></p>
+    
     <!-- <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js">
         var rhythm_day=0;
         var str="";
@@ -61,8 +141,21 @@
     <p>
       <%= radio_button_tag('rhythm_select', 'select_each', {onclick: "radioSelect(rhythm_base,each_base)"}) %>都度設定
       <p>前期<%= text_field_tag(:rhythm_first) %></p>
+      <%= select_tag(:each_first_a, options_for_select((0..9).map{|i| [i, i] }), {onchange: "numconv_f(each_first_day)"}) %>
+      <%= select_tag(:each_first_b, options_for_select((0..9).map{|i| [i, i] }), {onchange: "numconv_f(each_first_day)"}) %>
+      <%= select_tag(:each_first_c, options_for_select((0..9).map{|i| [i, i] }), {onchange: "numconv_f(each_first_day)"}) %>日間
+
+      <p>中期<%= text_field_tag(:rhythm_center) %></p>
+      <%= select_tag(:each_center_a, options_for_select((0..9).map{|i| [i, i] }), {onchange: "numconv_f(each_center_day)"}) %>
+      <%= select_tag(:each_center_b, options_for_select((0..9).map{|i| [i, i] }), {onchange: "numconv_f(each_center_day)"}) %>
+      <%= select_tag(:each_center_c, options_for_select((0..9).map{|i| [i, i] }), {onchange: "numconv_f(each_center_day)"}) %>日間
+
+      <p>後期 <%= text_field_tag(:rhythm_after) %></p>
+      <%= select_tag(:each_after_a, options_for_select((0..9).map{|i| [i, i] }), {onchange: "numconv_f(each_after_day)"}) %>
+      <%= select_tag(:each_after_b, options_for_select((0..9).map{|i| [i, i] }), {onchange: "numconv_f(each_after_day)"}) %>
+      <%= select_tag(:each_after_c, options_for_select((0..9).map{|i| [i, i] }), {onchange: "numconv_f(each_after_day)"}) %>日間
     </p>
   </div>
   <%= hidden_field_tag(:token, @current_user.try(:token)) %>
-  <%= submit_tag("OK") %>
+  <%= submit_tag("入力完了",{id: "btn"}) %>
 <% end %>

@@ -4,7 +4,6 @@ class FoodForecast::TopController < FoodForecast::BaseController
   def index
     # 天気をとる
     # 天気から飲食店やレシピを引っ張る
-    head(:ok)
   end
 
   private

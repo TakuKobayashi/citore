@@ -134,6 +134,10 @@ Rails.application.routes.draw do
   namespace :food_forecast do
     root to: "top#index"
 
+    resource :top, controller: :top, only: [] do
+      post :send_location
+    end
+
     resource :auth, controller: :auth, only: [] do
       post :login
       post :logout

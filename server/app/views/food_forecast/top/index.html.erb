@@ -1,3 +1,6 @@
 ログイン中<br/>
 これはトップ画面です。<br/>
 <%= link_to("設定", input_food_forecast_settings_url) %>
+<%= form_tag(send_location_food_forecast_top_url) do %>
+  <%= submit_tag("確認") %>
+<% end %>

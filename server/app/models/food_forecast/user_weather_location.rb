@@ -32,7 +32,20 @@ class FoodForecast::UserWeatherLocation < ApplicationRecord
   GNAVI_API_URL = "https://api.gnavi.co.jp/RestSearchAPI/20150630/"
 
   #https://developers.google.com/places/web-service/search?hl=ja
-　GOOGLE_PLACE_API_URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/output?parameters"
+  GOOGLE_PLACE_API_URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/output?parameters"
+
+  YAHOO_WEATHER_API_URL = "https://map.yahooapis.jp/weather/V1/place"
+
+  after_validation :reverse_geocode
+  reverse_geocoded_by :lat, :lon, address: :address, language: :ja
+
+  def update_weather_reports!
+    apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
+    client = HTTPClient.new
+    response = client.get(YAHOO_WEATHER_API_URL, {appid: apiconfig["yahoo"]["appId"], coordinates: [self.lat, self.lon].join(","), output: :json})
+    hash = JSON.parse(response.body)
+    update!(weather_reports: hash["Feature"])
+  end
 
   def self.icon_url
     return "https://taptappun.s3.amazonaws.com/project/spotgacha/icon/spotgacha_icon.jpg"

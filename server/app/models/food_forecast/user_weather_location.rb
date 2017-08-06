@@ -48,7 +48,7 @@ class FoodForecast::UserWeatherLocation < ApplicationRecord
   end
 
   def self.icon_url
-    return "https://taptappun.s3.amazonaws.com/project/spotgacha/icon/spotgacha_icon.jpg"
+    return "https://s3-ap-northeast-1.amazonaws.com/taptappun/project/food_forecast/images/icon.png"
   end
 
   def self.search_photo_url(keyword:)

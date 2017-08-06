@@ -8,7 +8,8 @@ class FoodForecast::TopController < FoodForecast::BaseController
 
   def send_location
     location = @current_user.generate_weather_location!(lat: params[:lat], lon: params[:lon], ipaddress: request.remote_ip)
-    render :json => location
+    restaurants = location.search_and_recommend_spots!
+    render :json => {location: location, restaurants: restaurants}
   end
 
   private

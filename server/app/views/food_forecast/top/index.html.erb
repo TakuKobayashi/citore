@@ -33,6 +33,9 @@
     border: 2px solid red; background-color: #ffcccc;
   }
   div.tab p { margin: 0.5em; }
+  .link-button{
+  	color: #ffe167;
+  }
 </style>
 <script>
     var rhythm_day = 0;
@@ -78,8 +81,8 @@
 <div>
   <figure class="button_panel">
   <p>
-    <%= submit_tag("リロード", id: "btn") %>
-    <%= link_to("周期変更", input_food_forecast_settings_url, id: "link") %>
+    <%= submit_tag("リロード", id: "btn", class: "pure-button link-button") %>
+    <%= link_to("周期変更", input_food_forecast_settings_url, id: "link", class: "pure-button link-button") %>
   </p>
   </figure>
 </div>
@@ -90,8 +93,6 @@
   <p class="tabs">
   	<%= link_to("#tab1", "外食", {class: "tab1", onclick: "ChangeTab('tab1'); return false;"}) %>
   	<%= link_to("#tab2", "自炊", {class: "tab2", onclick: "ChangeTab('tab2'); return false;"}) %>
-<!--      <a href="#tab3" class="tab3" onclick="ChangeTab('tab3'); return false;">特殊</a>
--->
   </p>
   <div id="tab1" class="tab">
     <p>外食</p>

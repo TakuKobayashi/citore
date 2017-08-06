@@ -1,0 +1,44 @@
+<h1>ごはんForecast</h1>
+<p>テストモック</p>
+<%= form_tag(register_food_forecast_settings_url) do %>
+  <div id="notification">
+    <p>通知
+      <%= select_tag(:notification, options_for_select((0..23).map{|i| ["#{i}時", i] })) %>
+    </p>
+  </div>
+
+  <div id="rhythm">
+    <p>
+      <%= radio_button_tag('rhythm_select', 'select_rhythm', {onclick: "radioSelect(each_base,rhythm_base)", checked: true}) %>周期設定
+      <%= select_tag(:rhythm_a, options_for_select((0..9).map{|i| [i, i] }), {onchange: "rhythmFunc()"}) %>
+      <%= select_tag(:rhythm_b, options_for_select((0..9).map{|i| [i, i] }), {onchange: "rhythmFunc()"}) %>
+      <%= select_tag(:rhythm_c, options_for_select((0..9).map{|i| [i, i] }), {onchange: "rhythmFunc()"}) %>日間
+    </p>
+
+    <!-- var rhythm_day=Number(document.rhythm_base.rhythm_a.value + document.rhythm_base.rhythm_b.value + document.rhythm_base.rhythm_c.value);
+        -->
+
+    <p>開始日<input type="text" id="rhythm_start" /></p>
+    <script type="text/javascript" src=rhythmFunc();>
+    </script>
+    <!-- <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js">
+        var rhythm_day=0;
+        var str="";
+            <p>開始日
+
+            </p>
+        document.open();
+        if (document.rhythm_base.rhythm_a.value == "9") {
+            document.write(document.rhythm_base.rhythm_a.value);
+        }
+        document.close();
+    </script>
+    -->
+  </div>
+  <div>
+    <p>
+      <%= radio_button_tag('rhythm_select', 'select_each', {onclick: "radioSelect(rhythm_base,each_base)"}) %>都度設定
+      <p>前期<%= text_field_tag(:rhythm_first) %></p>
+    </p>
+  </div>
+<% end %>

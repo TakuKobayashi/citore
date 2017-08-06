@@ -27,9 +27,9 @@ class FoodForecast::MstFood < ApplicationRecord
     :seaweeds, #海藻類
     :mushrooms, #きのこ類
     :pulses, #豆類
-    :Meats, #肉類
+    :meats, #肉類
     :seefoods, #魚介類
-    :Eggs, #卵類
+    :eggs, #卵類
     :milk, #乳類
     :oils, #油脂類
     :sugar, #砂糖

@@ -7,6 +7,6 @@ class CreateFoodForecastMstWeathers < ActiveRecord::Migration[5.1]
       t.float :threshold, null: false, default: 0
     end
 
-    add_index :food_forecast_mst_weathers, :factor, unique: true, name: "weather_factor_index"
+    add_index :food_forecast_mst_weathers, [:factor, :inequality], unique: true, name: "weather_factor_inequality_index"
   end
 end

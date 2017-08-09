@@ -47,6 +47,8 @@ canvas {
 /* To remove the scrollbars */
 
 .home-menu {
+  display: flex;
+  /* スクロールしても一が固定されたまま */
   position: fixed;
   top: 0;
   left: 0;

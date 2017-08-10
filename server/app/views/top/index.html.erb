@@ -22,8 +22,20 @@
 </div>
 
 <section id="top-products" class="top-products">
-  <div>
-    <%= link_to(t("homepage.top.title.products"), products_path) %>
+  <div class="top-prosucts-field">
+    <h2 class="top-products-caption">
+      <span class="top-products-caption-label"><%= t("homepage.top.title.products") %></span>
+    </h2>
+    <div class="top-prosucts-exlain">
+      <p class="top-products-summary">主にプライベートで作成したアプリやツール等の制作物をご紹介</p>
+      <p class="top-products-message">私はよくハッカソンイベントやプライベートでの活動の中でアプリやツールなどを作成しています。ここではその中で制作した制作物をご紹介していきます。</p>
+    </div>
+    <div class="top-prosucts-contents">
+
+    </div>
+    <div class="top-prosucts-contents-all">
+      <%= link_to("もっと見る", products_path) %>
+    </div>
   </div>
 </section>
 

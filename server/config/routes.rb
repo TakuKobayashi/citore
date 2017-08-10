@@ -101,6 +101,8 @@ Rails.application.routes.draw do
   end
 
   namespace :tools do
+    root to: "top#index"
+
     resource :chat, controller: :chat, only: [:index] do
       get :index
     end
@@ -109,10 +111,6 @@ Rails.application.routes.draw do
       get :canvas
       get :threed
       get :base64
-    end
-
-    resource :top, controller: :top, only: [] do
-      get :index
     end
 
     resource :texture_packer, controller: :texture_packer, only: [] do
@@ -156,12 +154,9 @@ Rails.application.routes.draw do
     get :index
   end
 
-  resources :products, only: [:index, :show] do
-  end
-
-  resource :community, controller: :community, only: [] do
-    get :index
-  end
+  resources :products, only: [:index, :show]
+  resources :relations, only: [:index]
+  resources :articles, only: [:index]
 
   resource :contact, controller: :contact, only: [] do
     get :index

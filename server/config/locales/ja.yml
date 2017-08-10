@@ -440,12 +440,21 @@ ja:
       title: タプンページ
       profile: お前誰よ?
       products: 制作物
-      community: コミュニティー
+      relations: 関わっているもの
       tools: WebツールやAPI
-      contact: お問い合わせ
+      articles: 記事
+      contacts: お問い合わせ
       application: アプリ系
       web: Web系
       iot: IoT系
       vrarmr: VR・AR・MR系
       bot: TwitterやLineなどのBot系
-      other: その他
+      others: その他
+    top:
+      title:
+        products: 制作物
+        tools: WebツールやAPI
+        articles: 記事
+        relations: 関わっているもの
+        contacts: お問い合わせ
+        others: その他

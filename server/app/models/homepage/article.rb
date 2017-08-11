@@ -21,4 +21,8 @@
 #
 
 class Homepage::Article < ApplicationRecord
+  def self.import!
+    Homepage::Qiita.import_articles!
+    Homepage::Slideshare.import_articles!
+  end
 end

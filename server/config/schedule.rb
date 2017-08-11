@@ -5,6 +5,10 @@
 
 set :output, "#{path}/log/cron.log"
 
+every :day, at: '11:00' do
+  runner "Homepage::Article.import!"
+end
+
 =begin
 every :day, at: "2:00 am" do
   rake "batch:db_dump_and_upload"

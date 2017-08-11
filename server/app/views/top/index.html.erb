@@ -89,13 +89,31 @@
 </section>
 
 <section id="top-relations" class="top-relations">
-  <div>
-    <%= link_to(t("homepage.top.title.relations"), relations_path) %>
+  <div class="top-relations-field">
+    <h2 class="top-relations-caption">
+      <span class="top-relations-caption-label"><%= t("homepage.top.title.relations") %></span>
+    </h2>
+    <div class="top-relations-exlain">
+      <p class="top-relations-message">以下のコミュニティも参加、または運営しております。</p>
+    </div>
+    <div class="top-relations-contents">
+    </div>
+    <div class="top-relations-contents-all">
+      <%= link_to("詳細を見る", relations_path) %>
+    </div>
   </div>
 </section>
 
 <section id="top-contacts" class="top-contacts">
-  <div>
-    <%= link_to(t("homepage.top.title.contacts"), contact_path) %>
+  <div class="top-contacts-field">
+    <h2 class="top-contacts-caption">
+      <span class="top-contacts-caption-label"><%= t("homepage.top.title.contacts") %></span>
+    </h2>
+    <div class="top-contacts-exlain">
+      <p class="top-contacts-message">お問合わせなどございましたら、こちらからお願いします</p>
+    </div>
+    <div class="top-contacts-contents-all">
+      <%= link_to("お問い合わせ", contact_path) %>
+    </div>
   </div>
 </section>

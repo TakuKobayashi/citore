@@ -45,8 +45,24 @@
 </section>
 
 <section id="top-tools" class="top-tools">
-  <div>
-    <%= link_to(t("homepage.top.title.tools"), tools_root_path) %>
+  <div class="top-tools-field">
+    <h2 class="top-tools-caption">
+      <span class="top-tools-caption-label"><%= t("homepage.top.title.tools") %></span>
+    </h2>
+    <div class="top-tools-exlain">
+      <p class="top-tools-message">個人的にあったらいいなと思ったツールやAPIを作成し、公開してみました。<br>よかったら使ってください。また、もしよろしければ「いいね」いただけると幸いです。</p>
+    </div>
+    <div class="top-tools-contents">
+      <% if @tools.present? %>
+        <% @tools.each do |tool| %>
+        <% end %>
+      <% else %>
+        <span>工事中しばらくお待ちを</span>
+      <% end %>
+    </div>
+    <div class="top-tools-contents-all">
+      <%= link_to("もっと見る", tools_root_path) %>
+    </div>
   </div>
 </section>
 
@@ -56,7 +72,7 @@
       <span class="top-articles-caption-label"><%= t("homepage.top.title.articles") %></span>
     </h2>
     <div class="top-articles-exlain">
-      <p class="top-articles-message">技術的な記事や資料を公開しています。<br>ご参考ください。もしもし良ければいいねいただけると幸いです。</p>
+      <p class="top-articles-message">技術的な記事や資料を公開しています。<br>ご参考ください。もしよろしければ「いいね」いただけると幸いです。</p>
     </div>
     <div class="top-articles-contents">
       <% if @articles.present? %>

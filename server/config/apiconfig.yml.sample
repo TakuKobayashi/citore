@@ -83,3 +83,11 @@ gnavi:
 twitcas:
   client_id:
   client_secret:
+
+slideshare:
+  apikey:
+  shared_secret:
+
+qiita:
+  taptappun:
+    accesstoken:

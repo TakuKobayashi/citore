@@ -86,6 +86,8 @@ gem 'opengraph_parser'
 gem 'canonical-rails', github: 'jumph4x/canonical-rails'
 gem 'foreman'
 
+gem 'qiita'
+
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 

@@ -3,6 +3,7 @@
 # Table name: homepage_articles
 #
 #  id            :integer          not null, primary key
+#  type          :string(255)
 #  title         :string(255)      not null
 #  description   :text(65535)
 #  url           :string(255)      not null

@@ -56,19 +56,18 @@
       <span class="top-articles-caption-label"><%= t("homepage.top.title.articles") %></span>
     </h2>
     <div class="top-articles-exlain">
-      <p class="top-articles-summary">主にプライベートで作成したアプリやツール等の制作物をご紹介</p>
-      <p class="top-articles-caution">※開発中であったり、アイディアのみのものも多くあります。<br>ほしいと思ったものに「いいね」と応援いただけると開発の励みになりますのでよろしくお願いします!!</p>
+      <p class="top-articles-message">技術的な記事や資料を公開しています。<br>ご参考ください。もしもし良ければいいねいただけると幸いです。</p>
     </div>
     <div class="top-articles-contents">
-      <% if @products.present? %>
-        <% @products.each do |product| %>
+      <% if @articles.present? %>
+        <% @articles.each do |article| %>
         <% end %>
       <% else %>
         <span>工事中しばらくお待ちを</span>
       <% end %>
     </div>
     <div class="top-articles-contents-all">
-      <%= link_to(t("homepage.top.title.articles"), articles_path) %>
+      <%= link_to("もっと見る", articles_path) %>
     </div>
   </div>
 </section>

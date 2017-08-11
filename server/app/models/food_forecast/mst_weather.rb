@@ -10,7 +10,7 @@
 #
 # Indexes
 #
-#  weather_factor_index  (factor) UNIQUE
+#  weather_factor_inequality_index  (factor,inequality) UNIQUE
 #
 
 class FoodForecast::MstWeather < ApplicationRecord

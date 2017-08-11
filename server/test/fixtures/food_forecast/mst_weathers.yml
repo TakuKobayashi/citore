@@ -10,7 +10,7 @@
 #
 # Indexes
 #
-#  weather_factor_index  (factor) UNIQUE
+#  weather_factor_inequality_index  (factor,inequality) UNIQUE
 #
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html

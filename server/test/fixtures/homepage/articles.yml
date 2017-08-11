@@ -2,16 +2,17 @@
 #
 # Table name: homepage_articles
 #
-#  id            :integer          not null, primary key
-#  type          :string(255)
-#  uid           :string(255)      not null
-#  title         :string(255)      not null
-#  description   :text(65535)
-#  url           :string(255)      not null
-#  thumbnail_url :string(255)
-#  pubulish_at   :datetime         not null
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
+#  id          :integer          not null, primary key
+#  type        :string(255)
+#  uid         :string(255)      not null
+#  title       :string(255)      not null
+#  description :text(65535)
+#  url         :string(255)      not null
+#  embed_html  :text(65535)
+#  active      :boolean          default(TRUE), not null
+#  pubulish_at :datetime         not null
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
 #
 # Indexes
 #

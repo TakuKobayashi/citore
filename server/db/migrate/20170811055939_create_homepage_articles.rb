@@ -6,7 +6,8 @@ class CreateHomepageArticles < ActiveRecord::Migration[5.1]
       t.string :title, null: false
       t.text :description
       t.string :url, null: false
-      t.string :thumbnail_url
+      t.text :embed_html
+      t.boolean :active, null: false, default: true
       t.datetime :pubulish_at, null: false
       t.timestamps
     end

@@ -33,19 +33,22 @@ def self.import_articles!
         page: page_num
       }
       articles = client.slideshows(send_params)
-      instances = articles.map do |article|
-        og = OpenGraph.new(article.url)
-        Homepage::Slideshare.new(
-          uid: article.id.to_s,
-          title: article.title,
-          description: article.description,
-          url: article.url,
-          embed_html: article.embed,
-          thumbnail_url: og.images.first,
-          pubulish_at: article.created_at
-        )
+      transaction do
+        articles.each do |article|
+          og = OpenGraph.new(article.url)
+          slideshare = Homepage::Slideshare.find_or_initialize_by(
+              uid: article.id.to_s
+          )
+          slideshare.update!(
+            title: article.title,
+            description: article.description,
+            url: article.url,
+            embed_html: article.embed,
+            thumbnail_url: og.images.first,
+            pubulish_at: article.created_at
+          )
+        end
       end
-      Homepage::Slideshare.import(instances, on_duplicate_key_update: [:title, :description, :url, :embed_html, :pubulish_at])
       page_num = page_num + 1
     end while articles.size >= 50
   end

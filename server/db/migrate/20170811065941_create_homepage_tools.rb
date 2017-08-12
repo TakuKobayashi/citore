@@ -8,6 +8,7 @@ class CreateHomepageTools < ActiveRecord::Migration[5.1]
       t.datetime :pubulish_at, null: false
       t.timestamps
     end
+    add_index :homepage_tools, :path
     add_index :homepage_tools, :pubulish_at
   end
 end

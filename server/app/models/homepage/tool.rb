@@ -13,6 +13,7 @@
 #
 # Indexes
 #
+#  index_homepage_tools_on_path         (path)
 #  index_homepage_tools_on_pubulish_at  (pubulish_at)
 #
 

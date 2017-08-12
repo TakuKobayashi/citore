@@ -33,18 +33,19 @@ class Homepage::Qiita < Homepage::Article
       }
       response = client.list_user_items("taptappun", send_params)
       articles = response.body
-      instances = articles.map do |article|
-        og = OpenGraph.new(article["url"])
-        Homepage::Qiita.new(
-          uid: article["id"],
-          title: article["title"],
-          description: article["rendered_body"],
-          url: article["url"],
-          thumbnail_url: og.images.first,
-          pubulish_at: Time.parse(article["created_at"])
-        )
+      transaction do
+        articles.each do |article|
+          og = OpenGraph.new(article["url"])
+          qiita = Homepage::Qiita.find_or_initialize_by(uid: article["id"])
+          qiita.update!(
+            title: article["title"],
+            description: article["rendered_body"],
+            url: article["url"],
+            thumbnail_url: og.images.first,
+            pubulish_at: Time.parse(article["created_at"])
+          )
+        end
       end
-      Homepage::Qiita.import(instances, on_duplicate_key_update: [:title, :description, :url, :embed_html, :pubulish_at])
       page_num = page_num + 1
     end while articles.size >= 100
   end

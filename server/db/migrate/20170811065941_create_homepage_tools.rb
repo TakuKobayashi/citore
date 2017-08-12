@@ -4,6 +4,7 @@ class CreateHomepageTools < ActiveRecord::Migration[5.1]
       t.string :title
       t.text :description
       t.string :path
+      t.boolean :active, null: false, default: true
       t.datetime :pubulish_at, null: false
       t.timestamps
     end

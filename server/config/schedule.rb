@@ -6,7 +6,7 @@
 set :output, "#{path}/log/cron.log"
 
 every :day, at: '11:00' do
-  runner "Homepage::Article.import!"
+  runner "Homepage.import_routine!"
 end
 
 =begin

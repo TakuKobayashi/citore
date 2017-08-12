@@ -6,6 +6,7 @@
 #  title       :string(255)
 #  description :text(65535)
 #  path        :string(255)
+#  active      :boolean          default(TRUE), not null
 #  pubulish_at :datetime         not null
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null

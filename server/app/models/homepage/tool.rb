@@ -21,7 +21,7 @@ class Homepage::Tool < ApplicationRecord
     announcement.update!(
       title: self.title + "を作成しました",
       description: self.description,
-      url: self.url,
+      url: self.path,
       pubulish_at: self.pubulish_at
     )
   end

@@ -16,4 +16,13 @@
 #
 
 class Homepage::Tool < ApplicationRecord
+  after_create do
+    announcement = Homepage::Announcement.find_or_initialize_by(from: self)
+    announcement.update!(
+      title: self.title + "を作成しました",
+      description: self.description,
+      url: self.url,
+      pubulish_at: self.pubulish_at
+    )
+  end
 end

@@ -21,6 +21,16 @@
 #
 
 class Homepage::Article < ApplicationRecord
+  after_create do
+    announcement = Homepage::Announcement.find_or_initialize_by(from: self)
+    announcement.update!(
+      title: self.title + "を公開しました",
+      description: self.title + "を公開しました。",
+      url: self.url,
+      pubulish_at: self.pubulish_at
+    )
+  end
+
   def self.import!
     Homepage::Qiita.import_articles!
     Homepage::Slideshare.import_articles!

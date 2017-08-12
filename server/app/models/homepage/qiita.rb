@@ -2,17 +2,18 @@
 #
 # Table name: homepage_articles
 #
-#  id          :integer          not null, primary key
-#  type        :string(255)
-#  uid         :string(255)      not null
-#  title       :string(255)      not null
-#  description :text(65535)
-#  url         :string(255)      not null
-#  embed_html  :text(65535)
-#  active      :boolean          default(TRUE), not null
-#  pubulish_at :datetime         not null
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
+#  id            :integer          not null, primary key
+#  type          :string(255)
+#  uid           :string(255)      not null
+#  title         :string(255)      not null
+#  description   :text(65535)
+#  url           :string(255)      not null
+#  embed_html    :text(65535)
+#  thumbnail_url :string(255)
+#  active        :boolean          default(TRUE), not null
+#  pubulish_at   :datetime         not null
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
 #
 # Indexes
 #
@@ -33,11 +34,13 @@ class Homepage::Qiita < Homepage::Article
       response = client.list_user_items("taptappun", send_params)
       articles = response.body
       instances = articles.map do |article|
+        og = OpenGraph.new(article["url"])
         Homepage::Qiita.new(
           uid: article["id"],
           title: article["title"],
           description: article["rendered_body"],
           url: article["url"],
+          thumbnail_url: og.images.first,
           pubulish_at: Time.parse(article["created_at"])
         )
       end

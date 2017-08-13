@@ -1,5 +1,6 @@
 <%= stylesheet_link_tag 'libraries/slick-theme.css' %>
 <%= stylesheet_link_tag 'libraries/slick.css' %>
+<%= stylesheet_link_tag 'libraries/animate.css' %>
 <%= javascript_include_tag 'libraries/slick.min.js' %>
 <%= stylesheet_link_tag 'homepage/top.css' %>
 <%= javascript_include_tag 'homepage/top.js' %>
@@ -9,7 +10,7 @@
     <div class="top-mv-visual-bg-item" data-imagepathes="<%= [image_path("homepage/top-mv-mask-a.jpg"), image_path("homepage/top-mv-mask-e.jpg"), image_path("homepage/top-mv-mask-g.jpg"), image_path("homepage/top-mv-mask-m.jpg")].to_json %>">
       <canvas id="bgimage"></canvas>
     </div>
-    <div class="top-mv-visual-logo">
+    <div class="top-mv-visual-logo tada animated">
       <%= image_tag("homepage/logo.png") %>
     </div>
   </div>

@@ -24,7 +24,6 @@
 }
 
 .top-mv-visual-logo{
-  position: absolute;
-  top: 50%;
   z-index: 4;
+  animation-iteration-count: infinite;
 }

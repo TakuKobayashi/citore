@@ -150,17 +150,19 @@ Rails.application.routes.draw do
     end
   end
 
-  resource :profile, controller: :profile, only: [] do
-    get :index
+  scope module: :homepage do
+    resource :profile, controller: :profile, only: [] do
+      get :index
+    end
+
+    resources :products, only: [:index, :show]
+    resources :relations, only: [:index]
+    resources :articles, only: [:index]
+
+    resource :contact, controller: :contact, only: [] do
+      get :index
+    end
   end
 
-  resources :products, only: [:index, :show]
-  resources :relations, only: [:index]
-  resources :articles, only: [:index]
-
-  resource :contact, controller: :contact, only: [] do
-    get :index
-  end
-
-  root to: "top#index"
+  root to: "homepage/top#index"
 end

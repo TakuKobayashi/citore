@@ -1,4 +1,4 @@
-class TopController < BaseController
+class Homepage::TopController < Homepage::BaseController
   def index
     @products = Homepage::Product.order("id DESC").limit(8)
     @articles = Homepage::Article.where(active: true).order("pubulish_at DESC").limit(3)

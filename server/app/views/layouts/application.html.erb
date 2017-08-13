@@ -17,6 +17,11 @@
     $('.pure-menu').scrollFollow();
     var visitor = <%= @visitor.try(:to_json, {only: [:id, :uid]}).try(:html_safe) || {}.to_json %>;
     if(Object.keys(visitor).length === 0){
+      var uid = localStorage.getItem("uid");
+      var params = "";
+      if(uid){
+        params = "uid=" + uid;
+      }
       var xhr = new XMLHttpRequest();
       // ハンドラの登録.
       xhr.onreadystatechange = function() {
@@ -24,16 +29,14 @@
           if( xhr.status == 200 || xhr.status == 304 ) {
             var data = JSON.parse(xhr.responseText); // responseXML もあり
             document.cookie = 'uid=' + data.uid;
-            console.log( 'COMPLETE! :'+document.cookie );
-          } else {
-            console.log( 'Failed. HttpStatus: '+xhr.statusText );
+            localStorage.setItem("uid", data.uid);
           }
           xhr.abort();
         }
       };
       xhr.open('POST', '<%= regist_visitor_top_url %>', true);
       xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
-      xhr.send();
+      xhr.send(params);
     }
   </script>
 </head>

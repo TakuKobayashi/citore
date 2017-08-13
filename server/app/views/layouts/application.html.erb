@@ -15,6 +15,7 @@
   <%= javascript_include_tag 'libraries/jquery.scrollfollow.js' %>
   <script>
     $('.pure-menu').scrollFollow();
+
     var visitor = <%= @visitor.try(:to_json, {only: [:id, :uid]}).try(:html_safe) || {}.to_json %>;
     if(Object.keys(visitor).length === 0){
       var uid = localStorage.getItem("uid");

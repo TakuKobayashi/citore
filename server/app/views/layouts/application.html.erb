@@ -15,6 +15,26 @@
   <%= javascript_include_tag 'libraries/jquery.scrollfollow.js' %>
   <script>
     $('.pure-menu').scrollFollow();
+    var visitor = <%= @visitor.try(:to_json, {only: [:id, :uid]}).try(:html_safe) || {}.to_json %>;
+    if(Object.keys(visitor).length === 0){
+      var xhr = new XMLHttpRequest();
+      // ハンドラの登録.
+      xhr.onreadystatechange = function() {
+        if(xhr.readyState == 4){
+          if( xhr.status == 200 || xhr.status == 304 ) {
+            var data = JSON.parse(xhr.responseText); // responseXML もあり
+            document.cookie = 'uid=' + data.uid;
+            console.log( 'COMPLETE! :'+document.cookie );
+          } else {
+            console.log( 'Failed. HttpStatus: '+xhr.statusText );
+          }
+          xhr.abort();
+        }
+      };
+      xhr.open('POST', '<%= regist_visitor_top_url %>', true);
+      xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+      xhr.send();
+    }
   </script>
 </head>
 

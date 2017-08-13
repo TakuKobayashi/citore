@@ -17,5 +17,5 @@
 
 class Homepage::Like < ApplicationRecord
   belongs_to :from, polymorphic: true, required: false
-  belongs_to :visiter, class_name: 'Homepage::Access', foreign_key: :homepage_access_id, required: false
+  belongs_to :visitor, class_name: 'Homepage::Access', foreign_key: :homepage_access_id, required: false
 end

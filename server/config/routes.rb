@@ -162,6 +162,11 @@ Rails.application.routes.draw do
     resource :contact, controller: :contact, only: [] do
       get :index
     end
+
+    resource :top, controller: :top, only: [] do
+      post :regist_visitor
+    end
+
   end
 
   root to: "homepage/top#index"

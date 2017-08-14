@@ -469,6 +469,7 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.4)
+    useragent (0.16.8)
     warden (1.2.7)
       rack (>= 1.0)
     web-console (3.5.1)
@@ -555,6 +556,7 @@ DEPENDENCIES
   twitter
   tzinfo-data
   uglifier (>= 1.3.0)
+  useragent
   web-console (>= 3.3.0)
   whenever
   wp2txt

@@ -27,3 +27,34 @@
   z-index: 4;
   animation-iteration-count: infinite;
 }
+
+/* チャットレイアウト */
+.article-box {
+  width: 100%;
+  height: auto;
+  overflow: hidden; /*floatの解除*/
+  margin-bottom: 20px;
+}
+.carticle-image {
+  float: left;
+  margin-right: -120px;
+}
+.article-image img{
+  border-radius: 30px;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 4px #ddd;
+}
+.article-area {
+  width: 100%;
+  float: right;
+}
+
+/* http://vdeep.net/css-chat-desi */
+.article-descriptio {
+  display: inline-block; /*コメントの文字数に合わせて可変*/
+  padding: 15px 20px;
+  margin-left: 120px;
+  margin-top: 10px;
+  border: 1px solid gray;
+  border-radius: 10px;
+}

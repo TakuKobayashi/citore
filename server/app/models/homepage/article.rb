@@ -36,4 +36,18 @@ class Homepage::Article < ApplicationRecord
     Homepage::Qiita.import_articles!
     Homepage::Slideshare.import_articles!
   end
+
+  def image_url
+    if self.thumbnail_url.blank?
+      return "https://png.icons8.com/news/nolan/200"
+    else
+      return self.thumbnail_url.to_s
+    end
+  end
+
+  def square_image?
+    width, height = FastImage.size(self.image_url)
+    # +- 10%の中に入っていれば正方形とみなす
+    return width - (width / 10) <= height && height <= width + (width / 10)
+  end
 end

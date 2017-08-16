@@ -72,16 +72,16 @@
     <div class="top-articles-contents">
       <% if @articles.present? %>
         <% @articles.each do |article| %>
-        　<div class="article-box">
+          <%= link_to(article.url.to_s, class: "article-box") do  %>
             <div class="article-image">
-              <%= image_tag(article.image_url, width: 200, height: 200) %>
+              <%= image_tag(article.image_url, width: 128, height: 128) %>
             </div>
             <div class="article-area">
               <div class="article-description">
-                <%= article.description.to_s %>
+                <%= article.summary_description.to_s %>
               </div>
             </div>
-          </div>
+          <% end %>
         <% end %>
       <% else %>
         <span>工事中しばらくお待ちを</span>

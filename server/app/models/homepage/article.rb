@@ -50,4 +50,20 @@ class Homepage::Article < ApplicationRecord
     # +- 10%の中に入っていれば正方形とみなす
     return width - (width / 10) <= height && height <= width + (width / 10)
   end
+
+  def summary_description
+    #og = OpenGraph.new(self.url.to_s)
+    #og.description
+    text = self.description_text
+    plain_text = text.split("\n").map{|t| t.strip.to_s }.join
+    if plain_text.size > 140
+      return plain_text[0..136].to_s + "..."
+    end
+    return plain_text.to_s
+  end
+
+  def description_text
+    doc = Nokogiri::HTML.parse(self.description.to_s)
+    return doc.text.to_s.strip
+  end
 end

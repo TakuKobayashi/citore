@@ -34,16 +34,30 @@
   height: auto;
   overflow: hidden; /*floatの解除*/
   margin-bottom: 20px;
+  border: 1px solid #ccc;
 }
-.carticle-image {
+
+.article-image {
   float: left;
+  width: 128px;  /* トリミングしたい幅 */
+  height: 128px;  /* トリミングしたい高さ */
+  overflow: hidden;
+  position: relative;
   margin-right: -120px;
 }
+
 .article-image img{
   border-radius: 30px;
-  border: 1px solid #ccc;
-  box-shadow: 0 0 4px #ddd;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  width: auto;
+  height: 100%;
 }
+
 .article-area {
   width: 100%;
   float: right;

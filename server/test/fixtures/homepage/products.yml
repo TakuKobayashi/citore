@@ -3,7 +3,7 @@
 # Table name: homepage_products
 #
 #  id              :integer          not null, primary key
-#  category        :integer          default(0), not null
+#  category        :integer          default("others"), not null
 #  title           :string(255)      not null
 #  description     :text(65535)
 #  thumbnail_url   :string(255)

@@ -5,6 +5,7 @@ class CreateHomepageArticles < ActiveRecord::Migration[5.1]
       t.string :uid, null: false
       t.string :title, null: false
       t.text :description
+      t.text :ogp_description
       t.string :url, null: false
       t.text :embed_html
       t.string :thumbnail_url

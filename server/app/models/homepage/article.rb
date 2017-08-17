@@ -2,18 +2,19 @@
 #
 # Table name: homepage_articles
 #
-#  id            :integer          not null, primary key
-#  type          :string(255)
-#  uid           :string(255)      not null
-#  title         :string(255)      not null
-#  description   :text(65535)
-#  url           :string(255)      not null
-#  embed_html    :text(65535)
-#  thumbnail_url :string(255)
-#  active        :boolean          default(TRUE), not null
-#  pubulish_at   :datetime         not null
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
+#  id              :integer          not null, primary key
+#  type            :string(255)
+#  uid             :string(255)      not null
+#  title           :string(255)      not null
+#  description     :text(65535)
+#  ogp_description :text(65535)
+#  url             :string(255)      not null
+#  embed_html      :text(65535)
+#  thumbnail_url   :string(255)
+#  active          :boolean          default(TRUE), not null
+#  pubulish_at     :datetime         not null
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
 #
 # Indexes
 #
@@ -22,6 +23,13 @@
 #
 
 class Homepage::Article < ApplicationRecord
+  before_create do
+    if self.url.present? && self.ogp_description.blank?
+      og = OpenGraph.new(self.url.to_s)
+      self.ogp_description = og.description
+    end
+  end
+
   after_create do
     announcement = Homepage::Announcement.find_or_initialize_by(from: self)
     announcement.update!(

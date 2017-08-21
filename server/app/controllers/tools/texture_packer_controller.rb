@@ -1,4 +1,4 @@
-class Tools::TexturePackerController < BaseController
+class Tools::TexturePackerController < Homepage::BaseController
   def index
   end
 

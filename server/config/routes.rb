@@ -127,6 +127,14 @@ Rails.application.routes.draw do
       get :index
       post :convert_to_json
     end
+
+    resource :twitter, controller: :twitter, only: [] do
+      get :index
+      get :input_user
+      post :diff_follow_and_follower
+      post :remove_followers
+      post :crawl_user_all_tweet
+    end
   end
 
   namespace :food_forecast do

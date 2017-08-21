@@ -1,0 +1,23 @@
+<table>
+  <%= form_tag(crawl_tools_image_crawl_url, multipart: true) do %>
+    <tr>
+      <td><%= label_tag("解析してほしいHTMLファイル (Fileをアップした場合、以下のURLとページ番号は無効になる)") %></td>
+      <td><%= file_field_tag :html_file %></td>
+    </tr>
+    <tr>
+      <td><%= label_tag("クロールするURL (URLの中に %s と入力すると下のページ番号の変数になる)") %></td>
+      <td style="position:relative"><%= text_field_tag :crawl_url, "", style: "width:100%; box-sizing:border-box" %></td>
+    </tr>
+    <tr>
+      <td><%= label_tag("該当の場所を絞りこむためのDOM要素 (あれば)") %></td>
+      <td><%= text_field_tag :filter %></td>
+    </tr>
+    <tr>
+      <td><%= label_tag("ページ番号(あれば)") %></td>
+      <td><%= number_field_tag :start_page_num %> ~ <%= number_field_tag :end_page_num %></td>
+    </tr>
+    <tr>
+      <td><%= submit_tag("画像をダウンロードする") %></td>
+    </tr>
+  <% end %>
+</table>

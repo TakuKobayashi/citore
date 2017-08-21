@@ -1,4 +1,4 @@
-class Tools::TopController < BaseController
+class Tools::TopController < Homepage::BaseController
   def index
   end
 end

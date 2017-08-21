@@ -1,4 +1,4 @@
-class Tools::ImageCrawlController < BaseController
+class Tools::ImageCrawlController < Homepage::BaseController
   def index
   end
 

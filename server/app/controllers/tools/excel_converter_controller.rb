@@ -1,4 +1,4 @@
-class Tools::ExcelConverterController < BaseController
+class Tools::ExcelConverterController < Homepage::BaseController
   def index
   end
 

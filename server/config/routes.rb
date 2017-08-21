@@ -131,7 +131,8 @@ Rails.application.routes.draw do
     resource :twitter, controller: :twitter, only: [] do
       get :index
       get :input_user
-      post :diff_follow_and_follower
+      post :only_follower_users
+      post :only_following_users
       post :remove_followers
       post :crawl_user_all_tweet
     end

@@ -84,4 +84,43 @@ class Datapool::HatsugenKomachi < ApplicationRecord
     "10" => "編集部からのトピ",
     "11" => "男性から発信するトピ",
   }
+
+  def self.import_words!
+    natto = ApplicationRecord.get_natto
+    Datapool::HatsugenKomachi.find_in_batches(batch_size: 10000) do |komachies|
+      import_words = []
+      appear_imports = {}
+      komachies.each do |komachi|
+        words = []
+        natto.parse(komachi.body.to_s) do |n|
+          next if n.surface.blank?
+          features = n.feature.split(",")
+          word = features[6]
+          if word.blank? || word == "*"
+            word = n.surface
+          end
+          reading = features[7]
+          if reading.blank?
+            reading = n.surface
+          end
+          appears = appear_imports[word]
+          count = 0
+          if appears.present?
+            count = appears[:appear_count]
+          end
+          appear_imports[word] = {word: word, part: features[0], appear_count: count.to_i + 1, reading: reading.to_s, type: "Datapool::HatsugenKomachiWord"}
+          words << word
+        end
+
+        words.uniq.each do |w|
+          appear_imports[w][:sentence_count] = appear_imports[w][:sentence_count].to_i + 1
+        end
+      end
+      appear_imports.each do |word, hash|
+        appear_word = Datapool::AppearWord.new(hash)
+        import_words << appear_word
+      end
+      Datapool::HatsugenKomachiWord.import(import_words, on_duplicate_key_update: "appear_count = appear_count + VALUES(appear_count), sentence_count = VALUES(sentence_count)")
+    end
+  end
 end

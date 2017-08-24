@@ -138,6 +138,14 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace :unibo do
+    resource :talk, controller: :talk, only: [] do
+      get :index
+      get :input
+      get :say
+    end
+  end
+
   namespace :food_forecast do
     root to: "top#index"
 

@@ -14,11 +14,11 @@
 #  parent_topic_flag :string(255)      not null
 #  komachi_user_id   :integer          not null
 #  advice            :text(65535)
-#  funny             :boolean          default(FALSE), not null
-#  surprise          :boolean          default(FALSE), not null
-#  tears             :boolean          default(FALSE), not null
-#  yell              :boolean          default(FALSE), not null
-#  isee              :string(255)
+#  funny             :integer          default(0), not null
+#  surprise          :integer          default(0), not null
+#  tears             :integer          default(0), not null
+#  yell              :integer          default(0), not null
+#  isee              :integer          default(0), not null
 #  genre_code        :string(255)      default(""), not null
 #  res_state         :string(255)
 #  facemark_id       :string(255)

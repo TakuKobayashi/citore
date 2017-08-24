@@ -71,10 +71,10 @@ namespace :batch do
         end
 
         appear_imports.each do |word, hash|
-          appear_word = AppearWord.new(hash)
+          appear_word = Datapool::AppearWord.new(hash)
           import_words << appear_word
         end
-        AppearWord.import(import_words, on_duplicate_key_update: "appear_count = appear_count + VALUES(appear_count), sentence_count = VALUES(sentence_count)")
+        Datapool::AppearWord.import(import_words, on_duplicate_key_update: "appear_count = appear_count + VALUES(appear_count), sentence_count = VALUES(sentence_count)")
         sum_count = sum_count + import_words.size
         ExtraInfo.update({"sum_sentence_count" => sum_count})
       end
@@ -85,15 +85,15 @@ namespace :batch do
     similar_id = ExtraInfo.read_extra_info["similar_metadata"]
     apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
     parts = EmotionalWord::PARTS.values
-    AppearWord.where(part: parts).where("id > ?", similar_id.to_i).find_in_batches do |appears|
+    Datapool::AppearWord.where(part: parts).where("id > ?", similar_id.to_i).find_in_batches do |appears|
       appears.each do |appear|
         list = `http -a #{apiconfig["metadata_wordassociator"]["username"]}:#{apiconfig["metadata_wordassociator"]["password"]} GET wordassociator.ap.mextractr.net/word_associator/api_query query==#{appear.word}`
         word_score_list = JSON.parse(list).map{|l| [ApplicationRecord.basic_sanitize(l[0].encode("UTF-8")), l[1]] }
         next if word_score_list.blank?
         values = word_score_list.map{|word, score| "(" + ["NULL", 1, "'#{word}'", "'#{appear.part}'"].join(",") + ")" }
-        sql = "INSERT INTO `#{AppearWord.table_name}` (#{AppearWord.column_names.join(',')}) VALUES " + values.join(",") + " ON DUPLICATE KEY UPDATE `#{AppearWord.table_name}`.`word` = VALUES(`word`)"
-        AppearWord.connection.execute(sql)
-        word_ids = AppearWord.where(word: word_score_list.map{|w| w[0] }, part: appear.part).pluck(:word, :id)
+        sql = "INSERT INTO `#{Datapool::AppearWord.table_name}` (#{Datapool::AppearWord.column_names.join(',')}) VALUES " + values.join(",") + " ON DUPLICATE KEY UPDATE `#{Datapool::AppearWord.table_name}`.`word` = VALUES(`word`)"
+        Datapool::AppearWord.connection.execute(sql)
+        word_ids = Datapool::AppearWord.where(word: word_score_list.map{|w| w[0] }, part: appear.part).pluck(:word, :id)
 
         similar_values = word_score_list.map do |word, score|
           w_id = word_ids.detect{|w, id| w == word }
@@ -115,7 +115,7 @@ namespace :batch do
     client = Aws::DynamoDB::Client.new
     {
       TwitterWord => "TwitterWordDynamo",
-      AppearWord => "AppearWordDynamo",
+      Datapool::AppearWord => "AppearWordDynamo",
       MarkovTrigram => "MarkovTrigramDynamo",
     }.each do |activerecord_clazz, dynamodb_tablename|
       activerecord_clazz.find_in_batches do |clazzes|

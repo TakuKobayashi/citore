@@ -6,6 +6,7 @@ class Unibo::TalkController < BaseController
   end
 
   def say
-    render :json => "aaa"
+    data = Datapool::HatsugenKomachi.find_by(id: rand(Datapool::HatsugenKomachi.count) + 1)
+    render :json => data.try(:title)
   end
 end

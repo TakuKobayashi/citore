@@ -1,2 +1,59 @@
+# == Schema Information
+#
+# Table name: datapool_hatsugen_komachis
+#
+#  id                :integer          not null, primary key
+#  topic_id          :integer          not null
+#  res_number        :string(255)      not null
+#  top_res_flag      :string(255)      not null
+#  title             :string(255)      not null
+#  body              :text(65535)
+#  handle_name       :string(255)      not null
+#  posted_at         :datetime         not null
+#  publish_flag      :string(255)      not null
+#  parent_topic_flag :string(255)      not null
+#  komachi_user_id   :integer          not null
+#  advice            :text(65535)
+#  funny             :boolean          default(FALSE), not null
+#  surprise          :boolean          default(FALSE), not null
+#  tears             :boolean          default(FALSE), not null
+#  yell              :boolean          default(FALSE), not null
+#  isee              :string(255)
+#  genre_code        :string(255)      default(""), not null
+#  res_state         :string(255)
+#  facemark_id       :string(255)
+#  remark            :text(65535)
+#  post_device       :string(255)
+#
+# Indexes
+#
+#  index_datapool_hatsugen_komachis_on_genre_code               (genre_code)
+#  index_datapool_hatsugen_komachis_on_komachi_user_id          (komachi_user_id)
+#  index_datapool_hatsugen_komachis_on_posted_at                (posted_at)
+#  index_datapool_hatsugen_komachis_on_topic_id_and_res_number  (topic_id,res_number)
+#
+
 class Datapool::HatsugenKomachi < ApplicationRecord
+  COLUMN_LABELS = {
+    topic_id: "トピID",
+    res_number: "レスNo",
+    top_res_flag: "トピ・レス判定フラグ",
+    title: "タイトル",
+    body: "本文",
+    handle_name: "ハンドルネーム",
+    posted_at: "投稿日時",
+    publish_flag: "公開状態",
+    parent_topic_flag: "親トピ公開状態",
+    komachi_user_id: "ユーザーID",
+    advice: "備考",
+    funny: "面白い",
+    surprise: "びっくり",
+    tears: "涙ぽろり",
+    yell: "なるほど",
+    genre_code: "ジャンルコード",
+    res_state: "レス受付状態",
+    facemark_id: "顔アイコンID",
+    remark: "ご意見・ご感想",
+    post_device: "投稿デバイス",
+  }
 end

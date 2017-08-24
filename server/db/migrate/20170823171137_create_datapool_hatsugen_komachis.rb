@@ -12,11 +12,21 @@ class CreateDatapoolHatsugenKomachis < ActiveRecord::Migration[5.1]
       t.string :parent_topic_flag, null: false
       t.integer :komachi_user_id, limit: 8, null: false
       t.text :advice
-      t.string :post_device, null: false
+      t.integer :funny, null: false, default: 0
+      t.integer :surprise, null: false, default: 0
+      t.integer :tears, null: false, default: 0
+      t.integer :yell, null: false, default: 0
+      t.integer :isee, null: false, default: 0
+      t.string :genre_code, null: false, default: ""
+      t.string :res_state
+      t.string :facemark_id
       t.text :remark
-
-#      トピID	レスNo	トピ・レス判定フラグ	タイトル	本文	ハンドルネーム	投稿日時
-#      公開状態	親トピ公開状態	ユーザーID	備考	面白い	びっくり	涙ぽろり	エール	なるほど	ジャンルコード	レス受付状態	顔アイコンID	ご意見・ご感想	投稿デバイス	メールアドレス(PCのみ)	パスワード(PCのみ)	UID(モバイルのみ)
+      t.string :post_device
     end
+
+    add_index :datapool_hatsugen_komachis, [:topic_id, :res_number]
+    add_index :datapool_hatsugen_komachis, :komachi_user_id
+    add_index :datapool_hatsugen_komachis, :genre_code
+    add_index :datapool_hatsugen_komachis, :posted_at
   end
 end

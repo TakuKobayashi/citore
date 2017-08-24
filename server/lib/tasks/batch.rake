@@ -375,4 +375,10 @@ namespace :batch do
     end
   end
 
+  task upload_s3: :enviroment do
+    s3 = Aws::S3::Client.new
+    File.open(ARGV.last, 'rb') do |file|
+      s3.put_object(bucket: "taptappun",body: file,key: "project/backup/" + File.basename(ARGV.last), acl: "public-read")
+    end
+  end
 end

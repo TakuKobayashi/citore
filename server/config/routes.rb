@@ -143,6 +143,7 @@ Rails.application.routes.draw do
       get :index
       get :input
       get :say
+      post :say
     end
   end
 

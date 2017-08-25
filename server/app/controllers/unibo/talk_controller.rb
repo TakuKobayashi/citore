@@ -1,4 +1,6 @@
 class Unibo::TalkController < BaseController
+  protect_from_forgery
+
   def index
   end
 

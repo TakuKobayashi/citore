@@ -32,7 +32,7 @@ class Unibo::TalkController < BaseController
     elsif reading.include?("ヤラナキャイケナイコトヲアトマワシニ")
       return "どうしてそう思う？"
     elsif reading.include?("ホントウニダメナニンゲンニオモエテクル")
-      return "そっかぁ"
+      return "そういうときもあるよ!"
     end
     return nil
   end

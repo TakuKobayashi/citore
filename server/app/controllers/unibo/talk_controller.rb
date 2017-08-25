@@ -23,15 +23,15 @@ class Unibo::TalkController < BaseController
     reading = ApplicationRecord.reading(word)
     if reading.start_with?("ハァ")
       return "どうしたの？"
-    elsif reading.start_with?("ナンカサイキンヤルキガオキナインダヨネイエニイルトキハダイタイネットサーフィンシテルカソシャゲシテルダケダシ")
-      return "家にいるとついダラダラとネットサーフィンしちゃうよね。やらなきゃいけないことがある時ほどやる気が起こらなかったり。"
-    elsif reading.start_with?("ソウナンダヨヤラナイトイケナイコトハタクサンアッテナノニダラダラシチャウヤラナキャイケナイコトヲアトマワシニシテルトジブンガホントウニダメナニンゲンニオモエテクル")
+    elsif reading.include?("ナンカサイキンヤルキガオキナインダヨネ")
+      return "やらなきゃいけないことがある時ほどやる気が起こらなかったり。"
+    elsif reading.start_with?("ヤラナイトイケナイコトハタクサンア")
       return "なんでだろうね？"
     elsif reading.start_with?("ワカラナイ")
       return "そうだよね…"
-    elsif reading.start_with?("デモヤラナキャイケナイコトガアルトキホドヤルキガオコラナイッテノハホントウニソウナンダヨナァコンカイモレポートノテイシュツガアトニシュウカンダッテオモッタラナンカキュウニナニモヤリタクナクナッテキチャッテ")
+    elsif reading.start_with?("ヤラナキャイケナイコトヲアトマワシニ")
       return "どうしてそう思う？"
-    elsif reading.start_with?("ドウシテッテ…ヤラナキャイケナイコトカラニゲテアソンジャッテルカラソリャジブンハダメニンゲンダッテオモッチャウヨ")
+    elsif reading.start_with?("ホントウニダメナニンゲンニオモエテクル")
       return "そっかぁ"
     end
     return nil

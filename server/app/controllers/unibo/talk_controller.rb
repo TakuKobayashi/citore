@@ -25,13 +25,13 @@ class Unibo::TalkController < BaseController
       return "どうしたの？"
     elsif reading.include?("サイキンヤルキガオキナインダヨネ")
       return "やらなきゃいけないことがある時ほどやる気が起こらなかったり。"
-    elsif reading.start_with?("ヤラナイトイケナイコトハタクサンア")
+    elsif reading.include?("ヤラナイトイケナイコトハタクサンア")
       return "なんでだろうね？"
     elsif reading.start_with?("ワカラナイ")
       return "そうだよね…"
-    elsif reading.start_with?("ヤラナキャイケナイコトヲアトマワシニ")
+    elsif reading.include?("ヤラナキャイケナイコトヲアトマワシニ")
       return "どうしてそう思う？"
-    elsif reading.start_with?("ホントウニダメナニンゲンニオモエテクル")
+    elsif reading.include?("ホントウニダメナニンゲンニオモエテクル")
       return "そっかぁ"
     end
     return nil

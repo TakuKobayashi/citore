@@ -23,7 +23,7 @@ class Unibo::TalkController < BaseController
     reading = ApplicationRecord.reading(word)
     if reading.start_with?("ハァ")
       return "どうしたの？"
-    elsif reading.include?("ナンカサイキンヤルキガオキナインダヨネ")
+    elsif reading.include?("サイキンヤルキガオキナインダヨネ")
       return "やらなきゃいけないことがある時ほどやる気が起こらなかったり。"
     elsif reading.start_with?("ヤラナイトイケナイコトハタクサンア")
       return "なんでだろうね？"

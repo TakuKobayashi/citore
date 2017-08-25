@@ -375,10 +375,37 @@ namespace :batch do
     end
   end
 
-  task upload_s3: :enviroment do
+  task upload_s3: :environment do
     s3 = Aws::S3::Client.new
     File.open(ARGV.last, 'rb') do |file|
       s3.put_object(bucket: "taptappun",body: file,key: "project/backup/" + File.basename(ARGV.last), acl: "public-read")
     end
+  end
+
+  task generate_komachi_res_set: :environment do
+    natto = ApplicationRecord.get_natto
+    topic_id_count = Datapool::HatsugenKomachi.group(:topic_id).count
+    out_file = File.new("komachi.txt", "w")
+    topic_id_count.each do |topic_id, count|
+      next if count <= 1
+      komachies = Datapool::HatsugenKomachi.where(topic_id: topic_id).sort_by{|k| k.res_number.to_i }
+      topic = komachies.first
+      reses = komachies[1..(komachies.size)]
+      reses.each do |res|
+#      komachies.each_cons(2) do |topic, res|
+        line = ""
+        nres = []
+        natto.parse(ApplicationRecord.basic_sanitize(topic.body)) do |n|
+          next if n.surface.to_s.strip.blank?
+          line += "__label__" + n.surface.to_s + ", "
+        end
+        natto.parse(ApplicationRecord.basic_sanitize(res.body)) do |n|
+          nres << n
+        end
+        line += nres.map{|res| res.surface }.join(" ")
+        out_file.puts(line)
+      end
+    end
+    out_file.close
   end
 end

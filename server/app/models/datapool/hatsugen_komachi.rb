@@ -34,6 +34,8 @@
 #
 
 class Datapool::HatsugenKomachi < ApplicationRecord
+  has_many :keywords, class_name: 'Datapool::HatsugenKomachiKeyword', foreign_key: :datapool_hatsugen_komachi_id
+
   COLUMN_LABELS = {
     topic_id: "トピID",
     res_number: "レスNo",

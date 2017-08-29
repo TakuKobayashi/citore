@@ -117,11 +117,10 @@ class Datapool::HatsugenKomachi < ApplicationRecord
         end
       end
       appear_imports.each do |word, hash|
-        Datapool::AppearWord.where(word: hash[:word], part: hash[:part]).update_all("sentence_count = sentence_count + #{hash[:sentence_count].to_i}")
-        #appear_word = Datapool::AppearWord.new(hash)
-        #import_words << appear_word
+        appear_word = Datapool::AppearWord.new(hash)
+        import_words << appear_word
       end
-      #Datapool::HatsugenKomachiWord.import(import_words, on_duplicate_key_update: "appear_count = appear_count + VALUES(appear_count), sentence_count = sentence_count + VALUES(sentence_count)")
+      Datapool::HatsugenKomachiWord.import(import_words, on_duplicate_key_update: "appear_count = appear_count + VALUES(appear_count), sentence_count = sentence_count + VALUES(sentence_count)")
     end
   end
 end

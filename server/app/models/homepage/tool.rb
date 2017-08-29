@@ -20,7 +20,7 @@
 class Homepage::Tool < ApplicationRecord
   def self.register_tools!
     http_client = HTTPClient.new
-    tool_path_methods = Rails.application.routes.named_routes.helper_names.map(&:to_s).select{|s| s.include?("tools") && s.include?("path") && !s.include?("root") }
+    tool_path_methods = Rails.application.routes.named_routes.helper_names.map(&:to_s).select{|s| s.start_with?("tools") && s.include?("path") && !s.include?("root") }
     transaction do
       tool_path_methods.each do |path_method|
         path = Rails.application.routes.url_helpers.send(path_method)

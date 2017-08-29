@@ -382,6 +382,28 @@ namespace :batch do
     end
   end
 
+  task komachi_sanitize: :environment do
+    Datapool::HatsugenKomachi.find_each do |komachi|
+      komachi.update!(
+        title: Charwidth.normalize(komachi.title),
+        body: Charwidth.normalize(komachi.body.to_s),
+        advice: Charwidth.normalize(komachi.advice.to_s)
+      )
+    end
+    Datapool::AppearWord.find_each do |aw|
+      word = Charwidth.normalize(aw.word.to_s)
+      if aw.word.to_s != word
+        same_aw = Datapool::AppearWord.find_by(word: word, part: aw.part)
+        if same_aw.present?
+          Datapool::AppearWord.transaction do
+            aw.update(appear_count: aw.appear_count + same_aw.appear_count, sentence_count: aw.sentence_count + same_aw.sentence_count)
+            same_aw.destroy
+          end
+        end
+      end
+    end
+  end
+
   task generate_komachi_res_set: :environment do
     natto = ApplicationRecord.get_natto
     topic_id_count = Datapool::HatsugenKomachi.group(:topic_id).count

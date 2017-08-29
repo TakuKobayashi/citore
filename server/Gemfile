@@ -90,6 +90,8 @@ gem 'qiita'
 gem 'slideshare_api'
 gem 'useragent'
 
+gem 'romaji'
+
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 

@@ -36,6 +36,30 @@
 class Datapool::HatsugenKomachi < ApplicationRecord
   has_many :keywords, class_name: 'Datapool::HatsugenKomachiKeyword', foreign_key: :datapool_hatsugen_komachi_id
 
+  def generate_keywords!
+    natto = ApplicationRecord.get_natto
+    formats = []
+    self.natto_text_splitter(put_natto: natto, text: self.body.to_s) do |format|
+      formats << format
+    end
+    komachi_words = Datapool::HatsugenKomachiWord.where(word: formats.map(&:word).uniq).select do |w|
+      ["形容詞", "名詞", "動詞"].include?(w.part) && formats.any?{|f| f.word == w.word && f.part == w.part}
+    end
+    format_groups = formats.group_by{|f| [f.word, f.part] }
+    keywords = komachi_words.sort_by{|w| -(w.sentence_count_all_score * format_groups[[w.word, w.part]].size) }[0..9]
+    import_keywords = keywords.map do |k|
+      Datapool::HatsugenKomachiKeyword.new(
+        datapool_hatsugen_komachi_id: self.id,
+        word: k.word,
+        part: k.part,
+        appear_score: k.appear_count_all_score * format_groups[[k.word, k.part]].size,
+        tf_idf_score: k.sentence_count_all_score * format_groups[[k.word, k.part]].size
+      )
+    end
+
+    Datapool::HatsugenKomachiWord.import(import_keywords, on_duplicate_key_update: [:appear_score, :tf_idf_score])
+  end
+
   COLUMN_LABELS = {
     topic_id: "トピID",
     res_number: "レスNo",
@@ -87,30 +111,41 @@ class Datapool::HatsugenKomachi < ApplicationRecord
     "11" => "男性から発信するトピ",
   }
 
+  def self.natto_text_splitter(put_natto: nil, text:)
+    if put_natto.blank?
+      natto = ApplicationRecord.get_natto
+    else
+      natto = put_natto
+    end
+    natto.parse(text) do |n|
+      next if n.surface.blank?
+      features = n.feature.split(",")
+      word = features[6]
+      if word.blank? || word == "*"
+        word = n.surface
+      end
+      reading = features[7]
+      if reading.blank?
+        reading = n.surface
+      end
+      yield(OpenStruct.new(word: word, part: features[0], reading: reading.to_s))
+    end
+  end
+
   def self.import_words!
     natto = ApplicationRecord.get_natto
-    Datapool::HatsugenKomachi.find_in_batches(batch_size: 10000) do |komachies|
+    self.find_in_batches(batch_size: 10000) do |komachies|
       import_words = []
       appear_imports = {}
       komachies.each do |komachi|
         words = []
-        natto.parse(komachi.body.to_s) do |n|
-          next if n.surface.blank?
-          features = n.feature.split(",")
-          word = features[6]
-          if word.blank? || word == "*"
-            word = n.surface
-          end
-          reading = features[7]
-          if reading.blank?
-            reading = n.surface
-          end
-          appears = appear_imports[word]
+        self.natto_text_splitter(put_natto: natto, text: komachi.body.to_s) do |format|
+          appears = appear_imports[format.word]
           count = 0
           if appears.present?
             count = appears[:appear_count]
           end
-          appear_imports[word] = {word: word, part: features[0], appear_count: count.to_i + 1, reading: reading.to_s, type: "Datapool::HatsugenKomachiWord"}
+          appear_imports[word] = {word: format.word, part: format.part, appear_count: count.to_i + 1, reading: format.reading.to_s, type: "Datapool::HatsugenKomachiWord"}
           words << word
         end
 

@@ -404,6 +404,12 @@ namespace :batch do
     end
   end
 
+  task komachi_keywords: :environment do
+    Datapool::HatsugenKomachi.find_each do |komachi|
+      komachi.generate_keywords!
+    end
+  end
+
   task generate_komachi_res_set: :environment do
     natto = ApplicationRecord.get_natto
     topic_id_count = Datapool::HatsugenKomachi.group(:topic_id).count

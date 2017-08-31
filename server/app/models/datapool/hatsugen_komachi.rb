@@ -145,8 +145,8 @@ class Datapool::HatsugenKomachi < ApplicationRecord
           if appears.present?
             count = appears[:appear_count]
           end
-          appear_imports[word] = {word: format.word, part: format.part, appear_count: count.to_i + 1, reading: format.reading.to_s, type: "Datapool::HatsugenKomachiWord"}
-          words << word
+          appear_imports[format.word] = {word: format.word, part: format.part, appear_count: count.to_i + 1, reading: format.reading.to_s, type: "Datapool::HatsugenKomachiWord"}
+          words << format.word
         end
 
         words.uniq.each do |w|

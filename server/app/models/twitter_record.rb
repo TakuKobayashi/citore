@@ -100,4 +100,15 @@ class TwitterRecord < ApplicationRecord
     end
     return rest_client
   end
+
+  def self.get_twitter_stream_client(username)
+    apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
+    stream_client = Twitter::Streaming::Client.new do |config|
+      config.consumer_key        = apiconfig["twitter"][username]["consumer_key"]
+      config.consumer_secret     = apiconfig["twitter"][username]["consumer_secret"]
+      config.access_token        = apiconfig["twitter"][username]["bot"]["access_token_key"]
+      config.access_token_secret = apiconfig["twitter"][username]["bot"]["access_token_secret"]
+    end
+    return stream_client
+  end
 end

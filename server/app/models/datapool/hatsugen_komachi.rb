@@ -139,7 +139,7 @@ class Datapool::HatsugenKomachi < ApplicationRecord
       appear_imports = {}
       komachies.each do |komachi|
         words = []
-        self.natto_text_splitter(put_natto: natto, text: komachi.body.to_s) do |format|
+        self.natto_text_splitter(put_natto: natto, text: Charwidth.normalize(komachi.body.to_s)) do |format|
           appears = appear_imports[format.word]
           count = 0
           if appears.present?

@@ -36,30 +36,6 @@
 class Datapool::HatsugenKomachi < ApplicationRecord
   has_many :keywords, class_name: 'Datapool::HatsugenKomachiKeyword', foreign_key: :datapool_hatsugen_komachi_id
 
-  def generate_keywords!
-    natto = ApplicationRecord.get_natto
-    formats = []
-    self.natto_text_splitter(put_natto: natto, text: self.body.to_s) do |format|
-      formats << format
-    end
-    komachi_words = Datapool::HatsugenKomachiWord.where(word: formats.map(&:word).uniq).select do |w|
-      ["形容詞", "名詞", "動詞"].include?(w.part) && formats.any?{|f| f.word == w.word && f.part == w.part}
-    end
-    format_groups = formats.group_by{|f| [f.word, f.part] }
-    keywords = komachi_words.sort_by{|w| -(w.sentence_count_all_score * format_groups[[w.word, w.part]].size) }[0..9]
-    import_keywords = keywords.map do |k|
-      Datapool::HatsugenKomachiKeyword.new(
-        datapool_hatsugen_komachi_id: self.id,
-        word: k.word,
-        part: k.part,
-        appear_score: k.appear_count_all_score * format_groups[[k.word, k.part]].size,
-        tf_idf_score: k.sentence_count_all_score * format_groups[[k.word, k.part]].size
-      )
-    end
-
-    Datapool::HatsugenKomachiWord.import(import_keywords, on_duplicate_key_update: [:appear_score, :tf_idf_score])
-  end
-
   COLUMN_LABELS = {
     topic_id: "トピID",
     res_number: "レスNo",
@@ -110,6 +86,30 @@ class Datapool::HatsugenKomachi < ApplicationRecord
     "10" => "編集部からのトピ",
     "11" => "男性から発信するトピ",
   }
+
+  def generate_keywords!
+    natto = ApplicationRecord.get_natto
+    formats = []
+    self.natto_text_splitter(put_natto: natto, text: self.body.to_s) do |format|
+      formats << format
+    end
+    komachi_words = Datapool::HatsugenKomachiWord.where(word: formats.map(&:word).uniq).select do |w|
+      ["形容詞", "名詞", "動詞"].include?(w.part) && formats.any?{|f| f.word == w.word && f.part == w.part}
+    end
+    format_groups = formats.group_by{|f| [f.word, f.part] }
+    keywords = komachi_words.sort_by{|w| -(w.sentence_count_all_score * format_groups[[w.word, w.part]].size) }[0..9]
+    import_keywords = keywords.map do |k|
+      Datapool::HatsugenKomachiKeyword.new(
+        datapool_hatsugen_komachi_id: self.id,
+        word: k.word,
+        part: k.part,
+        appear_score: k.appear_count_all_score * format_groups[[k.word, k.part]].size,
+        tf_idf_score: k.sentence_count_all_score * format_groups[[k.word, k.part]].size
+      )
+    end
+
+    Datapool::HatsugenKomachiWord.import(import_keywords, on_duplicate_key_update: [:appear_score, :tf_idf_score])
+  end
 
   def self.natto_text_splitter(put_natto: nil, text:)
     if put_natto.blank?

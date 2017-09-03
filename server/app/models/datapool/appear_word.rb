@@ -43,41 +43,41 @@ class Datapool::AppearWord < ApplicationRecord
     ExtraInfo.update({"appear_words" => hash})
   end
 
-  def self.cached_count_hash
+  def self.cached_count_hash(type_name: "Datapool::AppearWord")
     class_sum = ExtraInfo.read_extra_info["appear_words"] || {}
-    return class_sum[self.class.to_s] || {}
+    return class_sum[type_name] || {}
   end
 
-  def self.get_part_appear_sum(part)
-    self.cached_count_hash["#{part}_sum_appear_count"] || self.where(part: part).sum(:appear_count)
+  def self.get_part_appear_sum(part:, type_name: "Datapool::AppearWord")
+    self.cached_count_hash(type_name: type_name)["#{part}_sum_appear_count"] || self.where(part: part).sum(:appear_count)
   end
 
-  def self.get_part_sentence_sum(part)
-    self.cached_count_hash["#{part}_sum_sentence_count"] || self.where(part: part).sum(:sentence_count)
+  def self.get_part_sentence_sum(part:, type_name: "Datapool::AppearWord")
+    self.cached_count_hash(type_name: type_name)["#{part}_sum_sentence_count"] || self.where(part: part).sum(:sentence_count)
   end
 
-  def self.get_appear_all_sum
-    self.cached_count_hash["sum_appear_all_count"] || self.sum(:appear_count)
+  def self.get_appear_all_sum(type_name: "Datapool::AppearWord")
+    self.cached_count_hash(type_name: type_name)["sum_appear_all_count"] || self.sum(:appear_count)
   end
 
-  def self.get_sentence_all_sum
-    self.cached_count_hash["sum_sentence_all_count"] || self.sum(:sentence_count)
+  def self.get_sentence_all_sum(type_name: "Datapool::AppearWord")
+    self.cached_count_hash(type_name: type_name)["sum_sentence_all_count"] || self.sum(:sentence_count)
   end
 
   def appear_count_part_score
-    return self.appear_count.to_f / self.class.get_part_appear_sum(self.part)
+    return self.appear_count.to_f / self.class.get_part_appear_sum(part: self.part, type_name: self.type)
   end
 
   def sentence_count_part_score
-    return self.sentence_count.to_f / self.class.get_part_sentence_sum(self.part)
+    return self.sentence_count.to_f / self.class.get_part_sentence_sum(part: self.part, type_name: self.type)
   end
 
   def appear_count_all_score
-    return self.appear_count.to_f / self.class.get_appear_all_sum
+    return self.appear_count.to_f / self.class.get_appear_all_sum(type_name: self.type)
   end
 
   def sentence_count_all_score
-    return self.sentence_count.to_f / self.class.get_sentence_all_sum
+    return self.sentence_count.to_f / self.class.get_sentence_all_sum(type_name: self.type)
   end
 
   def self.calc_score_and_parts(text:)

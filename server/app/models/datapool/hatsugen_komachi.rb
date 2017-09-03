@@ -108,7 +108,7 @@ class Datapool::HatsugenKomachi < ApplicationRecord
       )
     end
 
-    Datapool::HatsugenKomachiWord.import(import_keywords, on_duplicate_key_update: [:appear_score, :tf_idf_score])
+    Datapool::HatsugenKomachiKeyword.import(import_keywords, on_duplicate_key_update: [:appear_score, :tf_idf_score])
   end
 
   def self.natto_text_splitter(put_natto: nil, text:)

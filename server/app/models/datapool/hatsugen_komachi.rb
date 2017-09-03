@@ -90,7 +90,7 @@ class Datapool::HatsugenKomachi < ApplicationRecord
   def generate_keywords!
     natto = ApplicationRecord.get_natto
     formats = []
-    self.natto_text_splitter(put_natto: natto, text: self.body.to_s) do |format|
+    self.class.natto_text_splitter(put_natto: natto, text: self.body.to_s) do |format|
       formats << format
     end
     komachi_words = Datapool::HatsugenKomachiWord.where(word: formats.map(&:word).uniq).select do |w|

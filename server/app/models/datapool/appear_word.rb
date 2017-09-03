@@ -66,7 +66,7 @@ class Datapool::AppearWord < ApplicationRecord
   end
 
   def idf
-    return Math.log(self.all_sentence_count.to_f　/ self.sentence_count.to_f)
+    return Math.log(self.all_sentence_count.to_f / self.sentence_count.to_f)
   end
 
   def all_sentence_count

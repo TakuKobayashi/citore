@@ -37,6 +37,7 @@ class Datapool::AppearWord < ApplicationRecord
         all_sum += sum
       end
       counter_hash["sum_sentence_all_count"] = all_sum
+      counter_hash["all_sentence_count"] = Datapool::AppearWord.where(type: t).count
 
       hash[t] = counter_hash
     end
@@ -62,6 +63,21 @@ class Datapool::AppearWord < ApplicationRecord
 
   def self.get_sentence_all_sum(type_name: "Datapool::AppearWord")
     self.cached_count_hash(type_name: type_name)["sum_sentence_all_count"] || self.sum(:sentence_count)
+  end
+
+  def idf
+    return Math.log(self.all_sentence_count.to_f, self.sentence_count.to_f) + 1
+  end
+
+  def all_sentence_count
+    all_count = self.class.cached_count_hash(type_name: self.type)["all_sentence_count"]
+    if all_count.blank?
+      all_count = Datapool::AppearWord.where(type: type).count
+    end
+    if all_count.to_i.zero?
+      all_count = 1
+    end
+    return all_count.to_i
   end
 
   def appear_count_part_score

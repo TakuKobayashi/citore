@@ -93,12 +93,21 @@ class Datapool::HatsugenKomachi < ApplicationRecord
     self.class.natto_text_splitter(put_natto: natto, text: self.body.to_s) do |format|
       formats << format
     end
+    # bodyの中の総単語数N
+    all_word_count = formats.size
     komachi_words = Datapool::HatsugenKomachiWord.where(word: formats.map(&:word).uniq).select do |w|
       ["形容詞", "名詞", "動詞"].include?(w.part) && formats.any?{|f| f.word == w.word && f.part == w.part}
     end
     format_groups = formats.group_by{|f| [f.word, f.part] }
-    keywords = komachi_words.sort_by{|w| -(w.sentence_count_all_score * format_groups[[w.word, w.part]].size) }[0..9]
-    import_keywords = keywords.map do |k|
+    keywords = komachi_words.sort_by do |w|
+      #tf n / N (出現単語数 / 総単語数)
+      tf = format_groups[[w.word, w.part]].size / all_word_count
+      idf = self.idf.to_f
+      tfidf = tf.to_f * idf.to_f
+      p "word: #{w.word} tf:#{tf} idf:#{idf} tfidf:#{tfidf}"
+      -tfidf
+    end
+    import_keywords = keywords[0..9].map do |k|
       Datapool::HatsugenKomachiKeyword.new(
         datapool_hatsugen_komachi_id: self.id,
         word: k.word,

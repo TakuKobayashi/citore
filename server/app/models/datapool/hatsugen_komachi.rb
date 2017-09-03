@@ -102,7 +102,7 @@ class Datapool::HatsugenKomachi < ApplicationRecord
     keywords = komachi_words.sort_by do |w|
       #tf n / N (出現単語数 / 総単語数)
       tf = format_groups[[w.word, w.part]].size / all_word_count
-      idf = self.idf.to_f
+      idf = w.idf.to_f
       tfidf = tf.to_f * idf.to_f
       p "word: #{w.word} tf:#{tf} idf:#{idf} tfidf:#{tfidf}"
       -tfidf

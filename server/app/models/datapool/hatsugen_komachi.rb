@@ -104,11 +104,9 @@ class Datapool::HatsugenKomachi < ApplicationRecord
       tf = format_groups[[w.word, w.part]].size.to_f / all_word_count
       idf = w.idf.to_f
       tfidf = tf.to_f * idf.to_f
-      p "word: #{w.word} tf:#{tf} idf:#{idf} tfidf:#{tfidf}"
       -tfidf
     end
     import_keywords = keywords[0..9].map do |k|
-      p k.word
       Datapool::HatsugenKomachiKeyword.new(
         datapool_hatsugen_komachi_id: self.id,
         word: k.word,

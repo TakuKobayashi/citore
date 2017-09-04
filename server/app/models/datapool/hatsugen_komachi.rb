@@ -99,20 +99,24 @@ class Datapool::HatsugenKomachi < ApplicationRecord
       ["形容詞", "名詞", "動詞"].include?(w.part) && formats.any?{|f| f.word == w.word && f.part == w.part}
     end
     format_groups = formats.group_by{|f| [f.word, f.part] }
+    format_groups_tf = {}
+    format_groups.each do |word_part, formats|
+      format_groups_tf[word_part] = formats.size.to_f / all_word_count
+    end
+
     keywords = komachi_words.sort_by do |w|
       #tf n / N (出現単語数 / 総単語数)
-      tf = format_groups[[w.word, w.part]].size.to_f / all_word_count
-      idf = w.idf.to_f
-      tfidf = tf.to_f * idf.to_f
+      tfidf = format_groups_tf[[w.word, w.part]].to_f * w.idf.to_f
       -tfidf
     end
     import_keywords = keywords[0..9].map do |k|
+      #tf n / N (出現単語数 / 総単語数)
       Datapool::HatsugenKomachiKeyword.new(
         datapool_hatsugen_komachi_id: self.id,
         word: k.word,
         part: k.part,
         appear_score: k.appear_count_all_score * format_groups[[k.word, k.part]].size,
-        tf_idf_score: k.sentence_count_all_score * format_groups[[k.word, k.part]].size
+        tf_idf_score: format_groups_tf[[k.word, k.part]].to_f * w.idf.to_f
       )
     end
 

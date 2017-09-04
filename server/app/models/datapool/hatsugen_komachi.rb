@@ -111,12 +111,13 @@ class Datapool::HatsugenKomachi < ApplicationRecord
     end
     import_keywords = keywords[0..9].map do |k|
       #tf n / N (出現単語数 / 総単語数)
+      tf = format_groups_tf[[k.word, k.part]].to_f
       Datapool::HatsugenKomachiKeyword.new(
         datapool_hatsugen_komachi_id: self.id,
         word: k.word,
         part: k.part,
-        appear_score: k.appear_count_all_score * format_groups[[k.word, k.part]].size,
-        tf_idf_score: format_groups_tf[[k.word, k.part]].to_f * w.idf.to_f
+        appear_score: k.appear_count_all_score * tf,
+        tf_idf_score: tf * w.idf.to_f
       )
     end
 

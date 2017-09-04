@@ -116,7 +116,7 @@ class Datapool::HatsugenKomachi < ApplicationRecord
         datapool_hatsugen_komachi_id: self.id,
         word: k.word,
         part: k.part,
-        appear_score: k.appear_count_all_score * tf,
+        appear_score: tf * k.appear_idf.to_f,
         tf_idf_score: tf * w.idf.to_f
       )
     end

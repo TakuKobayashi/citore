@@ -9,7 +9,7 @@ whenever --update-crontab
 spring stop
 kill -9 `cat tmp/pids/server.pid`
 SECRET_KEY_BASE=$(rake secret) rails server -e production -p 3100 -d
-cd ./nodejs/
+cd ./streaming/
 npm update
 forever restart index.js
 cd ../

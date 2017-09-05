@@ -1,5 +1,5 @@
 var path = require('path');
-var railsRootPath = path.normalize(__dirname + "/../server");
+var railsRootPath = path.normalize(__dirname + "/../");
 var fs = require("fs");
 var apiConfigString = fs.readFileSync(path.normalize(railsRootPath + "/config/apiconfig.yml"), "utf8");
 

@@ -1,4 +1,4 @@
-class Tools::WebsocketsController < ApplicationController
+class Tools::WebsocketsController < Homepage::BaseController
   def index
   end
 

@@ -34,6 +34,11 @@
 #
 
 class Datapool::HatsugenKomachi < ApplicationRecord
+  LABELING_COUNT = 10
+  LEARNING_TXT_FILE_PATH = "/tmp/komachi.txt"
+  FASTTEXT_PATH = "/fastText/"
+  FASTTEXT_LABEL_PREFIX = "__label__"
+
   COLUMN_LABELS = {
     topic_id: "トピID",
     res_number: "レスNo",

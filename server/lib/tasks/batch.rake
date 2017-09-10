@@ -385,7 +385,7 @@ namespace :batch do
   task generate_komachi_res_set: :environment do
     natto = ApplicationRecord.get_natto
     topic_id_count = Datapool::HatsugenKomachi.group(:topic_id).count
-    out_file = File.new("komachi.txt", "w")
+    out_file = File.new(Rails.root.to_s + LEARNING_TXT_FILE_PATH, "w")
     topic_id_count.each do |topic_id, count|
       next if count <= 1
       komachies = Datapool::HatsugenKomachi.where(topic_id: topic_id).sort_by{|k| k.res_number.to_i }
@@ -395,9 +395,14 @@ namespace :batch do
 #      komachies.each_cons(2) do |topic, res|
         line = ""
         nres = []
+        topic_keywords = []
         natto.parse(ApplicationRecord.basic_sanitize(topic.body)) do |n|
-          next if n.surface.to_s.strip.blank?
-          line += "__label__" + n.surface.to_s + ", "
+          next if n.surface.to_s.strip.blank? || !["動詞", "形容詞", "名詞"].include?(n.feature.split(",").first)
+          topic_keywords << n.surface.to_s
+        end
+        topic_keywords.shuffle!
+        topic_keywords.uniq[0..9].each do |word|
+          line += "__label__" + word + ", "
         end
         natto.parse(ApplicationRecord.basic_sanitize(res.body)) do |n|
           nres << n

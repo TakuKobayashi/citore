@@ -39,6 +39,8 @@ class Datapool::HatsugenKomachi < ApplicationRecord
   FASTTEXT_PATH = "/fastText/"
   FASTTEXT_LABEL_PREFIX = "__label__"
 
+  has_many :keywords, class_name: 'Datapool::HatsugenKomachiKeyword', foreign_key: :datapool_hatsugen_komachi_id
+
   COLUMN_LABELS = {
     topic_id: "トピID",
     res_number: "レスNo",
@@ -90,31 +92,79 @@ class Datapool::HatsugenKomachi < ApplicationRecord
     "11" => "男性から発信するトピ",
   }
 
+  def generate_keywords!
+    natto = ApplicationRecord.get_natto
+    formats = []
+    self.class.natto_text_splitter(put_natto: natto, text: self.body.to_s) do |format|
+      formats << format
+    end
+    # bodyの中の総単語数N
+    all_word_count = formats.size.to_f
+    komachi_words = Datapool::HatsugenKomachiWord.where(word: formats.map(&:word).uniq).select do |w|
+      ["形容詞", "名詞", "動詞"].include?(w.part) && formats.any?{|f| f.word == w.word && f.part == w.part}
+    end
+    format_groups = formats.group_by{|f| [f.word, f.part] }
+    format_groups_tf = {}
+    format_groups.each do |word_part, formats|
+      format_groups_tf[word_part] = formats.size.to_f / all_word_count
+    end
+
+    keywords = komachi_words.sort_by do |w|
+      #tf n / N (出現単語数 / 総単語数)
+      tfidf = format_groups_tf[[w.word, w.part]].to_f * w.idf.to_f
+      -tfidf
+    end
+    import_keywords = keywords[0..9].map do |k|
+      #tf n / N (出現単語数 / 総単語数)
+      tf = format_groups_tf[[k.word, k.part]].to_f
+      Datapool::HatsugenKomachiKeyword.new(
+        datapool_hatsugen_komachi_id: self.id,
+        word: k.word,
+        part: k.part,
+        appear_score: tf * k.appear_idf.to_f,
+        tf_idf_score: tf * k.idf.to_f
+      )
+    end
+
+    Datapool::HatsugenKomachiKeyword.import(import_keywords, on_duplicate_key_update: [:appear_score, :tf_idf_score])
+  end
+
+  def self.natto_text_splitter(put_natto: nil, text:)
+    if put_natto.blank?
+      natto = ApplicationRecord.get_natto
+    else
+      natto = put_natto
+    end
+    natto.parse(text) do |n|
+      next if n.surface.blank?
+      features = n.feature.split(",")
+      word = features[6]
+      if word.blank? || word == "*"
+        word = n.surface
+      end
+      reading = features[7]
+      if reading.blank?
+        reading = n.surface
+      end
+      yield(OpenStruct.new(word: word, part: features[0], reading: reading.to_s))
+    end
+  end
+
   def self.import_words!
     natto = ApplicationRecord.get_natto
-    Datapool::HatsugenKomachi.find_in_batches(batch_size: 10000) do |komachies|
+    self.find_in_batches(batch_size: 10000) do |komachies|
       import_words = []
       appear_imports = {}
       komachies.each do |komachi|
         words = []
-        natto.parse(komachi.body.to_s) do |n|
-          next if n.surface.blank?
-          features = n.feature.split(",")
-          word = features[6]
-          if word.blank? || word == "*"
-            word = n.surface
-          end
-          reading = features[7]
-          if reading.blank?
-            reading = n.surface
-          end
-          appears = appear_imports[word]
+        self.natto_text_splitter(put_natto: natto, text: Charwidth.normalize(komachi.body.to_s)) do |format|
+          appears = appear_imports[format.word]
           count = 0
           if appears.present?
             count = appears[:appear_count]
           end
-          appear_imports[word] = {word: word, part: features[0], appear_count: count.to_i + 1, reading: reading.to_s, type: "Datapool::HatsugenKomachiWord"}
-          words << word
+          appear_imports[format.word] = {word: format.word, part: format.part, appear_count: count.to_i + 1, reading: format.reading.to_s, type: "Datapool::HatsugenKomachiWord"}
+          words << format.word
         end
 
         words.uniq.each do |w|
@@ -125,7 +175,7 @@ class Datapool::HatsugenKomachi < ApplicationRecord
         appear_word = Datapool::AppearWord.new(hash)
         import_words << appear_word
       end
-      Datapool::HatsugenKomachiWord.import(import_words, on_duplicate_key_update: "appear_count = appear_count + VALUES(appear_count), sentence_count = VALUES(sentence_count)")
+      Datapool::HatsugenKomachiWord.import(import_words, on_duplicate_key_update: "appear_count = appear_count + VALUES(appear_count), sentence_count = sentence_count + VALUES(sentence_count)")
     end
   end
 end

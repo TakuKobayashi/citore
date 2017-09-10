@@ -35,7 +35,7 @@
       if(hostname.startsWith("localhost")){
         url = url + ":" + port;
       }
-      url = url + "/nodejs"
+      url = url + "/streaming"
       var ws = new WebSocket(url);
 
       //socketioを使いserverにconnectする(socketioの場合)

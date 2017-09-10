@@ -136,6 +136,18 @@ Rails.application.routes.draw do
       post :remove_followers
       post :crawl_user_all_tweet
     end
+
+    resources :webrtcs, only: [:index] do
+      collection do
+        get :freedom_videochat
+      end
+    end
+
+    resources :websockets, only: [:index] do
+      collection do
+        get :twitter_sample
+      end
+    end
   end
 
   namespace :unibo do

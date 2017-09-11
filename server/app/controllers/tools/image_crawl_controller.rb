@@ -17,8 +17,7 @@ class Tools::ImageCrawlController < Homepage::BaseController
     tempfile = Tempfile.new(Time.now.strftime("%Y%m%d_%H%M%S"))
     Zip::OutputStream.open(tempfile.path) do |stream|
       images.each do |image|
-        next unless image.can_download?
-        response = image.download_image
+        response = image.download_image_response
         next if (response.status >= 300 && response.status != 304) || !response.headers["Content-Type"].to_s.include?("image")
         stream.put_next_entry("image/#{image.save_filename}")
         stream.print(response.body)

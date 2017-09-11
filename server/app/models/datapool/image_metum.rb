@@ -106,7 +106,7 @@ class Datapool::ImageMetum < ApplicationRecord
       # 画像じゃないものも含まれていることもあるので分別する
       fi = FastImage.new(image_url.to_s)
       next if fi.type.blank?
-      image = self.new(title: title.to_s, from_site_url: from_site_url)
+      image = self.new(title: title.to_s, from_url: from_site_url)
       if image_url.scheme == "data"
         image_binary =  Base64.decode64(image_url.to_s.gsub(/data:image\/.+;base64\,/, ""))
         new_filename = SecureRandom.hex + ".#{fi.type.to_s}"

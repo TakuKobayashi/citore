@@ -5,13 +5,13 @@ class Tools::ImageCrawlController < Homepage::BaseController
   def crawl
     if params[:html_file].present?
       doc = Nokogiri::HTML.parse(params[:html_file].read.to_s)
-      images = ImageMetum.generate_objects_from_parsed_html(doc: doc, filter: params[:filter])
-      ImageMetum.import!(images, on_duplicate_key_update: [:title])
+      images = Datapool::ImageMetum.generate_objects_from_parsed_html(doc: doc, filter: params[:filter])
+      Datapool::ImageMetum.import!(images, on_duplicate_key_update: [:title])
     else
       url = params[:crawl_url]
       start_page = params[:start_page_num].to_i
       end_page = params[:end_page_num].to_i
-      images = ImageMetum.crawl_images!(url: url, start_page: start_page, end_page: end_page, filter: params[:filter])
+      images = Datapool::ImageMetum.crawl_images!(url: url, start_page: start_page, end_page: end_page, filter: params[:filter])
     end
 
     tempfile = Tempfile.new(Time.now.strftime("%Y%m%d_%H%M%S"))

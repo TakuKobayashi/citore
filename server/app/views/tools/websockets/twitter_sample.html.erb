@@ -49,8 +49,7 @@
       });
 
       ws.onmessage = function (event) {
-         console.log(event);
-         $('#messages').append($('<li>').text(event.data));
+         $('#messages').prepend($('<li>').text(event.data));
       };
     </script>
   </body>

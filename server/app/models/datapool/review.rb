@@ -19,4 +19,5 @@
 #
 
 class Datapool::Review < ApplicationRecord
+  serialize :options, JSON
 end

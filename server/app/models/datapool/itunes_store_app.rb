@@ -73,6 +73,12 @@ class Datapool::ItunesStoreApp < Datapool::StoreProduct
         app_arr << app_ins
       end
       Datapool::ItunesStoreApp.import!(app_arr, on_duplicate_key_update: [:title, :description, :icon_url, :publisher_name, :options])
+      product_id_app = Datapool::ItunesStoreApp.where(product_id: results.map{|r| r["id"] }).index_by(&:product_id)
+      rankings = []
+      results.each_with_index do |result, index|
+        rankings << product_id_app[result["id"]].rankings.new(category: category, rank: index + 1)
+      end
+      Datapool::StoreRanking.import(rankings)
     end
   end
 

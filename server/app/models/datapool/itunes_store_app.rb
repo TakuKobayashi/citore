@@ -82,6 +82,12 @@ class Datapool::ItunesStoreApp < Datapool::StoreProduct
     end
   end
 
-  def self.import_review!
+  def import_detail_and_reviews!
+    parsed_html = ApplicationRecord.request_and_parse_html(self.url)
+    rating_field = parsed_html.css(".rating").children
+    self.update!(
+      review_count: rating_field.first.try(:text).to_i,
+      average_score: rating_field.detect{|h| h[:itemprop] == "ratingValue" }.try(:text).to_f,
+    )
   end
 end

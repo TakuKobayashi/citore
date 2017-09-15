@@ -31,14 +31,19 @@ class Datapool::ItunesStoreApp < Datapool::StoreProduct
     new_apps: "https://rss.itunes.apple.com/api/v1/jp/ios-apps/new-apps-we-love/all/300/explicit.json",
     top_grossing_tablet: "https://rss.itunes.apple.com/api/v1/jp/ios-apps/top-grossing-ipad//all/300/explicit.json",
     top_free_tablet: "https://rss.itunes.apple.com/api/v1/jp/top-free-ipad/top-free/all/300/explicit.json",
-    top_free_pc: "https://rss.itunes.apple.com/api/v1/jp/macos-apps/top-free-mac-apps/all/300/explicit.json",
-    top_grossing_pc: "https://rss.itunes.apple.com/api/v1/jp/macos-apps/top-grossing-mac-apps/all/300/explicit.json",
-    top_all_pc: "https://rss.itunes.apple.com/api/v1/jp/macos-apps/top-mac-apps/all/300/explicit.json",
-    top_paid_pc: "https://rss.itunes.apple.com/api/v1/jp/macos-apps/top-paid-mac-apps/all/300/explicit.json",
+    top_free_pc: "https://rss.itunes.apple.com/api/v1/jp/macos-apps/top-free-mac-apps/all/200/explicit.json",
+    top_grossing_pc: "https://rss.itunes.apple.com/api/v1/jp/macos-apps/top-grossing-mac-apps/all/200/explicit.json",
+    top_all_pc: "https://rss.itunes.apple.com/api/v1/jp/macos-apps/top-mac-apps/all/200/explicit.json",
+    top_paid_pc: "https://rss.itunes.apple.com/api/v1/jp/macos-apps/top-paid-mac-apps/all/200/explicit.json",
   }
 
   def self.update_rankings!
-
+    h = []
+    URLS_HASH.each do |category, crawl_url|
+      hash = ApplicationRecord.request_and_parse_json(crawl_url)
+      h << hash
+    end
+    p h
   end
 
   def self.import_review!

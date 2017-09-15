@@ -25,11 +25,19 @@ class ApplicationRecord < ActiveRecord::Base
     return xml_to_hash
   end
 
-  def self.request_and_parse_html(url, method = :get)
+  def self.request_and_parse_html(url, method = :get, params = {})
     http_client = HTTPClient.new
-    response = http_client.send(method, url, {}, {})
+    response = http_client.send(method, url, params, {})
     doc = Nokogiri::HTML.parse(response.body)
     return doc
+  end
+
+  def self.request_and_parse_json(url, method = :get, params = {})
+    p url
+    http_client = HTTPClient.new
+    response = http_client.send(method, url, params, {})
+    hash = JSON.parse(response.body)
+    return hash
   end
 
   def self.request_and_get_links_from_html(url)

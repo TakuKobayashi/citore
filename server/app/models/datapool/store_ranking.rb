@@ -16,4 +16,5 @@
 #
 
 class Datapool::StoreRanking < ApplicationRecord
+  belongs_to :store_product, class_name: 'Datapool::StoreProduct', foreign_key: :datapool_store_product_id, required: false
 end

@@ -24,5 +24,6 @@
 
 class Datapool::StoreProduct < ApplicationRecord
   serialize :options, JSON
+  has_many :rankings, class_name: 'Datapool::StoreRanking', foreign_key: :datapool_store_product_id
   has_many :reviews, class_name: 'Datapool::Review', foreign_key: :datapool_store_product_id
 end

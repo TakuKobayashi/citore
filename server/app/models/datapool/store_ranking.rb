@@ -4,7 +4,7 @@
 #
 #  id                        :integer          not null, primary key
 #  datapool_store_product_id :integer          not null
-#  category                  :integer          default(0), not null
+#  category                  :integer          default("top_grossing"), not null
 #  rank                      :integer          default(0), not null
 #  created_at                :datetime         not null
 #  updated_at                :datetime         not null
@@ -16,5 +16,6 @@
 #
 
 class Datapool::StoreRanking < ApplicationRecord
+  enum category: (Datapool::ItunesStoreApp::URLS_HASH.keys | Datapool::GooglePlayApp::URLS_HASH.keys)
   belongs_to :store_product, class_name: 'Datapool::StoreProduct', foreign_key: :datapool_store_product_id, required: false
 end

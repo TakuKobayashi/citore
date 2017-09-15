@@ -4,6 +4,7 @@
 #
 #  id            :integer          not null, primary key
 #  type          :string(255)
+#  genre         :integer          default(0), not null
 #  product_id    :string(255)      not null
 #  title         :string(255)      not null
 #  url           :string(255)      not null

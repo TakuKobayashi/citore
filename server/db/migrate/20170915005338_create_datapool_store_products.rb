@@ -2,6 +2,7 @@ class CreateDatapoolStoreProducts < ActiveRecord::Migration[5.1]
   def change
     create_table :datapool_store_products do |t|
       t.string :type
+      t.integer :genre, null: false, default: 0
       t.string :product_id, null: false
       t.string :title, null: false
       t.string :url, null: false

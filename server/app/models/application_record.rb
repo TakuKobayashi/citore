@@ -33,7 +33,6 @@ class ApplicationRecord < ActiveRecord::Base
   end
 
   def self.request_and_parse_json(url, method = :get, params = {})
-    p url
     http_client = HTTPClient.new
     response = http_client.send(method, url, params, {})
     hash = JSON.parse(response.body)

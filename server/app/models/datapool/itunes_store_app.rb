@@ -8,7 +8,7 @@
 #  product_id     :string(255)      not null
 #  title          :string(255)      not null
 #  description    :text(65535)
-#  url            :string(255)      not null
+#  url            :text(65535)      not null
 #  icon_url       :string(255)
 #  review_count   :integer          default(0), not null
 #  average_score  :float(24)        default(0.0), not null
@@ -19,7 +19,6 @@
 #
 #  store_product_published_at_index  (published_at)
 #  store_product_unique_index        (product_id,type) UNIQUE
-#  store_product_url_index           (url)
 #
 
 class Datapool::ItunesStoreApp < Datapool::StoreProduct
@@ -38,12 +37,43 @@ class Datapool::ItunesStoreApp < Datapool::StoreProduct
   }
 
   def self.update_rankings!
-    h = []
     URLS_HASH.each do |category, crawl_url|
-      hash = ApplicationRecord.request_and_parse_json(crawl_url)
-      h << hash
+      response_hash = ApplicationRecord.request_and_parse_json(crawl_url)
+      results = response_hash["feed"]["results"] || []
+      app_arr = []
+      product_id_app = Datapool::ItunesStoreApp.where(product_id: results.map{|r| r["id"] }).index_by(&:product_id)
+      results.each do |result|
+        if product_id_app.has_key?(result["id"])
+          app_ins = product_id_app[result["id"]]
+          app_ins.title = result["name"]
+          app_ins.description = result["summary"]
+          app_ins.icon_url = result["artworkUrl100"]
+          app_ins.publisher_name = result["artistName"]
+        else
+          app_ins = Datapool::ItunesStoreApp.new(
+            publisher_name: result["artistName"],
+            product_id: result["id"],
+            title: result["name"],
+            description: result["summary"],
+            icon_url: result["artworkUrl100"],
+            url: result["url"],
+            published_at: Time.parse(result["releaseDate"]),
+            options: {}
+          )
+        end
+        app_ins.options = app_ins.options.merge({
+          genres: result["genres"],
+          kind: result["kind"],
+          publiser_url: result["artistUrl"],
+          primary_genre: result["primaryGenreName"],
+          artist_id: result["artistId"],
+          bundle_id: result["bundleId"],
+          price: result["price"]
+        }).delete_if{|k, v| v.nil? }
+        app_arr << app_ins
+      end
+      Datapool::ItunesStoreApp.import!(app_arr, on_duplicate_key_update: [:title, :description, :icon_url, :publisher_name, :options])
     end
-    p h
   end
 
   def self.import_review!

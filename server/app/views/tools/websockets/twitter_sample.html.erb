@@ -37,6 +37,9 @@
       }
       url = url + "/streaming"
       var ws = new WebSocket(url);
+      ws.onopen = function(event){
+        ws.send(JSON.stringify({action: "connection", path: "twitter_sample"}));
+      }
 
       //socketioを使いserverにconnectする(socketioの場合)
       //var socket = io.connect("ws://" + location.host);

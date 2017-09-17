@@ -32,15 +32,30 @@ var twitterClient = new Twitter({
 var WebSocketServer = require('ws').Server;
 var wss = new WebSocketServer({server:server});
 
-var connections = []; 
+var connections = {};
+connections.twitter_sample = [];
+var path_names = Object.keys(connections);
+
 wss.on('connection', function (ws) {
   console.log('connect!!');
-  connections.push(ws);
+  ws.on('message', function (message) {
+    try {
+      var json = JSON.parse(message);
+      if(json.action == "connection"){
+        connections[json.path].push(ws);
+      }
+    } catch (e) {
+      console.log("parseError:" + e);
+    }
+  });
   ws.on('close', function () {
     console.log('close');
-    connections = connections.filter(function (conn, i) {
-      return (conn === ws) ? false : true;
-    });
+    for(var i = 0;i < path_names.length;++i){
+      var removed_connections = connections[path_names[i]].filter(function (conn, i) {
+        return (conn === ws) ? false : true;
+      });
+      connections[path_names[i]] = removed_connections;
+    }
   });
 });
 
@@ -51,10 +66,10 @@ twitterStream.on('data', function(event) {
     sanitized_word = sanitizer.delete_retweet(sanitized_word);
     sanitized_word = sanitizer.delete_url(sanitized_word);
     sanitized_word = sanitizer.delete_symbols(sanitized_word);
-    connections.forEach(function (con, i) {
+    connections.twitter_sample.forEach(function(con, i) {
       con.send(sanitized_word);
     });
-  }  
+  }
 });
 
 twitterStream.on('error', function(error) {

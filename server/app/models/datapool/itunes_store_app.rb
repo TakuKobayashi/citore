@@ -46,7 +46,6 @@ class Datapool::ItunesStoreApp < Datapool::StoreProduct
         if product_id_app.has_key?(result["id"])
           app_ins = product_id_app[result["id"]]
           app_ins.title = result["name"]
-          app_ins.description = result["summary"]
           app_ins.icon_url = result["artworkUrl100"]
           app_ins.publisher_name = result["artistName"]
         else
@@ -54,7 +53,6 @@ class Datapool::ItunesStoreApp < Datapool::StoreProduct
             publisher_name: result["artistName"],
             product_id: result["id"],
             title: result["name"],
-            description: result["summary"],
             icon_url: result["artworkUrl100"],
             url: result["url"],
             published_at: Time.parse(result["releaseDate"]),
@@ -64,12 +62,14 @@ class Datapool::ItunesStoreApp < Datapool::StoreProduct
         app_ins.options = app_ins.options.merge({
           genres: result["genres"],
           kind: result["kind"],
+          summary: result["summary"],
           publiser_url: result["artistUrl"],
           primary_genre: result["primaryGenreName"],
           artist_id: result["artistId"],
           bundle_id: result["bundleId"],
           price: result["price"]
         }).delete_if{|k, v| v.nil? }
+        app_ins.set_details
         app_arr << app_ins
       end
       Datapool::ItunesStoreApp.import!(app_arr, on_duplicate_key_update: [:title, :description, :icon_url, :publisher_name, :options])
@@ -82,15 +82,13 @@ class Datapool::ItunesStoreApp < Datapool::StoreProduct
     end
   end
 
-  def import_detail_and_reviews!
+  def set_details
     parsed_html = ApplicationRecord.request_and_parse_html(self.url)
     rating_field = parsed_html.css(".rating").children
     if self.description.blank?
       self.description = parsed_html.css(".center-stack").css("p").detect{|h| h[:itemprop] == "description" }.try(:text)
     end
-    self.update!(
-      review_count: rating_field.first.try(:text).to_i,
-      average_score: rating_field.detect{|h| h[:itemprop] == "ratingValue" }.try(:text).to_f,
-    )
+    self.review_count = rating_field.first.try(:text).to_i,
+    self.average_score = rating_field.detect{|h| h[:itemprop] == "ratingValue" }.try(:text).to_f
   end
 end

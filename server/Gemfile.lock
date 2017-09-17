@@ -7,7 +7,7 @@ GIT
 
 GIT
   remote: https://github.com/activeadmin/activeadmin
-  revision: acff8334b3c3bd7a5e3ce9ab1f2616989d8de1ae
+  revision: 8f8e2662d5b922af6fac306e08f84d20a0decedb
   specs:
     activeadmin (2.0.0.alpha)
       arbre (>= 1.1.1)
@@ -67,7 +67,7 @@ GEM
       activemodel (= 5.1.4)
       activesupport (= 5.1.4)
       arel (~> 8.0)
-    activerecord-import (0.19.1)
+    activerecord-import (0.20.0)
       activerecord (>= 3.2)
     activesupport (5.1.4)
       concurrent-ruby (~> 1.0, >= 1.0.2)
@@ -88,16 +88,16 @@ GEM
     ast (2.3.0)
     aws-record (1.1.1)
       aws-sdk-resources (~> 2.0)
-    aws-sdk (2.10.42)
-      aws-sdk-resources (= 2.10.42)
-    aws-sdk-core (2.10.42)
+    aws-sdk (2.10.47)
+      aws-sdk-resources (= 2.10.47)
+    aws-sdk-core (2.10.47)
       aws-sigv4 (~> 1.0)
       jmespath (~> 1.0)
     aws-sdk-rails (1.0.1)
       aws-sdk-resources (~> 2)
       railties (>= 3)
-    aws-sdk-resources (2.10.42)
-      aws-sdk-core (= 2.10.42)
+    aws-sdk-resources (2.10.47)
+      aws-sdk-core (= 2.10.47)
     aws-sigv4 (1.0.2)
     babel-source (5.8.35)
     babel-transpiler (0.7.0)
@@ -150,7 +150,7 @@ GEM
     coffee-script-source (1.12.2)
     concurrent-ruby (1.0.5)
     daemons (1.2.4)
-    declarative (0.0.9)
+    declarative (0.0.10)
     declarative-option (0.1.0)
     devise (4.3.0)
       bcrypt (~> 3.0)

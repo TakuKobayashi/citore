@@ -9,13 +9,29 @@
   let localStream;
   // start local video
   function startVideo() {
-    navigator.mediaDevices.getUserMedia({video: true, audio: false}).then(function (stream){
-      // success
+    getDeviceStream({video: true, audio: false})
+    .then(function (stream) { // success
       localStream = stream;
       localVideo.src = window.URL.createObjectURL(localStream);
     }).catch(function (error) { // error
       console.error('mediaDevice.getUserMedia() error:', error);
       return;
     });
+  }
+  // ---- 新旧APIをPromiseでラップする ----
+  function getDeviceStream(option) {
+    if ('getUserMedia' in navigator.mediaDevices) {
+      console.log('navigator.mediaDevices.getUserMadia');
+      return navigator.mediaDevices.getUserMedia(option);
+    }
+    else {
+      console.log('wrap navigator.getUserMadia with Promise');
+      return new Promise(function(resolve, reject){
+        navigator.getUserMedia(option,
+          resolve,
+          reject
+        );
+      });
+    }
   }
 </script>

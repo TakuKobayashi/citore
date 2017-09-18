@@ -86,9 +86,9 @@ class Datapool::ItunesStoreApp < Datapool::StoreProduct
     parsed_html = ApplicationRecord.request_and_parse_html(self.url)
     rating_field = parsed_html.css(".rating").children
     if self.description.blank?
-      self.description = parsed_html.css(".center-stack").css("p").detect{|h| h[:itemprop] == "description" }.try(:text)
+      self.description = parsed_html.css(".center-stack").css("p").detect{|h| h[:itemprop] == "description" }.try(:to_html)
     end
-    self.review_count = rating_field.first.try(:text).to_i,
+    self.review_count = rating_field.first.try(:text).to_i
     self.average_score = rating_field.detect{|h| h[:itemprop] == "ratingValue" }.try(:text).to_f
   end
 end

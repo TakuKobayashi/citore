@@ -11,8 +11,7 @@
   <p>SDP to send:<br />
     <textarea id="text_for_send_sdp" rows="5" cols="60" readonly="readonly">SDP to send</textarea>
   </p>
-  <p>SDP to receive:&nbsp;
-    <button type="button" onclick="onSdpText();">Receive remote SDP</button><br />
+  <p>SDP to receive:<br />
     <textarea id="text_for_receive_sdp" rows="5" cols="60"></textarea>
   </p>
 </div>
@@ -23,6 +22,8 @@
   let peerConnection = null;
   let textForSendSdp = document.getElementById('text_for_send_sdp');
   let textToReceiveSdp = document.getElementById('text_for_receive_sdp');
+
+  var localSdp = "";
 
   // Websocket
   var hostname = window.document.location.hostname;
@@ -35,7 +36,7 @@
   }else{
     url = 'ws://' + hostname;
   }
-  if(hostname.startsWith("localhost")){
+  if(hostname.startsWith("localhost") || navigator.onLine){
     url = url + ":" + port;
   }
   url = url + "/streaming"
@@ -45,7 +46,15 @@
   }
 
   ws.onmessage = function (event) {
-    console.log(event);
+    if(localSdp.length > 0){
+      var sdpMessage = JSON.parse(event.data);
+      if(localSdp != sdpMessage.sdp){
+        console.log("remote??");
+        onSdpText(sdpMessage.sdp);
+      }else{
+        console.log("same!!");
+      }
+    }
   };
 
   // --- prefix -----
@@ -69,6 +78,7 @@
   function stopVideo() {
     pauseVideo(localVideo);
     stopLocalStream(localStream);
+    localSdp = "";
   }
 
   function stopLocalStream(stream) {
@@ -123,8 +133,7 @@
   }
 
   // ----- hand signaling ----
-  function onSdpText() {
-    let text = textToReceiveSdp.value;
+  function onSdpText(text) {
     if (peerConnection) {
       console.log('Received answer text...');
       let answer = new RTCSessionDescription({
@@ -142,12 +151,13 @@
     }
     textToReceiveSdp.value ='';
   }
- 
+
   function sendSdp(sessionDescription) {
     console.log('---sending sdp ---');
     console.log(sessionDescription);
     ws.send(JSON.stringify({action: "send", path: websocket_path, message: {sdp: sessionDescription.sdp}}));
     textForSendSdp.value = sessionDescription.sdp;
+    localSdp = sessionDescription.sdp;
     textForSendSdp.focus();
     textForSendSdp.select();
   }
@@ -286,6 +296,7 @@
       console.log('Hang up.');
       peerConnection.close();
       peerConnection = null;
+      localSdp = "";
       pauseVideo(remoteVideo);
     } else {
       console.warn('peer NOT exist.');

@@ -45,10 +45,10 @@ wss.on('connection', function (ws) {
       if(json.action == "connection"){
         connections[json.path].push(ws);
       }else if(json.action == "send"){
-        console.log(json.message);
         var sendConnections = connections[json.path];
+        var message_json = JSON.stringify(json.message);
         for(var i = 0;i < sendConnections.length;++i){
-          sendConnections[i].send(json.message);
+          sendConnections[i].send(message_json);
         }
       }
     } catch (e) {

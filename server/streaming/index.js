@@ -34,6 +34,7 @@ var wss = new WebSocketServer({server:server});
 
 var connections = {};
 connections.twitter_sample = [];
+connections.webrtc = [];
 var path_names = Object.keys(connections);
 
 wss.on('connection', function (ws) {
@@ -43,6 +44,12 @@ wss.on('connection', function (ws) {
       var json = JSON.parse(message);
       if(json.action == "connection"){
         connections[json.path].push(ws);
+      }else if(json.action == "send"){
+        console.log(json.message);
+        var sendConnections = connections[json.path];
+        for(var i = 0;i < sendConnections.length;++i){
+          sendConnections[i].send(json.message);
+        }
       }
     } catch (e) {
       console.log("parseError:" + e);

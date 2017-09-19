@@ -93,23 +93,24 @@ class Datapool::ItunesStoreApp < Datapool::StoreProduct
   end
 
   def self.import_reviews!
-    Datapool::ItunesStoreApp.find_each do |store|
+    Datapool::ItunesStoreApp.includes(:reviews).find_each do |store|
       response_hash = ApplicationRecord.request_and_parse_json("https://itunes.apple.com/jp/rss/customerreviews/id=" + store.product_id + "/json")
       next if response_hash["feed"].blank?
       entries = response_hash["feed"]["entry"] || []
-      reviews = []
-      id_review = store.reviews.where(review_id: entries.map{|e| (e["id"] || {})["label"] }.compact).index_by(&:review_id)
+      next if entries.instance_of?(Hash)
+      review_instances = []
+      id_review = store.reviews.where(review_id: entries.map{|e| (e["id"] || {})["label"] }.compact).index_by{|s| s.review_id}
       entries.each do |entry|
-        next if !entry.instance_of?(Hash) ||
-          !entry["id"].has_key?("label") ||
+        next if !entry["id"].has_key?("label") ||
           entry["content"].nil? ||
           entry["im:rating"].nil?
 
         user_attributes = (entry["author"] || {})
-        if id_review.has_key?((entry["id"] || {})["label"])
-          review_ins = id_review[(entry["id"] || {})["label"]]
+        review_id = (entry["id"] || {})["label"]
+        if id_review.has_key?(review_id)
+          review_ins = id_review[review_id]
         else
-          review_ins = store.reviews.new(options: {})
+          review_ins = store.reviews.new(review_id: review_id, options: {})
         end
         review_ins.title = ApplicationRecord.basic_sanitize((entry["title"] || {})["label"].to_s)
         review_ins.user_name = ApplicationRecord.basic_sanitize((user_attributes["name"] || {})["label"].to_s)
@@ -121,9 +122,9 @@ class Datapool::ItunesStoreApp < Datapool::StoreProduct
           vote_sum: (entry["im:voteSum"] || {})["label"].to_i,
           vote_count: (entry["im:voteCount"] || {})["label"].to_i
         }).delete_if{|k, v| v.nil? }
-        reviews << review_ins
+        review_instances << review_ins
       end
-      Datapool::Review.import(reviews, on_duplicate_key_update: [:title, :user_name, :score, :message, :options])
+      Datapool::Review.import(review_instances, on_duplicate_key_update: [:title, :user_name, :score, :message, :options])
     end
   end
 end

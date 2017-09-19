@@ -9,6 +9,10 @@ every :day, at: '11:00' do
   runner "Homepage.import_routine!"
 end
 
+every :day, at: '3:00' do
+  runner "Datapool::StoreProduct.update_data!"
+end
+
 =begin
 every :day, at: "2:00 am" do
   rake "batch:db_dump_and_upload"

@@ -46,20 +46,17 @@ class Datapool::ItunesStoreApp < Datapool::StoreProduct
       results.each do |result|
         if product_id_app.has_key?(result["id"])
           app_ins = product_id_app[result["id"]]
-          app_ins.title = result["name"]
-          app_ins.icon_url = result["artworkUrl100"]
-          app_ins.publisher_name = result["artistName"]
         else
           app_ins = Datapool::ItunesStoreApp.new(
-            publisher_name: result["artistName"],
             product_id: result["id"],
-            title: result["name"],
-            icon_url: result["artworkUrl100"],
             url: result["url"],
             published_at: Time.parse(result["releaseDate"]),
             options: {}
           )
         end
+        app_ins.title = result["name"]
+        app_ins.icon_url = result["artworkUrl100"]
+        app_ins.publisher_name = result["artistName"]
         app_ins.options = app_ins.options.merge({
           genres: result["genres"],
           kind: result["kind"],
@@ -99,6 +96,7 @@ class Datapool::ItunesStoreApp < Datapool::StoreProduct
       next if response_hash["feed"].blank?
       entries = response_hash["feed"]["entry"] || []
       reviews = []
+      id_review = store.reviews.where(review_id: entries.map{|e| (e["id"] || {})["label"] }.compact).index_by(&:review_id)
       entries.each do |entry|
         next if !entry.instance_of?(Hash) ||
           !entry["id"].has_key?("label") ||
@@ -106,20 +104,22 @@ class Datapool::ItunesStoreApp < Datapool::StoreProduct
           entry["im:rating"].nil?
 
         user_attributes = (entry["author"] || {})
-        reviews << Datapool::Review.new(
-          datapool_store_product_id: store.id,
-          review_id: (entry["id"] || {})["label"],
-          title: ApplicationRecord.basic_sanitize((entry["title"] || {})["label"].to_s),
-          user_name: ApplicationRecord.basic_sanitize((user_attributes["name"] || {})["label"].to_s),
-          score: (entry["im:rating"] || {})["label"].to_f,
-          message: ApplicationRecord.basic_sanitize((entry["content"] || {})["label"].to_s),
-          options: {
-            user_review_url: (user_attributes["url"] || {})["label"].to_s,
-            version: (entry["im:version"] || {})["label"],
-            vote_sum: (entry["im:voteSum"] || {})["label"].to_i,
-            vote_count: (entry["im:voteCount"] || {})["label"].to_i
-          }
-        )
+        if id_review.has_key?((entry["id"] || {})["label"])
+          review_ins = id_review[(entry["id"] || {})["label"]]
+        else
+          review_ins = store.reviews.new(options: {})
+        end
+        review_ins.title = ApplicationRecord.basic_sanitize((entry["title"] || {})["label"].to_s)
+        review_ins.user_name = ApplicationRecord.basic_sanitize((user_attributes["name"] || {})["label"].to_s)
+        review_ins.score = (entry["im:rating"] || {})["label"].to_f
+        review_ins.message = ApplicationRecord.basic_sanitize((entry["content"] || {})["label"].to_s)
+        review_ins.options = review_ins.options.merge({
+          user_review_url: (user_attributes["url"] || {})["label"].to_s,
+          version: (entry["im:version"] || {})["label"],
+          vote_sum: (entry["im:voteSum"] || {})["label"].to_i,
+          vote_count: (entry["im:voteCount"] || {})["label"].to_i
+        }).delete_if{|k, v| v.nil? }
+        reviews << review_ins
       end
       Datapool::Review.import(reviews, on_duplicate_key_update: [:title, :user_name, :score, :message, :options])
     end

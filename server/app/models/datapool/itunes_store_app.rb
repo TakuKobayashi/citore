@@ -60,7 +60,6 @@ class Datapool::ItunesStoreApp < Datapool::StoreProduct
         app_ins.options = app_ins.options.merge({
           genres: result["genres"],
           kind: result["kind"],
-          summary: result["summary"],
           publiser_url: result["artistUrl"],
           primary_genre: result["primaryGenreName"],
           artist_id: result["artistId"],
@@ -68,6 +67,9 @@ class Datapool::ItunesStoreApp < Datapool::StoreProduct
           price: result["price"]
         }).delete_if{|k, v| v.nil? }
         app_ins.set_details
+        if app_ins.description.blank?
+          app_ins.description = result["summary"]
+        end
         app_arr << app_ins
       end
       Datapool::ItunesStoreApp.import!(app_arr, on_duplicate_key_update: [:title, :description, :icon_url, :publisher_name, :options])

@@ -7,6 +7,6 @@ class CreateDatapoolReviews < ActiveRecord::Migration[5.1]
       t.text :message, null: false
       t.text :options
     end
-    add_index :datapool_reviews, :datapool_store_product_id, name: "reviews_product_url_index"
+    add_index :datapool_reviews, :datapool_store_product_id, name: "reviews_product_id_index"
   end
 end

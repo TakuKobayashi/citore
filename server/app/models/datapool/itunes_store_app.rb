@@ -29,7 +29,7 @@ class Datapool::ItunesStoreApp < Datapool::StoreProduct
     new_games: "https://rss.itunes.apple.com/api/v1/jp/ios-apps/new-games-we-love/all/300/explicit.json",
     new_apps: "https://rss.itunes.apple.com/api/v1/jp/ios-apps/new-apps-we-love/all/300/explicit.json",
     top_grossing_tablet: "https://rss.itunes.apple.com/api/v1/jp/ios-apps/top-grossing-ipad//all/300/explicit.json",
-    top_free_tablet: "https://rss.itunes.apple.com/api/v1/jp/top-free-ipad/top-free/all/300/explicit.json",
+    top_free_tablet: "https://rss.itunes.apple.com/api/v1/jp/ios-apps/top-free-ipad/all/300/explicit.json",
     top_free_pc: "https://rss.itunes.apple.com/api/v1/jp/macos-apps/top-free-mac-apps/all/200/explicit.json",
     top_grossing_pc: "https://rss.itunes.apple.com/api/v1/jp/macos-apps/top-grossing-mac-apps/all/200/explicit.json",
     top_all_pc: "https://rss.itunes.apple.com/api/v1/jp/macos-apps/top-mac-apps/all/200/explicit.json",

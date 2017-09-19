@@ -92,4 +92,36 @@ class Datapool::ItunesStoreApp < Datapool::StoreProduct
     self.review_count = rating_field.first.try(:text).to_i
     self.average_score = rating_field.detect{|h| h[:itemprop] == "ratingValue" }.try(:text).to_f
   end
+
+  def self.import_reviews!
+    Datapool::ItunesStoreApp.find_each do |store|
+      response_hash = ApplicationRecord.request_and_parse_json("https://itunes.apple.com/jp/rss/customerreviews/id=" + store.product_id + "/json")
+      next if response_hash["feed"].blank?
+      entries = response_hash["feed"]["entry"] || []
+      reviews = []
+      entries.each do |entry|
+        next if !entry.instance_of?(Hash) ||
+          !entry["id"].has_key?("label") ||
+          entry["content"].nil? ||
+          entry["im:rating"].nil?
+
+        user_attributes = (entry["author"] || {})
+        reviews << Datapool::Review.new(
+          datapool_store_product_id: store.id,
+          review_id: (entry["id"] || {})["label"],
+          title: ApplicationRecord.basic_sanitize((entry["title"] || {})["label"].to_s),
+          user_name: ApplicationRecord.basic_sanitize((user_attributes["name"] || {})["label"].to_s),
+          score: (entry["im:rating"] || {})["label"].to_f,
+          message: ApplicationRecord.basic_sanitize((entry["content"] || {})["label"].to_s),
+          options: {
+            user_review_url: (user_attributes["url"] || {})["label"].to_s,
+            version: (entry["im:version"] || {})["label"],
+            vote_sum: (entry["im:voteSum"] || {})["label"].to_i,
+            vote_count: (entry["im:voteCount"] || {})["label"].to_i
+          }
+        )
+      end
+      Datapool::Review.import(reviews, on_duplicate_key_update: [:title, :user_name, :score, :message, :options])
+    end
+  end
 end

@@ -36,7 +36,12 @@ class ApplicationRecord < ActiveRecord::Base
   def self.request_and_parse_json(url, method = :get, params = {})
     http_client = HTTPClient.new
     response = http_client.send(method, url, params, {})
-    hash = JSON.parse(response.body)
+    hash = {}
+    begin
+      hash = JSON.parse(response.body)
+    rescue JSON::ParserError => e
+      puts "ERROR: #{url}:#{e}"
+    end
     return hash
   end
 

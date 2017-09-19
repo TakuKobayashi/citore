@@ -39,6 +39,7 @@ class Datapool::ItunesStoreApp < Datapool::StoreProduct
   def self.update_rankings!
     URLS_HASH.each do |category, crawl_url|
       response_hash = ApplicationRecord.request_and_parse_json(crawl_url)
+      next if response_hash["feed"].blank?
       results = response_hash["feed"]["results"] || []
       app_arr = []
       product_id_app = Datapool::ItunesStoreApp.where(product_id: results.map{|r| r["id"] }).index_by(&:product_id)

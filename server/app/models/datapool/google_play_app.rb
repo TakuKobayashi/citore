@@ -36,9 +36,47 @@ class Datapool::GooglePlayApp < Datapool::StoreProduct
   }
 
   def self.update_rankings!
-
+    URLS_HASH.each do |category, crawl_url|
+      html = ApplicationRecord.request_and_parse_html(crawl_url)
+      contents = html.css(".card-content")
+      app_arr = []
+      product_id_app = Datapool::GooglePlayApp.where(product_id: contents.map{|r| r["id"] }).index_by(&:product_id)
+      contents.each do |content|
+        if product_id_app.has_key?(result["id"])
+          app_ins = product_id_app[result["id"]]
+        else
+          app_ins = Datapool::GooglePlayApp.new(
+            product_id: result["id"],
+            url: result["url"]
+            options: {}
+          )
+        end
+        app_ins.icon_url = content.css("img").first[:src]
+        app_ins.title = content.css(".title").first[:title]
+        app_ins.url = content.css(".title").first[:href]
+        app_ins.publisher_name = content.css(".subtitle").first[:title]
+        app_ins.options = app_ins.options.merge({
+          publiser_url: content.css(".subtitle").first[:url],
+          artist_id: result["artistId"]
+        }).delete_if{|k, v| v.nil? }
+        app_ins.set_details
+        app_arr << app_ins
+      end
+      Datapool::GooglePlayApp.import!(app_arr, on_duplicate_key_update: [:title, :description, :icon_url, :publisher_name, :options])
+      product_id_app = Datapool::GooglePlayApp.where(product_id: results.map{|r| r["id"] }).index_by(&:product_id)
+      rankings = []
+      results.each_with_index do |result, index|
+        rankings << product_id_app[result["id"]].rankings.new(category: category, rank: index + 1)
+      end
+      Datapool::StoreRanking.import(rankings)
+    end
   end
 
-  def self.import_review!
+  def set_details
+    parsed_html = ApplicationRecord.request_and_parse_html(self.url)
+    rating_field = parsed_html.css(".score-container").children
+    self.description = parsed_html.css(".description").css(".text-body").children.select{|c| c.text.strip.present? }.map{|c| c.children.to_html }.join
+    self.review_count = rating_field.detect{|h| h[:itemprop] == "ratingCount" }.try(:text).to_i
+    self.average_score = rating_field.detect{|h| h[:itemprop] == "ratingValue" }.try(:text).to_f
   end
 end

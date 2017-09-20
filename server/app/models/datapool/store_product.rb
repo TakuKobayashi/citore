@@ -60,7 +60,7 @@ class Datapool::StoreProduct < ApplicationRecord
 
     Zip::File.open(dir_path + "/app_store_product_tables.zip", Zip::File::CREATE) do |zip|
       tables.each do |table|
-        File.open("#{dir_path}/#{table}.sql" 'rb') do |file|
+        File.open("#{dir_path}/#{table}.sql", "rb") do |file|
           zip.get_output_stream("#{table}.sql" ) do |s|
             file.each_line do |line|
               s.write(line)

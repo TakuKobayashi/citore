@@ -42,6 +42,7 @@ class Datapool::GooglePlayApp < Datapool::StoreProduct
       app_arr = []
       product_id_app = Datapool::GooglePlayApp.where(product_id: contents.map{|r| r["id"] }).index_by(&:product_id)
       contents.each do |content|
+        ads_url = ApplicationRecord.merge_full_url(src: content.css(".title").first[:href], org: crawl_url)
         if product_id_app.has_key?(result["id"])
           app_ins = product_id_app[result["id"]]
         else
@@ -51,12 +52,12 @@ class Datapool::GooglePlayApp < Datapool::StoreProduct
             options: {}
           )
         end
-        app_ins.icon_url = content.css("img").first[:src]
+        app_ins.icon_url = ApplicationRecord.merge_full_url(src: content.css("img").first[:src], org: crawl_url).to_s
         app_ins.title = content.css(".title").first[:title]
-        app_ins.url = content.css(".title").first[:href]
+        app_ins.url = ads_url.to_s
         app_ins.publisher_name = content.css(".subtitle").first[:title]
         app_ins.options = app_ins.options.merge({
-          publiser_url: content.css(".subtitle").first[:url],
+          publiser_url: ApplicationRecord.merge_full_url(src: content.css(".subtitle").first[:url], org: crawl_url).to_s,
           artist_id: result["artistId"]
         }).delete_if{|k, v| v.nil? }
         app_ins.set_details

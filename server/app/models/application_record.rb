@@ -200,6 +200,18 @@ class ApplicationRecord < ActiveRecord::Base
     return text.match(/[0-9]{10,11}|\d{2,4}-\d{2,4}-\d{4}/).to_s
   end
 
+  def self.merge_full_url(src:, org:)
+    src_url = Addressable::URI.parse(src.to_s)
+    org_url = Addressable::URI.parse(org.to_s)
+    if src_url.scheme.blank?
+      src_url.scheme = org_url.scheme.to_s
+    end
+    if src_url.host.blank?
+      src_url.host = org_url.host
+    end
+    return src_url
+  end
+
   #参考: http://www.mk-mode.com/octopress/2011/10/28/28002050/
   # 定数 ( ベッセル楕円体 ( 旧日本測地系 ) )
   BESSEL_R_X  = 6377397.155000 # 赤道半径

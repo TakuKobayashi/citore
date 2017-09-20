@@ -93,15 +93,9 @@ class Datapool::ImageMetum < ApplicationRecord
         title = d.text
       end
       image_url = Addressable::URI.parse(d[:src])
-      from_url = Addressable::URI.parse(from_site_url.to_s)
       # base64encodeされたものはschemeがdataになる
       if image_url.scheme != "data"
-        if image_url.blank?
-          image_url.scheme = from_url.scheme.to_s
-        end
-        if image_url.host.blank?
-          image_url.host = from_url.host
-        end
+        image_url = ApplicationRecord.merge_full_url(src: image_url, org: from_site_url)
       end
       # 画像じゃないものも含まれていることもあるので分別する
       fi = FastImage.new(image_url.to_s)

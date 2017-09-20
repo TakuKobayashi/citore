@@ -30,4 +30,57 @@ class Datapool::StoreProduct < ApplicationRecord
     Datapool::ItunesStoreApp.update_rankings!
     Datapool::ItunesStoreApp.import_reviews!
   end
+
+  def self.backup_to_s3
+    environment = Rails.env
+    configuration = ActiveRecord::Base.configurations[environment]
+    database = Shellwords.escape(Regexp.escape(configuration['database'].to_s))
+    username = Shellwords.escape(Regexp.escape(configuration['username'].to_s))
+    password = Shellwords.escape(Regexp.escape(configuration['password'].to_s))
+    tables = [Datapool::StoreProduct, Datapool::StoreRanking, Datapool::Review].map(&:table_name)
+
+    unless Dir.exists?(Rails.root.to_s + "/tmp")
+      Dir.mkdir(Rails.root.to_s + "/tmp")
+    end
+    unless Dir.exists?(Rails.root.to_s + "/tmp/dbdump")
+      Dir.mkdir(Rails.root.to_s + "/tmp/dbdump")
+    end
+    dir_path = Rails.root.to_s + "/tmp/dbdump"
+
+    tables.each do |table|
+      cmd = ""
+      if password.present?
+        cmd += "MYSQL_PWD=#{password} "
+      end
+      cmd += "mysqldump -u #{username} "
+      cmd += "--skip-lock-tables #{database} #{table} > #{dir_path}/#{table}.sql"
+      system(cmd)
+      puts "#{table} dump complete"
+    end
+
+    Zip::File.open(dir_path + "/app_store_product_tables.zip", Zip::File::CREATE) do |zip|
+      tables.each do |table|
+        File.open("#{dir_path}/#{table}.sql" 'rb') do |file|
+          zip.get_output_stream("#{table}.sql" ) do |s|
+            file.each_line do |line|
+              s.write(line)
+            end
+          end
+          puts "#{table} compressed complete"
+        end
+      end
+    end
+    puts "compress completed"
+    tables.each do |table|
+      File.delete("#{dir_path}/#{table}.sql")
+    end
+    puts "upload start"
+    s3 = Aws::S3::Client.new
+    File.open(dir_path + "/app_store_product_tables.zip", 'rb') do |zip_file|
+      s3.put_object(bucket: "taptappun", body: zip_file,key: "for_send/app_store/app_store_product_tables.zip", acl: "public-read")
+    end
+    puts "upload completed"
+    File.delete(dir_path + "/app_store_product_tables.zip")
+    puts "batch completed"
+  end
 end

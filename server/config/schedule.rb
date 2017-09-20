@@ -13,6 +13,10 @@ every :day, at: '3:00' do
   runner "Datapool::StoreProduct.update_data!"
 end
 
+every :day, at: '7:00' do
+  runner "Datapool::StoreProduct.backup_to_s3"
+end
+
 =begin
 every :day, at: "2:00 am" do
   rake "batch:db_dump_and_upload"

@@ -35,49 +35,76 @@ class Datapool::GooglePlayApp < Datapool::StoreProduct
     new_apps_paid: "https://play.google.com/store/apps/collection/topselling_new_paid?hl=ja"
   }
 
+  RANKING_PERPAGE = 100
+  RANKING_MAXPAGE = 500
+
   def self.update_rankings!
     URLS_HASH.each do |category, crawl_url|
-      html = ApplicationRecord.request_and_parse_html(crawl_url)
-      contents = html.css(".card-content")
-      app_arr = []
-      product_id_app = Datapool::GooglePlayApp.where(product_id: contents.map{|r| r["id"] }).index_by(&:product_id)
-      contents.each do |content|
-        ads_url = ApplicationRecord.merge_full_url(src: content.css(".title").first[:href], org: crawl_url)
-        if product_id_app.has_key?(result["id"])
-          app_ins = product_id_app[result["id"]]
-        else
-          app_ins = Datapool::GooglePlayApp.new(
-            product_id: result["id"],
-            url: result["url"]
-            options: {}
-          )
+      page_counter = 0
+      while(page_counter <= RANKING_MAXPAGE) do
+        html = ApplicationRecord.request_and_parse_html(crawl_url, :post, {start: page_counter, num: RANKING_PERPAGE})
+        contents = html.css(".card-content")
+        ids = contents.map do |c|
+          url = ApplicationRecord.merge_full_url(src: c.css(".title").first[:href], org: crawl_url)
+          url.query_values["id"]
         end
-        app_ins.icon_url = ApplicationRecord.merge_full_url(src: content.css("img").first[:src], org: crawl_url).to_s
-        app_ins.title = content.css(".title").first[:title]
-        app_ins.url = ads_url.to_s
-        app_ins.publisher_name = content.css(".subtitle").first[:title]
-        app_ins.options = app_ins.options.merge({
-          publiser_url: ApplicationRecord.merge_full_url(src: content.css(".subtitle").first[:url], org: crawl_url).to_s,
-          artist_id: result["artistId"]
-        }).delete_if{|k, v| v.nil? }
-        app_ins.set_details
-        app_arr << app_ins
+        ids.compact!
+        product_id_app = Datapool::GooglePlayApp.where(product_id: ids).index_by(&:product_id)
+        contents.each do |content|
+          ads_url = ApplicationRecord.merge_full_url(src: content.css(".title").first[:href], org: crawl_url)
+          if product_id_app.has_key?(ads_url.query_values["id"])
+            app_ins = product_id_app[ads_url.query_values["id"]]
+          else
+            app_ins = Datapool::GooglePlayApp.new(
+              product_id: ads_url.query_values["id"],
+              url: ads_url.to_s,
+              options: {}
+            )
+          end
+          app_ins.icon_url = ApplicationRecord.merge_full_url(src: content.css("img").first[:src], org: crawl_url).to_s
+          app_ins.title = content.css(".title").first[:title]
+          app_ins.publisher_name = content.css(".subtitle").first[:title]
+
+          artist_url = ApplicationRecord.merge_full_url(src: content.css(".subtitle").first[:href], org: crawl_url)
+          app_ins.options = app_ins.options.merge({
+            publiser_url: artist_url.to_s,
+            artist_id: artist_url.query_values["id"],
+            price: content.css(".price-container").css(".display-price").last.try(:text),
+            summary: ApplicationRecord.basic_sanitize(content.css(".description").text).strip
+          }).delete_if{|k, v| v.blank? }
+          app_ins.set_details
+          app_ins.save!
+        end
+        product_id_app = Datapool::GooglePlayApp.where(product_id: ids).index_by(&:product_id)
+        rankings = []
+        ids.each_with_index do |product_id, index|
+          rankings << product_id_app[product_id].rankings.new(category: category, rank: page_counter + index + 1)
+        end
+        Datapool::StoreRanking.import(rankings)
+        page_counter += RANKING_PERPAGE
       end
-      Datapool::GooglePlayApp.import!(app_arr, on_duplicate_key_update: [:title, :description, :icon_url, :publisher_name, :options])
-      product_id_app = Datapool::GooglePlayApp.where(product_id: results.map{|r| r["id"] }).index_by(&:product_id)
-      rankings = []
-      results.each_with_index do |result, index|
-        rankings << product_id_app[result["id"]].rankings.new(category: category, rank: index + 1)
-      end
-      Datapool::StoreRanking.import(rankings)
     end
   end
 
   def set_details
     parsed_html = ApplicationRecord.request_and_parse_html(self.url)
     rating_field = parsed_html.css(".score-container").children
+    detail_contents = parsed_html.css(".details-wrapper").css(".content")
+
     self.description = parsed_html.css(".description").css(".text-body").children.select{|c| c.text.strip.present? }.map{|c| c.children.to_html }.join
     self.review_count = rating_field.detect{|h| h[:itemprop] == "ratingCount" }.try(:text).to_i
     self.average_score = rating_field.detect{|h| h[:itemprop] == "ratingValue" }.try(:text).to_f
+
+    screenshot_urls = parsed_html.css(".screenshot-container").css("img").map{|h| ApplicationRecord.merge_full_url(src: h[:src], org: self.url).to_s }.select do |url|
+      fi = FastImage.new(url)
+      fi.type.present?
+    end
+
+    self.options = self.options.merge({
+      screen_shots: screenshot_urls,
+      genre: parsed_html.css(".details-info").css(".category").text.strip,
+      download_num: detail_contents.detect{|c| c[:itemprop] == "numDownloads"}.try(:text).to_s.strip.gsub(",", ""),
+      version: detail_contents.detect{|c| c[:itemprop] == "softwareVersion"}.try(:text).to_s.strip,
+    })
   end
 end

@@ -29,6 +29,7 @@ class Datapool::StoreProduct < ApplicationRecord
   def self.update_data!
     Datapool::ItunesStoreApp.update_rankings!
     Datapool::ItunesStoreApp.import_reviews!
+    Datapool::GooglePlayApp.update_rankings!
   end
 
   def self.backup_to_s3

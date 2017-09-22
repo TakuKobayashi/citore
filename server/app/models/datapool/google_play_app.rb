@@ -91,7 +91,7 @@ class Datapool::GooglePlayApp < Datapool::StoreProduct
     rating_field = parsed_html.css(".score-container").children
     detail_contents = parsed_html.css(".details-wrapper").css(".content")
 
-    self.description = parsed_html.css(".description").css(".text-body").children.select{|c| c.text.strip.present? }.map{|c| c.children.to_html }.join
+    self.description = ApplicationRecord.basic_sanitize(parsed_html.css(".description").css(".text-body").children.select{|c| c.text.strip.present? }.map{|c| c.children.to_html }.join)
     self.review_count = rating_field.detect{|h| h[:itemprop] == "ratingCount" }.try(:text).to_i
     self.average_score = rating_field.detect{|h| h[:itemprop] == "ratingValue" }.try(:text).to_f
 

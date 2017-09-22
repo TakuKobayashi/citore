@@ -41,7 +41,6 @@ class Datapool::ItunesStoreApp < Datapool::StoreProduct
       response_hash = ApplicationRecord.request_and_parse_json(crawl_url)
       next if response_hash["feed"].blank?
       results = response_hash["feed"]["results"] || []
-      app_arr = []
       product_id_app = Datapool::ItunesStoreApp.where(product_id: results.map{|r| r["id"] }).index_by(&:product_id)
       results.each do |result|
         if product_id_app.has_key?(result["id"])
@@ -70,9 +69,8 @@ class Datapool::ItunesStoreApp < Datapool::StoreProduct
         if app_ins.description.blank?
           app_ins.description = result["summary"]
         end
-        app_arr << app_ins
+        app_ins.save!
       end
-      Datapool::ItunesStoreApp.import!(app_arr, on_duplicate_key_update: [:title, :description, :icon_url, :publisher_name, :options])
       product_id_app = Datapool::ItunesStoreApp.where(product_id: results.map{|r| r["id"] }).index_by(&:product_id)
       rankings = []
       results.each_with_index do |result, index|

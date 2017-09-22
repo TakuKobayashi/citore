@@ -100,6 +100,11 @@ class Datapool::GooglePlayApp < Datapool::StoreProduct
       fi.type.present?
     end
 
+    date_string = detail_contents.detect{|c| c[:itemprop] == "datePublished"}.try(:text).to_s.strip
+    if date_string.present?
+      self.published_at = Time.strptime(date_string, "%Y年%m月%d日")
+    end
+
     self.options = self.options.merge({
       screen_shots: screenshot_urls,
       genre: parsed_html.css(".details-info").css(".category").text.strip,

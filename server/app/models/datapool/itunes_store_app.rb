@@ -83,15 +83,17 @@ class Datapool::ItunesStoreApp < Datapool::StoreProduct
   def set_details
     parsed_html = ApplicationRecord.request_and_parse_html(self.url)
     rating_field = parsed_html.css(".rating").children
-    product_info_fields= parsed_html.css("#left-stack").css("ul.list").css("li")
+    product_info_fields= parsed_html.css("#left-stack").css("ul.list").css("li").css("span")
 
     if self.description.blank?
       self.description = parsed_html.css(".center-stack").css("p").detect{|h| h[:itemprop] == "description" }.try(:to_html)
     end
     self.review_count = rating_field.first.try(:text).to_i
     self.average_score = rating_field.detect{|h| h[:itemprop] == "ratingValue" }.try(:text).to_f
-    self.published_at = product_info_fields.detect{|l| l[:itemprop] == "datePublished"}.try(:text)
-
+    date_string = product_info_fields.detect{|l| l[:itemprop] == "datePublished"}.try(:text).to_s.strip
+    if date_string.present?
+      self.published_at = Time.strptime(date_string, "%Y年%m月%d日")
+    end
     iphone_screenshot_urls = parsed_html.css(".iphone-screen-shots").css("img").map{|h| ApplicationRecord.merge_full_url(src: h[:src], org: self.url).to_s }.select do |url|
       fi = FastImage.new(url)
       fi.type.present?

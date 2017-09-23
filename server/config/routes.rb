@@ -167,6 +167,9 @@ Rails.application.routes.draw do
     resources :greets, controller: :greets, only: [] do
       collection do
         get :list
+      end
+
+      member do
         get :receive
       end
     end

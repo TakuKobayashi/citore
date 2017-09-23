@@ -23,6 +23,13 @@ module Server
     config.i18n.default_locale = :ja
     config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}').to_s]
 
+    config.middleware.insert_before ActionDispatch::Static, Rack::Cors do
+      allow do
+        origins '*'
+        resource '*', :headers => :any, :methods => [:get, :post, :delete]
+      end
+    end
+
     config.after_initialize do
       if defined?(Rails::Server) || (defined?(Puma))
         # アプリキャッシュにマスター情報を入れておくことでスピードを稼ぐ

@@ -3,6 +3,7 @@ class Bannosama::PhotosController < Bannosama::BaseController
   end
 
   def upload
-    head(:ok)
+    upload_files = params[:image_files] || []
+    render :json => {upload_file_count: upload_files.size}
   end
 end

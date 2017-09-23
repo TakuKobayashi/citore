@@ -62,7 +62,7 @@ class Datapool::GooglePlayApp < Datapool::StoreProduct
             )
           end
           app_ins.icon_url = ApplicationRecord.merge_full_url(src: content.css("img").first[:src], org: crawl_url).to_s
-          app_ins.title = content.css(".title").first[:title]
+          app_ins.title = ApplicationRecord.basic_sanitize(content.css(".title").first[:title].to_s)
           app_ins.publisher_name = content.css(".subtitle").first[:title]
 
           artist_url = ApplicationRecord.merge_full_url(src: content.css(".subtitle").first[:href], org: crawl_url)

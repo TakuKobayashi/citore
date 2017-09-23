@@ -91,6 +91,7 @@ gem 'slideshare_api'
 gem 'useragent'
 
 gem 'romaji'
+gem 'flickraw'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development

@@ -35,7 +35,12 @@ ActiveAdmin.register Datapool::StoreProduct do
         row("その他") {|a| a.options }
         row("直近ランク") do |a|
           last_ranking = a.rankings.last
-          last_ranking.category + "の#{last_ranking.rank}位"
+          if last_ranking.present?
+            ranking_string = last_ranking.category + "の#{last_ranking.rank}位"
+          else
+            ranking_string = "まだデータはありません"
+          end
+          ranking_string
         end
         row("直近レビュー") do |a|
           result = ""

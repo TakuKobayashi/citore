@@ -6,7 +6,6 @@
 #  from_user_id :integer
 #  to_user_id   :integer
 #  state        :integer          default("uploaded"), not null
-#  title        :string(255)      not null
 #  message      :text(65535)
 #  theme        :integer          default(0), not null
 #  created_at   :datetime         not null

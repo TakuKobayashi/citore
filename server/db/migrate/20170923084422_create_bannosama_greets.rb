@@ -4,7 +4,6 @@ class CreateBannosamaGreets < ActiveRecord::Migration[5.1]
       t.integer :from_user_id
       t.integer :to_user_id
       t.integer :state, null: false, default: 0
-      t.string :title, null: false
       t.text :message
       t.integer :theme, null: false, default: 0
       t.timestamps

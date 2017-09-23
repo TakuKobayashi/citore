@@ -103,10 +103,6 @@ Rails.application.routes.draw do
   namespace :tools do
     root to: "top#index"
 
-    resource :chat, controller: :chat, only: [:index] do
-      get :index
-    end
-
     resource :graphics, controller: :graphics, only: [] do
       get :canvas
       get :threed

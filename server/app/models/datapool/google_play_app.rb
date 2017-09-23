@@ -88,12 +88,18 @@ class Datapool::GooglePlayApp < Datapool::StoreProduct
 
   def set_details
     parsed_html = ApplicationRecord.request_and_parse_html(self.url)
-    rating_field = parsed_html.css(".score-container").children
+    rating_field = parsed_html.css(".score-container").css("meta")
     detail_contents = parsed_html.css(".details-wrapper").css(".content")
 
     self.description = ApplicationRecord.basic_sanitize(parsed_html.css(".description").css(".text-body").children.select{|c| c.text.strip.present? }.map{|c| c.children.to_html }.join)
-    self.review_count = rating_field.detect{|h| h[:itemprop] == "ratingCount" }.try(:text).to_i
-    self.average_score = rating_field.detect{|h| h[:itemprop] == "ratingValue" }.try(:text).to_f
+    review_count_content = rating_field.detect{|h| h[:itemprop] == "ratingCount" }
+    if review_count_content.present?
+      self.review_count = review_count_content[:content].to_i
+    end
+    average_score_content = rating_field.detect{|h| h[:itemprop] == "ratingValue" }
+    if average_score_content.present?
+      self.average_score = average_score_content[:content].to_f
+    end
 
     screenshot_urls = parsed_html.css(".screenshot-container").css("img").map{|h| ApplicationRecord.merge_full_url(src: h[:src], org: self.url).to_s }.select do |url|
       fi = FastImage.new(url)

@@ -93,6 +93,7 @@ gem 'useragent'
 gem 'romaji'
 gem 'flickraw'
 gem 'rack-cors', :require => 'rack/cors'
+gem 'mini_magick'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development

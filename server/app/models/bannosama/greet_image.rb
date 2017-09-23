@@ -24,14 +24,15 @@ class Bannosama::GreetImage < ApplicationRecord
   belongs_to :greet, class_name: 'Bannosama::Greet', foreign_key: :greet_id, required: false
 
   def upload_s3_and_set_metadata(file)
-    fi = FastImage.new(file)
-    self.width = fi.size[0]
-    self.height = fi.size[1]
+    image = MiniMagick::Image.open(file)
+    self.width = image.width
+    self.height = image.height
     self.origin_file_name = file.original_filename
+    self.options = image.exif
     s3 = Aws::S3::Client.new
-    filename = SecureRandom.hex + File.extname(file.original_filename)
+    filename = SecureRandom.hex + File.extname(file.original_filename).downcase
     filepath = IMAGE_S3_FILE_ROOT + filename
-    s3.put_object(bucket: "taptappun",body: file.read, key: filepath, acl: "public-read")
+    s3.put_object(bucket: "taptappun",body: file.to_blob, key: filepath, acl: "public-read")
     self.upload_url = "https://taptappun.s3.amazonaws.com/" + filepath
   end
 end

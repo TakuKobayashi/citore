@@ -161,6 +161,7 @@ Rails.application.routes.draw do
     resources :photos, only: [:index] do
       collection do
         post :upload
+        post :upload_message
       end
     end
 

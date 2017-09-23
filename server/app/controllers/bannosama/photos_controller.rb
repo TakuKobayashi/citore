@@ -1,4 +1,6 @@
 class Bannosama::PhotosController < Bannosama::BaseController
+  protect_from_forgery
+
   def index
   end
 

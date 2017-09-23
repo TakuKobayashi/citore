@@ -155,6 +155,16 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace :bannosama do
+    root to: "top#index"
+
+    resources :photos, only: [:index] do
+      collection do
+        post :upload
+      end
+    end
+  end
+
   namespace :food_forecast do
     root to: "top#index"
 

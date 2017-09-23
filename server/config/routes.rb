@@ -163,6 +163,12 @@ Rails.application.routes.draw do
         post :upload
       end
     end
+
+    resources :greets, controller: :greets, only: [] do
+      collection do
+        get :receive
+      end
+    end
   end
 
   namespace :food_forecast do

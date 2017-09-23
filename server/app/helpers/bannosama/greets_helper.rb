@@ -1,0 +1,2 @@
+module Bannosama::GreetsHelper
+end

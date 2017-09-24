@@ -35,6 +35,7 @@ var wss = new WebSocketServer({server:server});
 var connections = {};
 connections.twitter_sample = [];
 connections.webrtc = [];
+connections.bannosama = [];
 var path_names = Object.keys(connections);
 
 wss.on('connection', function (ws) {
@@ -69,7 +70,7 @@ wss.on('connection', function (ws) {
 
 app.get('/bannosama/greets/mode_change', function(req, res){
   console.log(req.query);
-  if(connections.bannosama && req.query.mode){
+  if(req.query.mode){
     var data =  {mesh: parseInt(req.query.mode)};
     connections.bannosama.forEach(function(con, i) {
       con.send(JSON.stringify(data));

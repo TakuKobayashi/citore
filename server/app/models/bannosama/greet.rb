@@ -2,14 +2,15 @@
 #
 # Table name: bannosama_greets
 #
-#  id           :integer          not null, primary key
-#  from_user_id :integer
-#  to_user_id   :integer
-#  state        :integer          default("uploaded"), not null
-#  message      :text(65535)
-#  theme        :integer          default(0), not null
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
+#  id               :integer          not null, primary key
+#  from_user_id     :integer
+#  to_user_id       :integer
+#  state            :integer          default("uploaded"), not null
+#  message          :text(65535)
+#  theme            :integer          default(0), not null
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#  audio_upload_url :string(255)
 #
 # Indexes
 #
@@ -18,6 +19,8 @@
 #
 
 class Bannosama::Greet < ApplicationRecord
+  AUDIO_S3_FILE_ROOT = "project/bannosama/audio/"
+
   has_many :images, class_name: 'Bannosama::GreetImage', foreign_key: :greet_id
   belongs_to :to_user, class_name: 'Bannosama::User', foreign_key: :to_user_id, required: false
   belongs_to :from_user, class_name: 'Bannosama::User', foreign_key: :from_user_id, required: false
@@ -32,6 +35,15 @@ class Bannosama::Greet < ApplicationRecord
     filename = self.id.to_s + File.extname(file.original_filename).downcase
     filepath = Bannosama::GreetImage::IMAGE_S3_THUMBNAIL_ROOT + filename
     s3.put_object(bucket: "taptappun",body: image.to_blob, key: filepath, acl: "public-read")
+  end
+
+  def upload_s3_and_set_audiofile(audio_file)
+    return nil if audio_file.blank?
+    s3 = Aws::S3::Client.new
+    filename = SecureRandom.hex + File.extname(audio_file.original_filename).downcase
+    filepath = AUDIO_S3_FILE_ROOT + filename
+    self.audio_upload_url = "https://taptappun.s3.amazonaws.com/" + filepath
+    s3.put_object(bucket: "taptappun",body: audio_file.read, key: filepath, acl: "public-read")
   end
 
   def get_thumbnail_url

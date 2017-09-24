@@ -26,7 +26,7 @@ class Bannosama::Greet < ApplicationRecord
 
   def generate_thumnail!(file)
     return nil if file.blank?
-    image = MiniMagick::Image.open(file)
+    image = MiniMagick::Image.open(file.path)
     image.resize(Bannosama::GreetImage.calc_resize_text(width: image.width, height: image.height, max_length: 200))
     s3 = Aws::S3::Client.new
     filename = self.id.to_s + File.extname(file.original_filename).downcase

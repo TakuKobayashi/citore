@@ -25,7 +25,7 @@ class Bannosama::GreetImage < ApplicationRecord
   belongs_to :greet, class_name: 'Bannosama::Greet', foreign_key: :greet_id, required: false
 
   def upload_s3_and_set_metadata(file)
-    image = MiniMagick::Image.open(file)
+    image = MiniMagick::Image.open(file.path)
     image.resize(Bannosama::GreetImage.calc_resize_text(width: image.width, height: image.height, max_length: 800))
     self.width = image.width
     self.height = image.height

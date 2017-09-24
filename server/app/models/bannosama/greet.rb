@@ -35,6 +35,10 @@ class Bannosama::Greet < ApplicationRecord
   end
 
   def get_thumbnail_url
-    return "https://taptappun.s3.amazonaws.com/" + Bannosama::GreetImage::IMAGE_S3_THUMBNAIL_ROOT + self.id.to_s + File.extname(file.original_filename).downcase
+    image = images.first
+    if image.blank?
+      return ""
+    end
+    return "https://taptappun.s3.amazonaws.com/" + Bannosama::GreetImage::IMAGE_S3_THUMBNAIL_ROOT + self.id.to_s + File.extname(image.upload_url).downcase
   end
 end

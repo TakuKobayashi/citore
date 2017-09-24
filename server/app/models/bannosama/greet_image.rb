@@ -19,7 +19,7 @@
 
 class Bannosama::GreetImage < ApplicationRecord
   IMAGE_S3_FILE_ROOT = "project/bannosama/"
-  IMAGE_S3_THUMBNAIL_ROOT = "project/bannosama/thumbnail"
+  IMAGE_S3_THUMBNAIL_ROOT = "project/bannosama/thumbnail/"
 
   serialize :options, JSON
   belongs_to :greet, class_name: 'Bannosama::Greet', foreign_key: :greet_id, required: false

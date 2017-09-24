@@ -1,6 +1,5 @@
 class Bannosama::BaseController < BaseController
   layout "bannosama"
-  before_action :find_user
 
   def find_user
     @user = Bannosama::User.find_by(uuid: cookies[:uuid])

@@ -1,6 +1,6 @@
 class Bannosama::GreetsController < Bannosama::BaseController
   def list
-    greets = Bannosama::Greet.all
+    greets = Bannosama::Greet.all.includes(:images)
     render :json => greets.map{|g| {id: g.id, theme: g.theme, thumbnail_url: g.get_thumbnail_url} }
   end
 

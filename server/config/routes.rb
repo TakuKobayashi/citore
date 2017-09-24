@@ -167,6 +167,7 @@ Rails.application.routes.draw do
     resources :greets, controller: :greets, only: [] do
       collection do
         get :list
+        get :mode_change
       end
 
       member do

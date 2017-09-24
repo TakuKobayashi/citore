@@ -66,6 +66,17 @@ wss.on('connection', function (ws) {
   });
 });
 
+app.get('/bannosama/greets/mode_change', function(req, res){
+  console.log(req.query);
+  if(connections.bannosama && req.query.mode){
+    var data =  {mesh: parseInt(req.query.mode)};
+    connections.bannosama.forEach(function(con, i) {
+      con.send(JSON.stringify(data));
+    });
+  }
+  res.status(200).send('');
+});
+
 var twitterStream = twitterClient.stream('statuses/sample.json');
 twitterStream.on('data', function(event) {
   if(event.user.lang == "ja" && !event.retweeted && !event.favorited){

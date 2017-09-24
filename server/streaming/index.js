@@ -42,6 +42,7 @@ wss.on('connection', function (ws) {
   ws.on('message', function (message) {
     try {
       var json = JSON.parse(message);
+      console.log(json);
       if(json.action == "connection"){
         connections[json.path].push(ws);
       }else if(json.action == "send"){

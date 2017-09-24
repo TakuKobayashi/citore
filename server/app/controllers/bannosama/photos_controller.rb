@@ -15,7 +15,7 @@ class Bannosama::PhotosController < Bannosama::BaseController
     end
     Bannosama::GreetImage.import(images)
 
-    images.first.try(:generate_thumnail!)
+    greet.generate_thumnail!(upload_files.first)
 
     hash = params.dup.delete_if{|k, v| ["controller", "action"].include?(k) }
     render :json => {upload_file_count: upload_files.size, params: hash}

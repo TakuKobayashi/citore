@@ -26,6 +26,7 @@ class Bannosama::GreetImage < ApplicationRecord
 
   def upload_s3_and_set_metadata(file)
     image = MiniMagick::Image.open(file)
+    image.resize(Bannosama::GreetImage.calc_resize_text(width: image.width, height: image.height, max_length: 800))
     self.width = image.width
     self.height = image.height
     self.origin_file_name = file.original_filename
@@ -33,16 +34,8 @@ class Bannosama::GreetImage < ApplicationRecord
     s3 = Aws::S3::Client.new
     filename = SecureRandom.hex + File.extname(file.original_filename).downcase
     filepath = IMAGE_S3_FILE_ROOT + filename
-    s3.put_object(bucket: "taptappun",body: file.to_blob, key: filepath, acl: "public-read")
+    s3.put_object(bucket: "taptappun",body: image.to_blob, key: filepath, acl: "public-read")
     self.upload_url = "https://taptappun.s3.amazonaws.com/" + filepath
-  end
-
-  def generate_thumnail!(file)
-    fi = FastImage.new(file)
-    s3 = Aws::S3::Client.new
-    filename = self.greet_id.to_s + File.extname(file.original_filename).downcase
-    filepath = IMAGE_S3_THUMBNAIL_ROOT + filename
-    s3.put_object(bucket: "taptappun",body: file.read, key: filepath, acl: "public-read")
   end
 
   def self.calc_resize_text(width:, height:, max_length:)

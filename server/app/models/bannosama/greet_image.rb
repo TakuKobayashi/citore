@@ -19,6 +19,7 @@
 
 class Bannosama::GreetImage < ApplicationRecord
   IMAGE_S3_FILE_ROOT = "project/bannosama/"
+  IMAGE_S3_THUMBNAIL_ROOT = "project/bannosama/thumbnail"
 
   serialize :options, JSON
   belongs_to :greet, class_name: 'Bannosama::Greet', foreign_key: :greet_id, required: false
@@ -34,6 +35,14 @@ class Bannosama::GreetImage < ApplicationRecord
     filepath = IMAGE_S3_FILE_ROOT + filename
     s3.put_object(bucket: "taptappun",body: file.to_blob, key: filepath, acl: "public-read")
     self.upload_url = "https://taptappun.s3.amazonaws.com/" + filepath
+  end
+
+  def generate_thumnail!(file)
+    fi = FastImage.new(file)
+    s3 = Aws::S3::Client.new
+    filename = self.greet_id.to_s + File.extname(file.original_filename).downcase
+    filepath = IMAGE_S3_THUMBNAIL_ROOT + filename
+    s3.put_object(bucket: "taptappun",body: file.read, key: filepath, acl: "public-read")
   end
 
   def self.calc_resize_text(width:, height:, max_length:)

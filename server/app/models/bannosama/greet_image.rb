@@ -26,7 +26,7 @@ class Bannosama::GreetImage < ApplicationRecord
 
   def upload_s3_and_set_metadata(file)
     image = MiniMagick::Image.open(file.path)
-    image.resize(Bannosama::GreetImage.calc_resize_text(width: image.width, height: image.height, max_length: 800))
+    image.resize(Bannosama::GreetImage.calc_resize_text(width: image.width, height: image.height, max_length: 600))
     self.width = image.width
     self.height = image.height
     self.origin_file_name = file.original_filename

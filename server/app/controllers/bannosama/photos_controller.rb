@@ -6,7 +6,7 @@ class Bannosama::PhotosController < Bannosama::BaseController
 
   def upload
     audio_file = params[:audio_file]
-    greet = Bannosama::Greet.new(message: params[:say_comment].to_s, theme: params[:theme].to_i)
+    greet = Bannosama::Greet.new(from_user_id: @user.id, message: params[:say_comment].to_s, theme: params[:theme].to_i)
     greet.upload_s3_and_set_audiofile(audio_file)
     greet.save!
 

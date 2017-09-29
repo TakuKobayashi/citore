@@ -75,7 +75,6 @@ gem 'inherited_resources', git: 'https://github.com/activeadmin/inherited_resour
 
 gem 'cabocha'
 gem 'xml-simple'
-gem 'exifr'
 gem 'fastimage'
 
 gem 'puma_worker_killer'

@@ -15,7 +15,7 @@ class Tools::ImageCrawlController < Homepage::BaseController
     url = params[:crawl_url]
     start_page = params[:start_page_num].to_i
     end_page = params[:end_page_num].to_i
-    images = Datapool::ImageMetum.crawl_images!(url: url, start_page: start_page, end_page: end_page, filter: params[:filter])
+    images = Datapool::WebSiteImageMetum.crawl_images!(url: url, start_page: start_page, end_page: end_page, filter: params[:filter])
 
     tempfile = Tempfile.new(Time.now.strftime("%Y%m%d_%H%M%S"))
     zippath = compress_to_zip(zip_filepath: tempfile.path, images: images)

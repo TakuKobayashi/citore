@@ -4,10 +4,11 @@ class CreateDatapoolImageMeta < ActiveRecord::Migration[5.1]
       t.string :type
       t.string :title, null: false
       t.string :original_filename
-      t.string :src
-      t.string :from_url
+      t.string :origin_src, null: false
+      t.text :query
+      t.text :options
     end
     add_index :datapool_image_meta, :title
-    add_index :datapool_image_meta, [:from_url, :src], unique: true
+    add_index :datapool_image_meta, :origin_src
   end
 end

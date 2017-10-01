@@ -29,7 +29,7 @@ class Tools::ImageCrawlController < Homepage::BaseController
       images.each do |image|
         response = image.download_image_response
         next if (response.status >= 300 && response.status != 304) || !response.headers["Content-Type"].to_s.include?("image")
-        stream.put_next_entry("image/#{image.save_filename}")
+        stream.put_next_entry(image.save_filename)
         stream.print(response.body)
       end
     end

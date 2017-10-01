@@ -117,7 +117,9 @@ Rails.application.routes.draw do
     resource :image_crawl, controller: :image_crawl, only: [] do
       get :index
       get :twitter
+      post :twitter_crawl
       get :flickr
+      post :flickr_crawl
       get :url
       post :url_crawl
     end

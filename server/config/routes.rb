@@ -116,7 +116,10 @@ Rails.application.routes.draw do
 
     resource :image_crawl, controller: :image_crawl, only: [] do
       get :index
-      post :crawl
+      get :twitter
+      get :flickr
+      get :url
+      post :url_crawl
     end
 
     resource :excel_converter, controller: :excel_converter, only: [] do

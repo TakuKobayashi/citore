@@ -81,7 +81,7 @@ class Datapool::ImageMetum < ApplicationRecord
   end
 
   def download_image_response
-    aurl = Addressable::URI.parse(URI.unescape(self.src))
+    aurl = Addressable::URI.parse(self.src)
     client = HTTPClient.new
     response = client.get(aurl.to_s)
     return response

@@ -5,6 +5,10 @@ class Tools::ImageCrawlController < Homepage::BaseController
   def twitter
   end
 
+  def twitter_crawl
+    head(:ok)
+  end
+
   def flickr
   end
 

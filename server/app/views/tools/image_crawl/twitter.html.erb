@@ -1,5 +1,5 @@
 <table>
-  <%= form_tag(url_crawl_tools_image_crawl_url, multipart: true) do %>
+  <%= form_tag(twitter_crawl_tools_image_crawl_url, multipart: true) do %>
     <tr>
       <td><%= label_tag("検索種別") %></td>
       <td><%= select_tag(:search_type, options_for_select(["フリーワード", "ユーザー名"].map.with_index{|word, i| [word.to_s, i] })) %></td>

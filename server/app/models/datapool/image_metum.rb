@@ -57,7 +57,7 @@ class Datapool::ImageMetum < ApplicationRecord
 
   def src=(url)
     aurl = Addressable::URI.parse(url)
-    self.origin_src = aurl.origin
+    self.origin_src = aurl.origin.to_s + aurl.path.to_s
     self.query = aurl.query
   end
 

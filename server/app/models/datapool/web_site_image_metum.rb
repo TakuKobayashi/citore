@@ -30,6 +30,7 @@ class Datapool::WebSiteImageMetum < Datapool::ImageMetum
 
   def self.generate_objects_from_parsed_html(doc:, filter: nil, from_site_url: nil)
     images = []
+    image_urls = []
     if filter.present?
       doc = doc.css(filter)
     end
@@ -49,6 +50,8 @@ class Datapool::WebSiteImageMetum < Datapool::ImageMetum
       if image_url.scheme != "data"
         image_url = ApplicationRecord.merge_full_url(src: image_url, org: from_site_url)
       end
+      next if image_urls.include?(image_url.to_s)
+      image_urls << image_url.to_s
       # 画像じゃないものも含まれていることもあるので分別する
       image_type = FastImage.type(image_url.to_s)
       next if image_type.blank?

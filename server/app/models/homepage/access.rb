@@ -17,4 +17,5 @@
 
 class Homepage::Access < ApplicationRecord
   has_many :likes, class_name: 'Homepage::Like', foreign_key: :homepage_access_id
+  has_many :upload_jobs, class_name: 'Homepage::UploadJobQueue', foreign_key: :homepage_access_id
 end

@@ -40,7 +40,7 @@ class Datapool::FrickrImageMetum < Datapool::ImageMetum
     images = []
     begin
       flickr_images = flickr_client.people.getPhotos({user_id: flickr_user["id"], per_page: PER_PAGE, page: page_counter})
-      images += self.generate_images!(flickr_images)
+      images += self.generate_images!(flickr_images: flickr_images)
       page_counter = page_counter + 1
     end while flickr_images.size >= PER_PAGE
     return images
@@ -53,30 +53,29 @@ class Datapool::FrickrImageMetum < Datapool::ImageMetum
     images = []
     begin
       flickr_images = flickr_client.photos.search({tags: tags, per_page: PER_PAGE, page: page_counter})
-      images += self.generate_images!(flickr_images)
+      images += self.generate_images!(flickr_images: flickr_images, {keyword: tags})
       page_counter = page_counter + 1
     end while flickr_images.size >= PER_PAGE
     return images
   end
 
   private
-  def self.generate_images!(flickr_images)
+  def self.generate_images!(flickr_images:, options: {})
     images = []
     image_urls = []
     flickr_images.each do |flickr_image|
       image_url = FlickRaw.url(flickr_image)
       next if image_urls.include?(image_url.to_s)
       image_urls << image_url.to_s
-      image = self.new(
+      image = self.constract(
+        image_url: image_url.to_s,
         title: flickr_image.title,
         options: {
           image_id: flickr_image.id,
           image_secret: flickr_image.secret,
           post_user_id: flickr_image.owner
-        }
+        }.merge(options)
       )
-      image.src = image_url.to_s
-      image.original_filename = self.match_image_filename(image.src.to_s)
       images << image
     end
     self.import!(images)

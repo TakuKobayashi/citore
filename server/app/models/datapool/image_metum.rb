@@ -102,4 +102,25 @@ class Datapool::ImageMetum < ApplicationRecord
     base64_image = Base64.strict_encode64(binary.body.read)
     return "data:image/" + ext[1..ext.size] + ";base64," + base64_image
   end
+
+  def self.constract(image_url:, title:, check_image_file: false, options: {})
+    aimage_url = Addressable::URI.parse(image_url.to_s)
+    image_type = nil
+    if check_image_file
+      # 画像じゃないものも含まれていることもあるので分別する
+      image_type = FastImage.type(aimage_url.to_s)
+      return nil if image_type.blank?
+    end
+    image = self.new(title: title.to_s, options: options)
+    if aimage_url.scheme == "data"
+      image_binary =  Base64.decode64(aimage_url.to_s.gsub(/data:image\/.+;base64\,/, ""))
+      new_filename = SecureRandom.hex + ".#{image_type.to_s.downcase}"
+      uploaded_path = self.upload_s3(image_binary, new_filename)
+      image.src = "https://taptappun.s3.amazonaws.com/" + uploaded_path
+    else
+      image.src = aimage_url.to_s
+    end
+    image.original_filename = self.match_image_filename(image.src.to_s)
+    return image
+  end
 end

@@ -36,9 +36,7 @@ class Datapool::FrickrImageMetum < Datapool::ImageMetum
       flickr_images = flickr_client.people.getPhotos({user_id: flickr_user["id"], per_page: PER_PAGE, page: page_counter})
       images += self.generate_images!(flickr_images)
       page_counter = page_counter + 1
-      Rails.logger.info page_counter
     end while flickr_images.size >= PER_PAGE
-    self.import!(images)
     return images
   end
 
@@ -51,9 +49,7 @@ class Datapool::FrickrImageMetum < Datapool::ImageMetum
       flickr_images = flickr_client.photos.search({tags: tags, per_page: PER_PAGE, page: page_counter})
       images += self.generate_images!(flickr_images)
       page_counter = page_counter + 1
-      Rails.logger.info page_counter
     end while flickr_images.size >= PER_PAGE
-    self.import!(images)
     return images
   end
 
@@ -77,6 +73,7 @@ class Datapool::FrickrImageMetum < Datapool::ImageMetum
       image.original_filename = self.match_image_filename(image.src.to_s)
       images << image
     end
+    self.import!(images)
 
     return images
   end

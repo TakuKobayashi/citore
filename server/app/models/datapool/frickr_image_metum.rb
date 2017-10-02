@@ -17,6 +17,8 @@
 #
 
 class Datapool::FrickrImageMetum < Datapool::ImageMetum
+  PER_PAGE = 500
+
   def self.get_flickr_client
     apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
     FlickRaw.api_key = apiconfig["flickr"]["apikey"]
@@ -27,18 +29,30 @@ class Datapool::FrickrImageMetum < Datapool::ImageMetum
   def self.import_users_images!(username:)
     flickr_client = self.get_flickr_client
     flickr_user = flickr_client.people.findByUsername(username: username)
-    flickr_images = flickr_client.people.getPhotos({user_id: flickr_user["id"], per_page: 500, page: 1})
+    page_counter = 1
+    flickr_images = []
     images = []
-    images += self.generate_images!(flickr_images)
+    begin
+      flickr_images = flickr_client.people.getPhotos({user_id: flickr_user["id"], per_page: PER_PAGE, page: page_counter})
+      images += self.generate_images!(flickr_images)
+      page_counter = page_counter + 1
+      Rails.logger.info page_counter
+    end while flickr_images.size >= PER_PAGE
     self.import!(images)
     return images
   end
 
   def self.search_images!(tags:)
     flickr_client = self.get_flickr_client
-    flickr_images = flickr_client.photos.search({tags: tags, per_page: 500, page: 1})
+    page_counter = 1
+    flickr_images = []
     images = []
-    images += self.generate_images!(flickr_images)
+    begin
+      flickr_images = flickr_client.photos.search({tags: tags, per_page: PER_PAGE, page: page_counter})
+      images += self.generate_images!(flickr_images)
+      page_counter = page_counter + 1
+      Rails.logger.info page_counter
+    end while flickr_images.size >= PER_PAGE
     self.import!(images)
     return images
   end

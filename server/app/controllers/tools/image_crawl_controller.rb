@@ -39,6 +39,6 @@ class Tools::ImageCrawlController < Homepage::BaseController
     else
       @upload_job = @visitor.upload_jobs.create!(from_type: "Datapool::WebSiteImageMetum", token: SecureRandom.hex)
     end
-    ImageCrawlJob.perform_later(params.dup, @upload_job)
+    ImageCrawlJob.perform_later(params.to_h.dup, @upload_job)
   end
 end

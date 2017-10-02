@@ -23,7 +23,7 @@ class ImageCrawlJob < ApplicationJob
 
       zipfile = File.open(zippath)
       zipfile_size = zipfile.size
-      upload_file_path = Datapool::ImageMetum.upload_s3(zipfile, filename)
+      upload_file_path = Datapool::ImageMetum.upload_s3(zipfile, "#{Time.now.strftime("%Y%m%d_%H%M%S")}_#{request_params[:action]}.zip")
       upload_job.update!(state: :complete, upload_url: "https://taptappun.s3.amazonaws.com/" + upload_file_path, upload_file_size: zipfile_size)
     end
   end

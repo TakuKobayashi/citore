@@ -65,9 +65,6 @@ class Datapool::FrickrImageMetum < Datapool::ImageMetum
       image_url = FlickRaw.url(flickr_image)
       next if image_urls.include?(image_url.to_s)
       image_urls << image_url.to_s
-      # 画像じゃないものも含まれていることもあるので分別する
-      image_type = FastImage.type(image_url.to_s)
-      next if image_type.blank?
       image = self.new(
         title: flickr_image.title,
         options: {

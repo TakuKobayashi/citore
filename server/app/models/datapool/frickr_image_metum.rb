@@ -28,7 +28,13 @@ class Datapool::FrickrImageMetum < Datapool::ImageMetum
 
   def self.import_users_images!(username:)
     flickr_client = self.get_flickr_client
-    flickr_user = flickr_client.people.findByUsername(username: username)
+    flickr_user = nil
+    begin
+      flickr_user = flickr_client.people.findByUsername(username: username)
+    rescue e => FlickRaw::FailedResponse
+      Rails.logger.info "unknown user"
+    end
+    return [] if flickr_user.nil?
     page_counter = 1
     flickr_images = []
     images = []

@@ -52,20 +52,14 @@ class Datapool::WebSiteImageMetum < Datapool::ImageMetum
       end
       next if image_urls.include?(image_url.to_s)
       image_urls << image_url.to_s
-      # 画像じゃないものも含まれていることもあるので分別する
-      image_type = FastImage.type(image_url.to_s)
-      next if image_type.blank?
-      image = self.new(title: title.to_s, options: {})
-      image.options[:from_url] = from_site_url
-      if image_url.scheme == "data"
-        image_binary =  Base64.decode64(image_url.to_s.gsub(/data:image\/.+;base64\,/, ""))
-        new_filename = SecureRandom.hex + ".#{image_type.to_s.downcase}"
-        uploaded_path = self.upload_s3(image_binary, new_filename)
-        image.src = "https://taptappun.s3.amazonaws.com/" + uploaded_path
-      else
-        image.src = image_url.to_s
-      end
-      image.original_filename = self.match_image_filename(image.src.to_s)
+      image = self.constract(
+        image_url: image_url.to_s,
+        title: title.to_s,
+        check_image_file: true,
+        options: {
+          from_url: from_site_url
+        }
+      )
       images << image
     end
     return images

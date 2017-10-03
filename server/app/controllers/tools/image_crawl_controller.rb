@@ -32,13 +32,15 @@ class Tools::ImageCrawlController < Homepage::BaseController
   end
 
   def execute_upload_job
+    @upload_job = @visitor.upload_jobs.new(token: params[:authenticity_token])
     if params[:action] == "flickr_crawl"
-      @upload_job = @visitor.upload_jobs.create!(from_type: "Datapool::FrickrImageMetum", token: SecureRandom.hex)
+      @upload_job.from_type = "Datapool::FrickrImageMetum"
     elsif params[:action] == "twitter_crawl"
-      @upload_job = @visitor.upload_jobs.create!(from_type: "Datapool::TwitterImageMetum", token: SecureRandom.hex)
+      @upload_job.from_type = "Datapool::TwitterImageMetum"
     else
-      @upload_job = @visitor.upload_jobs.create!(from_type: "Datapool::WebSiteImageMetum", token: SecureRandom.hex)
+      @upload_job.from_type = "Datapool::WebSiteImageMetum"
     end
+    @upload_job.save!
     ImageCrawlJob.perform_later(params.to_h.dup, @upload_job)
   end
 end

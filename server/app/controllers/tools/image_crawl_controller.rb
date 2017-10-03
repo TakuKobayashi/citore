@@ -1,5 +1,5 @@
 class Tools::ImageCrawlController < Homepage::BaseController
-  before_action :load_upload_jobs, only: [:url, :twitter, :flickr]
+  before_action :load_upload_jobs, only: [:index, :url, :twitter, :flickr]
   before_action :execute_upload_job, only: [:url_crawl, :twitter_crawl, :flickr_crawl]
 
   def index
@@ -28,7 +28,7 @@ class Tools::ImageCrawlController < Homepage::BaseController
 
   private
   def load_upload_jobs
-    @upload_jobs = @visitor.upload_jobs
+    @upload_jobs = @visitor.try(:upload_jobs) || []
   end
 
   def execute_upload_job

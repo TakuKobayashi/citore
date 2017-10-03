@@ -458,3 +458,14 @@ ja:
         relations: 関わっているもの
         contacts: お問い合わせ
         others: その他
+
+  activerecord:
+    enum:
+      homepage_upload_job_queues:
+        state:
+          standby: 収集待ち
+          crawling: 収集中
+          compressing: 圧縮中
+          uploading: アップロード中
+          complete: 完了
+          downloaded: ダウンロード済み

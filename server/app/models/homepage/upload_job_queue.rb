@@ -23,7 +23,7 @@
 class Homepage::UploadJobQueue < ApplicationRecord
   serialize :options, JSON
 
-  enum state: [:standby, :crawling, :compressing, :uploading, :complete]
+  enum state: [:standby, :crawling, :compressing, :uploading, :complete, :downloaded]
 
   belongs_to :visitor, class_name: 'Homepage::Access', foreign_key: :homepage_access_id, required: false
 end

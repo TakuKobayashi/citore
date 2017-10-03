@@ -10,17 +10,45 @@
 <meta name="twitter:description" content="WebサイトやSNSからキーワードを入力するとその中の画像だけをまとめて集めてダウンロードすることができるツール置き場">
 <meta name="twitter:title" content="多くの画像ファイルを集めるためのツール置き場">
 
+<h2>画像を収集したいサービスを選んでください</h2>
+<div class="pure-menu custom-restricted-width">
+  <ul class="pure-menu-list">
+    <li class="pure-menu-item">
+      <%= link_to("Webサイトから画像を収集", url_tools_image_crawl_url, class: "pure-menu-link") %>
+    </li>
+    <li class="pure-menu-item">
+      <%= link_to("Twitterから画像を収集", twitter_tools_image_crawl_url, class: "pure-menu-link") %>
+    </li>
+    <li class="pure-menu-item">
+      <%= link_to("Flickrから画像を収集", flickr_tools_image_crawl_url, class: "pure-menu-link") %>
+    </li>
+  </ul>
+</div>
+<hr>
+<h2>画像の収集状況</h2>
+<table class="pure-table">
+  <thead>
+    <tr>
+      <th>作成日時</th>
+      <th>状態</th>
+      <th>ダウンロード</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @upload_jobs.each do |job| %>
+      <tr>
+        <td><%= job.created_at.strftime("%Y-%m-%d %H:%M:%S") %></td>
+        <td><%= t("activerecord.enum.homepage_upload_job_queues.state.#{job.state}") %></td>
+        <td><%=
+          if job.upload_url.present?
+            link_to("ダウンロード", job.upload_url, class: "pure-button")
+          else
+            ""
+          end
+        %></td>
+      </tr>
+    <% end %>
+  </tbody>
 <table>
-  <tr>
-    <td><%= label_tag("Webサイトから画像を収集") %></td>
-    <td><%= link_to("使ってみる", url_tools_image_crawl_url) %></td>
-  </tr>
-  <tr>
-    <td><%= label_tag("Twitterから画像を収集") %></td>
-    <td><%= link_to("使ってみる", twitter_tools_image_crawl_url) %></td>
-  </tr>
-  <tr>
-    <td><%= label_tag("Flickrから画像を収集") %></td>
-    <td><%= link_to("使ってみる", flickr_tools_image_crawl_url) %></td>
-  </tr>
-</table>
+<% @upload_jobs.each do |job| %>
+<% end %>

@@ -1,15 +1,13 @@
-<table>
-  <%= form_tag(twitter_crawl_tools_image_crawl_url, multipart: true) do %>
-    <tr>
-      <td><%= label_tag("検索種別") %></td>
-      <td><%= select_tag(:search_type, options_for_select(["フリーワード", "ユーザー名"].map.with_index{|word, i| [word.to_s, i] })) %></td>
-    </tr>
-    <tr>
-      <td><%= label_tag("キーワード") %></td>
-      <td style="position:relative"><%= text_field_tag :keyword, "", style: "width:100%; box-sizing:border-box" %></td>
-    </tr>
-    <tr>
-      <td><%= submit_tag("画像をダウンロードする") %></td>
-    </tr>
-  <% end %>
-</table>
+<%= form_tag(twitter_crawl_tools_image_crawl_url, multipart: true, class: "pure-form pure-form-aligned") do %>
+  <div class="pure-control-group">
+    <%= label_tag("検索種別") %>
+    <%= select_tag(:search_type, options_for_select(["フリーワード", "ユーザー名"].map.with_index{|word, i| [word.to_s, i] }), class: "pure-input-1-4") %>
+  </div>
+  <div class="pure-control-group">
+    <%= label_tag("キーワード") %>
+    <%= text_field_tag :keyword, "", placeholder: "keyword", class: "pure-input-2-3" %>
+  </div>
+  <div class="pure-controls">
+    <%= submit_tag("画像をダウンロードする", class: "pure-button pure-button-primary") %>
+  </div>
+<% end %>

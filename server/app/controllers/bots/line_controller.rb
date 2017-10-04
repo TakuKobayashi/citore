@@ -46,9 +46,9 @@ class Bots::LineController < BaseController
           end
           if answer.image_id.present?
             image_message = {
-              "type": "image",
-              "originalContentUrl": answer.image.file_url,
-              "previewImageUrl": answer.image.preview_file_url
+              type: "image",
+              originalContentUrl: answer.image.file_url,
+              previewImageUrl: answer.image.preview_file_url
             }
             image_res = @client.reply_message(event['replyToken'], image_message)
             logger.info image_res.code + ":" + image_res.message + ":" + image_res.body

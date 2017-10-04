@@ -8,7 +8,6 @@ class Unibo::TalkController < BaseController
   end
 
   def say
-    word = params[:word]
     res_word = dummy_res
     if res_word.blank?
       data = Datapool::HatsugenKomachi.find_by(id: rand(Datapool::HatsugenKomachi.count) + 1)

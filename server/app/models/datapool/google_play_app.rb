@@ -67,7 +67,7 @@ class Datapool::GooglePlayApp < Datapool::StoreProduct
 
           artist_url = ApplicationRecord.merge_full_url(src: content.css(".subtitle").first[:href], org: crawl_url)
           app_ins.options = app_ins.options.merge({
-            publiser_url: artist_url.to_s,
+            publisher_url: artist_url.to_s,
             artist_id: artist_url.query_values["id"],
             price: content.css(".price-container").css(".display-price").last.try(:text),
             summary: ApplicationRecord.basic_sanitize(content.css(".description").text).strip

@@ -58,7 +58,7 @@ class Datapool::ItunesStoreApp < Datapool::StoreProduct
         app_ins.options = app_ins.options.merge({
           genres: result["genres"],
           kind: result["kind"],
-          publiser_url: result["artistUrl"],
+          publisher_url: result["artistUrl"],
           primary_genre: result["primaryGenreName"],
           artist_id: result["artistId"],
           bundle_id: result["bundleId"],

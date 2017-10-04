@@ -8,7 +8,7 @@ class ApplicationRecord < ActiveRecord::Base
   end
 
   before_destroy do
-    destory_cache!
+    destroy_cache!
   end
 
   MECAB_NEOLOGD_DIC_PATH = "/usr/local/lib/mecab/dic/mecab-ipadic-neologd"
@@ -158,7 +158,7 @@ class ApplicationRecord < ActiveRecord::Base
     end
   end
 
-  def destory_cache!
+  def destroy_cache!
     records = CacheStore::CACHE.read(self.class.table_name)
     if records.present?
       records.delete("self.id")

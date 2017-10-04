@@ -39,7 +39,7 @@ ActiveAdmin.register_page "DataBatches" do
     end
 
     data = CSV.read(file.tempfile.path, headers: true)
-    arr = data.map{|d| clazz.new(data) }
+    arr = data.map{|d| clazz.new(d) }
     ActiveRecord::Base.transaction do
       clazz.import(arr)
     end

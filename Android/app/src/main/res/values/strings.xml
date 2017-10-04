@@ -1,6 +1,0 @@
-<resources>
-    <string name="app_name">Citore</string>
-    <string name="recoarding_start">音声認識開始</string>
-    <string name="recoarding_now">音声認識中</string>
-    <string name="recoarding_key">recoardingkey</string>
-</resources>

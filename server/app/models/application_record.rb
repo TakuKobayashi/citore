@@ -12,6 +12,7 @@ class ApplicationRecord < ActiveRecord::Base
   end
 
   MECAB_NEOLOGD_DIC_PATH = "/usr/local/lib/mecab/dic/mecab-ipadic-neologd"
+  S3_ROOT_URL = "https://taptappun.s3.amazonaws.com/"
 
   def self.get_natto
     @@natto ||= Natto::MeCab.new(dicdir: ApplicationRecord::MECAB_NEOLOGD_DIC_PATH)

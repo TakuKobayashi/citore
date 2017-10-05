@@ -35,7 +35,7 @@ class Bannosama::GreetImage < ApplicationRecord
     filename = SecureRandom.hex + File.extname(file.original_filename).downcase
     filepath = IMAGE_S3_FILE_ROOT + filename
     s3.put_object(bucket: "taptappun",body: image.to_blob, key: filepath, acl: "public-read")
-    self.upload_url = "https://taptappun.s3.amazonaws.com/" + filepath
+    self.upload_url = ApplicationRecord::S3_ROOT_URL + filepath
   end
 
   def self.calc_resize_text(width:, height:, max_length:)

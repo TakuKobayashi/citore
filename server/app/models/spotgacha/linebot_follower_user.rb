@@ -31,7 +31,7 @@ class Spotgacha::LinebotFollowerUser < LinebotFollowerUser
 　GOOGLE_PLACE_API_URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/output?parameters"
 
   def self.icon_url
-    return "https://taptappun.s3.amazonaws.com/project/spotgacha/icon/spotgacha_icon.jpg"
+    return ApplicationRecord::S3_ROOT_URL + "project/spotgacha/icon/spotgacha_icon.jpg"
   end
 
   def self.search_photo_url(keyword:)

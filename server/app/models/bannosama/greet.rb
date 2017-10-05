@@ -42,7 +42,7 @@ class Bannosama::Greet < ApplicationRecord
     s3 = Aws::S3::Client.new
     filename = SecureRandom.hex + File.extname(audio_file.original_filename).downcase
     filepath = AUDIO_S3_FILE_ROOT + filename
-    self.audio_upload_url = "https://taptappun.s3.amazonaws.com/" + filepath
+    self.audio_upload_url = ApplicationRecord::S3_ROOT_URL + filepath
     s3.put_object(bucket: "taptappun",body: audio_file.read, key: filepath, acl: "public-read")
   end
 
@@ -51,6 +51,6 @@ class Bannosama::Greet < ApplicationRecord
     if image.blank?
       return ""
     end
-    return "https://taptappun.s3.amazonaws.com/" + Bannosama::GreetImage::IMAGE_S3_THUMBNAIL_ROOT + self.id.to_s + File.extname(image.upload_url).downcase
+    return ApplicationRecord::S3_ROOT_URL + Bannosama::GreetImage::IMAGE_S3_THUMBNAIL_ROOT + self.id.to_s + File.extname(image.upload_url).downcase
   end
 end

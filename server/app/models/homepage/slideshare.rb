@@ -27,7 +27,7 @@ def self.import_articles!
     client = get_slideshare_client
     articles = []
     page_num = 1
-    begin
+    loop do
       send_params = {
         user: "takukobayashi560",
         per_page: 50,
@@ -51,7 +51,8 @@ def self.import_articles!
         end
       end
       page_num = page_num + 1
-    end while articles.size >= 50
+      break if articles.size >= 50
+    end
   end
 
   def self.get_slideshare_client

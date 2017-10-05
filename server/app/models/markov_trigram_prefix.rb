@@ -36,7 +36,7 @@ class MarkovTrigramPrefix < ApplicationRecord
       select_source_type = markov.try(:source_type)
     end
 
-    begin
+    loop do
       word_id_count = markov.other_words.pluck(:id, :appear_count)
       lot_value = rand(word_id_count.sum{|id, count| count})
       #lot_value = rand(markov.sum_count)
@@ -65,7 +65,8 @@ class MarkovTrigramPrefix < ApplicationRecord
 #      else
 #        markov = continue_words.sample
 #      end
-    end while markov.present? && !markov.eos?
+      break if markov.present? && !markov.eos?
+    end
 
     return sentence_array.join("")
   end

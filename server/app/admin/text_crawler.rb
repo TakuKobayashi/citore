@@ -57,7 +57,7 @@ ActiveAdmin.register_page "TextCrawler" do
     html_file = params[:text][:html_file]
     columns_dom = params[:text][:columns] || {}
     loop_filter = params[:text][:loop_filter].to_s
-    doc = doc = Nokogiri::HTML.parse(html_file.read.to_s)
+    doc = Nokogiri::HTML.parse(html_file.read.to_s)
     if params[:text][:filter].present?
       doc = doc.css(params[:text][:filter])
     end

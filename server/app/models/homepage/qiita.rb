@@ -27,7 +27,7 @@ class Homepage::Qiita < Homepage::Article
     client = get_qiita_client
     articles = []
     page_num = 1
-    begin
+    loop do
       send_params = {
         per_page: 100,
         page: page_num
@@ -48,7 +48,8 @@ class Homepage::Qiita < Homepage::Article
         end
       end
       page_num = page_num + 1
-    end while articles.size >= 100
+      break if articles.size >= 100
+    end
   end
 
   def self.get_qiita_client

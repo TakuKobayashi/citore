@@ -10,7 +10,7 @@ namespace :batch do
     counter = 0
     CSV.open(Rails.root.to_s + "/tmp/" + table_name + ".csv", "wb") do |csv|
       results = []
-      begin
+      loop do
         counter += 1
         results = client.scan(table_name: table_name, limit: 500, exclusive_start_key: start_key)
         results.items.each_with_index do |hash, index|
@@ -28,7 +28,8 @@ namespace :batch do
         end
         puts "#{counter}:#{results.count}:#{results.last_evaluated_key}"
         start_key = results.last_evaluated_key
-      end while start_key.present?
+        break if start_key.present?
+      end
     end
     # 空タスク作ってエラーを握りつぶす
     ARGV.slice(1,ARGV.size).each{|v| task v.to_sym do; end}

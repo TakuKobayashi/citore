@@ -60,7 +60,7 @@ class Tools::TwitterController < Homepage::BaseController
     timeline_count = 200
     all_tweets = []
     tweets = []
-    begin
+    loop do
       options = {count: timeline_count, trim_user: true, exclude_replies: true, contributor_details: false, include_rts: false}
       if max_id.present?
         options.merge!({max_id: max_id.to_i - 1})
@@ -71,9 +71,11 @@ class Tools::TwitterController < Homepage::BaseController
       rescue Twitter::Error::TooManyRequests => error
         tweets = []
         flash[:error] = "twitter apiの利用上限数を超えました。#{error.rate_limit.reset_in.to_i}秒経ってから再度ご利用ください。"
+        break
       end
       all_tweets << tweets
-    end while tweets.size > 0
+      break if tweets.size > 0
+    end
 
     if params[:is_file].present?
       download_file_name = Time.current.strftime("%Y%m%d_%H%M%S") + "_tweets.json"
@@ -95,32 +97,36 @@ class Tools::TwitterController < Homepage::BaseController
   def get_all_follower_ids(twitter_user)
     all_follower_ids = []
     follower_ids = []
-    begin
+    loop do
       options = {count: 5000}
       begin
         follower_ids = client.follower_ids(twitter_user, options).to_a
       rescue Twitter::Error::TooManyRequests => error
         follower_ids = []
         flash[:error] = "twitter apiの利用上限数を超えました。#{error.rate_limit.reset_in.to_i}秒経ってから再度ご利用ください。"
+        break
       end
       all_follower_ids << follower_ids
-    end while follower_ids.size > 0
+      break if follower_ids.size > 0
+    end
     return all_follower_ids.flatten
   end
 
   def get_all_following_ids(twitter_user)
     all_following_ids = []
     following_ids = []
-    begin
+    loop do
       options = {count: 5000}
       begin
         following_ids = client.friend_ids(twitter_user, options).to_a
       rescue Twitter::Error::TooManyRequests => error
         following_ids = []
         flash[:error] = "twitter apiの利用上限数を超えました。#{error.rate_limit.reset_in.to_i}秒経ってから再度ご利用ください。"
+        break
       end
       all_following_ids << following_ids
-    end while following_ids.size > 0
+      break if following_ids.size > 0
+    end
     return all_following_ids.flatten
   end
 end

@@ -9,7 +9,7 @@ class YoutubeRecord < ApplicationRecord
     youtube.key = apiconfig["google_api"]["key"]
     page_token = ExtraInfo.read_extra_info[table_name]
     retry_counter = 0
-    begin
+    loop do
       begin
         get_list = block.call(youtube, page_token)
         if get_list.next_page_token.blank?
@@ -32,6 +32,7 @@ class YoutubeRecord < ApplicationRecord
           break
         end
       end
-    end while page_token.present?
+      break if page_token.present?
+    end
   end
 end

@@ -32,7 +32,7 @@ class YoutubeRecord < ApplicationRecord
           break
         end
       end
-      break if page_token.present?
+      break if page_token.blank?
     end
   end
 end

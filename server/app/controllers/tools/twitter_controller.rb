@@ -74,7 +74,8 @@ class Tools::TwitterController < Homepage::BaseController
         break
       end
       all_tweets << tweets
-      break if tweets.size > 0
+      #公開されていないtweetもあるので200件までにおさまるとは限らない
+      break if tweets.size <= 0
     end
 
     if params[:is_file].present?
@@ -107,7 +108,7 @@ class Tools::TwitterController < Homepage::BaseController
         break
       end
       all_follower_ids << follower_ids
-      break if follower_ids.size > 0
+      break if follower_ids.size <= 0
     end
     return all_follower_ids.flatten
   end
@@ -125,7 +126,7 @@ class Tools::TwitterController < Homepage::BaseController
         break
       end
       all_following_ids << following_ids
-      break if following_ids.size > 0
+      break if following_ids.size <= 0
     end
     return all_following_ids.flatten
   end

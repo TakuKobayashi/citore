@@ -28,7 +28,7 @@ namespace :batch do
         end
         puts "#{counter}:#{results.count}:#{results.last_evaluated_key}"
         start_key = results.last_evaluated_key
-        break if start_key.present?
+        break if start_key.blank?
       end
     end
     # 空タスク作ってエラーを握りつぶす

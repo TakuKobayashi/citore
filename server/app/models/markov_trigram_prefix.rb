@@ -65,7 +65,7 @@ class MarkovTrigramPrefix < ApplicationRecord
 #      else
 #        markov = continue_words.sample
 #      end
-      break if markov.present? && !markov.eos?
+      break if markov.blank? || markov.eos?
     end
 
     return sentence_array.join("")

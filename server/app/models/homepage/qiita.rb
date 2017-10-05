@@ -48,7 +48,7 @@ class Homepage::Qiita < Homepage::Article
         end
       end
       page_num = page_num + 1
-      break if articles.size >= 100
+      break if articles.size < 100
     end
   end
 

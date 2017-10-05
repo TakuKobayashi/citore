@@ -13,7 +13,7 @@ class ImageCrawlJob < ApplicationJob
       if search_type == 1
         images = Datapool::FrickrImageMetum.import_users_images!(username: request_params[:keyword].to_s)
       else
-        images = Datapool::FrickrImageMetum.search_images!(tags: request_params[:keyword].to_s)
+        images = Datapool::FrickrImageMetum.search_images!(text: request_params[:keyword].to_s)
       end
     end
     Tempfile.create(SecureRandom.hex) do |tempfile|
@@ -30,12 +30,18 @@ class ImageCrawlJob < ApplicationJob
 
   private
   def compress_to_zip(zip_filepath:, images: [])
+    filename_hash = {}
     Zip::OutputStream.open(zip_filepath) do |stream|
       images.each do |image|
         response = image.download_image_response
         next if (response.status >= 300 && response.status != 304) || !response.headers["Content-Type"].to_s.include?("image")
-        stream.put_next_entry(image.save_filename)
+        if filename_hash[image.save_filename].nil?
+          stream.put_next_entry(image.save_filename)
+        else
+          stream.put_next_entry(SecureRandom.hex + File.extname(image.save_filename))
+        end
         stream.print(response.body)
+        filename_hash[image.save_filename] = image
       end
     end
     return zip_filepath

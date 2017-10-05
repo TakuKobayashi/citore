@@ -42,21 +42,21 @@ class Datapool::FrickrImageMetum < Datapool::ImageMetum
       flickr_images = flickr_client.people.getPhotos({user_id: flickr_user["id"], per_page: PER_PAGE, page: page_counter})
       images += self.generate_images!(flickr_images: flickr_images)
       page_counter = page_counter + 1
-      break if flickr_images.size >= PER_PAGE
+      break if flickr_images.size < PER_PAGE
     end
     return images
   end
 
-  def self.search_images!(tags:)
+  def self.search_images!(text:)
     flickr_client = self.get_flickr_client
     page_counter = 1
     flickr_images = []
     images = []
     loop do
-      flickr_images = flickr_client.photos.search({tags: tags, per_page: PER_PAGE, page: page_counter})
-      images += self.generate_images!(flickr_images: flickr_images, options: {keyword: tags})
+      flickr_images = flickr_client.photos.search({text: text, per_page: PER_PAGE, page: page_counter})
+      images += self.generate_images!(flickr_images: flickr_images, options: {keyword: text})
       page_counter = page_counter + 1
-      break if flickr_images.size >= PER_PAGE
+      break if flickr_images.size < PER_PAGE
     end
     return images
   end

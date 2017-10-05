@@ -51,7 +51,7 @@ def self.import_articles!
         end
       end
       page_num = page_num + 1
-      break if articles.size >= 50
+      break if articles.size < 50
     end
   end
 

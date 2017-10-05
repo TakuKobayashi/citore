@@ -122,6 +122,7 @@ Rails.application.routes.draw do
       post :flickr_crawl
       get :url
       post :url_crawl
+      get :download_zip
     end
 
     resource :excel_converter, controller: :excel_converter, only: [] do

@@ -1,5 +1,5 @@
 class Tools::ImageCrawlController < Homepage::BaseController
-  before_action :load_upload_jobs, only: [:index, :url, :twitter, :flickr]
+  before_action :load_upload_jobs, only: :index
   before_action :execute_upload_job, only: [:url_crawl, :twitter_crawl, :flickr_crawl]
 
   def index
@@ -24,6 +24,12 @@ class Tools::ImageCrawlController < Homepage::BaseController
 
   def url_crawl
     render :json => @upload_job.to_json
+  end
+
+  def download_zip
+    job = @visitor.upload_jobs.find_by(id: params[:job_id])
+    job.downloaded!
+    redirect_to job.upload_url
   end
 
   private

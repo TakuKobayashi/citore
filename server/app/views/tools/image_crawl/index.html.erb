@@ -41,7 +41,7 @@
         <td><%= t("activerecord.enum.homepage_upload_job_queues.state.#{job.state}") %></td>
         <td><%=
           if job.upload_url.present?
-            link_to("ダウンロード", job.upload_url, class: "pure-button")
+            link_to("ダウンロード", download_zip_tools_image_crawl_url(job_id: job.id), class: "pure-button")
           else
             ""
           end
@@ -50,5 +50,3 @@
     <% end %>
   </tbody>
 <table>
-<% @upload_jobs.each do |job| %>
-<% end %>

@@ -112,7 +112,7 @@ class FeyKunAi::InquiryTweet < TwitterRecord
   end
 
   def generate_images!(tweet:, reply_to_tweet:)
-    image_urls = FeyKunAi::InquiryTweetImage.get_image_urls_from_tweet(tweet: tweet)
+    image_urls = TwitterRecord.get_image_urls_from_tweet(tweet: tweet)
     images = image_urls.map do |url|
       image = FeyKunAi::InquiryTweetImage.new(inquiry_tweet_id: self.id, image_url: url, reply_to_tweet_id: reply_to_tweet.id)
       image.set_image_meta_data

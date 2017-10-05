@@ -17,6 +17,12 @@ class ImageCrawlJob < ApplicationJob
         search_hash[:text] = request_params[:keyword].to_s
       end
       images = Datapool::FrickrImageMetum.search_images!(search: search_hash)
+    else
+      if search_type == 1
+        images = Datapool::TwitterImageMetum.images_from_user_timeline!(keyword: request_params[:keyword].to_s)
+      else
+        images = Datapool::TwitterImageMetum.search_image_tweet!(keyword: request_params[:keyword].to_s)
+      end
     end
     if images.blank?
       upload_job.failed!

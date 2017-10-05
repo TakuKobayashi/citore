@@ -90,6 +90,18 @@ class TwitterRecord < ApplicationRecord
     ExtraInfo.update({self.table_name => crawl_info})
   end
 
+  def self.get_image_urls_from_tweet(tweet:)
+    image_urls = tweet.media.flat_map do |m|
+      case m
+      when Twitter::Media::Photo
+        m.media_url.to_s
+      else
+        []
+      end
+    end
+    return image_urls
+  end
+
   def self.get_twitter_rest_client(username)
     apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
     rest_client = Twitter::REST::Client.new do |config|

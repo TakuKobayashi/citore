@@ -31,7 +31,7 @@ class Datapool::FrickrImageMetum < Datapool::ImageMetum
     flickr_user = nil
     begin
       flickr_user = flickr_client.people.findByUsername(username: username)
-    rescue e => FlickRaw::FailedResponse
+    rescue FlickRaw::FailedResponse => e
       Rails.logger.info "unknown user"
     end
     return [] if flickr_user.nil?

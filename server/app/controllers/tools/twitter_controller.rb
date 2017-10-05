@@ -29,7 +29,7 @@ class Tools::TwitterController < Homepage::BaseController
     @twitter_users = []
 
     begin
-      @twitter_users = only_following_ids.each_slice(100).to_a.inject([]]) do |users, ids|
+      @twitter_users = only_following_ids.each_slice(100).to_a.inject([]) do |users, ids|
         users.concat(client.users(ids))
       end
     rescue Twitter::Error::TooManyRequests => error

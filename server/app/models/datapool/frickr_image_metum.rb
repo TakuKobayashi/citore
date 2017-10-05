@@ -54,7 +54,7 @@ class Datapool::FrickrImageMetum < Datapool::ImageMetum
     images = []
     loop do
       flickr_images = flickr_client.photos.search({tags: tags, per_page: PER_PAGE, page: page_counter})
-      images += self.generate_images!(flickr_images: flickr_images, {keyword: tags})
+      images += self.generate_images!(flickr_images: flickr_images, options: {keyword: tags})
       page_counter = page_counter + 1
       break if flickr_images.size >= PER_PAGE
     end

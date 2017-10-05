@@ -47,6 +47,6 @@ class Tools::ImageCrawlController < Homepage::BaseController
       @upload_job.from_type = "Datapool::WebSiteImageMetum"
     end
     @upload_job.save!
-    ImageCrawlJob.perform_later(params.to_h.dup, @upload_job)
+    ImageCrawlWorker.perform_async(params.to_h.dup, @upload_job)
   end
 end

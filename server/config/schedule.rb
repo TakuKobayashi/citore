@@ -17,6 +17,10 @@ every :day, at: '7:00' do
   runner "Datapool::StoreProduct.backup_to_s3"
 end
 
+every :day, at: '0:00' do
+  runner "Homepage::UploadJobQueue.cleanup!"
+end
+
 =begin
 every :day, at: "2:00 am" do
   rake "batch:db_dump_and_upload"

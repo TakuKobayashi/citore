@@ -1,7 +1,7 @@
 <%= form_tag(flickr_crawl_tools_image_crawl_url, multipart: true, class: "pure-form pure-form-aligned") do %>
   <div class="pure-control-group">
     <%= label_tag("検索種別") %>
-    <%= select_tag(:search_type, options_for_select(["フリーワード", "ユーザー名"].map.with_index{|word, i| [word.to_s, i] }), class: "pure-input-1-4") %>
+    <%= select_tag(:search_type, options_for_select(["フリーワード", "タグ名"].map.with_index{|word, i| [word.to_s, i] }), class: "pure-input-1-4") %>
   </div>
   <div class="pure-control-group">
     <%= label_tag("キーワード") %>

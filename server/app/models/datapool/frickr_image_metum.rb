@@ -26,35 +26,14 @@ class Datapool::FrickrImageMetum < Datapool::ImageMetum
     return flickr
   end
 
-  def self.import_users_images!(username:)
-    flickr_client = self.get_flickr_client
-    flickr_user = nil
-    begin
-      flickr_user = flickr_client.people.findByUsername(username: username)
-    rescue FlickRaw::FailedResponse => e
-      Rails.logger.info "unknown user"
-    end
-    return [] if flickr_user.nil?
-    page_counter = 1
-    flickr_images = []
-    images = []
-    loop do
-      flickr_images = flickr_client.people.getPhotos({user_id: flickr_user["id"], per_page: PER_PAGE, page: page_counter})
-      images += self.generate_images!(flickr_images: flickr_images)
-      page_counter = page_counter + 1
-      break if flickr_images.size < PER_PAGE
-    end
-    return images
-  end
-
-  def self.search_images!(text:)
+  def self.search_images!(search: {})
     flickr_client = self.get_flickr_client
     page_counter = 1
     flickr_images = []
     images = []
     loop do
-      flickr_images = flickr_client.photos.search({text: text, per_page: PER_PAGE, page: page_counter})
-      images += self.generate_images!(flickr_images: flickr_images, options: {keyword: text})
+      flickr_images = flickr_client.photos.search(search.merge({per_page: PER_PAGE, page: page_counter}))
+      images += self.generate_images!(flickr_images: flickr_images, options: search)
       page_counter = page_counter + 1
       break if flickr_images.size < PER_PAGE
     end

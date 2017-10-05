@@ -10,11 +10,17 @@ class ImageCrawlJob < ApplicationJob
       images = Datapool::WebSiteImageMetum.crawl_images!(url: url, start_page: start_page, end_page: end_page, filter: request_params[:filter])
     elsif request_params[:action] == "flickr_crawl"
       search_type = request_params[:search_type].to_i
+      search_hash = {}
       if search_type == 1
-        images = Datapool::FrickrImageMetum.import_users_images!(username: request_params[:keyword].to_s)
+        search_hash[:tags] = request_params[:keyword].to_s
       else
-        images = Datapool::FrickrImageMetum.search_images!(text: request_params[:keyword].to_s)
+        search_hash[:text] = request_params[:keyword].to_s
       end
+      images = Datapool::FrickrImageMetum.search_images!(search: search_hash)
+    end
+    if images.blank?
+      upload_job.failed!
+      return
     end
     Tempfile.create(SecureRandom.hex) do |tempfile|
       upload_job.compressing!

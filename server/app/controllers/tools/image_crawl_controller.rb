@@ -9,21 +9,21 @@ class Tools::ImageCrawlController < Homepage::BaseController
   end
 
   def twitter_crawl
-    render :json => @upload_job.to_json
+    redirect_to tools_image_crawl_url
   end
 
   def flickr
   end
 
   def flickr_crawl
-    render :json => @upload_job.to_json
+    redirect_to tools_image_crawl_url
   end
 
   def url
   end
 
   def url_crawl
-    render :json => @upload_job.to_json
+    redirect_to tools_image_crawl_url
   end
 
   def download_zip
@@ -38,15 +38,26 @@ class Tools::ImageCrawlController < Homepage::BaseController
   end
 
   def execute_upload_job
-    @upload_job = @visitor.upload_jobs.new(token: params[:authenticity_token])
     if params[:action] == "flickr_crawl"
-      @upload_job.from_type = "Datapool::FrickrImageMetum"
+      prefix = "Datapool::FrickrImageMetum"
     elsif params[:action] == "twitter_crawl"
-      @upload_job.from_type = "Datapool::TwitterImageMetum"
+      prefix = "Datapool::TwitterImageMetum"
     else
-      @upload_job.from_type = "Datapool::WebSiteImageMetum"
+      prefix = "Datapool::WebSiteImageMetum"
     end
-    @upload_job.save!
-    ImageCrawlWorker.perform_async(params.to_h.dup, @upload_job.id)
+    @upload_job = @visitor.upload_jobs.find_by(from_type: prefix, state: [:standby, :crawling, :compressing, :uploading])
+    is_new = false
+    if @upload_job.blank?
+      @upload_job = @visitor.upload_jobs.find_or_initialize_by(token: params[:authenticity_token])
+      @upload_job.from_type = prefix
+      is_new = @upload_job.new_record?
+      @upload_job.save!
+    end
+    if is_new
+      flash[:notice] = "処理を受け付けました。処理が完了するまでしばらくお待ち下さい。"
+      ImageCrawlWorker.perform_async(params.to_h.dup, @upload_job.id)
+    else
+      flash[:error] = "現在処理中のものがあるので、処理が終わって使うようにしてください"
+    end
   end
 end

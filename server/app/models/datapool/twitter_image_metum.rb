@@ -17,6 +17,8 @@
 #
 
 class Datapool::TwitterImageMetum < Datapool::ImageMetum
+  TIMELINE_CRAWL_COUNT = 200
+
   def self.search_image_tweet!(keyword:)
     twitter_client = TwitterRecord.get_twitter_rest_client("citore")
     tweets = twitter_client.search(keyword)
@@ -24,13 +26,25 @@ class Datapool::TwitterImageMetum < Datapool::ImageMetum
   end
 
   def self.images_from_user_timeline!(username:)
+    tweet_options = {count: TIMELINE_CRAWL_COUNT}
     twitter_client = TwitterRecord.get_twitter_rest_client("citore")
-    begin
-      tweets = twitter_client.user_timeline(username, {count: 200})
-    rescue Twitter::Error::NotFound => e
-      Rails.logger.warn "user not found:" + e.message
+    images = []
+    last_tweet_id = nil
+
+    loop do
+      if last_tweet_id.present?
+        options[:max_id] = last_tweet_id.to_i
+      end
+      begin
+        tweets = twitter_client.user_timeline(username, options)
+      rescue Twitter::Error::NotFound => e
+        Rails.logger.warn "user not found:" + e.message
+      end
+      images += generate_images(tweets: tweets, options: {username: username})
+      break if tweets.size < TIMELINE_CRAWL_COUNT
+      last_tweet_id = tweets.select{|s| s.try(:id).present? }.min_by{|s| s.id.to_i }.try(:id).to_i
     end
-    return generate_images(tweets: tweets, options: {username: username})
+    return images
   end
 
   private

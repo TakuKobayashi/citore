@@ -14,6 +14,6 @@ ActiveAdmin.register Datapool::ImageMetum do
     id_column
     column("タイトル") {|a| a.title }
     column("クラス名") {|a| a.type }
-    column("画像") {|a| image_tag(a.src) }
+    column("画像") {|a| image_tag(a.src, width: 200) }
   end
 end

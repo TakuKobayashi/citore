@@ -1,7 +1,8 @@
 class ImageCrawlWorker
   include Sidekiq::Worker
 
-  def perform(request_params, upload_job)
+  def perform(request_params, upload_job_id)
+    upload_job = Homepage::UploadJobQueue.find_by(id: upload_job_id)
     upload_job.crawling!
     if request_params[:action] == "url_crawl"
       url = request_params[:crawl_url]

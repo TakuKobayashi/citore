@@ -23,7 +23,16 @@
 class Homepage::UploadJobQueue < ApplicationRecord
   serialize :options, JSON
 
-  enum state: [:standby, :crawling, :compressing, :uploading, :complete, :downloaded, :failed]
+  enum state: {
+    standby: 0,
+    crawling: 1,
+    compressing: 2,
+    uploading: 3,
+    complete: 4,
+    downloaded: 5,
+    failed: 6,
+    cleaned: 7,
+  }
 
   belongs_to :visitor, class_name: 'Homepage::Access', foreign_key: :homepage_access_id, required: false
 
@@ -33,11 +42,11 @@ class Homepage::UploadJobQueue < ApplicationRecord
       next if job.complete? && job.created_at > 7.day.ago
       next if (job.crawling? || job.compressing? || job.uploading?) && job.created_at > 8.hours.ago
       if job.upload_url.present?
-        s3 = Aws::S3::Client.new
-        filepath = job.upload_url.gsub(ApplicationRecord::S3_ROOT_URL, "")
-        s3.delete_object(bucket: "taptappun", key: filepath)
+        #s3 = Aws::S3::Client.new
+        #filepath = job.upload_url.gsub(ApplicationRecord::S3_ROOT_URL, "")
+        #s3.delete_object(bucket: "taptappun", key: filepath)
       end
-      job.destroy
+      job.cleaned!
     end
   end
 end

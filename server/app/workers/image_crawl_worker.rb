@@ -4,25 +4,25 @@ class ImageCrawlWorker
   def perform(request_params, upload_job_id)
     upload_job = Homepage::UploadJobQueue.find_by(id: upload_job_id)
     upload_job.crawling!
-    if request_params[:action] == "url_crawl"
-      url = request_params[:crawl_url]
-      start_page = request_params[:start_page_num].to_i
-      end_page = request_params[:end_page_num].to_i
-      images = Datapool::WebSiteImageMetum.crawl_images!(url: url, start_page: start_page, end_page: end_page, filter: request_params[:filter])
+    if request_params["action"] == "url_crawl"
+      url = request_params["crawl_url"]
+      start_page = request_params["start_page_num"].to_i
+      end_page = request_params["end_page_num"].to_i
+      images = Datapool::WebSiteImageMetum.crawl_images!(url: url, start_page: start_page, end_page: end_page, filter: request_params["filter"])
     elsif request_params[:action] == "flickr_crawl"
       search_type = request_params[:search_type].to_i
       search_hash = {}
       if search_type == 1
-        search_hash[:tags] = request_params[:keyword].to_s
+        search_hash[:tags] = request_params["keyword"].to_s
       else
-        search_hash[:text] = request_params[:keyword].to_s
+        search_hash[:text] = request_params["keyword"].to_s
       end
       images = Datapool::FrickrImageMetum.search_images!(search: search_hash)
     else
       if search_type == 1
-        images = Datapool::TwitterImageMetum.images_from_user_timeline!(keyword: request_params[:keyword].to_s)
+        images = Datapool::TwitterImageMetum.images_from_user_timeline!(username: request_params["keyword"].to_s)
       else
-        images = Datapool::TwitterImageMetum.search_image_tweet!(keyword: request_params[:keyword].to_s)
+        images = Datapool::TwitterImageMetum.search_image_tweet!(keyword: request_params["keyword"].to_s)
       end
     end
     if images.blank?

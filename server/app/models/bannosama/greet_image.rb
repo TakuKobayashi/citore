@@ -26,7 +26,7 @@ class Bannosama::GreetImage < ApplicationRecord
 
   def upload_s3_and_set_metadata(file)
     image = MiniMagick::Image.open(file.path)
-    image.resize(Bannosama::GreetImage.calc_resize_text(width: image.width, height: image.height, max_length: 600))
+    image.resize(Datapool::ImageMetum.calc_resize_text(width: image.width, height: image.height, max_length: 600))
     self.width = image.width
     self.height = image.height
     self.origin_file_name = file.original_filename
@@ -36,17 +36,5 @@ class Bannosama::GreetImage < ApplicationRecord
     filepath = IMAGE_S3_FILE_ROOT + filename
     s3.put_object(bucket: "taptappun",body: image.to_blob, key: filepath, acl: "public-read")
     self.upload_url = ApplicationRecord::S3_ROOT_URL + filepath
-  end
-
-  def self.calc_resize_text(width:, height:, max_length:)
-    if width > height
-      resized_width = [width, max_length].min
-      resized_height = ((resized_width.to_f / width.to_f) * height.to_f).to_i
-      return "#{resized_width.to_i}x#{resized_height.to_i}"
-    else
-      resized_height = [height, max_length].min
-      resized_width = ((resized_height.to_f / height.to_f) * width.to_f).to_i
-      return "#{resized_width.to_i}x#{resized_height.to_i}"
-    end
   end
 end

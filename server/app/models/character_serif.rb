@@ -17,7 +17,6 @@
 
 class CharacterSerif < CategorisedWord
   def self.import_serif
-    columns = CharacterSerif.column_names
     doc = ApplicationRecord.request_and_parse_html("http://40s-animeigen.com/sakuhin/")
     link_list = doc.css(".so-panel").css("li.cat-item")
     link_list.css("a").each do |link|

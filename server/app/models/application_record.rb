@@ -251,18 +251,18 @@ class ApplicationRecord < ActiveRecord::Base
     # 距離を計算
     d  = (a_y * m) ** 2
     d += (a_x * n * Math.cos(p)) ** 2
-    distance = Math::sqrt(d)
+    d  = Math::sqrt(d)
     #地球を完全な球とみなさない場合はdの値を返す
 
     # 地球を完全な球とみなした場合
     # ( 球面三角法 )
     # D = R * acos( sin(y1) * sin(y2) + cos(y1) * cos(y2) * cos(x2-x1) )
-    d_1  = Math::sin(latitude1 * Math::PI / 180.0)
-    d_1 *= Math::sin(latitude2 * Math::PI / 180.0)
-    d_2  = Math::cos(latitude1* Math::PI / 180.0)
-    d_2 *= Math::cos(latitude2 * Math::PI / 180.0)
-    d_2 *= Math::cos(longitude2 * Math::PI / 180.0 - longitude1 * Math::PI / 180.0)
-    d_0  = r_x * Math::acos(d_1 + d_2).to_f
-    return d_0
+    # d_1  = Math::sin(latitude1 * Math::PI / 180.0)
+    # d_1 *= Math::sin(latitude2 * Math::PI / 180.0)
+    # d_2  = Math::cos(latitude1* Math::PI / 180.0)
+    # d_2 *= Math::cos(latitude2 * Math::PI / 180.0)
+    # d_2 *= Math::cos(longitude2 * Math::PI / 180.0 - longitude1 * Math::PI / 180.0)
+    # d_0  = r_x * Math::acos(d_1 + d_2).to_f
+    return d
   end
 end

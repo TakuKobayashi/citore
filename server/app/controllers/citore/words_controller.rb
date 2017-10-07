@@ -5,7 +5,6 @@ class Citore::WordsController < BaseController
   end
 
   def search
-    natto = ApplicationRecord.get_natto
     sanitaized_word = ApplicationRecord.basic_sanitize(params[:text].to_s)
     reading = ApplicationRecord.reading(sanitaized_word)
     split_words = ApplicationRecord.ngram(reading, 2).uniq

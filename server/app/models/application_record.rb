@@ -92,7 +92,7 @@ class ApplicationRecord < ActiveRecord::Base
   def self.reading(text)
     #記号を除去
     sanitaized_word = delete_symbols(text)
-    word, urls = separate_urls(sanitaized_word)
+    word = separate_urls(sanitaized_word)
     reading_array = []
     natto = self.get_natto
     natto.parse(word) do |n|
@@ -174,7 +174,7 @@ class ApplicationRecord < ActiveRecord::Base
       logger = ActiveSupport::Logger.new("log/batch_error.log")
       console = ActiveSupport::Logger.new(STDOUT)
       logger.extend ActiveSupport::Logger.broadcast(console)
-      message = "error: #{e.to_s}\n #{e.backtrace.join("\n")}\n"
+      message = "error: #{e.message.to_s}\n #{e.backtrace.join("\n")}\n"
       logger.info(message)
       puts message
       if sleep_second.present?

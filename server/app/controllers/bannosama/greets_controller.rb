@@ -18,7 +18,7 @@ class Bannosama::GreetsController < Bannosama::BaseController
   def mode_change
     # websocketにcallするためのpass
     http = HTTPClient.new
-    res = http.get("http://localhost:3110/bannosama/greets/mode_change", {mode: params[:mode]})
+    http.get("http://localhost:3110/bannosama/greets/mode_change", {mode: params[:mode]})
     head(:ok)
   end
 end

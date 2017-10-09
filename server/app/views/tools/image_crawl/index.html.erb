@@ -51,7 +51,18 @@
       <tr>
         <td><%= job.created_at.strftime("%Y-%m-%d %H:%M:%S") %></td>
         <td><%= job.from_type_name %></td>
-        <td><%= t("activerecord.enum.homepage_upload_job_queues.state.#{job.state}") %></td>
+        <%
+          if job.downloaded?
+            stylecolor = "drakgray"
+          elsif job.failed?
+            stylecolor = "crimson"
+          elsif job.complete?
+            stylecolor = "blue"
+          else
+            stylecolor = "forestgreen"
+          end
+        %>
+        <td><span style="color:<%= stylecolor %>"><%= t("activerecord.enum.homepage_upload_job_queues.state.#{job.state}") %></span></td>
         <td><%=
           if job.upload_url.present?
             link_to("ダウンロード", download_zip_tools_image_crawl_url(job_id: job.id), class: "pure-button pure-button-primary")

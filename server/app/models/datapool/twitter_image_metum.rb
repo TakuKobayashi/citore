@@ -68,7 +68,7 @@ class Datapool::TwitterImageMetum < Datapool::ImageMetum
 
   def self.constract_images_from_tweet(tweet:, image_urls:, options: {})
     tweet_text = ApplicationRecord.basic_sanitize(tweet.text)
-    tweet_text = ApplicationRecord.separate_urls(tweet_text)
+    tweet_text = ApplicationRecord.separate_urls(tweet_text).first
     images = []
     image_urls.each do |image_url|
       image = self.constract(

@@ -92,7 +92,7 @@ class ApplicationRecord < ActiveRecord::Base
   def self.reading(text)
     #記号を除去
     sanitaized_word = delete_symbols(text)
-    word = separate_urls(sanitaized_word)
+    word = separate_urls(sanitaized_word).first
     reading_array = []
     natto = self.get_natto
     natto.parse(word) do |n|

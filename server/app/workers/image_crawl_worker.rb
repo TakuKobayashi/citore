@@ -32,7 +32,7 @@ class ImageCrawlWorker
     take_over_hash = {
       homepage_access_id: upload_job.homepage_access_id,
       token: upload_job.token,
-      prefix: upload_job.prefix,
+      from_type: upload_job.from_type,
       state: upload_job.state,
       options: upload_job.options
     }

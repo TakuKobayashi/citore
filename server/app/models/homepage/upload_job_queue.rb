@@ -59,7 +59,7 @@ class Homepage::UploadJobQueue < ApplicationRecord
       zipfile = File.open(zippath)
       zipfile_size = zipfile.size
       upload_file_path = Datapool::ImageMetum.upload_s3(zipfile, "#{Time.current.strftime("%Y%m%d_%H%M%S%L")}.zip")
-      upload_job.update!(state: :complete, upload_url: ApplicationRecord::S3_ROOT_URL + upload_file_path, upload_file_size: zipfile_size)
+      self.update!(state: :complete, upload_url: ApplicationRecord::S3_ROOT_URL + upload_file_path, upload_file_size: zipfile_size)
     end
   end
 end

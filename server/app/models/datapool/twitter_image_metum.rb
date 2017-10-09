@@ -50,36 +50,55 @@ class Datapool::TwitterImageMetum < Datapool::ImageMetum
   private
   def self.generate_images(tweets:, options: {})
     images = []
+    all_image_urls = tweets.flat_map do |tweet|
+      image_urls = TwitterRecord.get_image_urls_from_tweet(tweet: tweet)
+      if tweet.quoted_tweet?
+        image_urls += TwitterRecord.get_image_urls_from_tweet(tweet: tweet.quoted_tweet)
+      end
+      image_urls
+    end.uniq
+    twitter_images = Datapool::TwitterImageMetum.where(origin_src: all_image_urls).index_by(&:origin_src)
+    import_images = []
+    all_image_urls = []
+
     tweets.each do |tweet|
       image_urls = TwitterRecord.get_image_urls_from_tweet(tweet: tweet)
-      if image_urls.present?
-        images += self.constract_images_from_tweet(tweet: tweet, image_urls: image_urls, options: options)
+      image_urls.each do |image_url|
+        next if all_image_urls.include?(image_url)
+        all_image_urls << image_url
+        if twitter_images[image_url].present?
+          images << twitter_images[image_url]
+        else
+          images << self.constract_image_from_tweet(tweet: tweet, image_url: image_url, options: options)
+        end
       end
       if tweet.quoted_tweet? && tweet.quoted_tweet.media.present?
         qimage_urls = TwitterRecord.get_image_urls_from_tweet(tweet: tweet.quoted_tweet)
-        if qimage_urls.present?
-          images += self.constract_images_from_tweet(tweet: tweet.quoted_tweet, image_urls: qimage_urls, options: options)
+        qimage_urls.each do |image_url|
+          next if all_image_urls.include?(image_url)
+          all_image_urls << image_url
+          if twitter_images[image_url].present?
+            images << twitter_images[image_url]
+          else
+            images << self.constract_images_from_tweet(tweet: tweet.quoted_tweet, image_url: image_url, options: options)
+          end
         end
       end
     end
-    self.import!(images)
+    self.import!(images.select(&:new_record?))
     return images
   end
 
-  def self.constract_images_from_tweet(tweet:, image_urls:, options: {})
+  def self.constract_image_from_tweet(tweet:, image_url:, options: {})
     tweet_text = ApplicationRecord.basic_sanitize(tweet.text)
     tweet_text = ApplicationRecord.separate_urls(tweet_text).first
-    images = []
-    image_urls.each do |image_url|
-      image = self.constract(
-        image_url: image_url.to_s,
-        title: tweet_text,
-        options: {
-          tweet_id: tweet.id
-        }.merge(options)
-      )
-      images << image
-    end
-    return images
+    image = self.constract(
+      image_url: image_url.to_s,
+      title: tweet_text,
+      options: {
+        tweet_id: tweet.id
+      }.merge(options)
+    )
+    return image
   end
 end

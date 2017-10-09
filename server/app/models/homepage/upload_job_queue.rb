@@ -39,8 +39,8 @@ class Homepage::UploadJobQueue < ApplicationRecord
   def self.cleanup!
     Homepage::UploadJobQueue.find_each do |job|
       next if job.standby?
-      next if job.complete? && job.created_at > 7.day.ago
-      next if (job.crawling? || job.compressing? || job.uploading?) && job.created_at > 8.hours.ago
+      next if job.complete? && job.updated_at > 7.day.ago
+      next if (job.crawling? || job.compressing? || job.uploading?) && job.updated_at > 8.hours.ago
       if job.upload_url.present?
         #s3 = Aws::S3::Client.new
         #filepath = job.upload_url.gsub(ApplicationRecord::S3_ROOT_URL, "")

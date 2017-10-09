@@ -8,6 +8,7 @@ class ImageCrawlWorker
       url = request_params["crawl_url"]
       start_page = request_params["start_page_num"].to_i
       end_page = request_params["end_page_num"].to_i
+      upload_job.options = upload_job.options.merge({url: url, start_page: start_page, end_page: end_page})
       images = Datapool::WebSiteImageMetum.crawl_images!(url: url, start_page: start_page, end_page: end_page, filter: request_params["filter"])
     elsif request_params["action"] == "flickr_crawl"
       search_type = request_params["search_type"].to_i
@@ -17,14 +18,18 @@ class ImageCrawlWorker
       else
         search_hash[:text] = request_params["keyword"].to_s
       end
+      upload_job.options = upload_job.options.merge({keyword: request_params["keyword"].to_s, search_type: search_type})
       images = Datapool::FrickrImageMetum.search_images!(search: search_hash)
     else
+      search_type = request_params["search_type"].to_i
+      upload_job.options = upload_job.options.merge({keyword: request_params["keyword"].to_s, search_type: search_type})
       if search_type == 1
         images = Datapool::TwitterImageMetum.images_from_user_timeline!(username: request_params["keyword"].to_s)
       else
         images = Datapool::TwitterImageMetum.search_image_tweet!(keyword: request_params["keyword"].to_s)
       end
     end
+    upload_job.save!
     if images.blank?
       upload_job.failed!
       return

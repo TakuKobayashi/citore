@@ -49,4 +49,17 @@ class Homepage::UploadJobQueue < ApplicationRecord
       job.cleaned!
     end
   end
+
+  def compress_and_upload_images!(images:)
+    Tempfile.create(SecureRandom.hex) do |tempfile|
+      self.compressing!
+      zippath = Datapool::ImageMetum.compress_to_zip(zip_filepath: tempfile.path, images: images)
+      self.uploading!
+
+      zipfile = File.open(zippath)
+      zipfile_size = zipfile.size
+      upload_file_path = Datapool::ImageMetum.upload_s3(zipfile, "#{Time.current.strftime("%Y%m%d_%H%M%S%L")}.zip")
+      upload_job.update!(state: :complete, upload_url: ApplicationRecord::S3_ROOT_URL + upload_file_path, upload_file_size: zipfile_size)
+    end
+  end
 end

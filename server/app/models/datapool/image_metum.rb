@@ -135,4 +135,22 @@ class Datapool::ImageMetum < ApplicationRecord
       return "#{resized_width.to_i}x#{resized_height.to_i}"
     end
   end
+
+  def self.compress_to_zip(zip_filepath:, images: [])
+    filename_hash = {}
+    Zip::OutputStream.open(zip_filepath) do |stream|
+      images.each do |image|
+        response = image.download_image_response
+        next if (response.status >= 300 && response.status != 304) || !response.headers["Content-Type"].to_s.include?("image")
+        if filename_hash[image.save_filename].nil?
+          stream.put_next_entry(image.save_filename)
+        else
+          stream.put_next_entry(SecureRandom.hex + File.extname(image.save_filename))
+        end
+        stream.print(response.body)
+        filename_hash[image.save_filename] = image
+      end
+    end
+    return zip_filepath
+  end
 end

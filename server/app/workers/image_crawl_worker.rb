@@ -29,34 +29,21 @@ class ImageCrawlWorker
       upload_job.failed!
       return
     end
-    Tempfile.create(SecureRandom.hex) do |tempfile|
-      upload_job.compressing!
-      zippath = compress_to_zip(zip_filepath: tempfile.path, images: images)
-      upload_job.uploading!
-
-      zipfile = File.open(zippath)
-      zipfile_size = zipfile.size
-      upload_file_path = Datapool::ImageMetum.upload_s3(zipfile, "#{Time.now.strftime("%Y%m%d_%H%M%S")}_#{request_params[:action]}.zip")
-      upload_job.update!(state: :complete, upload_url: ApplicationRecord::S3_ROOT_URL + upload_file_path, upload_file_size: zipfile_size)
-    end
-  end
-
-  private
-  def compress_to_zip(zip_filepath:, images: [])
-    filename_hash = {}
-    Zip::OutputStream.open(zip_filepath) do |stream|
-      images.each do |image|
-        response = image.download_image_response
-        next if (response.status >= 300 && response.status != 304) || !response.headers["Content-Type"].to_s.include?("image")
-        if filename_hash[image.save_filename].nil?
-          stream.put_next_entry(image.save_filename)
-        else
-          stream.put_next_entry(SecureRandom.hex + File.extname(image.save_filename))
-        end
-        stream.print(response.body)
-        filename_hash[image.save_filename] = image
+    take_over_hash = {
+      homepage_access_id: upload_job.homepage_access_id,
+      token: upload_job.token,
+      prefix: upload_job.prefix,
+      state: upload_job.state,
+      options: upload_job.options
+    }
+    # 画像の数が多いとメモリに乗り切らないおそれがあるので500件ずつに区切って処理を行おうと思う
+    images.each_slice(500).with_index do |slice_images, index|
+      if index == 0
+        job = upload_job
+      else
+        job = Homepage::UploadJobQueue.create(take_over_hash)
       end
+      job.compress_and_upload_images!(images: slice_images)
     end
-    return zip_filepath
   end
 end

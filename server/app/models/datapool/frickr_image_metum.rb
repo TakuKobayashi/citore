@@ -44,22 +44,27 @@ class Datapool::FrickrImageMetum < Datapool::ImageMetum
   def self.generate_images!(flickr_images:, options: {})
     images = []
     image_urls = []
+    flickr_image_meta = Datapool::FrickrImageMetum.where(origin_src: flickr_images.map{|f| FlickRaw.url(f) }).index_by(&:origin_src)
     flickr_images.each do |flickr_image|
       image_url = FlickRaw.url(flickr_image)
       next if image_urls.include?(image_url.to_s)
       image_urls << image_url.to_s
-      image = self.constract(
-        image_url: image_url.to_s,
-        title: flickr_image.title,
-        options: {
-          image_id: flickr_image.id,
-          image_secret: flickr_image.secret,
-          post_user_id: flickr_image.owner
-        }.merge(options)
-      )
+      if flickr_image_meta[image_url.to_s].present?
+        image = flickr_image_meta[image_url.to_s]
+      else
+        image = self.constract(
+          image_url: image_url.to_s,
+          title: flickr_image.title,
+          options: {
+            image_id: flickr_image.id,
+            image_secret: flickr_image.secret,
+            post_user_id: flickr_image.owner
+          }.merge(options)
+        )
+      end
       images << image
     end
-    self.import!(images)
+    self.import!(images.select(&:new_record?))
 
     return images
   end

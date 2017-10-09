@@ -54,6 +54,7 @@ class Tools::ImageCrawlController < Homepage::BaseController
     if @upload_job.blank?
       @upload_job = @visitor.upload_jobs.find_or_initialize_by(token: params[:authenticity_token])
       @upload_job.from_type = prefix
+      @upload_job.options ||= {}
       is_new = @upload_job.new_record?
       @upload_job.save!
     end

@@ -33,10 +33,10 @@ class Datapool::TwitterImageMetum < Datapool::ImageMetum
 
     loop do
       if last_tweet_id.present?
-        options[:max_id] = last_tweet_id.to_i
+        tweet_options[:max_id] = last_tweet_id.to_i
       end
       begin
-        tweets = twitter_client.user_timeline(username, options)
+        tweets = twitter_client.user_timeline(username, tweet_options)
       rescue Twitter::Error::NotFound => e
         Rails.logger.warn "user not found:" + e.message
       end

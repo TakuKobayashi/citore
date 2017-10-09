@@ -62,29 +62,43 @@ class Datapool::TwitterImageMetum < Datapool::ImageMetum
     all_image_urls = []
 
     tweets.each do |tweet|
+      is_depulicate = false
       image_urls = TwitterRecord.get_image_urls_from_tweet(tweet: tweet)
       image_urls.each do |image_url|
-        next if all_image_urls.include?(image_url)
+        if all_image_urls.include?(image_url)
+          is_depulicate = true
+          next
+        end
         all_image_urls << image_url
         if twitter_images[image_url].present?
           images << twitter_images[image_url]
+          is_depulicate = true
         else
           images << self.constract_image_from_tweet(tweet: tweet, image_url: image_url, options: options)
         end
       end
-      import_videos += Datapool::TwitterVideoMetum.constract_from_tweet(tweet: tweet)
+      if !is_depulicate
+        import_videos += Datapool::TwitterVideoMetum.constract_from_tweet(tweet: tweet)
+      end
       if tweet.quoted_tweet? && tweet.quoted_tweet.media.present?
+        is_qdepulicate = false
         qimage_urls = TwitterRecord.get_image_urls_from_tweet(tweet: tweet.quoted_tweet)
         qimage_urls.each do |image_url|
-          next if all_image_urls.include?(image_url)
+          if all_image_urls.include?(image_url)
+            is_qdepulicate = true
+            next
+          end
           all_image_urls << image_url
           if twitter_images[image_url].present?
             images << twitter_images[image_url]
+            is_qdepulicate = true
           else
             images << self.constract_image_from_tweet(tweet: tweet.quoted_tweet, image_url: image_url, options: options)
           end
         end
-        import_videos += Datapool::TwitterVideoMetum.constract_from_tweet(tweet: tweet.quoted_tweet)
+        if !is_qdepulicate
+          import_videos += Datapool::TwitterVideoMetum.constract_from_tweet(tweet: tweet.quoted_tweet)
+        end
       end
     end
     self.import!(images.select(&:new_record?))

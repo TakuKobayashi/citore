@@ -9,8 +9,8 @@ module HomepageHelper
         <meta property="og:type" content="website">
         <meta property="og:title" content="多くの画像ファイルを集めるためのツール置き場">
         <meta property="og:description" content="WebサイトやSNSからキーワードを入力するとその中の画像だけをまとめて集めてダウンロードすることができるツール置き場">
-        <meta property="og:url" content="<%= tools_image_crawl_url %>">
-        <meta property="og:site_name" content="<%= homepage_sitename %>">
+        <meta property="og:url" content="#{tools_image_crawl_url}">
+        <meta property="og:site_name" content="#{homepage_sitename}">
         <meta name="twitter:card" content="summary_large_image">
         <meta name="twitter:description" content="WebサイトやSNSからキーワードを入力するとその中の画像だけをまとめて集めてダウンロードすることができるツール置き場">
         <meta name="twitter:title" content="多くの画像ファイルを集めるためのツール置き場">
@@ -23,8 +23,8 @@ module HomepageHelper
         <meta property="og:type" content="website">
         <meta property="og:title" content="WebRTCを使ったビデオチャットとかやってみた系の遊び場">
         <meta property="og:description" content="WebRTCってなに？とか、WebRTCを実装したいというときに、とりあえずつないだり、どんなもの検証したりしたいときときのための場所">
-        <meta property="og:url" content="<%= tools_webrtcs_url %>">
-        <meta property="og:site_name" content="<%= homepage_sitename %>">
+        <meta property="og:url" content="#{tools_webrtcs_url}">
+        <meta property="og:site_name" content="#{homepage_sitename}">
         <meta name="twitter:card" content="summary_large_image">
         <meta name="twitter:description" content="WebRTCってなに？とか、WebRTCを実装したいというときに、とりあえずつないだり、どんなもの検証したりしたいときときのための場所">
         <meta name="twitter:title" content="WebRTCを使ったビデオチャットとかやってみた系の遊び場">
@@ -37,8 +37,8 @@ module HomepageHelper
         <meta property="og:type" content="website">
         <meta property="og:title" content="WebSocketを使ったリアルタイム通信の遊び場">
         <meta property="og:description" content="WebSocketを使ったテストとか、実装するときにとりあえずつなぎたちとかそういうデモや実験を行うための場所">
-        <meta property="og:url" content="<%= tools_websockets_url %>">
-        <meta property="og:site_name" content="<%= homepage_sitename %>">
+        <meta property="og:url" content="#{tools_websockets_url}">
+        <meta property="og:site_name" content="#{homepage_sitename}">
         <meta name="twitter:card" content="summary_large_image">
         <meta name="twitter:description" content="WebSocketを使ったテストとか、実装するときにとりあえずつなぎたちとかそういうデモや実験を行うための場所">
         <meta name="twitter:title" content="WebSocketを使ったリアルタイム通信の遊び場">

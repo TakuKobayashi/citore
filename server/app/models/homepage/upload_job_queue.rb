@@ -62,4 +62,16 @@ class Homepage::UploadJobQueue < ApplicationRecord
       self.update!(state: :complete, upload_url: ApplicationRecord::S3_ROOT_URL + upload_file_path, upload_file_size: zipfile_size)
     end
   end
+
+  def from_type_name
+    if self.from_type == "Datapool::FrickrImageMetum"
+      return I18n.t("activerecord.models.datapool_image_metum.flickr")
+    elsif self.from_type == "Datapool::TwitterImageMetum"
+      return I18n.t("activerecord.models.datapool_image_metum.twitter")
+    elsif self.from_type == "Datapool::WebSiteImageMetum"
+      return I18n.t("activerecord.models.datapool_image_metum.website")
+    else
+      return I18n.t("activerecord.models.datapool_image_metum.others")
+    end
+  end
 end

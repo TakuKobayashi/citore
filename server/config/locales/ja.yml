@@ -460,6 +460,12 @@ ja:
         others: その他
 
   activerecord:
+    models:
+      datapool_image_metum:
+        flickr: Flickr
+        website: Website
+        twitter: Twitter
+        other: どこか
     enum:
       homepage_upload_job_queues:
         state:

@@ -1,14 +1,22 @@
 <%= form_tag(url_crawl_tools_image_crawl_url, multipart: true, class: "pure-form pure-form-aligned") do %>
   <div class="pure-control-group">
-    <%= label_tag("クロールするURL (URLの中に %s と入力すると下のページ番号の変数になる)") %>
-    <%= text_field_tag :crawl_url, "", placeholder: "url", class: "pure-input-2-3" %>
+    <%= label_tag("url") %>
+    <%= text_field_tag :crawl_url, "", placeholder: "urlを入力してください", class: "pure-input-2-3" %>
   </div>
   <div class="pure-control-group">
-    <%= label_tag("該当の場所を絞りこむためのDOM要素 (あれば)") %>
+    <%= label_tag("") %>
+    <span>※URLの中に %s と入力すると以下で入力するページ番号につける変数になります</span>
+  </div>
+  <div class="pure-control-group">
+    <%= label_tag("絞りこみDOM要素") %>
     <%= text_field_tag :filter, "" ,class: "pure-input-2-3" %>
   </div>
   <div class="pure-control-group">
-    <%= label_tag("ページ番号(あれば)") %>
+    <%= label_tag("") %>
+    <span>例: classならば.class, idならば#idのように入力してください。</span>
+  </div>
+  <div class="pure-control-group">
+    <%= label_tag("ページ番号") %>
     <%= number_field_tag :start_page_num %> ~ <%= number_field_tag :end_page_num %>
   </div>
   <div class="pure-controls">

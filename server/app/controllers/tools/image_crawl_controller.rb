@@ -34,7 +34,11 @@ class Tools::ImageCrawlController < Homepage::BaseController
 
   private
   def load_upload_jobs
-    @upload_jobs = @visitor.try(:upload_jobs) || []
+    if @visitor.blank?
+      @upload_jobs = []
+    else
+      @upload_jobs = @visitor.upload_jobs.where.not(state: :cleaned)
+    end
   end
 
   def execute_upload_job

@@ -1,3 +1,7 @@
+<%= link_to("https://flickr.com", class: "logo_link") do %>
+  <p><%= image_tag("icon/flickr_logo.png", size: "128x39") %></p>
+  <p><b>Flickr</b></p>
+<% end %>
 <%= form_tag(flickr_crawl_tools_image_crawl_url, multipart: true, class: "pure-form pure-form-aligned") do %>
   <div class="pure-control-group">
     <%= label_tag("検索種別") %>

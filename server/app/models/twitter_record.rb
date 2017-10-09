@@ -95,6 +95,8 @@ class TwitterRecord < ApplicationRecord
       case m
       when Twitter::Media::Photo
         m.media_url.to_s
+      when Twitter::Media::Video
+        m.media_url.to_s
       else
         []
       end

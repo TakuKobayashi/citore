@@ -58,7 +58,7 @@ class Datapool::TwitterImageMetum < Datapool::ImageMetum
       image_urls
     end.uniq
     twitter_images = Datapool::TwitterImageMetum.where(origin_src: all_image_urls).index_by(&:origin_src)
-    import_images = []
+    import_videos = []
     all_image_urls = []
 
     tweets.each do |tweet|
@@ -72,6 +72,7 @@ class Datapool::TwitterImageMetum < Datapool::ImageMetum
           images << self.constract_image_from_tweet(tweet: tweet, image_url: image_url, options: options)
         end
       end
+      import_videos += Datapool::TwitterVideoMetum.constract_from_tweet(tweet: tweet)
       if tweet.quoted_tweet? && tweet.quoted_tweet.media.present?
         qimage_urls = TwitterRecord.get_image_urls_from_tweet(tweet: tweet.quoted_tweet)
         qimage_urls.each do |image_url|
@@ -80,12 +81,14 @@ class Datapool::TwitterImageMetum < Datapool::ImageMetum
           if twitter_images[image_url].present?
             images << twitter_images[image_url]
           else
-            images << self.constract_images_from_tweet(tweet: tweet.quoted_tweet, image_url: image_url, options: options)
+            images << self.constract_image_from_tweet(tweet: tweet.quoted_tweet, image_url: image_url, options: options)
           end
         end
+        import_videos += Datapool::TwitterVideoMetum.constract_from_tweet(tweet: tweet.quoted_tweet)
       end
     end
     self.import!(images.select(&:new_record?))
+    Datapool::TwitterVideoMetum.import!(import_videos.flatten)
     return images
   end
 

@@ -20,7 +20,7 @@ class Datapool::WebSiteImageMetum < Datapool::ImageMetum
   def self.crawl_images!(url:, start_page: 1, end_page: 1, filter: nil, request_method: :get)
     images = []
     (start_page.to_i..end_page.to_i).each do |page|
-      address_url = Addressable::URI.parse(url % page.to_s)
+      address_url = Addressable::URI.parse(url.to_s % page.to_s)
       doc = ApplicationRecord.request_and_parse_html(address_url.to_s, request_method)
       images += self.generate_objects_from_parsed_html(doc: doc, filter: filter, from_site_url: address_url.to_s)
     end
@@ -48,7 +48,7 @@ class Datapool::WebSiteImageMetum < Datapool::ImageMetum
       image_url = Addressable::URI.parse(d[:src])
       # base64encodeされたものはschemeがdataになる
       if image_url.scheme != "data"
-        image_url = ApplicationRecord.merge_full_url(src: image_url, org: from_site_url)
+        image_url = ApplicationRecord.merge_full_url(src: image_url.to_s, org: from_site_url.to_s)
       end
       next if image_urls.include?(image_url.to_s)
       image_urls << image_url.to_s
@@ -57,7 +57,7 @@ class Datapool::WebSiteImageMetum < Datapool::ImageMetum
         title: title.to_s,
         check_image_file: true,
         options: {
-          from_url: from_site_url
+          from_url: from_site_url.to_s
         }
       )
       images << image

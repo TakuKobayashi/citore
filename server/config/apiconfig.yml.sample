@@ -95,3 +95,7 @@ qiita:
 flickr:
   apikey:
   secret:
+
+instagram:
+  client_id:
+  client_secret:

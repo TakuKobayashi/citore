@@ -31,16 +31,15 @@ class Datapool::FrickrImageMetum < Datapool::ImageMetum
     page_counter = 1
     flickr_images = []
     images = []
-    last_image = nil
+    image_counter = 0
     loop do
       flickr_images = flickr_client.photos.search(search.merge({per_page: PER_PAGE, page: page_counter}))
-      break if last_image.try(:id) == flickr_images.to_a.last.try(:id)
       images += self.generate_images!(flickr_images: flickr_images, options: search)
       page_counter = page_counter + 1
-      last_image = flickr_images.last
-      break if flickr_images.size < PER_PAGE
+      image_counter += flickr_images.size
+      break if image_counter > flickr_images.total.to_i
     end
-    return images
+    return images.uniq
   end
 
   private

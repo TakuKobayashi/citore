@@ -96,6 +96,7 @@ gem 'rack-cors', :require => 'rack/cors'
 gem 'mini_magick'
 gem 'sidekiq'
 gem 'redis-namespace'
+gem 'cairo'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development

@@ -165,6 +165,12 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace :egaonotatsuzin do
+    resource :authentication, controller: :authentication, only: [] do
+      get :spotify
+    end
+  end
+
   namespace :bannosama do
     root to: "top#index"
 

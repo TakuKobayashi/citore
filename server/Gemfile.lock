@@ -310,6 +310,8 @@ GEM
     omniauth-oauth2 (1.4.0)
       oauth2 (~> 1.0)
       omniauth (~> 1.2)
+    omniauth-spotify (0.0.13)
+      omniauth-oauth2 (~> 1.1)
     omniauth-twitter (1.4.0)
       omniauth-oauth (~> 1.1)
       rack
@@ -557,6 +559,7 @@ DEPENDENCIES
   omniauth-facebook
   omniauth-google-oauth2
   omniauth-instagram
+  omniauth-spotify
   omniauth-twitter
   opengraph_parser
   puma (~> 3.7)

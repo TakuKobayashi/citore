@@ -1,6 +1,4 @@
 ActiveAdmin.register_page "DataBatches" do
-  menu priority: 0, label: "データベース操作", parent: "data"
-
   content title: "データベース操作" do
     panel "エクセルまたはCSVのデータをインポート" do
       active_admin_form_for(:import, url: admin_databatches_import_data_path) do |f|

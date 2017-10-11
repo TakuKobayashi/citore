@@ -9,6 +9,11 @@ ActiveAdmin.register_page "Dashboard" do
           link_to("確認する", sidekiq_web_path)
         end
       end
+      column do
+        panel "データベース全般の操作" do
+          link_to("操作画面に行く", admin_databatches_path)
+        end
+      end
     end
 
 

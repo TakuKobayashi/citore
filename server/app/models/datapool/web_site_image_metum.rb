@@ -50,7 +50,7 @@ class Datapool::WebSiteImageMetum < Datapool::ImageMetum
       end
       image_url = Addressable::URI.parse(d[:src])
       if image_url.nil?
-        Rails.logger.warn("not exists image_url:" + image_url)
+        Rails.logger.warn("not exists image_url")
         next
       end
       # base64encodeされたものはschemeがdataになる

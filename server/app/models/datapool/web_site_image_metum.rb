@@ -63,6 +63,7 @@ class Datapool::WebSiteImageMetum < Datapool::ImageMetum
       )
       images << image
     end
-    return images
+    # constractできなかったものはnullが入っているので
+    return images.compact
   end
 end

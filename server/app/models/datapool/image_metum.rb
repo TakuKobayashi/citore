@@ -109,7 +109,10 @@ class Datapool::ImageMetum < ApplicationRecord
     if check_image_file
       # 画像じゃないものも含まれていることもあるので分別する
       image_type = FastImage.type(aimage_url.to_s)
-      return nil if image_type.blank?
+      if image_type.blank?
+        Rails.logger.warn("it is not image:", aimage_url.to_s)
+        return nil
+      end
     end
     image = self.new(title: title.to_s, options: options)
     if aimage_url.scheme == "data"

@@ -21,7 +21,13 @@ class Datapool::TwitterImageMetum < Datapool::ImageMetum
 
   def self.search_image_tweet!(keyword:)
     twitter_client = TwitterRecord.get_twitter_rest_client("citore")
-    tweets = twitter_client.search(keyword)
+    tweets = []
+    begin
+      tweets = twitter_client.search(keyword)
+    rescue Twitter::Error::TooManyRequests => error
+      sleep error.rate_limit.reset_in.to_i
+      retry
+    end
     return generate_images(tweets: tweets, options: {keyword: keyword})
   end
 
@@ -39,6 +45,9 @@ class Datapool::TwitterImageMetum < Datapool::ImageMetum
         tweets = twitter_client.user_timeline(username, tweet_options)
       rescue Twitter::Error::NotFound => e
         Rails.logger.warn "user not found:" + e.message
+      rescue Twitter::Error::TooManyRequests => error
+        sleep error.rate_limit.reset_in.to_i
+        retry
       end
       images += generate_images(tweets: tweets, options: {username: username})
       break if tweets.size < TIMELINE_CRAWL_COUNT

@@ -47,6 +47,11 @@ class Homepage::UploadJobQueue < ApplicationRecord
         #s3.delete_object(bucket: "taptappun", key: filepath)
       end
       job.cleaned!
+      if job.from_type == "Datapool::TwitterImageMetum"
+        if job.options.present? && job.options["params"].present? && job.options["params"]["search_type"].to_i == 0
+          Datapool::TwitterImageMetum.search_image_tweet!(keyword: job.options["params"]["keyword"].to_s)
+        end
+      end
     end
   end
 

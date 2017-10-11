@@ -99,3 +99,7 @@ flickr:
 instagram:
   client_id:
   client_secret:
+
+spotify:
+  client_id:
+  client_secret:

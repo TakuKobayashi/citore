@@ -204,11 +204,14 @@ class ApplicationRecord < ActiveRecord::Base
   def self.merge_full_url(src:, org:)
     src_url = Addressable::URI.parse(src.to_s)
     org_url = Addressable::URI.parse(org.to_s)
+    if src_url.path.to_s.first != "/"
+      src_url.path = "/" + src_url.path.to_s
+    end
     if src_url.scheme.blank?
       src_url.scheme = org_url.scheme.to_s
     end
     if src_url.host.blank?
-      src_url.host = org_url.host
+      src_url.host = org_url.host.to_s
     end
     return src_url
   end

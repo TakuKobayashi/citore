@@ -49,6 +49,10 @@ class Datapool::WebSiteImageMetum < Datapool::ImageMetum
         title = d.text
       end
       image_url = Addressable::URI.parse(d[:src])
+      if image_url.nil?
+        Rails.logger.warn("not exists image_url:" + image_url)
+        next
+      end
       # base64encodeされたものはschemeがdataになる
       if image_url.scheme != "data"
         image_url = ApplicationRecord.merge_full_url(src: image_url.to_s, org: from_site_url.to_s)

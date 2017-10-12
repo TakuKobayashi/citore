@@ -23,12 +23,14 @@ class Datapool::TwitterImageMetum < Datapool::ImageMetum
     twitter_client = TwitterRecord.get_twitter_rest_client("citore")
     tweets = []
     retry_count = 0
+    options = {count: 100}
     begin
-      tweets = twitter_client.search(keyword)
+      tweets = twitter_client.search(keyword, options)
     rescue Twitter::Error::TooManyRequests => e
       Rails.logger.warn "twitter retry since:#{e.rate_limit.reset_in.to_i}"
       retry_count = retry_count + 1
       sleep e.rate_limit.reset_in.to_i
+      options[:until] = 1.day.ago.strftime("%Y-%m-%d")
       if retry_count < 5
         retry
       end

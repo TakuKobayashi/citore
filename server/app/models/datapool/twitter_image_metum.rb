@@ -22,11 +22,16 @@ class Datapool::TwitterImageMetum < Datapool::ImageMetum
   def self.search_image_tweet!(keyword:)
     twitter_client = TwitterRecord.get_twitter_rest_client("citore")
     tweets = []
+    retry_count = 0
     begin
       tweets = twitter_client.search(keyword)
-    rescue Twitter::Error::TooManyRequests => error
-      sleep error.rate_limit.reset_in.to_i
-      retry
+    rescue Twitter::Error::TooManyRequests => e
+      Rails.logger.warn "twitter retry since:#{e.rate_limit.reset_in.to_i}"
+      retry_count = retry_count + 1
+      sleep e.rate_limit.reset_in.to_i
+      if retry_count < 5
+        retry
+      end
     end
     return generate_images(tweets: tweets, options: {keyword: keyword})
   end
@@ -41,13 +46,19 @@ class Datapool::TwitterImageMetum < Datapool::ImageMetum
       if last_tweet_id.present?
         tweet_options[:max_id] = last_tweet_id.to_i
       end
+      retry_count = 0
+      tweets = []
       begin
         tweets = twitter_client.user_timeline(username, tweet_options)
       rescue Twitter::Error::NotFound => e
         Rails.logger.warn "user not found:" + e.message
-      rescue Twitter::Error::TooManyRequests => error
-        sleep error.rate_limit.reset_in.to_i
-        retry
+      rescue Twitter::Error::NotFound => e
+        Rails.logger.warn "twitter retry since:#{e.rate_limit.reset_in.to_i}"
+        retry_count = retry_count + 1
+        sleep e.rate_limit.reset_in.to_i
+        if retry_count < 5
+          retry
+        end
       end
       images += generate_images(tweets: tweets, options: {username: username})
       break if tweets.size < TIMELINE_CRAWL_COUNT

@@ -9,7 +9,7 @@ class ImageCrawlWorker
       start_page = request_params["start_page_num"].to_i
       end_page = request_params["end_page_num"].to_i
       upload_job.options = upload_job.options.merge({url: url, start_page: start_page, end_page: end_page})
-      images = Datapool::WebSiteImageMetum.crawl_images!(url: url, start_page: start_page, end_page: end_page, filter: request_params["filter"])
+      images = Datapool::WebSiteImageMetum.crawl_images!(url: url, page_key: request_params["page_key"], start_page: start_page, end_page: end_page, filter: request_params["filter"])
     elsif request_params["action"] == "flickr_crawl"
       search_type = request_params["search_type"].to_i
       search_hash = {}

@@ -5,7 +5,7 @@
   </div>
   <div class="pure-control-group">
     <%= label_tag("") %>
-    <span>※URLの中に %s と入力すると以下で入力するページ番号につける変数になります</span>
+    <span>※繰り返し処理を行いたい場合は以下に指定してURLパラメータを基に繰り替えし処理を行います</span>
   </div>
   <div class="pure-control-group">
     <%= label_tag("絞りこみDOM要素") %>
@@ -13,13 +13,42 @@
   </div>
   <div class="pure-control-group">
     <%= label_tag("") %>
-    <span>例: classならば.class, idならば#idのように入力してください。</span>
+    <span>classならば.class, idならば#idのように入力してください。</span>
   </div>
   <div class="pure-control-group">
-    <%= label_tag("ページ番号") %>
+    <%= label_tag("繰り返すパラメータキー") %>
+    <%= text_field_tag :page_key, "" ,class: "pure-input-2-3" %>
+  </div>
+  <div class="pure-control-group">
+    <%= label_tag("") %>
+  </div>
+  <div class="pure-control-group">
+    <%= label_tag("繰り返す範囲") %>
     <%= number_field_tag :start_page_num %> ~ <%= number_field_tag :end_page_num %>
   </div>
   <div class="pure-controls">
     <%= submit_tag("画像を集める", class: "pure-button pure-button-primary") %>
   </div>
 <% end %>
+<hr>
+<h4>入力例</h4>
+<table class="pure-table">
+  <tbody>
+    <tr>
+      <td>URL</td>
+      <td><%= url_tools_image_crawl_url %></td>
+    </tr>
+    <tr>
+      <td>繰り返すパラメータキー</td>
+      <td>page</td>
+    </tr>
+    <tr>
+      <td>繰り返す範囲</td>
+      <td>1~10</td>
+    </tr>
+    <tr>
+      <td>実行結果</td>
+      <td><%= url_tools_image_crawl_url %>?page=1, <%= url_tools_image_crawl_url %>?page=2, ..., <%= url_tools_image_crawl_url %>?page=10</td>
+    </tr>
+  </tbody>
+</table>

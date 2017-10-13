@@ -31,9 +31,9 @@ class Datapool::WebSiteImageMetum < Datapool::ImageMetum
     end
     images.uniq!(&:src)
     src_images = Datapool::ImageMetum.where(origin_src: images.map(&:origin_src)).index_by(&:src)
-    images.select!{|image| src_images[image.src].blank? }
-    if images.present?
-      self.import!(images, on_duplicate_key_update: [:title])
+    import_images = images.select{|image| src_images[image.src].blank? }
+    if import_images.present?
+      self.import!(import_images)
     end
     return images
   end

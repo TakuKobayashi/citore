@@ -30,7 +30,7 @@ class Datapool::WebSiteImageMetum < Datapool::ImageMetum
       images += self.generate_objects_from_parsed_html(doc: doc, filter: filter, from_site_url: address_url.to_s)
     end
     images.uniq!(&:src)
-    src_images = Datapool::ImageMetum.where(origin_src: images.map(&:origin_src).index_by(&:src)
+    src_images = Datapool::ImageMetum.where(origin_src: images.map(&:origin_src)).index_by(&:src)
     images.select!{|image| src_images[image.src].blank? }
     if images.present?
       self.import!(images, on_duplicate_key_update: [:title])

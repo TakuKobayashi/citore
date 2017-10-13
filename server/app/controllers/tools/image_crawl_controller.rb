@@ -37,7 +37,7 @@ class Tools::ImageCrawlController < Homepage::BaseController
     if @visitor.blank?
       @upload_jobs = []
     else
-      @upload_jobs = @visitor.upload_jobs.where.not(state: :cleaned)
+      @upload_jobs = @visitor.upload_jobs.where.not(state: :cleaned).order("id DESC")
     end
   end
 

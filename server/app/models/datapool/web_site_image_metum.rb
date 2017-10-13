@@ -29,6 +29,7 @@ class Datapool::WebSiteImageMetum < Datapool::ImageMetum
       doc = ApplicationRecord.request_and_parse_html(address_url.to_s, request_method)
       images += self.generate_objects_from_parsed_html(doc: doc, filter: filter, from_site_url: address_url.to_s)
     end
+    images.uniq!(&:src)
     if images.present?
       self.import!(images, on_duplicate_key_update: [:title])
     end

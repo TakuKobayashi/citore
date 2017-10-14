@@ -1,0 +1,13 @@
+<%= link_to("https://www.google.co.jp/imghp", class: "logo_link") do %>
+  <p><%= image_tag("icon/google_logo.png", size: "128x44") %></p>
+  <p><b>Google画像検索</b></p>
+<% end %>
+<%= form_tag(google_image_search_crawl_tools_image_crawl_url, multipart: true, class: "pure-form pure-form-aligned") do %>
+  <div class="pure-control-group">
+    <%= label_tag("キーワード") %>
+    <%= text_field_tag :keyword, "", placeholder: "検索したい文字列を入力してください", class: "pure-input-2-3" %>
+  </div>
+  <div class="pure-controls">
+    <%= submit_tag("画像をダウンロードする", class: "pure-button pure-button-primary") %>
+  </div>
+<% end %>

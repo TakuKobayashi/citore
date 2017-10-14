@@ -127,6 +127,8 @@ Rails.application.routes.draw do
       get :url
       post :url_crawl
       get :download_zip
+      get :google_image_search
+      post :google_image_search_crawl
     end
 
     resource :excel_converter, controller: :excel_converter, only: [] do

@@ -5,6 +5,9 @@
 <h2>画像を収集したいサービスを選んでください</h2>
 <div class="pure-g">
   <div class="pure-u-1">
+    <%= link_to("Google画像検索から画像を収集(Beta)", google_image_search_tools_image_crawl_url) %>
+  </div>
+  <div class="pure-u-1">
     <%= link_to("Webサイトから画像を収集", url_tools_image_crawl_url) %>
   </div>
   <br>
@@ -15,6 +18,7 @@
   <div class="pure-u-1">
     <%= link_to("Flickrから画像を収集", flickr_tools_image_crawl_url) %>
   </div>
+  
 </div>
 <hr>
 <h2>画像の収集状況</h2>

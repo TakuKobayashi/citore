@@ -1,6 +1,6 @@
 class Tools::ImageCrawlController < Homepage::BaseController
   before_action :load_upload_jobs, only: :index
-  before_action :execute_upload_job, only: [:url_crawl, :twitter_crawl, :flickr_crawl]
+  before_action :execute_upload_job, only: [:url_crawl, :twitter_crawl, :flickr_crawl, :google_image_search_crawl]
 
   def index
   end
@@ -26,6 +26,13 @@ class Tools::ImageCrawlController < Homepage::BaseController
     redirect_to tools_image_crawl_url
   end
 
+  def google_image_search
+  end
+
+  def google_image_search_crawl
+    redirect_to tools_image_crawl_url
+  end
+
   def download_zip
     job = @visitor.upload_jobs.find_by(id: params[:job_id])
     job.downloaded!
@@ -46,8 +53,10 @@ class Tools::ImageCrawlController < Homepage::BaseController
       prefix = "Datapool::FrickrImageMetum"
     elsif params[:action] == "twitter_crawl"
       prefix = "Datapool::TwitterImageMetum"
-    else
+    elsif params[:action] == "url_crawl"
       prefix = "Datapool::WebSiteImageMetum"
+    else
+      prefix = "Datapool::GoogleImageSearch"
     end
     @upload_job = @visitor.upload_jobs.find_by(from_type: prefix, state: [:standby, :crawling, :compressing, :uploading])
     is_new = false

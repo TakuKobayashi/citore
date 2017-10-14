@@ -20,7 +20,7 @@ class ImageCrawlWorker
       end
       upload_job.options = upload_job.options.merge({keyword: request_params["keyword"].to_s, search_type: search_type})
       images = Datapool::FrickrImageMetum.search_images!(search: search_hash)
-    else
+    elsif request_params["action"] == "twitter_crawl"
       search_type = request_params["search_type"].to_i
       upload_job.options = upload_job.options.merge({keyword: request_params["keyword"].to_s, search_type: search_type})
       if search_type == 1
@@ -28,6 +28,9 @@ class ImageCrawlWorker
       else
         images = Datapool::TwitterImageMetum.search_image_tweet!(keyword: request_params["keyword"].to_s)
       end
+    else
+      upload_job.options = upload_job.options.merge({keyword: request_params["keyword"].to_s})
+      images = Datapool::GoogleImageSearch.crawl_images!(keyword: request_params["keyword"])
     end
     upload_job.save!
     if images.blank?

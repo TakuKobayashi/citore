@@ -55,7 +55,6 @@ class Datapool::GoogleImageSearch < Datapool::ImageMetum
       else
         img["src"]
       end
-      p img["alt"]
     end
     searched_urls.each_with_index do |url, index|
       link_metum = url.query_values

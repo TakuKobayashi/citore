@@ -57,8 +57,19 @@ class Datapool::ImageMetum < ApplicationRecord
 
   def src=(url)
     aurl = Addressable::URI.parse(url)
-    self.origin_src = aurl.origin.to_s + aurl.path.to_s
-    self.query = aurl.query
+    pure_url = aurl.origin.to_s + aurl.path.to_s
+    if pure_url.size > 255
+      word_counter = 0
+      srces, other_pathes = pure_url.split("/").partition do |word|
+        word_counter = word_counter + word.size + 1
+        word_counter <= 255
+      end
+      self.origin_src = srces.join("/")
+      self.query = other_pathes.join("/") + aurl.query.to_s
+    else
+      self.origin_src = pure_url
+      self.query = aurl.query
+    end
   end
 
   def self.match_image_filename(filepath)

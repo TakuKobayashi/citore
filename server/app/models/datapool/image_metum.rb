@@ -134,7 +134,12 @@ class Datapool::ImageMetum < ApplicationRecord
     else
       image.src = aimage_url.to_s
     end
-    image.original_filename = self.match_image_filename(image.src.to_s)
+    filename = self.match_image_filename(image.src.to_s)
+    if filename.size > 255
+      image.original_filename = SecureRandom.hex + File.extname(filename)
+    else
+      image.original_filename = filename
+    end
     return image
   end
 

@@ -94,6 +94,7 @@ class Datapool::ImageMetum < ApplicationRecord
   def download_image_response
     aurl = Addressable::URI.parse(self.src)
     client = HTTPClient.new
+    client.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
     response = client.get(aurl.to_s)
     return response
   end

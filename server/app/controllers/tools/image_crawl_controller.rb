@@ -67,11 +67,11 @@ class Tools::ImageCrawlController < Homepage::BaseController
       is_new = @upload_job.new_record?
       @upload_job.save!
     end
-    if is_new
+    #if is_new
       flash[:notice] = "処理を受け付けました。処理が完了するまでしばらくお待ち下さい。"
       ImageCrawlWorker.perform_async(params.to_h.dup, @upload_job.id)
-    else
-      flash[:error] = "現在処理中のものがあるので、処理が終わって使うようにしてください"
-    end
+    #else
+      #flash[:error] = "現在処理中のものがあるので、処理が終わって使うようにしてください"
+    #end
   end
 end

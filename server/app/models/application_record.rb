@@ -80,14 +80,6 @@ class ApplicationRecord < ActiveRecord::Base
     return result, urls
   end
 
-  def self.scan_url(text)
-    #ゴミを取り除く
-    result = text.gsub(/(\r\n|\r|\n)/, "")
-    #URLがあったらそれは別にする
-    urls = result.scan(/[\.\.\/|\.\/|\/|http(s):\/\/].*/)
-    return urls
-  end
-
   #記号を除去
   def self.delete_symbols(text)
     return text.gsub(/[【】、。《》「」〔〕・（）［］｛｝！＂＃＄％＆＇＊＋，－．／：；＜＝＞？＠＼＾＿｀｜￠￡￣\(\)\[\]<>{},!? \.\-\+\\~^='&%$#\"\'_\/;:*‼•一]/, "")

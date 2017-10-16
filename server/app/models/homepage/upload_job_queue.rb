@@ -78,8 +78,10 @@ class Homepage::UploadJobQueue < ApplicationRecord
       return I18n.t("activerecord.models.datapool_image_metum.twitter")
     elsif self.from_type == "Datapool::WebSiteImageMetum"
       return I18n.t("activerecord.models.datapool_image_metum.website")
+    elsif self.from_type == "Datapool::GoogleImageSearch"
+      return I18n.t("activerecord.models.datapool_image_metum.google_image_search")
     else
-      return I18n.t("activerecord.models.datapool_image_metum.others")
+      return I18n.t("activerecord.models.datapool_image_metum.other")
     end
   end
 end

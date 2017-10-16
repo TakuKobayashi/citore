@@ -465,6 +465,7 @@ ja:
         flickr: Flickr
         website: Website
         twitter: Twitter
+        google_image_search: Google画像検索
         other: どこか
     enum:
       homepage_upload_job_queues:

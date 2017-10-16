@@ -131,6 +131,12 @@ Rails.application.routes.draw do
       post :google_image_search_crawl
     end
 
+    resource :audio, controller: :audio, only: [] do
+      get :index
+      get :listen_from_spotify
+      get :website_crawl
+    end
+
     resource :excel_converter, controller: :excel_converter, only: [] do
       get :index
       post :convert_to_json

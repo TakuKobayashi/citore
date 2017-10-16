@@ -1,0 +1,2 @@
+module Tools::AudioHelper
+end

@@ -182,6 +182,14 @@ Rails.application.routes.draw do
       end
     end
 
+    resource :convey, controller: :convey, only: [] do
+      get :index
+      get :proto
+      get :upload_ng
+      get :upload_phone
+      get :upload_test
+    end
+
     resources :greets, controller: :greets, only: [] do
       collection do
         get :list

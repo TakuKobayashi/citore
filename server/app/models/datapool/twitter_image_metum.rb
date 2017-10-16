@@ -73,59 +73,38 @@ class Datapool::TwitterImageMetum < Datapool::ImageMetum
   private
   def self.generate_images(tweets:, options: {})
     images = []
-    all_image_urls = tweets.flat_map do |tweet|
-      image_urls = TwitterRecord.get_image_urls_from_tweet(tweet: tweet)
-      if tweet.quoted_tweet?
-        image_urls += TwitterRecord.get_image_urls_from_tweet(tweet: tweet.quoted_tweet)
-      end
-      image_urls
-    end.uniq
-    twitter_images = Datapool::TwitterImageMetum.where(origin_src: all_image_urls).index_by(&:origin_src)
-    import_videos = []
-    all_image_urls = []
+    twitter_images = Datapool::TwitterImageMetum.find_origin_src_by_url(url: tweets.map{|t| TwitterRecord.get_image_urls_from_tweet(tweet: t) }).index_by(&:src)
+    twitter_videos = Datapool::TwitterVideoMetum.find_origin_src_by_url(url: tweets.map{|t| TwitterRecord.get_video_urls_from_tweet(tweet: t) }).index_by(&:src)
+    twitter_websites = Datapool::TwitterWebsite.find_origin_src_by_url(url: tweets.map{|t| t.urls.flat_map{|urle| urle.expanded_url.to_s } }).index_by(&:src)
+    videos = []
+    websites = []
+    quoteds_tweets = []
 
     tweets.each do |tweet|
-      is_depulicate = false
       image_urls = TwitterRecord.get_image_urls_from_tweet(tweet: tweet)
       image_urls.each do |image_url|
-        if all_image_urls.include?(image_url)
-          is_depulicate = true
-          next
-        end
-        all_image_urls << image_url
         if twitter_images[image_url].present?
           images << twitter_images[image_url]
-          is_depulicate = true
         else
           images << self.constract_image_from_tweet(tweet: tweet, image_url: image_url, options: options)
         end
       end
-      if !is_depulicate
-        import_videos += Datapool::TwitterVideoMetum.constract_from_tweet(tweet: tweet)
-      end
-      if tweet.quoted_tweet? && tweet.quoted_tweet.media.present?
-        is_qdepulicate = false
-        qimage_urls = TwitterRecord.get_image_urls_from_tweet(tweet: tweet.quoted_tweet)
-        qimage_urls.each do |image_url|
-          if all_image_urls.include?(image_url)
-            is_qdepulicate = true
-            next
-          end
-          all_image_urls << image_url
-          if twitter_images[image_url].present?
-            images << twitter_images[image_url]
-            is_qdepulicate = true
-          else
-            images << self.constract_image_from_tweet(tweet: tweet.quoted_tweet, image_url: image_url, options: options)
-          end
-        end
-        if !is_qdepulicate
-          import_videos += Datapool::TwitterVideoMetum.constract_from_tweet(tweet: tweet.quoted_tweet)
-        end
+
+      videos += Datapool::TwitterVideoMetum.constract_from_tweet(tweet: tweet)
+      websites += Datapool::TwitterWebsite.constract_from_tweet(tweet: tweet)
+      if tweet.quoted_tweet?
+        quoteds_tweets << tweet.quoted_tweet
       end
     end
+    images.uniq!(&:src)
+    import_videos = videos.select{|v| twitter_videos[v.src].blank? }.uniq(&:src)
+    import_websites = websites.select{|w| twitter_websites[w.src].blank? }.uniq(&:src)
     self.import!(images.select(&:new_record?))
-    Datapool::TwitterVideoMetum.import!(import_videos.flatten)
+    Datapool::TwitterVideoMetum.import!(import_videos)
+    Datapool::TwitterWebsite.import!(import_websites)
+    if quoteds_tweets.present?
+      images += self.generate_images(tweets: quoteds_tweets, options: options)
+    end
     return images
   end
 

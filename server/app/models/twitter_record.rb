@@ -104,6 +104,19 @@ class TwitterRecord < ApplicationRecord
     return image_urls
   end
 
+  def self.get_video_urls_from_tweet(tweet:)
+    video_urls = tweet.media.flat_map do |m|
+      case m
+      when Twitter::Media::Video
+        max_bitrate_variant = m.video_info.variants.max_by{|variant| variant.bitrate.to_i }
+        [max_bitrate_variant.try(:url)].compact
+      else
+        []
+      end
+    end
+    return video_urls
+  end
+
   def self.get_twitter_rest_client(username)
     apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
     rest_client = Twitter::REST::Client.new do |config|

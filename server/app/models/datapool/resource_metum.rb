@@ -8,6 +8,29 @@ class Datapool::ResourceMetum < ApplicationRecord
   end
 
   def src=(url)
+    origin_src, query = Datapool::ResourceMetum.url_partition(url: url)
+    self.origin_src = origin_src
+    self.query = query
+  end
+
+  def self.find_origin_src_by_url(url:)
+    urls = [url].flatten.uniq
+    origin_srces = []
+    urls.each do |u|
+      origin_src, query = Datapool::ResourceMetum.url_partition(url: u)
+      origin_srces << origin_src
+    end
+    return self.where(origin_src: origin_srces)
+  end
+
+  def self.crawler_routine!
+    Homepage::UploadJobQueue.cleanup!
+    Datapool::Website.resource_crawl!
+    Datapool::ImageMetum.backup!
+  end
+
+  private
+  def self.url_partition(url:)
     aurl = Addressable::URI.parse(url)
     pure_url = aurl.origin.to_s + aurl.path.to_s
     if pure_url.size > 255
@@ -16,17 +39,9 @@ class Datapool::ResourceMetum < ApplicationRecord
         word_counter = word_counter + word.size + 1
         word_counter <= 255
       end
-      self.origin_src = srces.join("/")
-      self.query = other_pathes.join("/") + aurl.query.to_s
+      return srces.join("/"), other_pathes.join("/")
     else
-      self.origin_src = pure_url
-      self.query = aurl.query
+      return pure_url, aurl.query
     end
-  end
-
-  def self.crawler_routine!
-    Homepage::UploadJobQueue.cleanup!
-    Datapool::Website.resource_crawl!
-    Datapool::ImageMetum.backup!
   end
 end

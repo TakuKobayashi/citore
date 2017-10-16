@@ -41,12 +41,13 @@ class Homepage::UploadJobQueue < ApplicationRecord
       next if job.standby?
       next if job.complete? && job.updated_at > 7.day.ago
       next if (job.crawling? || job.compressing? || job.uploading?) && job.updated_at > 8.hours.ago
-      if job.upload_url.present?
-        #s3 = Aws::S3::Client.new
-        #filepath = job.upload_url.gsub(ApplicationRecord::S3_ROOT_URL, "")
-        #s3.delete_object(bucket: "taptappun", key: filepath)
-      end
       job.cleaned!
+      if job.cleaned? && job.upload_url.present?
+        s3 = Aws::S3::Client.new
+        filepath = job.upload_url.gsub(ApplicationRecord::S3_ROOT_URL, "")
+        s3.delete_object(bucket: "taptappun", key: filepath)
+        job.update!(upload_url: nil, upload_file_size: nil)
+      end
       if job.from_type == "Datapool::TwitterImageMetum"
         if job.options.present? && job.options["params"].present? && job.options["params"]["search_type"].to_i == 0
           Datapool::TwitterImageMetum.search_image_tweet!(keyword: job.options["params"]["keyword"].to_s)

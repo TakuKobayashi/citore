@@ -98,7 +98,12 @@ class Datapool::ImageMetum < Datapool::ResourceMetum
     image_type = nil
     if check_image_file
       # 画像じゃないものも含まれていることもあるので分別する
-      image_type = FastImage.type(aimage_url.to_s)
+      begin
+        image_type = FastImage.type(aimage_url.to_s)
+      rescue URI::InvalidComponentError => e
+        Rails.logger.warn("#{image_url} url error!!:" + e.message)
+        return nil
+      end
       if image_type.blank?
         Rails.logger.warn("it is not image:" + aimage_url.to_s)
         return nil

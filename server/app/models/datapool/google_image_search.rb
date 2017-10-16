@@ -38,7 +38,11 @@ class Datapool::GoogleImageSearch < Datapool::ImageMetum
   def self.laundering_url_path(url:)
     image_url = Addressable::URI.parse(url.to_s)
     pathes = image_url.path.split("/")
-    pathes[pathes.size - 1] = self.match_image_filename(image_url.to_s)
+    if pathes.size > 0
+      pathes[pathes.size - 1] = self.match_image_filename(image_url.to_s)
+    else
+      pathes = [("/" + self.match_image_filename(image_url.to_s))]
+    end
     image_url.path = pathes.join("/")
     return image_url.to_s
   end

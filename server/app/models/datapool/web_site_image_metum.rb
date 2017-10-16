@@ -55,7 +55,7 @@ class Datapool::WebSiteImageMetum < Datapool::ImageMetum
       if title.blank?
         title = d.text
       end
-      image_url = Addressable::URI.parse(ApplicationRecord.basic_sanitize(d["src"].to_s.gsub(/(\r\n|\r|\n)/, "")))
+      image_url = Addressable::URI.parse(ApplicationRecord.basic_sanitize(ApplicationRecord.scan_url(d["src"].to_s).first.to_s))
       if image_url.nil?
         Rails.logger.warn("not exists image_url")
         next

@@ -17,7 +17,7 @@
 #  index_datapool_audio_meta_on_title       (title)
 #
 
-class Datapool::AudioMetum < ApplicationRecord
+class Datapool::AudioMetum < Datapool::ResourceMetum
   enum file_genre: {
     audio_file: 0,
     video_file: 1,

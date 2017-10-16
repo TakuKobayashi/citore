@@ -16,7 +16,7 @@
 #  index_datapool_image_meta_on_title       (title)
 #
 
-class Datapool::ImageMetum < ApplicationRecord
+class Datapool::ImageMetum < Datapool::ResourceMetum
   serialize :options, JSON
 
   IMAGE_FILE_EXTENSIONS = [
@@ -48,29 +48,7 @@ class Datapool::ImageMetum < ApplicationRecord
   ]
 
   CRAWL_IMAGE_ROOT_PATH = "project/crawler/images/"
-
-  def src
-    url = Addressable::URI.parse(self.origin_src)
-    url.query = self.query
-    return url.to_s
-  end
-
-  def src=(url)
-    aurl = Addressable::URI.parse(url)
-    pure_url = aurl.origin.to_s + aurl.path.to_s
-    if pure_url.size > 255
-      word_counter = 0
-      srces, other_pathes = pure_url.split("/").partition do |word|
-        word_counter = word_counter + word.size + 1
-        word_counter <= 255
-      end
-      self.origin_src = srces.join("/")
-      self.query = other_pathes.join("/") + aurl.query.to_s
-    else
-      self.origin_src = pure_url
-      self.query = aurl.query
-    end
-  end
+  CRAWL_IMAGE_BACKUP_PATH = "backup/crawler/images/"
 
   def self.match_image_filename(filepath)
     paths = filepath.split("/")
@@ -172,5 +150,21 @@ class Datapool::ImageMetum < ApplicationRecord
       end
     end
     return zip_filepath
+  end
+
+  def self.backup!
+    Datapool::ImageMetum.find_in_bacthes do |images|
+      not_backup_images = images.select{|image| image.options["image_backuped"].blank? }
+      Tempfile.create(SecureRandom.hex) do |tempfile|
+        zippath = self.compress_to_zip(zip_filepath: tempfile.path, images: not_backup_images)
+        s3 = Aws::S3::Client.new
+        filepath = CRAWL_IMAGE_BACKUP_PATH + "#{Time.current.strftime("%Y%m%d_%H%M%S%L")}.zip"
+        s3.put_object(bucket: "taptappun",body: File.open(zippath), key: filepath)
+      end
+      not_backup_images.each do |image|
+        image.options["image_backuped"] = true
+        image.save!
+      end
+    end
   end
 end

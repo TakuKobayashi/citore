@@ -66,9 +66,13 @@ class Datapool::WebSiteImageMetum < Datapool::ImageMetum
       end
       next if image_urls.include?(image_url.to_s)
       image_urls << image_url.to_s
+      image_title = ApplicationRecord.basic_sanitize(title.to_s)
+      if image_title.blank?
+        image_title = doc.title
+      end
       image = self.constract(
         image_url: image_url.to_s,
-        title: title.to_s,
+        title: image_title,
         check_image_file: true,
         options: {
           from_url: from_site_url.to_s

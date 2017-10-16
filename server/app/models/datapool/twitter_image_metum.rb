@@ -30,9 +30,10 @@ class Datapool::TwitterImageMetum < Datapool::ImageMetum
       Rails.logger.warn "twitter retry since:#{e.rate_limit.reset_in.to_i}"
       retry_count = retry_count + 1
       sleep e.rate_limit.reset_in.to_i
-      options[:until] = 1.day.ago.strftime("%Y-%m-%d")
       if retry_count < 5
         retry
+      else
+        return []
       end
     end
     return generate_images(tweets: tweets, options: {keyword: keyword})

@@ -104,7 +104,7 @@ class Datapool::ImageMetum < Datapool::ResourceMetum
         return nil
       end
     end
-    image = self.new(title: image_title.to_s.truncate(255), options: options)
+    image = self.new(title: title.to_s.truncate(255), options: options)
     if aimage_url.scheme == "data"
       image_binary =  Base64.decode64(aimage_url.to_s.gsub(/data:image\/.+;base64\,/, ""))
       new_filename = SecureRandom.hex + ".#{image_type.to_s.downcase}"

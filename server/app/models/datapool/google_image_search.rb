@@ -88,8 +88,8 @@ class Datapool::GoogleImageSearch < Datapool::ImageMetum
         counter = counter + 1
       end
     end
-    src_images = Datapool::ImageMetum.where(origin_src: images.map(&:origin_src)).index_by(&:src)
-    src_websites = Datapool::GoogleSearchWebsite.where(origin_src: websites.map(&:origin_src)).index_by(&:src)
+    src_images = Datapool::ImageMetum.find_origin_src_by_url(url: images.map(&:src)).index_by(&:src)
+    src_websites = Datapool::Website.find_origin_src_by_url(url: websites.map(&:src)).index_by(&:src)
     import_images = images.select{|image| src_images[image.src].blank? }
     import_websites = websites.select{|website| src_websites[website.src].blank? }
     self.import!(import_images)

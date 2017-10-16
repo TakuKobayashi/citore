@@ -46,7 +46,7 @@ class Datapool::FrickrImageMetum < Datapool::ImageMetum
   def self.generate_images!(flickr_images:, options: {})
     images = []
     image_urls = []
-    flickr_image_meta = Datapool::FrickrImageMetum.where(origin_src: flickr_images.map{|f| FlickRaw.url(f) }).index_by(&:origin_src)
+    flickr_image_meta = Datapool::ImageMetum.find_origin_src_by_url(url: flickr_images.map{|f| FlickRaw.url(f) }).index_by(&:src)
     flickr_images.each do |flickr_image|
       image_url = FlickRaw.url(flickr_image)
       next if image_urls.include?(image_url.to_s)

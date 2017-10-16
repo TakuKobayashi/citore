@@ -34,7 +34,9 @@ class Datapool::Website < Datapool::ResourceMetum
       Datapool::WebSiteImageMetum.crawl_images!(url: website.src)
       website.options["image_crawled_at"] = Time.current
       site = ApplicationRecord.request_and_parse_html(website.src)
-      website.title = site.title
+      if site.title.present?
+        website.title = site.title
+      end
       website.save!
     end
   end

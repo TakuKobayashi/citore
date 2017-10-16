@@ -35,7 +35,7 @@ class Datapool::Website < Datapool::ResourceMetum
       website.options["image_crawled_at"] = Time.current
       site = ApplicationRecord.request_and_parse_html(website.src)
       if site.title.present?
-        website.title = ApplicationRecord.basic_sanitize(site.title)
+        website.title = ApplicationRecord.basic_sanitize(site.title.to_s)
       end
       website.save!
     end

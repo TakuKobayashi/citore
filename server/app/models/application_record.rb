@@ -30,7 +30,7 @@ class ApplicationRecord < ActiveRecord::Base
     http_client = HTTPClient.new
     http_client.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
     response = http_client.send(method, url, params, {})
-    doc = Nokogiri::HTML.parse(response.body)
+    doc = Nokogiri::HTML.parse(response.body.encode('SJIS', 'UTF-8', invalid: :replace, undef: :replace, replace: '').encode('UTF-8'))
     return doc
   end
 

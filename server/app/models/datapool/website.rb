@@ -32,7 +32,7 @@ class Datapool::Website < Datapool::ResourceMetum
     Datapool::Website.find_each do |website|
       next if website.options["image_crawled_at"].present?
       Datapool::WebSiteImageMetum.crawl_images!(url: website.src)
-      website.options["image_crawled_at"] = Time.current.now
+      website.options["image_crawled_at"] = Time.current
       website.save!
     end
   end

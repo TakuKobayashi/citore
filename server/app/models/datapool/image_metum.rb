@@ -158,7 +158,7 @@ class Datapool::ImageMetum < Datapool::ResourceMetum
   end
 
   def self.backup!
-    Datapool::ImageMetum.find_in_bacthes do |images|
+    Datapool::ImageMetum.find_in_batches do |images|
       not_backup_images = images.select{|image| image.options["image_backuped"].blank? }
       Tempfile.create(SecureRandom.hex) do |tempfile|
         zippath = self.compress_to_zip(zip_filepath: tempfile.path, images: not_backup_images)

@@ -160,16 +160,27 @@ class Datapool::ImageMetum < Datapool::ResourceMetum
   def self.backup!
     Datapool::ImageMetum.find_in_batches do |images|
       not_backup_images = images.select{|image| image.options["image_backuped"].blank? }
+      next if not_backup_images.blank?
+      self.write_image_buckup_log("#{not_backup_images.size} images backup start!!\n first id:#{not_backup_images.first.try(:id)} last id:#{not_backup_images.last.try(:id)}")
       Tempfile.create(SecureRandom.hex) do |tempfile|
         zippath = self.compress_to_zip(zip_filepath: tempfile.path, images: not_backup_images)
         s3 = Aws::S3::Client.new
         filepath = CRAWL_IMAGE_BACKUP_PATH + "#{Time.current.strftime("%Y%m%d_%H%M%S%L")}.zip"
         s3.put_object(bucket: "taptappun",body: File.open(zippath), key: filepath)
       end
-      not_backup_images.each do |image|
-        image.options["image_backuped"] = true
-        image.save!
+      self.write_image_buckup_log("#{not_backup_images.size} images upload complete!!\n first id:#{not_backup_images.first.try(:id)} last id:#{not_backup_images.last.try(:id)}")
+      self.transaction do
+        not_backup_images.each do |image|
+          image.options["image_backuped"] = true
+          image.save!
+        end
       end
+    end
+  end
+
+  def self.write_image_buckup_log(log_message)
+    File.open("#{Rails.root}/log/image_backup.log", 'a') do |file|
+      file.write(log_message.to_s)
     end
   end
 end

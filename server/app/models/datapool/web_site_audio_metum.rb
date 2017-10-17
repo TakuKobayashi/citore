@@ -20,8 +20,10 @@
 class Datapool::WebSiteAudioMetum < Datapool::AudioMetum
   # audioタグがそんなにあるわけではないので、そのサイトにある音声ファイル全てを抑えにいく勢い
   def self.suppress!(url:)
+    target_urls = [url.to_s]
+    crawl_urls = []
     address_url = Addressable::URI.parse(url.to_s)
-    doc = ApplicationRecord.request_and_parse_html(address_url.to_s, request_method)
+    doc = ApplicationRecord.request_and_parse_html(address_url.to_s)
     return []
   end
 end

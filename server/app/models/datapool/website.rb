@@ -48,7 +48,7 @@ class Datapool::Website < Datapool::ResourceMetum
 
   def write_crawl_error_log(error)
     File.open("#{Rails.root}/log/website_crawl_error.log", 'a') do |file|
-      file.write (["ID:#{self.id} URL:#{self.src} website is crawl error!!!!", error.message] + error.backtrace).join("\n")
+      file.write (["ID:#{self.id} URL:#{self.src} website is crawl error!!!!", error.message] + error.backtrace).join("\n") + "\n\n"
     end
   end
 end

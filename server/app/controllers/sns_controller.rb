@@ -4,7 +4,12 @@ class SnsController < BaseController
 
   def oauth_callback
     auth = request.env['omniauth.auth']
-    ExtraInfo.update({"#{auth.provider}_#{auth['uid']}" => {screen_name: auth['info']['nickname'], token: auth.credentials.token, token_secret: auth.credentials.secret}})
-    redirect_to admin_index_sns_path
+    logger.info auth
+#    ExtraInfo.update({"#{auth.provider}_#{auth['uid']}" => {screen_name: auth['info']['nickname'], token: auth.credentials.token, token_secret: auth.credentials.secret}})
+    if session["redirect_url"].present?
+      redirect_to session["redirect_url"]
+    else
+      redirect_to root_url
+    end
   end
 end

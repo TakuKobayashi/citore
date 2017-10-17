@@ -1,0 +1,10 @@
+<%= form_tag(execute_crawl_tools_audio_url, multipart: true, class: "pure-form pure-form-aligned") do %>
+  <%= hidden_field_tag("website") %>
+  <div class="pure-control-group">
+    <%= label_tag("url") %>
+    <%= text_field_tag :crawl_url, "", placeholder: "urlを入力してください", class: "pure-input-2-3" %>
+  </div>
+  <div class="pure-controls">
+    <%= submit_tag("画像を集める", class: "pure-button pure-button-primary") %>
+  </div>
+<% end %>

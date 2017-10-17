@@ -1,0 +1,60 @@
+<% flash.each do |key, value| %>
+  <%= content_tag(:div, value, class: key.to_s) %>
+<% end %>
+
+<div><%= link_to("戻る", tools_audio_url, class: "pure-button") %></div>
+
+<h2>音声を収集したいサービスを選んでください</h2>
+<div class="pure-g">
+  <div class="pure-u-1">
+    <%= link_to("Webサイトから音声を収集", crawl_website_tools_audio_url) %>
+  </div>
+</div>
+<hr>
+<h2>音声の収集状況</h2>
+<div class="pure-g">
+  <div class="pure-u-1">【注意】</div>
+  <div class="pure-u-1">1.収集処理は順番に実行されます</div>
+  <div class="pure-u-1">2.収集完了状態から1週間経過するとリストからなくなります。</div>
+  <div class="pure-u-1">3.ダウンロードが完了した場合、1日経過するとリストからなくなります</div>
+  <div class="pure-u-1">4.収集中状態から1日経過した場合もリストからなくなります</div>
+</div>
+<% if @upload_jobs.present? %>
+<table class="pure-table">
+  <thead>
+    <tr>
+      <th>作成日時</th>
+      <th>収集先</th>
+      <th>状態</th>
+      <th>ダウンロード</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @upload_jobs.each do |job| %>
+      <tr>
+        <td><%= job.created_at.strftime("%Y-%m-%d %H:%M:%S") %></td>
+        <td><%= job.from_type_name %></td>
+        <%
+          if job.downloaded?
+            stylecolor = "drakgray"
+          elsif job.failed?
+            stylecolor = "crimson"
+          elsif job.complete?
+            stylecolor = "blue"
+          else
+            stylecolor = "forestgreen"
+          end
+        %>
+        <td><span style="color:<%= stylecolor %>"><%= t("activerecord.enum.homepage_upload_job_queues.state.#{job.state}") %></span></td>
+        <td><%=
+          if job.upload_url.present?
+            link_to("ダウンロード", download_zip_tools_image_crawl_url(job_id: job.id), class: "pure-button pure-button-primary")
+          else
+            ""
+          end
+        %></td>
+      </tr>
+    <% end %>
+  </tbody>
+<table>
+<% end %>

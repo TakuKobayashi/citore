@@ -134,7 +134,9 @@ Rails.application.routes.draw do
     resource :audio, controller: :audio, only: [] do
       get :index
       get :listen_from_spotify
-      get :website_crawl
+      get :crawl
+      get :crawl_website
+      post :execute_crawl
     end
 
     resource :excel_converter, controller: :excel_converter, only: [] do

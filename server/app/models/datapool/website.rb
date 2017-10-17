@@ -31,13 +31,23 @@ class Datapool::Website < Datapool::ResourceMetum
   def self.resource_crawl!
     Datapool::Website.find_each do |website|
       next if website.options["image_crawled_at"].present?
-      Datapool::WebSiteImageMetum.crawl_images!(url: website.src)
+      begin
+        Datapool::WebSiteImageMetum.crawl_images!(url: website.src)
+      rescue => e
+        website.write_crawl_error_log(e)
+      end
       website.options["image_crawled_at"] = Time.current
       site = ApplicationRecord.request_and_parse_html(website.src)
       if site.title.present?
         website.title = ApplicationRecord.basic_sanitize(site.title.to_s)
       end
       website.save!
+    end
+  end
+
+  def write_crawl_error_log(error)
+    File.open("#{Rails.root}/log/website_crawl_error.log", 'a') do |file|
+      file.write (["ID:#{self.id} URL:#{self.src} website is crawl error!!!!", error.message] + error.backtrace).join("\n")
     end
   end
 end

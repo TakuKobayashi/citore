@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="592px" height="224px" viewBox="0 0 592 224" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 43.2 (39069) - http://www.bohemiancoding.com/sketch -->
+    <title>DOWN ARROW</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M458.328054,10.0005853 C507.8828,10.1774269 548,50.4068373 548,100 C548,149.596224 507.87975,189.822576 458.328054,189.999415 L0,190 L0,10 L458.328054,10 Z" id="path-1"></path>
+        <filter x="-6.2%" y="-18.9%" width="112.4%" height="137.8%" filterUnits="objectBoundingBox" id="filter-2">
+            <feMorphology radius="4" operator="dilate" in="SourceAlpha" result="shadowSpreadOuter1"></feMorphology>
+            <feOffset dx="0" dy="0" in="shadowSpreadOuter1" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="10" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <linearGradient x1="50%" y1="13.9185406%" x2="50%" y2="98.7723214%" id="linearGradient-3">
+            <stop stop-color="#8AE1CB" offset="0%"></stop>
+            <stop stop-color="#66B664" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="100%" x2="50%" y2="0%" id="linearGradient-4">
+            <stop stop-color="#FF7F00" offset="0%"></stop>
+            <stop stop-color="#FFE180" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="DOWN-ARROW" transform="translate(22.000000, 12.000000)">
+            <g id="Rectangle-6">
+                <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                <use fill="#000000" fill-rule="evenodd" xlink:href="#path-1"></use>
+            </g>
+            <path d="M458.328054,0.000585268574 C507.8828,0.177426884 548,40.4068373 548,90 C548,139.596224 507.87975,179.822576 458.328054,179.999415 L0,180 L0,-2.84217094e-13 L458.328054,-2.84217094e-13 Z" id="Rectangle-6" stroke="#4A4A4A" stroke-width="8" fill="url(#linearGradient-3)"></path>
+            <g id="Group-2" transform="translate(134.000000, 64.000000)" stroke-width="8" stroke="#4A4A4A" fill="url(#linearGradient-4)">
+                <polygon id="Path-2" transform="translate(317.164269, 28.375000) rotate(90.000000) translate(-317.164269, -28.375000) " points="291.789269 61.5392688 291.789269 -4.78926881 342.539269 28.375"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>

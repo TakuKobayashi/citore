@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="3840px" height="2160px" viewBox="0 0 3840 2160" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 43.2 (39069) - http://www.bohemiancoding.com/sketch -->
+    <title>blank-page-bg-yellow</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <polygon id="path-1" points="0 1.32307958e-13 3840 0 3840 2160 0 2160"></polygon>
+        <linearGradient x1="50%" y1="-5.04120026%" x2="50%" y2="100%" id="linearGradient-3">
+            <stop stop-color="#FFFFFF" stop-opacity="0" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" stop-opacity="0.254698822" offset="45.2881194%"></stop>
+            <stop stop-color="#000000" offset="100%"></stop>
+        </linearGradient>
+        <rect id="path-4" x="0" y="0" width="6373.33333" height="2944"></rect>
+        <pattern id="pattern-6" width="96" height="96" x="-96" y="-76" patternUnits="userSpaceOnUse">
+            <use xlink:href="#image-7" transform="scale(2,2)"></use>
+        </pattern>
+        <image id="image-7" width="48" height="48" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAALNJREFUaAXtmEEKwzAMBOP+yf9/gB/V0uMexZBtA5ObwJLiGQuM1977fQ2+c84aLL/urv+a/Mw/rnUDv7aiAQ1AAh4hCBCnawAjhAUeb2B0r/nCuvtuM63/eANuAM4gTtcARggLaAACxOkawAhhAQ1AgDh9Te8evgth5lnAGUge/UgDfebZUQPJox9poM88O2ogefQj34X6zLOjM5A8+pEG+syzowaSRz/SQJ95dtRA8uhHHxtJG5lrDDU9AAAAAElFTkSuQmCC"></image>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="blank-page-bg-yellow">
+            <mask id="mask-2" fill="white">
+                <use xlink:href="#path-1"></use>
+            </mask>
+            <use id="BG" fill="#FFDD71" xlink:href="#path-1"></use>
+            <g id="Pattern" opacity="0.100000001" mask="url(#mask-2)">
+                <g transform="translate(3186.666667, 1472.000000) scale(1, -1) translate(-3186.666667, -1472.000000) ">
+                    <mask id="mask-5" fill="white">
+                        <use xlink:href="#path-4"></use>
+                    </mask>
+                    <use id="Mask" stroke="none" fill="url(#linearGradient-3)" fill-rule="evenodd" xlink:href="#path-4"></use>
+                    <rect id="pattern" stroke="none" fill="url(#pattern-6)" fill-rule="evenodd" mask="url(#mask-5)" x="0" y="20" width="6373.33333" height="2924"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

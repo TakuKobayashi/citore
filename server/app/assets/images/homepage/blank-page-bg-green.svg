@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="3840px" height="2160px" viewBox="0 0 3840 2160" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 43.2 (39069) - http://www.bohemiancoding.com/sketch -->
+    <title>blank-page-bg-green</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="13.9185406%" x2="50%" y2="98.7723214%" id="linearGradient-1">
+            <stop stop-color="#8AE1CB" offset="0%"></stop>
+            <stop stop-color="#66B664" offset="100%"></stop>
+        </linearGradient>
+        <polygon id="path-2" points="0 1.32307958e-13 3840 0 3840 2160 0 2160"></polygon>
+        <pattern id="pattern-4" width="256" height="256" x="-1234.13839" y="-1030.60379" patternUnits="userSpaceOnUse">
+            <use xlink:href="#image-5"></use>
+        </pattern>
+        <image id="image-5" width="256" height="256" xlink:href="data:image/png;base64,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"></image>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" opacity="0.75">
+        <g id="blank-page-bg-green">
+            <mask id="mask-3" fill="white">
+                <use xlink:href="#path-2"></use>
+            </mask>
+            <use id="BG" fill="url(#linearGradient-1)" xlink:href="#path-2"></use>
+            <rect id="Rectangle-2" fill="url(#pattern-4)" opacity="0.15" style="mix-blend-mode: multiply;" mask="url(#mask-3)" transform="translate(1920.528278, 1314.396208) rotate(-45.000000) translate(-1920.528278, -1314.396208) " x="-978.138389" y="-774.603792" width="5797.33333" height="4178"></rect>
+        </g>
+    </g>
+</svg>

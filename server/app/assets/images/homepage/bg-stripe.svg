@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1920px" height="978px" viewBox="0 0 1920 978" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 43.2 (39069) - http://www.bohemiancoding.com/sketch -->
+    <title>bg-stripe</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="49.7929555%" y1="-10.2132076%" x2="50%" y2="98.7723214%" id="linearGradient-1">
+            <stop stop-color="#76CDB7" offset="0%"></stop>
+            <stop stop-color="#8AE1CB" offset="33.1935521%"></stop>
+            <stop stop-color="#66B664" offset="100%"></stop>
+        </linearGradient>
+        <polygon id="path-2" points="0 100 1920 0 1920 878 0 978"></polygon>
+        <polygon id="path-4" points="-210 110 2130 -11 2130 868 -210 989"></polygon>
+        <filter x="-2.1%" y="-5.0%" width="104.3%" height="110.0%" filterUnits="objectBoundingBox" id="filter-5">
+            <feGaussianBlur stdDeviation="50" in="SourceAlpha" result="shadowBlurInner1"></feGaussianBlur>
+            <feOffset dx="0" dy="0" in="shadowBlurInner1" result="shadowOffsetInner1"></feOffset>
+            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowInnerInner1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.195284194 0" type="matrix" in="shadowInnerInner1"></feColorMatrix>
+        </filter>
+        <pattern id="pattern-6" width="256" height="256" x="-392.801896" y="-746.301896" patternUnits="userSpaceOnUse">
+            <use xlink:href="#image-7"></use>
+        </pattern>
+        <image id="image-7" width="256" height="256" xlink:href="data:image/png;base64,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"></image>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="bg-stripe">
+            <mask id="mask-3" fill="white">
+                <use xlink:href="#path-2"></use>
+            </mask>
+            <use id="BG" fill="url(#linearGradient-1)" xlink:href="#path-2"></use>
+            <g id="BG" mask="url(#mask-3)" fill-opacity="1" fill="black">
+                <use filter="url(#filter-5)" xlink:href="#path-4"></use>
+            </g>
+            <rect id="Rectangle-2" fill="url(#pattern-6)" opacity="0.15" style="mix-blend-mode: multiply;" mask="url(#mask-3)" transform="translate(950.198104, 554.198104) rotate(-45.000000) translate(-950.198104, -554.198104) " x="-136.801896" y="-490.301896" width="2174" height="2089"></rect>
+        </g>
+    </g>
+</svg>

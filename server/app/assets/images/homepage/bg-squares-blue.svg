@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1920px" height="978px" viewBox="0 0 1920 978" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 43.2 (39069) - http://www.bohemiancoding.com/sketch -->
+    <title>bg-squares-blue</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="104.642195%" x2="50%" y2="0%" id="linearGradient-1">
+            <stop stop-color="#0091AE" offset="0%"></stop>
+            <stop stop-color="#BBF4FF" offset="100%"></stop>
+        </linearGradient>
+        <polygon id="path-2" points="0 100 1920 0 1920 878 0 978"></polygon>
+        <polygon id="path-4" points="-210 110 2130 -11 2130 868 -210 989"></polygon>
+        <filter x="-2.1%" y="-5.0%" width="104.3%" height="110.0%" filterUnits="objectBoundingBox" id="filter-5">
+            <feGaussianBlur stdDeviation="50" in="SourceAlpha" result="shadowBlurInner1"></feGaussianBlur>
+            <feOffset dx="0" dy="0" in="shadowBlurInner1" result="shadowOffsetInner1"></feOffset>
+            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowInnerInner1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.195284194 0" type="matrix" in="shadowInnerInner1"></feColorMatrix>
+        </filter>
+        <linearGradient x1="50%" y1="-5.04120026%" x2="50%" y2="100%" id="linearGradient-6">
+            <stop stop-color="#FFFFFF" stop-opacity="0" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" stop-opacity="0.254698822" offset="45.2881194%"></stop>
+            <stop stop-color="#000000" offset="100%"></stop>
+        </linearGradient>
+        <rect id="path-7" x="0" y="0" width="2820" height="1737"></rect>
+        <pattern id="pattern-9" width="96" height="96" x="-96" y="-96" patternUnits="userSpaceOnUse">
+            <use xlink:href="#image-10" transform="scale(2,2)"></use>
+        </pattern>
+        <image id="image-10" width="48" height="48" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAALNJREFUaAXtmEEKwzAMBOP+yf9/gB/V0uMexZBtA5ObwJLiGQuM1977fQ2+c84aLL/urv+a/Mw/rnUDv7aiAQ1AAh4hCBCnawAjhAUeb2B0r/nCuvtuM63/eANuAM4gTtcARggLaAACxOkawAhhAQ1AgDh9Te8evgth5lnAGUge/UgDfebZUQPJox9poM88O2ogefQj34X6zLOjM5A8+pEG+syzowaSRz/SQJ95dtRA8uhHHxtJG5lrDDU9AAAAAElFTkSuQmCC"></image>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="bg-squares-blue">
+            <mask id="mask-3" fill="white">
+                <use xlink:href="#path-2"></use>
+            </mask>
+            <use id="BG" fill="url(#linearGradient-1)" xlink:href="#path-2"></use>
+            <g id="BG" mask="url(#mask-3)" fill-opacity="1" fill="black">
+                <use filter="url(#filter-5)" xlink:href="#path-4"></use>
+            </g>
+            <g id="Pattern" opacity="0.100000001" mask="url(#mask-3)">
+                <g transform="translate(971.000000, 508.500000) scale(1, -1) translate(-971.000000, -508.500000) translate(-439.000000, -360.000000)">
+                    <mask id="mask-8" fill="white">
+                        <use xlink:href="#path-7"></use>
+                    </mask>
+                    <use id="Mask" stroke="none" fill="url(#linearGradient-6)" fill-rule="evenodd" xlink:href="#path-7"></use>
+                    <rect id="pattern" stroke="none" fill="url(#pattern-9)" fill-rule="evenodd" mask="url(#mask-8)" x="0" y="0" width="2820" height="1737"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="496px" height="146px" viewBox="0 0 496 146" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 43.2 (39069) - http://www.bohemiancoding.com/sketch -->
+    <title>HEADER</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="100%" x2="50%" y2="0%" id="linearGradient-1">
+            <stop stop-color="#FF7F00" offset="0%"></stop>
+            <stop stop-color="#FFE180" offset="100%"></stop>
+        </linearGradient>
+        <text id="text-2" font-family="SuperMarioGalaxy, Super Mario 256" font-size="144" font-weight="700" letter-spacing="-4.9000001">
+            <tspan x="0.365944376" y="108.676314">S</tspan>
+        </text>
+        <filter x="-8.4%" y="-5.9%" width="116.8%" height="111.8%" filterUnits="objectBoundingBox" id="filter-3">
+            <feGaussianBlur stdDeviation="1.5" in="SourceAlpha" result="shadowBlurInner1"></feGaussianBlur>
+            <feOffset dx="5" dy="6" in="shadowBlurInner1" result="shadowOffsetInner1"></feOffset>
+            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowInnerInner1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 1 0" type="matrix" in="shadowInnerInner1"></feColorMatrix>
+        </filter>
+        <filter x="-8.4%" y="-5.9%" width="116.8%" height="111.8%" filterUnits="objectBoundingBox" id="filter-4">
+            <feGaussianBlur stdDeviation="1.5" in="SourceAlpha" result="shadowBlurInner1"></feGaussianBlur>
+            <feOffset dx="5" dy="6" in="shadowBlurInner1" result="shadowOffsetInner1"></feOffset>
+            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowInnerInner1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 1 0" type="matrix" in="shadowInnerInner1"></feColorMatrix>
+        </filter>
+        <text id="text-5" font-family="SuperMarioGalaxy, Super Mario 256" font-size="144" font-weight="700" letter-spacing="-4.9000001">
+            <tspan x="0.297421114" y="108.293112">L</tspan>
+        </text>
+        <filter x="-9.8%" y="-5.9%" width="119.5%" height="111.8%" filterUnits="objectBoundingBox" id="filter-6">
+            <feGaussianBlur stdDeviation="1.5" in="SourceAlpha" result="shadowBlurInner1"></feGaussianBlur>
+            <feOffset dx="5" dy="6" in="shadowBlurInner1" result="shadowOffsetInner1"></feOffset>
+            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowInnerInner1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 1 0" type="matrix" in="shadowInnerInner1"></feColorMatrix>
+        </filter>
+        <filter x="-9.8%" y="-5.9%" width="119.5%" height="111.8%" filterUnits="objectBoundingBox" id="filter-7">
+            <feGaussianBlur stdDeviation="1.5" in="SourceAlpha" result="shadowBlurInner1"></feGaussianBlur>
+            <feOffset dx="5" dy="6" in="shadowBlurInner1" result="shadowOffsetInner1"></feOffset>
+            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowInnerInner1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 1 0" type="matrix" in="shadowInnerInner1"></feColorMatrix>
+        </filter>
+        <text id="text-8" font-family="SuperMarioGalaxy, Super Mario 256" font-size="144" font-weight="700" letter-spacing="-4.9000001">
+            <tspan x="0.297421114" y="108.293112">O</tspan>
+        </text>
+        <filter x="-9.0%" y="-5.9%" width="117.1%" height="111.8%" filterUnits="objectBoundingBox" id="filter-9">
+            <feGaussianBlur stdDeviation="1.5" in="SourceAlpha" result="shadowBlurInner1"></feGaussianBlur>
+            <feOffset dx="5" dy="6" in="shadowBlurInner1" result="shadowOffsetInner1"></feOffset>
+            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowInnerInner1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 1 0" type="matrix" in="shadowInnerInner1"></feColorMatrix>
+        </filter>
+        <filter x="-9.0%" y="-5.9%" width="117.1%" height="111.8%" filterUnits="objectBoundingBox" id="filter-10">
+            <feGaussianBlur stdDeviation="1.5" in="SourceAlpha" result="shadowBlurInner1"></feGaussianBlur>
+            <feOffset dx="5" dy="6" in="shadowBlurInner1" result="shadowOffsetInner1"></feOffset>
+            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowInnerInner1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 1 0" type="matrix" in="shadowInnerInner1"></feColorMatrix>
+        </filter>
+        <text id="text-11" font-family="SuperMarioGalaxy, Super Mario 256" font-size="144" font-weight="700" letter-spacing="-4.9000001">
+            <tspan x="0.297421114" y="108.293112">O</tspan>
+        </text>
+        <filter x="-9.0%" y="-5.9%" width="117.1%" height="111.8%" filterUnits="objectBoundingBox" id="filter-12">
+            <feGaussianBlur stdDeviation="1.5" in="SourceAlpha" result="shadowBlurInner1"></feGaussianBlur>
+            <feOffset dx="5" dy="6" in="shadowBlurInner1" result="shadowOffsetInner1"></feOffset>
+            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowInnerInner1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 1 0" type="matrix" in="shadowInnerInner1"></feColorMatrix>
+        </filter>
+        <filter x="-9.0%" y="-5.9%" width="117.1%" height="111.8%" filterUnits="objectBoundingBox" id="filter-13">
+            <feGaussianBlur stdDeviation="1.5" in="SourceAlpha" result="shadowBlurInner1"></feGaussianBlur>
+            <feOffset dx="5" dy="6" in="shadowBlurInner1" result="shadowOffsetInner1"></feOffset>
+            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowInnerInner1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 1 0" type="matrix" in="shadowInnerInner1"></feColorMatrix>
+        </filter>
+        <text id="text-14" font-family="SuperMarioGalaxy, Super Mario 256" font-size="144" font-weight="700" letter-spacing="-4.9000001">
+            <tspan x="3.29742111" y="110.293112">T</tspan>
+        </text>
+        <filter x="-7.7%" y="-5.9%" width="115.5%" height="111.8%" filterUnits="objectBoundingBox" id="filter-15">
+            <feGaussianBlur stdDeviation="1.5" in="SourceAlpha" result="shadowBlurInner1"></feGaussianBlur>
+            <feOffset dx="5" dy="6" in="shadowBlurInner1" result="shadowOffsetInner1"></feOffset>
+            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowInnerInner1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 1 0" type="matrix" in="shadowInnerInner1"></feColorMatrix>
+        </filter>
+        <filter x="-7.7%" y="-5.9%" width="115.5%" height="111.8%" filterUnits="objectBoundingBox" id="filter-16">
+            <feGaussianBlur stdDeviation="1.5" in="SourceAlpha" result="shadowBlurInner1"></feGaussianBlur>
+            <feOffset dx="5" dy="6" in="shadowBlurInner1" result="shadowOffsetInner1"></feOffset>
+            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowInnerInner1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 1 0" type="matrix" in="shadowInnerInner1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Mobile-(DESIGN)" transform="translate(-66.000000, -3883.000000)">
+            <g id="Tools" transform="translate(0.000000, 3725.000000)">
+                <g id="HEADER" transform="translate(314.249543, 246.636762) rotate(-2.000000) translate(-314.249543, -246.636762) translate(72.749543, 162.636762)">
+                    <g id="Group-6" transform="translate(429.910407, 84.562982) rotate(-1.000000) translate(-429.910407, -84.562982) translate(378.910407, 7.062982)">
+                        <text id="S" stroke="#000000" stroke-width="4" fill="#000000" font-family="SuperMarioGalaxy, Super Mario 256" font-size="144" font-weight="700" letter-spacing="-4.9000001">
+                            <tspan x="0.365944376" y="118.676314">S</tspan>
+                        </text>
+                        <g id="S">
+                            <use fill="url(#linearGradient-1)" fill-rule="evenodd" xlink:href="#text-2"></use>
+                            <use stroke="#4A4A4A" fill="#D8D8D8" fill-opacity="1" stroke-width="8" stroke-opacity="1" filter="url(#filter-3)" xlink:href="#text-2"></use>
+                            <use stroke="#4A4A4A" fill="#D8D8D8" fill-opacity="1" stroke-width="8" stroke-opacity="1" filter="url(#filter-4)" xlink:href="#text-2"></use>
+                            <use stroke="#4A4A4A" stroke-width="8" xlink:href="#text-2"></use>
+                        </g>
+                    </g>
+                    <g id="Group-6" transform="translate(352.975785, 85.913432) rotate(-1.000000) translate(-352.975785, -85.913432) translate(308.975785, 8.413432)">
+                        <text id="L" stroke="#000000" stroke-width="4" fill="#000000" font-family="SuperMarioGalaxy, Super Mario 256" font-size="144" font-weight="700" letter-spacing="-4.9000001">
+                            <tspan x="0.297421114" y="118.293112">L</tspan>
+                        </text>
+                        <g id="L">
+                            <use fill="url(#linearGradient-1)" fill-rule="evenodd" xlink:href="#text-5"></use>
+                            <use stroke="#4A4A4A" fill="#D8D8D8" fill-opacity="1" stroke-width="8" stroke-opacity="1" filter="url(#filter-6)" xlink:href="#text-5"></use>
+                            <use stroke="#4A4A4A" fill="#D8D8D8" fill-opacity="1" stroke-width="8" stroke-opacity="1" filter="url(#filter-7)" xlink:href="#text-5"></use>
+                            <use stroke="#4A4A4A" stroke-width="8" xlink:href="#text-5"></use>
+                        </g>
+                    </g>
+                    <g id="Group-6" transform="translate(251.987360, 85.145633) rotate(-2.000000) translate(-251.987360, -85.145633) translate(198.987360, 7.645633)">
+                        <text id="O" stroke="#000000" stroke-width="4" fill="#000000" font-family="SuperMarioGalaxy, Super Mario 256" font-size="144" font-weight="700" letter-spacing="-4.9000001">
+                            <tspan x="0.297421114" y="118.293112">O</tspan>
+                        </text>
+                        <g id="O">
+                            <use fill="url(#linearGradient-1)" fill-rule="evenodd" xlink:href="#text-8"></use>
+                            <use stroke="#4A4A4A" fill="#D8D8D8" fill-opacity="1" stroke-width="8" stroke-opacity="1" filter="url(#filter-9)" xlink:href="#text-8"></use>
+                            <use stroke="#4A4A4A" fill="#D8D8D8" fill-opacity="1" stroke-width="8" stroke-opacity="1" filter="url(#filter-10)" xlink:href="#text-8"></use>
+                            <use stroke="#4A4A4A" stroke-width="8" xlink:href="#text-8"></use>
+                        </g>
+                    </g>
+                    <g id="Group-6" transform="translate(151.978836, 85.215177) rotate(4.000000) translate(-151.978836, -85.215177) translate(98.978836, 7.715177)">
+                        <text id="O" stroke="#000000" stroke-width="4" fill="#000000" font-family="SuperMarioGalaxy, Super Mario 256" font-size="144" font-weight="700" letter-spacing="-4.9000001">
+                            <tspan x="0.297421114" y="118.293112">O</tspan>
+                        </text>
+                        <g id="O">
+                            <use fill="url(#linearGradient-1)" fill-rule="evenodd" xlink:href="#text-11"></use>
+                            <use stroke="#4A4A4A" fill="#D8D8D8" fill-opacity="1" stroke-width="8" stroke-opacity="1" filter="url(#filter-12)" xlink:href="#text-11"></use>
+                            <use stroke="#4A4A4A" fill="#D8D8D8" fill-opacity="1" stroke-width="8" stroke-opacity="1" filter="url(#filter-13)" xlink:href="#text-11"></use>
+                            <use stroke="#4A4A4A" stroke-width="8" xlink:href="#text-11"></use>
+                        </g>
+                    </g>
+                    <g id="Group-6" transform="translate(64.006865, 83.696583) rotate(-4.000000) translate(-64.006865, -83.696583) translate(6.006865, 4.196583)">
+                        <text id="T" stroke="#000000" stroke-width="4" fill="#000000" transform="translate(58.297421, 84.293112) rotate(-2.000000) translate(-58.297421, -84.293112) " font-family="SuperMarioGalaxy, Super Mario 256" font-size="144" font-weight="700" letter-spacing="-4.9000001">
+                            <tspan x="3.29742111" y="120.293112">T</tspan>
+                        </text>
+                        <g id="T" transform="translate(58.297421, 74.293112) rotate(-2.000000) translate(-58.297421, -74.293112) ">
+                            <use fill="url(#linearGradient-1)" fill-rule="evenodd" xlink:href="#text-14"></use>
+                            <use stroke="#4A4A4A" fill="#D8D8D8" fill-opacity="1" stroke-width="8" stroke-opacity="1" filter="url(#filter-15)" xlink:href="#text-14"></use>
+                            <use stroke="#4A4A4A" fill="#D8D8D8" fill-opacity="1" stroke-width="8" stroke-opacity="1" filter="url(#filter-16)" xlink:href="#text-14"></use>
+                            <use stroke="#4A4A4A" stroke-width="8" xlink:href="#text-14"></use>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

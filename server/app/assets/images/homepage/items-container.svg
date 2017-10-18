@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1920px" height="374px" viewBox="0 0 1920 374" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 43.2 (39069) - http://www.bohemiancoding.com/sketch -->
+    <title>Container</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="23.9862477%" y1="26.3294838%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#FFFFFF" stop-opacity="0.75" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" opacity="0.75">
+        <g id="PC-(DESIGN)" transform="translate(0.000000, -1306.000000)" fill="url(#linearGradient-1)">
+            <g id="Projects" transform="translate(0.000000, 979.000000)">
+                <polygon id="Container" points="0 427 1920 327 1920 601 0 701"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>

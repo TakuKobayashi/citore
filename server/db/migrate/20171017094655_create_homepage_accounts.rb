@@ -7,9 +7,10 @@ class CreateHomepageAccounts < ActiveRecord::Migration[5.1]
       t.string :token
       t.string :token_secret
       t.datetime :expired_at
+      t.text :options
       t.timestamps
     end
     add_index :homepage_accounts, :uid
-    add_index :homepage_accounts, :homepage_access_id
+    add_index :homepage_accounts, [:homepage_access_id, :type], unique: true, name: "unique_homepage_accounts_index"
   end
 end

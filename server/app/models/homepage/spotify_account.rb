@@ -9,13 +9,14 @@
 #  token              :string(255)
 #  token_secret       :string(255)
 #  expired_at         :datetime
+#  options            :text(65535)
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
 #
 # Indexes
 #
-#  index_homepage_accounts_on_homepage_access_id  (homepage_access_id)
-#  index_homepage_accounts_on_uid                 (uid)
+#  index_homepage_accounts_on_uid  (uid)
+#  unique_homepage_accounts_index  (homepage_access_id,type) UNIQUE
 #
 
 class Homepage::SpotifyAccount < Homepage::Account

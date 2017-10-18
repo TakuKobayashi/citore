@@ -20,4 +20,7 @@
 #
 
 class Homepage::SpotifyAccount < Homepage::Account
+  def get_playlists
+    return ApplicationRecord.request_and_parse_json(url: "https://api.spotify.com/v1/users/wizzler/playlists", headers: {Authorization: "Bearer #{self.token}"})
+  end
 end

@@ -81,7 +81,7 @@ class Datapool::ItunesStoreApp < Datapool::StoreProduct
   end
 
   def set_details
-    parsed_html = ApplicationRecord.request_and_parse_html(self.url)
+    parsed_html = ApplicationRecord.request_and_parse_html(url: self.url)
     rating_field = parsed_html.css(".rating").css("span")
     product_info_fields= parsed_html.css("#left-stack").css("ul.list").css("li").css("span")
 
@@ -113,7 +113,7 @@ class Datapool::ItunesStoreApp < Datapool::StoreProduct
 
   def self.import_reviews!
     Datapool::ItunesStoreApp.includes(:reviews).find_each do |store|
-      response_hash = ApplicationRecord.request_and_parse_json("https://itunes.apple.com/jp/rss/customerreviews/id=" + store.product_id + "/json")
+      response_hash = ApplicationRecord.request_and_parse_json(url: "https://itunes.apple.com/jp/rss/customerreviews/id=" + store.product_id + "/json")
       next if response_hash["feed"].blank?
       entries = response_hash["feed"]["entry"] || []
       next if entries.instance_of?(Hash)

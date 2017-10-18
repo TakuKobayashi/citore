@@ -29,9 +29,6 @@ class ApplicationRecord < ActiveRecord::Base
   def self.request_and_parse_html(url, method = :get, params = {})
     http_client = HTTPClient.new
     http_client.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
-    http_client.connect_timeout = 300
-    http_client.send_timeout    = 300
-    http_client.receive_timeout = 300
     begin
       response = http_client.send(method, url, params, {}, {follow_redirect: true})
       doc = Nokogiri::HTML.parse(response.body.encode('SJIS', 'UTF-8', invalid: :replace, undef: :replace, replace: '').encode('UTF-8'))

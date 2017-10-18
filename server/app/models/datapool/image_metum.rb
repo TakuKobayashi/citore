@@ -71,7 +71,11 @@ class Datapool::ImageMetum < Datapool::ResourceMetum
 
   def download_image_response
     aurl = Addressable::URI.parse(self.src)
+    Rails.logger.info aurl.to_s
     client = HTTPClient.new
+    client.connect_timeout = 300
+    client.send_timeout    = 300
+    client.receive_timeout = 300
     client.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
     response = client.get(aurl.to_s)
     return response

@@ -21,6 +21,29 @@
 
 class Homepage::SpotifyAccount < Homepage::Account
   def get_playlists
-    return ApplicationRecord.request_and_parse_json(url: "https://api.spotify.com/v1/users/wizzler/playlists", headers: {Authorization: "Bearer #{self.token}"})
+    return ApplicationRecord.request_and_parse_json(url: "https://api.spotify.com/v1/me/playlists", headers: {Authorization: "Bearer #{self.token}"})
+  end
+
+  # artist, playlist, track.
+  def searches(text:, search_type: :track)
+    #method: :get, params: {}, headers: {}
+    return ApplicationRecord.request_and_parse_json(url: "https://api.spotify.com/v1/search", params: {q: text, type: search_type, limit: 50}, headers: {Authorization: "Bearer #{self.token}"})
+  end
+
+  #max 50件
+  def tracks(ids: [])
+    return ApplicationRecord.request_and_parse_json(url: "https://api.spotify.com/v1/tracks", params: {ids: ids.join(",")}, headers: {Authorization: "Bearer #{self.token}"})
+  end
+
+  def recommendations
+    return ApplicationRecord.request_and_parse_json(url: "https://developer.spotify.com/web-api/get-recommendations/", headers: {Authorization: "Bearer #{self.token}"})
+  end
+
+  def audio_analysis(track_id:)
+    return ApplicationRecord.request_and_parse_json(url: "https://api.spotify.com/v1/audio-analysis/#{track_id}", headers: {Authorization: "Bearer #{self.token}"})
+  end
+
+  def audio_features(track_id:)
+    return ApplicationRecord.request_and_parse_json(url: "https://api.spotify.com/v1/audio-features/#{track_id}", headers: {Authorization: "Bearer #{self.token}"})
   end
 end

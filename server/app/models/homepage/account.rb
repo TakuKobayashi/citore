@@ -28,7 +28,7 @@ class Homepage::Account < ApplicationRecord
       account = Homepage::Account.find_or_initialize_by(homepage_access_id: visitor_id, uid: omni_auth.uid, type: "Homepage::SpotifyAccount")
       account.token = omni_auth.credentials.token
       account.expired_at = Time.at(omni_auth.credentials.expires_at)
-      account.options["extra"] = omni_auth.extra.to_hash
+      account.options = {extra: omni_auth.extra.to_hash}
       account.save!
     end
   end

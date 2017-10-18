@@ -4,8 +4,8 @@ class CreateHomepageAccounts < ActiveRecord::Migration[5.1]
       t.integer :homepage_access_id, null: false
       t.string :type
       t.string :uid, null: false
-      t.string :token
-      t.string :token_secret
+      t.text :token
+      t.text :token_secret
       t.datetime :expired_at
       t.text :options
       t.timestamps

@@ -207,10 +207,10 @@ class ApplicationRecord < ActiveRecord::Base
   end
 
   def self.merge_full_url(src:, org:)
-    src_url = Addressable::URI.parse(src.to_s)
+    src_url = Addressable::URI.parse(src.to_s.gsub(/(\.\.\/|\.\/)+/,"/"))
     org_url = Addressable::URI.parse(org.to_s)
     if src_url.path.to_s.first != "/"
-      src_url.path = "/" + src_url.path.to_s.gsub("../", "").gsub("./", "")
+      src_url.path = "/" + src_url.path.to_s
     end
     if src_url.scheme.blank?
       src_url.scheme = org_url.scheme.to_s

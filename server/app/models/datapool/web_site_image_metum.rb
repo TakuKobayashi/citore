@@ -26,7 +26,7 @@ class Datapool::WebSiteImageMetum < Datapool::ImageMetum
         address_url.query_values = queries.merge(page_key => page)
       end
       break unless address_url.scheme.to_s.include?("http")
-      doc = ApplicationRecord.request_and_parse_html(address_url.to_s, request_method)
+      doc = ApplicationRecord.request_and_parse_html(url: address_url.to_s,method: request_method)
       images += self.generate_objects_from_parsed_html(doc: doc, filter: filter, from_site_url: address_url.to_s)
     end
     images.uniq!(&:src)

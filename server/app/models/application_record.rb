@@ -26,12 +26,16 @@ class ApplicationRecord < ActiveRecord::Base
     return xml_to_hash
   end
 
-  def self.request_and_parse_html(url, method = :get, params = {})
+  def self.request_and_parse_html(url:, method: :get, params: {}, headers: {})
     http_client = HTTPClient.new
     http_client.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
     begin
-      response = http_client.send(method, url, params, {}, {follow_redirect: true})
-      doc = Nokogiri::HTML.parse(response.body.encode('SJIS', 'UTF-8', invalid: :replace, undef: :replace, replace: '').encode('UTF-8'))
+      response = http_client.send(method, URI.encode(url), params: params,headers: headers, follow_redirect: true)
+      if response.status < 300 || response.status == 304
+        doc = Nokogiri::HTML.parse(response.body.encode('SJIS', 'UTF-8', invalid: :replace, undef: :replace, replace: '').encode('UTF-8'))
+      else
+        doc = Nokogiri::HTML.parse("")
+      end
     rescue HTTPClient::ConnectTimeoutError => e
       Rails.logger.warn "#{url} is timeout!!:" + e.message
       doc = Nokogiri::HTML.parse("")
@@ -53,7 +57,7 @@ class ApplicationRecord < ActiveRecord::Base
   end
 
   def self.request_and_get_links_from_html(url)
-    doc = request_and_parse_html(url)
+    doc = request_and_parse_html(url: url)
     result = {}
     doc.css('a').select{|anchor| anchor[:href].present? && anchor[:href] != "/" }.each{|anchor| result[anchor[:href]] = anchor.text }
     return result
@@ -209,8 +213,13 @@ class ApplicationRecord < ActiveRecord::Base
   def self.merge_full_url(src:, org:)
     src_url = Addressable::URI.parse(src.to_s.gsub(/(\.\.\/|\.\/)+/,"/"))
     org_url = Addressable::URI.parse(org.to_s)
-    if src_url.path.to_s.first != "/"
-      src_url.path = "/" + src_url.path.to_s
+    if (src_url.scheme.blank? || src_url.host.blank?)
+      if src_url.path.to_s.first != "#" && src_url.path.to_s.first != "/"
+        src_url.path = org_url.path.to_s + src_url.path.to_s
+        if src_url.path.to_s.first != "/"
+          src_url.path = "/" + src_url.path.to_s
+        end
+      end
     end
     if src_url.scheme.blank?
       src_url.scheme = org_url.scheme.to_s

@@ -30,7 +30,7 @@ class Lyric < ApplicationRecord
   JLYRIC_ROOT_URL = "http://j-lyric.net/lyric/"
 
   def self.request_and_scrape_link_filters(url, filter_word)
-    doc = request_and_parse_html(url)
+    doc = ApplicationRecord.request_and_parse_html(url: url)
     pathes = doc.css('a').map do |anchor|
       if anchor[:href].include?(filter_word)
         nil
@@ -45,7 +45,7 @@ class Lyric < ApplicationRecord
     (1..250000).each do |i|
       from_url = Lyric::UTANET_ROOT_CRAWL_URL + i.to_s + "/"
       url = Addressable::URI.parse(from_url)
-      doc = Lyric.request_and_parse_html(url)
+      doc = ApplicationRecord.request_and_parse_html(url: url)
       svg_img_path = doc.css('#ipad_kashi').map{|d| d.children.map{|c| c[:src] } }.flatten.first
       if svg_img_path.present?
         url.path = svg_img_path
@@ -59,7 +59,7 @@ class Lyric < ApplicationRecord
     text = nokogiri_doc.css('text').map{|d| d.children.to_s }.join("\n")
     sleep 0.1
     origin_url = Addressable::URI.parse(origin_url)
-    origin_doc = Lyric.request_and_parse_html(origin_url)
+    origin_doc = ApplicationRecord.request_and_parse_html(url: origin_url.to_s)
     artist = origin_doc.css(".kashi_artist").text
     words = Lyric.basic_sanitize(artist).split("\n").map(&:strip).select{|s| s.present? }
     lyric = Lyric.create!({
@@ -77,7 +77,7 @@ class Lyric < ApplicationRecord
       (1..3000).each do |j|
         from_url = Lyric::JLYRIC_ROOT_URL + "i#{i}p#{j}.html"
         url = Addressable::URI.parse(from_url)
-        doc = Lyric.request_and_parse_html(url)
+        doc = Lyric.request_and_parse_html(url: url)
         pathes = doc.css(".title").children.map{|c| c[:href]}.select{|url| url != "/" }.compact
         break if pathes.blank?
         transaction do

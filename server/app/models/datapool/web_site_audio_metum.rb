@@ -27,16 +27,17 @@ class Datapool::WebSiteAudioMetum < Datapool::AudioMetum
     root_crawl_url = Addressable::URI.parse(url.to_s)
     crawl_url = root_crawl_url.origin
     loop do
-      doc = ApplicationRecord.request_and_parse_html(crawl_url.to_s)
+      Rails.logger.info crawl_url.to_s
+      doc = ApplicationRecord.request_and_parse_html(url: crawl_url.to_s)
       doc.css("a").each do |a|
-        link_url = Addressable::URI.parse(ApplicationRecord.merge_full_url(src: a["href"], org: root_crawl_url.to_s))
-        if root_crawl_url.host == link_url.host && !crawl_urls.include?(link_url.to_s)
+        link_url = Addressable::URI.parse(ApplicationRecord.merge_full_url(src: a["href"], org: crawl_url.to_s))
+        if root_crawl_url.host == link_url.host && link_url.scheme.to_s.include?("http") && !crawl_urls.include?(link_url.to_s)
           crawl_urls << link_url.to_s
           target_urls << link_url.to_s
         end
       end
       doc.css("audio").each do |audio_doc|
-        audio_url = ApplicationRecord.merge_full_url(src: audio_doc["src"].to_s, org: root_crawl_url.to_s)
+        audio_url = ApplicationRecord.merge_full_url(src: audio_doc["src"].to_s, org: crawl_url.to_s)
         next if audio_urls.include?(audio_url.to_s)
         audio_urls << audio_url.to_s
         audio_metum = Datapool::WebSiteAudioMetum.new(

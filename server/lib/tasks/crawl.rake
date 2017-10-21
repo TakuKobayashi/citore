@@ -47,7 +47,7 @@ namespace :crawl do
     end
     url_text = ExpressionCategorisedWord.request_and_get_links_from_html(ExpressionCategorisedWord::JAPANESE_HYOGEN_URL)
     CrawlTargetUrl.execute_html_crawl!(ExpressionCategorisedWord.to_s) do |crawl_target, doc|
-      from_doc = ExpressionCategorisedWord.request_and_parse_html(crawl_target.crawl_from_keyword)
+      from_doc = ExpressionCategorisedWord.request_and_parse_html(url: crawl_target.crawl_from_keyword)
       detail = from_doc.css("a").detect{|h| h[:href] == crawl_target.crawl_from_keyword }
       large_text = from_doc.css(".pan_anchor")[1].try(:text).to_s
       t, value = large_jas.detect{|k, v| large_text.include?(k.to_s) }

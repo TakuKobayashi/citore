@@ -33,17 +33,8 @@ class Datapool::WebSiteAudioMetum < Datapool::AudioMetum
       loop do
         crawl_url = target_urls.shift
         Rails.logger.info crawl_url.to_s
-        doc = ApplicationRecord.request_and_parse_html(url: crawl_url.to_s)
         all_audios += self.analize_and_import_audio!(url: crawl_url.to_s, options: {root_from_url: url.to_s})
         break if target_urls.blank?
-      end
-    end
-    all_audios.uniq!(&:src)
-    if all_audios.present?
-      src_audios = Datapool::AudioMetum.find_origin_src_by_url(url: all_audios.map(&:src)).index_by(&:src)
-      import_audios = all_audios.select{|audio| src_audios[audio.src].blank? }
-      if import_audios.present?
-        Datapool::WebSiteAudioMetum.import!(import_audios)
       end
     end
     return all_audios
@@ -55,7 +46,7 @@ class Datapool::WebSiteAudioMetum < Datapool::AudioMetum
     doc = ApplicationRecord.request_and_parse_html(url: crawl_url.to_s)
     doc.css("a").each do |a|
       link_url = Addressable::URI.parse(ApplicationRecord.merge_full_url(src: URI.encode(a["href"].to_s), org: crawl_url.to_s))
-      if crawl_url.host == link_url.host && link_url.scheme.to_s.include?("http")
+      if crawl_url.host == link_url.host && link_url.scheme.to_s.include?("http") && !Datapool::AudioMetum.audiofile?(link_url.to_s)
         urls << link_url.to_s
       end
     end
@@ -67,6 +58,7 @@ class Datapool::WebSiteAudioMetum < Datapool::AudioMetum
     crawl_url = Addressable::URI.parse(url.to_s)
     doc = ApplicationRecord.request_and_parse_html(url: crawl_url.to_s)
     doc.css("audio").each do |audio_doc|
+      next if audio_doc["src"].blank?
       audio_url = Addressable::URI.parse(ApplicationRecord.merge_full_url(src: audio_doc["src"].to_s, org: crawl_url.to_s))
       audio_metum = Datapool::WebSiteAudioMetum.new(
         title: doc.title,
@@ -75,6 +67,41 @@ class Datapool::WebSiteAudioMetum < Datapool::AudioMetum
       )
       audio_metum.src = audio_url.to_s
       audios << audio_metum
+    end
+    doc.css("a").each do |audio_doc|
+      url = audio_doc["href"].to_s
+      next unless Datapool::AudioMetum.audiofile?(url.to_s)
+      audio_url = Addressable::URI.parse(ApplicationRecord.merge_full_url(src: url, org: crawl_url.to_s))
+      audio_metum = Datapool::WebSiteAudioMetum.new(
+        title: doc.title,
+        file_genre: :audio_file,
+        options: options.merge({from_url: crawl_url.to_s})
+      )
+      audio_metum.src = audio_url.to_s
+      audios << audio_metum
+    end
+    doc.css("video").each do |audio_doc|
+      url = audio_doc["src"]
+      if url.blank?
+        url = audio_doc.children.map{|a| a["src"] }.compact.first
+      end
+      next unless Datapool::AudioMetum.audiofile?(url.to_s)
+      audio_url = Addressable::URI.parse(ApplicationRecord.merge_full_url(src: url, org: crawl_url.to_s))
+      audio_metum = Datapool::WebSiteAudioMetum.new(
+        title: doc.title,
+        file_genre: :audio_file,
+        options: options.merge({from_url: crawl_url.to_s})
+      )
+      audio_metum.src = audio_url.to_s
+      audios << audio_metum
+    end
+    audios.uniq!(&:src)
+    if audios.present?
+      src_audios = Datapool::AudioMetum.find_origin_src_by_url(url: audios.map(&:src)).index_by(&:src)
+      import_audios = audios.select{|audio| src_audios[audio.src].blank? }
+      if import_audios.present?
+        Datapool::WebSiteAudioMetum.import!(import_audios)
+      end
     end
     return audios
   end

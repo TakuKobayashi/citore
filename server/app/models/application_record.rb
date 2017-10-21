@@ -31,7 +31,7 @@ class ApplicationRecord < ActiveRecord::Base
     http_client.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
     begin
       response = http_client.send(method, url, params: params,headers: headers, follow_redirect: true)
-      if response.status < 300 || response.status == 304
+      if response.status < 300 || (302..304).cover?(response.status)
         doc = Nokogiri::HTML.parse(response.body.encode('SJIS', 'UTF-8', invalid: :replace, undef: :replace, replace: '').encode('UTF-8'))
       else
         doc = Nokogiri::HTML.parse("")

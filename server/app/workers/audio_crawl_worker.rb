@@ -30,6 +30,7 @@ class AudioCrawlWorker
       else
         job = Homepage::UploadJobQueue.create(take_over_hash)
       end
+      job.compress_and_upload_audios!(audios: slice_audios)
     end
   end
 end

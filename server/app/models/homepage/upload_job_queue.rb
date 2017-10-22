@@ -64,6 +64,12 @@ class Homepage::UploadJobQueue < ApplicationRecord
     end
   end
 
+  def compress_and_upload_audios!(audios:)
+    compress_resources!(audios) do |zipfile|
+      Datapool::AudioMetum.upload_s3(zipfile, "#{Time.current.strftime("%Y%m%d_%H%M%S%L")}.zip")
+    end
+  end
+
   def compress_resources!(resources)
     Tempfile.create(SecureRandom.hex) do |tempfile|
       self.compressing!

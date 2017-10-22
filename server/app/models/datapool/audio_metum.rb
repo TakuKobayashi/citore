@@ -25,6 +25,9 @@ class Datapool::AudioMetum < Datapool::ResourceMetum
     video_streaming: 3
   }
 
+  CRAWL_AUDIO_ROOT_PATH = "project/crawler/audios/"
+  CRAWL_AUDIO_BACKUP_PATH = "backup/crawler/audios/"
+
   AUDIO_FILE_EXTENSIONS = [
     #https://ja.wikipedia.org/wiki/AIFF
     ".aiff",".aif", ".aifc", ".afc",
@@ -60,6 +63,12 @@ class Datapool::AudioMetum < Datapool::ResourceMetum
       return self.original_filename
     end
     return super
+  end
+
+  def self.upload_s3(binary, filename)
+    filepath = CRAWL_AUDIO_ROOT_PATH + filename
+    self.upload_to_s3(binary, filepath)
+    return filepath
   end
 
   def self.audiofile?(filename)

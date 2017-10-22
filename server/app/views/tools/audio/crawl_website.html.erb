@@ -6,6 +6,10 @@
   </div>
   <div class="pure-control-group">
     <%= label_tag("") %>
+    <span>※入力したURLのリンク先ににある音声ファイルまでの音声ファイルを集めます。</span>
+  </div>
+  <div class="pure-control-group">
+    <%= label_tag("") %>
     <span>※繰り返し処理を行いたい場合は以下に指定してURLパラメータを基に繰り替えし処理を行います</span>
   </div>
   <div class="pure-control-group">
@@ -20,7 +24,7 @@
     <%= number_field_tag :start_page_num %> ~ <%= number_field_tag :end_page_num %>
   </div>
   <div class="pure-controls">
-    <%= submit_tag("画像を集める", class: "pure-button pure-button-primary") %>
+    <%= submit_tag("音声を集める", class: "pure-button pure-button-primary") %>
   </div>
 <% end %>
 <hr>

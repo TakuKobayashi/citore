@@ -73,7 +73,7 @@ class Homepage::UploadJobQueue < ApplicationRecord
   def compress_resources!(resources)
     Tempfile.create(SecureRandom.hex) do |tempfile|
       self.compressing!
-      zippath = Datapool::ResourceMetum.compress_to_zip(zip_filepath: tempfile.path, resources: images)
+      zippath = Datapool::ResourceMetum.compress_to_zip(zip_filepath: tempfile.path, resources: resources)
       self.uploading!
 
       zipfile = File.open(zippath)

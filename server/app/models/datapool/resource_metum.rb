@@ -24,7 +24,7 @@ class Datapool::ResourceMetum < ApplicationRecord
   end
 
   def save_filename
-    return filename + File.extname(self.try(:original_filename).to_s)
+    return SecureRandom.hex + File.extname(self.try(:original_filename).to_s)
   end
 
   def self.crawler_routine!

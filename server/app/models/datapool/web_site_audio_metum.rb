@@ -57,27 +57,36 @@ class Datapool::WebSiteAudioMetum < Datapool::AudioMetum
     audios = []
     crawl_url = Addressable::URI.parse(url.to_s)
     doc = ApplicationRecord.request_and_parse_html(url: crawl_url.to_s)
+    site_title = ApplicationRecord.basic_sanitize(doc.title.to_s)
     doc.css("audio").each do |audio_doc|
       next if audio_doc["src"].blank?
       audio_url = Addressable::URI.parse(ApplicationRecord.merge_full_url(src: audio_doc["src"].to_s, org: crawl_url.to_s))
       audio_metum = Datapool::WebSiteAudioMetum.new(
-        title: doc.title,
+        title: site_title,
         file_genre: :audio_file,
         options: options.merge({from_url: crawl_url.to_s})
       )
       audio_metum.src = audio_url.to_s
+      filename = self.match_audio_filename(audio_metum.src.to_s)
+      audio_metum.set_original_filename(filename)
       audios << audio_metum
     end
     doc.css("a").each do |audio_doc|
       url = audio_doc["href"].to_s
       next unless Datapool::AudioMetum.audiofile?(url.to_s)
       audio_url = Addressable::URI.parse(ApplicationRecord.merge_full_url(src: url, org: crawl_url.to_s))
+      title = ApplicationRecord.basic_sanitize(audio_doc.text)
+      if title.blank?
+        title = site_title
+      end
       audio_metum = Datapool::WebSiteAudioMetum.new(
-        title: doc.title,
+        title: title,
         file_genre: :audio_file,
         options: options.merge({from_url: crawl_url.to_s})
       )
       audio_metum.src = audio_url.to_s
+      filename = self.match_audio_filename(audio_metum.src.to_s)
+      audio_metum.set_original_filename(filename)
       audios << audio_metum
     end
     doc.css("video").each do |audio_doc|
@@ -88,11 +97,13 @@ class Datapool::WebSiteAudioMetum < Datapool::AudioMetum
       next unless Datapool::AudioMetum.audiofile?(url.to_s)
       audio_url = Addressable::URI.parse(ApplicationRecord.merge_full_url(src: url.to_s, org: crawl_url.to_s))
       audio_metum = Datapool::WebSiteAudioMetum.new(
-        title: doc.title,
+        title: site_title,
         file_genre: :video_file,
         options: options.merge({from_url: crawl_url.to_s})
       )
       audio_metum.src = audio_url.to_s
+      filename = self.match_audio_filename(audio_metum.src.to_s)
+      audio_metum.set_original_filename(filename)
       audios << audio_metum
     end
     audios.uniq!(&:src)

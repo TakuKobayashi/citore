@@ -65,6 +65,14 @@ class Datapool::AudioMetum < Datapool::ResourceMetum
     return super
   end
 
+  def self.match_audio_filename(filepath)
+    paths = filepath.split("/")
+    audiofile_name = paths.detect{|p| AUDIO_FILE_EXTENSIONS.any?{|ie| p.include?(ie)} }
+    return "" if audiofile_name.blank?
+    ext = AUDIO_FILE_EXTENSIONS.detect{|ie| audiofile_name.include?(ie) }
+    return audiofile_name.match(/(.+?#{ext})/).to_s
+  end
+
   def self.upload_s3(binary, filename)
     filepath = CRAWL_AUDIO_ROOT_PATH + filename
     self.upload_to_s3(binary, filepath)

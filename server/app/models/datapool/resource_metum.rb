@@ -27,6 +27,14 @@ class Datapool::ResourceMetum < ApplicationRecord
     return SecureRandom.hex + File.extname(self.try(:original_filename).to_s)
   end
 
+  def set_original_filename(filename)
+    if filename.size > 255
+      self.original_filename = SecureRandom.hex + File.extname(filename)
+    else
+      self.original_filename = filename
+    end
+  end
+
   def self.crawler_routine!
     Homepage::UploadJobQueue.cleanup!
     Datapool::Website.resource_crawl!

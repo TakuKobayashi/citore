@@ -106,11 +106,7 @@ class Datapool::ImageMetum < Datapool::ResourceMetum
       image.src = aimage_url.to_s
     end
     filename = self.match_image_filename(image.src.to_s)
-    if filename.size > 255
-      image.original_filename = SecureRandom.hex + File.extname(filename)
-    else
-      image.original_filename = filename
-    end
+    self.set_original_filename(filename)
     return image
   end
 

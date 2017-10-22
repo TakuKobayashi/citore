@@ -44,7 +44,9 @@ class Tools::ImageCrawlController < Homepage::BaseController
     if @visitor.blank?
       @upload_jobs = []
     else
-      @upload_jobs = @visitor.upload_jobs.where.not(state: :cleaned).order("id DESC")
+      @upload_jobs = @visitor.upload_jobs.where.not(state: :cleaned).
+        where(from_type: ["Datapool::FrickrImageMetum", "Datapool::TwitterImageMetum", "Datapool::WebSiteImageMetum", "Datapool::GoogleImageSearch"]).
+        order("id DESC")
     end
   end
 

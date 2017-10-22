@@ -1,10 +1,47 @@
 <%= form_tag(execute_crawl_tools_audio_url, multipart: true, class: "pure-form pure-form-aligned") do %>
-  <%= hidden_field_tag("website") %>
+  <%= hidden_field_tag("crawl_type","website") %>
   <div class="pure-control-group">
     <%= label_tag("url") %>
     <%= text_field_tag :crawl_url, "", placeholder: "urlを入力してください", class: "pure-input-2-3" %>
+  </div>
+  <div class="pure-control-group">
+    <%= label_tag("") %>
+    <span>※繰り返し処理を行いたい場合は以下に指定してURLパラメータを基に繰り替えし処理を行います</span>
+  </div>
+  <div class="pure-control-group">
+    <%= label_tag("繰り返すクエリキー") %>
+    <%= text_field_tag :page_key, "" ,class: "pure-input-1-3" %>
+  </div>
+  <div class="pure-control-group">
+    <%= label_tag("") %>
+  </div>
+  <div class="pure-control-group">
+    <%= label_tag("繰り返す範囲") %>
+    <%= number_field_tag :start_page_num %> ~ <%= number_field_tag :end_page_num %>
   </div>
   <div class="pure-controls">
     <%= submit_tag("画像を集める", class: "pure-button pure-button-primary") %>
   </div>
 <% end %>
+<hr>
+<h4>入力例</h4>
+<table class="pure-table">
+  <tbody>
+    <tr>
+      <td>URL</td>
+      <td><%= crawl_website_tools_audio_url %></td>
+    </tr>
+    <tr>
+      <td>繰り返すクエリキー</td>
+      <td>page</td>
+    </tr>
+    <tr>
+      <td>繰り返す範囲</td>
+      <td>1~10</td>
+    </tr>
+    <tr>
+      <td>実行結果</td>
+      <td><%= crawl_website_tools_audio_url %>?page=1, <%= crawl_website_tools_audio_url %>?page=2, ..., <%= crawl_website_tools_audio_url %>?page=10</td>
+    </tr>
+  </tbody>
+</table>

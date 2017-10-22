@@ -9,6 +9,11 @@ class Tools::AudioController < Homepage::BaseController
   end
 
   def crawl
+    if @visitor.blank?
+      @upload_jobs = []
+    else
+      @upload_jobs = @visitor.upload_jobs.where.not(state: :cleaned).where(from_type: "Datapool::WebSiteAudioMetum").order("id DESC")
+    end
   end
 
   def crawl_website
@@ -28,8 +33,8 @@ class Tools::AudioController < Homepage::BaseController
   end
 
   def execute_upload_job
-    if params["crawl_type"] == "url"
-      prefix = "Datapool::WebSiteImageMetum"
+    if params["crawl_type"] == "website"
+      prefix = "Datapool::WebSiteAudioMetum"
     else
       prefix = ""
     end

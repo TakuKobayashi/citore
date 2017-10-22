@@ -66,7 +66,7 @@ class Datapool::ResourceMetum < ApplicationRecord
         if filename_hash[resource.save_filename].nil?
           stream.put_next_entry(resource.save_filename)
         else
-          stream.put_next_entry(SecureRandom.hex + File.extname(response.save_filename))
+          stream.put_next_entry(SecureRandom.hex + File.extname(resource.save_filename))
         end
         stream.print(response.body)
         filename_hash[resource.save_filename] = resource

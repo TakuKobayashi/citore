@@ -85,7 +85,7 @@ class ImageMetum < ApplicationRecord
     images = []
     (start_page.to_i..end_page.to_i).each do |page|
       address_url = Addressable::URI.parse(url % page.to_s)
-      doc = ApplicationRecord.request_and_parse_html(url: address_url.to_s, request_method)
+      doc = ApplicationRecord.request_and_parse_html(url: address_url.to_s, method: request_method)
       images += self.generate_objects_from_parsed_html(doc: doc, filter: filter, from_site_url: address_url.to_s)
     end
     self.import!(images, on_duplicate_key_update: [:title])

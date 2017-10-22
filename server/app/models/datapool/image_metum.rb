@@ -106,7 +106,7 @@ class Datapool::ImageMetum < Datapool::ResourceMetum
       image.src = aimage_url.to_s
     end
     filename = self.match_image_filename(image.src.to_s)
-    self.set_original_filename(filename)
+    image.set_original_filename(filename)
     return image
   end
 

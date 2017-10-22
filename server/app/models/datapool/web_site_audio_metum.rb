@@ -89,7 +89,7 @@ class Datapool::WebSiteAudioMetum < Datapool::AudioMetum
       audio_url = Addressable::URI.parse(ApplicationRecord.merge_full_url(src: url.to_s, org: crawl_url.to_s))
       audio_metum = Datapool::WebSiteAudioMetum.new(
         title: doc.title,
-        file_genre: :audio_file,
+        file_genre: :video_file,
         options: options.merge({from_url: crawl_url.to_s})
       )
       audio_metum.src = audio_url.to_s

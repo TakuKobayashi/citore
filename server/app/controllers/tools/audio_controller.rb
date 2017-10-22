@@ -1,5 +1,6 @@
 class Tools::AudioController < Homepage::BaseController
   before_action :check_and_auth_account, only: :listen_from_spotify
+  before_action :execute_upload_job, only: :execute_crawl
 
   def index
   end
@@ -24,5 +25,19 @@ class Tools::AudioController < Homepage::BaseController
       session["visitor_id"] = @visitor.id
       redirect_to "/auth/spotify" and return
     end
+  end
+
+  def execute_upload_job
+    if params["crawl_type"] == "url"
+      prefix = "Datapool::WebSiteImageMetum"
+    else
+      prefix = ""
+    end
+    @upload_job = @visitor.upload_jobs.find_or_initialize_by(token: params[:authenticity_token])
+    @upload_job.from_type = prefix
+    @upload_job.options ||= {params: params.to_h.dup}
+    @upload_job.save!
+    flash[:notice] = "処理を受け付けました。処理が完了するまでしばらくお待ち下さい。"
+    AudioCrawlWorker.perform_async(params.to_h.dup, @upload_job.id)
   end
 end

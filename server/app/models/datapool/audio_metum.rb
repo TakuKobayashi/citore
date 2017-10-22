@@ -55,6 +55,13 @@ class Datapool::AudioMetum < Datapool::ResourceMetum
     ".alac"
   ]
 
+  def save_filename
+    if self.original_filename.present?
+      return self.original_filename
+    end
+    return super
+  end
+
   def self.audiofile?(filename)
     return AUDIO_FILE_EXTENSIONS.include?(File.extname(filename))
   end

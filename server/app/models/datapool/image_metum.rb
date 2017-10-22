@@ -58,32 +58,16 @@ class Datapool::ImageMetum < Datapool::ResourceMetum
     return imagefile_name.match(/(.+?#{ext})/).to_s
   end
 
-  def self.s3_file_image_root
-    return CRAWL_IMAGE_ROOT_PATH
-  end
-
   def save_filename
     if self.original_filename.present?
       return self.original_filename
     end
-    return SecureRandom.hex
-  end
-
-  def download_image_response
-    aurl = Addressable::URI.parse(self.src)
-    client = HTTPClient.new
-    client.connect_timeout = 300
-    client.send_timeout    = 300
-    client.receive_timeout = 300
-    client.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
-    response = client.get(aurl.to_s)
-    return response
+    return super
   end
 
   def self.upload_s3(binary, filename)
-    s3 = Aws::S3::Client.new
-    filepath = self.s3_file_image_root + filename
-    s3.put_object(bucket: "taptappun",body: binary, key: filepath, acl: "public-read")
+    filepath = CRAWL_IMAGE_ROOT_PATH + filename
+    self.upload_to_s3(binary, filepath)
     return filepath
   end
 
@@ -142,31 +126,13 @@ class Datapool::ImageMetum < Datapool::ResourceMetum
     end
   end
 
-  def self.compress_to_zip(zip_filepath:, images: [])
-    filename_hash = {}
-    Zip::OutputStream.open(zip_filepath) do |stream|
-      images.each do |image|
-        response = image.download_image_response
-        next if (response.status >= 300 && response.status != 304) || !response.headers["Content-Type"].to_s.include?("image")
-        if filename_hash[image.save_filename].nil?
-          stream.put_next_entry(image.save_filename)
-        else
-          stream.put_next_entry(SecureRandom.hex + File.extname(image.save_filename))
-        end
-        stream.print(response.body)
-        filename_hash[image.save_filename] = image
-      end
-    end
-    return zip_filepath
-  end
-
   def self.backup!
     Datapool::ImageMetum.find_in_batches do |images|
       not_backup_images = images.select{|image| image.options["image_backuped"].blank? }
       next if not_backup_images.blank?
       self.write_image_buckup_log("#{not_backup_images.size} images backup start!!\n first id:#{not_backup_images.first.try(:id)} last id:#{not_backup_images.last.try(:id)}")
       Tempfile.create(SecureRandom.hex) do |tempfile|
-        zippath = self.compress_to_zip(zip_filepath: tempfile.path, images: not_backup_images)
+        zippath = self.compress_to_zip(zip_filepath: tempfile.path, resources: not_backup_images)
         s3 = Aws::S3::Client.new
         filepath = CRAWL_IMAGE_BACKUP_PATH + "#{Time.current.strftime("%Y%m%d_%H%M%S%L")}.zip"
         s3.put_object(bucket: "taptappun",body: File.open(zippath), key: filepath)

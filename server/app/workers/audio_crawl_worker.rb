@@ -24,7 +24,7 @@ class AudioCrawlWorker
       options: upload_job.options
     }
     # 画像の数が多いとメモリに乗り切らないおそれがあるので500件ずつに区切って処理を行おうと思う
-    audios.each_slice(100).with_index do |slice_audios, index|
+    audios.each_slice(500).with_index do |slice_audios, index|
       if index == 0
         job = upload_job
       else

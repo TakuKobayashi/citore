@@ -98,6 +98,7 @@ gem 'sidekiq'
 gem 'redis-namespace'
 gem 'cairo'
 gem 'omniauth-spotify'
+gem 'soundcloud'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development

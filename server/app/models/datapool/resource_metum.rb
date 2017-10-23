@@ -53,7 +53,12 @@ class Datapool::ResourceMetum < ApplicationRecord
     client.send_timeout    = 300
     client.receive_timeout = 300
     client.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
-    response = client.get(aurl.to_s)
+    response = nil
+    begin
+      response = client.get(aurl.to_s)
+    rescue => e
+      Rails.logger.warn("download error #{self.class.to_s}_#{self.id}:#{aurl.to_s}")
+    end
     return response
   end
 
@@ -62,7 +67,7 @@ class Datapool::ResourceMetum < ApplicationRecord
     Zip::OutputStream.open(zip_filepath) do |stream|
       resources.each do |resource|
         response = resource.download_resource_response
-        next if (response.status >= 300 && !(302..304).cover?(response.status))
+        next if response.blank? || (response.status >= 300 && !(302..304).cover?(response.status))
         if filename_hash[resource.save_filename].nil?
           stream.put_next_entry(resource.save_filename)
         else

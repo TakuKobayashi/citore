@@ -1,8 +1,19 @@
-<html lang="ja">
+<html class="no-js" lang="en">
   <head>
-    <title>Bannnosama</title></title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes" />
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>ペッパソン2017 きのこ</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <%= stylesheet_link_tag 'bannosama/vendor.css' %>
+    <%= stylesheet_link_tag 'bannosama/app.css' %>
+    <%= javascript_include_tag 'libraries/jquery.min.js' %>
+    <%= javascript_include_tag 'bannosama/jquery.uploadThumbs.js' %>
+
+    <!-- for loading -->
+    <%= stylesheet_link_tag 'bannosama/loading.css' %>
+    <%= javascript_include_tag 'bannosama/loading.js' %>
   </head>
   <body>
     <%= yield %>

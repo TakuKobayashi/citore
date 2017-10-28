@@ -15,4 +15,6 @@
 #
 
 class Datapool::PdfPageMetum < ApplicationRecord
+  serialize :options, JSON
+  belongs_to :pgf_metum, class_name: 'Datapool::PdfMetum', foreign_key: :datapool_pdf_metum_id, required: false
 end

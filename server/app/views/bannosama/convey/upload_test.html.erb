@@ -1,25 +1,6 @@
-<!DOCTYPE html>
-<html lang="ja">
-    <head>
-        <meta charset="utf-8"/> 
-        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-<!--
-        <script type="text/javascript" src="./js/exif.js"></script>
-        <script type="text/javascript" src="./js/ios-imagefile-megapixel.js"></script>
-        <script type="text/javascript" src="./js/Sortable.js"></script>
--->
-<!--         <script type="text/javascript" src="./js/main.js"></script> -->
-        <meta name="viewport" content="width=320">
-    </head>
-    
-    <body>
-        <form action="recieve.php" method="post" enctype="multipart/form-data">
-            Send these files:<br />
-            <input name="image_files[]" type="file" /><br />
-            <input name="image_files[]" type="file" /><br />
-            <input type="submit" value="Send files" />
-        </form>
-    </body>
-
-
-</html>
+<form action="recieve.php" method="post" enctype="multipart/form-data">
+  Send these files:<br />
+  <input name="image_files[]" type="file" /><br />
+  <input name="image_files[]" type="file" /><br />
+  <input type="submit" value="Send files" />
+</form>

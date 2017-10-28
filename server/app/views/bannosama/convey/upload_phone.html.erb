@@ -1,55 +1,24 @@
-<!DOCTYPE html>
-<html lang="ja">
-    <head>
-        <meta charset="utf-8"/>
-<!--         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script> -->
-        <script type="text/javascript" src="./js/jquery.min.js"></script>
-
-<!--
-        <script type="text/javascript" src="./js/exif.js"></script>
-        <script type="text/javascript" src="./js/ios-imagefile-megapixel.js"></script>
-        <script type="text/javascript" src="./js/Sortable.js"></script>
--->
-<!--         <script type="text/javascript" src="./js/main.js"></script> -->
-        <script type="text/javascript" src="./js/jquery.uploadThumbs.js"></script>
-
-        <meta name="viewport" content="width=320">
-    </head>
-
-    <body>
-
 <!--     <form  id="my_form" action="recieve.php" method="post" enctype="multipart/form-data"> -->
-    <form  id="my_form" action="#" method="post" enctype="multipart/form-data">
-        <p id="preview"></p>
-        <p class="upload">
-            <label>
-                <input type="file" name="image_files[]" multiple="multiple" accept="image/*"
-                    title="画像をアップロードする" />
+<form  id="my_form" action="#" method="post" enctype="multipart/form-data">
+  <p id="preview"></p>
+  <p class="upload">
+    <label>
+      <input type="file" name="image_files[]" multiple="multiple" accept="image/*" title="画像をアップロードする" />
 <!--                 <img src="../img/button.png" class="button" alt="" /> -->
 <!--                 <input type="submit"  id="send_button"  value="Send files" /> -->
                 <!-- <input type="submit"  value="Send files" /> -->
 <!--                 <button type="button" onclick="file_upload()">アップロード</button> -->
-                <input type="file" name="audio_file"
-                    multiple="multiple" accept="audio/*"
-                    title="音声をアップロードする" style="width:100%;"/>
-            </label>
+      <input type="file" name="audio_file" multiple="multiple" accept="audio/*" title="音声をアップロードする" style="width:100%;"/>
+    </label>
 
-            <input type="text" class="alt" />
-        </p>
-    </form>
+    <input type="text" class="alt" />
+  </p>
+</form>
 
-    <button type="button" onclick="file_upload()">アップロード</button>
+<button type="button" onclick="file_upload()">アップロード</button>
 
-
-    <br />
-    <div id="debug_msg0"></div><br />
-    <div id="debug_msg1"></div><br />
-    <div id="debug_msg2"></div><br />
-    <div id="debug_msg3"></div><br />
-
-
-    <script type="text/javascript" src="./js/main.js"></script>
-
-    </body>
-
-</html>
+<br />
+<div id="debug_msg0"></div><br />
+<div id="debug_msg1"></div><br />
+<div id="debug_msg2"></div><br />
+<div id="debug_msg3"></div><br />

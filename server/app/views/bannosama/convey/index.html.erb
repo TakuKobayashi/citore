@@ -1,367 +1,202 @@
-<div class="main-wrapper">
-  <div class="app" id="app">
-    <header class="header">
-      <div class="header-block header-block-collapse hidden-lg-up">
-        <button class="collapse-btn" id="sidebar-collapse-btn">
-          <i class="fa fa-bars"></i>
-        </button>
-      </div>
-      <div class="header-block header-block-search hidden-sm-down">
-        <form role="search">
-          <div class="input-container">
-            <i class="fa fa-search"></i>
-            <input type="search" placeholder="Search">
-            <div class="underline"></div>
-           </div>
-        </form>
-      </div>
-      <div class="header-block header-block-buttons">
-        <%= link_to("http://twitter.com/share?url=#{bannosama_convey_url}", class: "btn btn-sm header-btn") do %>
-          <i class="fa fa-twitter"></i>
-          <span>Twitterでシェア</span>
-        <% end %>
-        <%= link_to("https://plus.google.com/share?url=#{bannosama_convey_url}", class: "btn btn-sm header-btn") do %>
-          <i class="fa fa-google-plus"></i>
-          <span>Google+でシェア</span>
-        <% end %>
-        <%= link_to("https://www.facebook.com/sharer/sharer.php?u=#{bannosama_convey_url}", class: "btn btn-sm header-btn") do %>
-          <i class="fa fa-facebook"></i>
-          <span>Facebookでシェア</span>
-        <% end %>
-      </div>
+<article class="content forms-page">
+  <div class="title-block">
+    <!-- for debug -->
+    <div id="debug_msg0"></div>
+    <div id="debug_msg1"></div>
+    <div id="debug_msg2"></div>
+    <div id="debug_msg3"></div>
 
-      <div class="header-block header-block-nav">
-        <ul class="nav-profile">
-          <li class="notifications new">
-            <%= link_to("", data: {toggle: "dropdown"}) do %>
-              <i class="fa fa-bell-o"></i>
-              <sup>
-                <span class="counter">8</span>
-              </sup>
-            <% end %>
-            <div class="dropdown-menu notifications-dropdown-menu">
-              <ul class="notifications-container">
-                <li>
-                  <%= link_to("", class: "notification-item") do %>
-                    <div class="img-col">
-                      <div class="img" style="background-image: url('<%= image_path("bannosama/target_face1.png") %>')"></div>
-                    </div>
-                    <div class="body-col">
-                      <p>
-                        <span class="accent">伴野 智樹さん</span>が新たなスタートをきりました。日頃の感謝の気持ちを伝えませんか
-                      </p>
-                    </div>
-                  <% end %>
-                </li>
-                <li>
-                  <%= link_to("", class: "notification-item") do %>
-                    <div class="img-col">
-                      <div class="img" style="background-image: url('<%= image_path("bannosama/target_face2.png") %>')"></div>
-                    </div>
-                    <div class="body-col">
-                      <p>
-                        <span class="accent">おばあちゃん</span>が誕生日です。お祝いメッセージを伝えませんか
-                      </p>
-                    </div>
-                  <% end %>
-                </li>
-                <li>
-                  <%= link_to("", class: "notification-item") do %>
-                    <div class="img-col">
-                      <div class="img" style="background-image: url('<%= image_path("bannosama/target_face3.png") %>')"></div>
-                    </div>
-                    <div class="body-col">
-                      <p>
-                        <span class="accent">村瀬さん</span>がペッパソンに参加しました。お疲れさまメッセージを送りませんか
-                      </p>
-                    </div>
-                  <% end %>
-                </li>
-              </ul>
-              <footer>
-                <ul>
-                  <li>
-                    <%= link_to("View All", "") %>
-                  </li>
-                </ul>
-              </footer>
-            </div>
-          </li>
-          <li class="profile dropdown">
-            <%= link_to("#", {class: "nav-link dropdown-toggle", data: {toggle: "dropdown"}, role: "button", aria: {haspopup: "true", expanded: "false"}}) do %>
-              <!-- <div class="img" style="background-image: url('https://avatars3.githubusercontent.com/u/3959008?v=3&s=40')"> </div> -->
-              <div class="img" style="background-image: url('<%= image_path("bannosama/face.png") %>')"> </div>
-              <span class="name">
-                きのこ
-              </span>
-            <% end %>
-            <div class="dropdown-menu profile-dropdown-menu" aria-labelledby="dropdownMenu1">
-              <%= link_to("#", class: "dropdown-item") do %>
-                <i class="fa fa-user icon"></i> プロファイル
-              <% end %>
-              <%= link_to("#", class: "dropdown-item") do %>
-                <i class="fa fa-bell icon"></i> 通知
-              <% end %>
-              <%= link_to("#", class: "dropdown-item") do %>
-                <i class="fa fa-gear icon"></i> 設定
-              <% end %>
-              <div class="dropdown-divider"></div>
-              <%= link_to("login.html", class: "dropdown-item") do %>
-                <i class="fa fa-power-off icon"></i> ログアウト
-              <% end %>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </header>
-    <aside class="sidebar">
-      <div class="sidebar-container">
-        <div class="sidebar-header">
-          <div class="brand">
-            <div class="logo">
-              <span class="l l1"></span>
-              <span class="l l2"></span>
-              <span class="l l3"></span>
-              <span class="l l4"></span>
-              <span class="l l5"></span>
-            </div>
-            ペッパー様
-          </div>
-        </div>
-        <nav class="menu">
-          <ul class="nav metismenu" id="sidebar-menu">
-            <li>
-              <%= link_to("#") do %>
-                <i class="fa fa-home"></i> ホーム
-              <% end %>
-            </li>
-          </ul>
-        </nav>
-      </div>
-      <footer class="sidebar-footer">
-        <ul class="nav metismenu" id="customize-menu">
-          <li>
-            <%= link_to("#") do %>
-              <i class="fa fa-cog"></i> カスタマイズ
-            <% end %>
-          </li>
-        </ul>
-      </footer>
-    </aside>
-    <div class="sidebar-overlay" id="sidebar-overlay"></div>
-    <article class="content forms-page">
-      <div class="title-block">
-        <!-- for debug -->
-        <div id="debug_msg0"></div>
-        <div id="debug_msg1"></div>
-        <div id="debug_msg2"></div>
-        <div id="debug_msg3"></div>
-
-        <h3 class="title"> 想いを届ける </h3>
-        <!-- <p class="title-description"> xxxxさんへに感謝の気持ちを伝えよう </p> -->
-      </div>
-      <!-- <div class="subtitle-block">
-        <h3 class="subtitle"> 気持ちを伝えよう </h3>
-      </div> -->
-      <section class="section">
-        <div class="row sameheight-container">
-          <div class="col-md-6">
-            <div class="card card-block sameheight-item">
-              <!-- <div class="title-block">
-                <h3 class="title"> Underlined Inputs </h3>
-              </div> -->
-              <%= form_tag(upload_bannosama_photos_url, multipart: true) do %>
+    <h3 class="title"> 想いを届ける </h3>
+    <!-- <p class="title-description"> xxxxさんへに感謝の気持ちを伝えよう </p> -->
+  </div>
+  <!-- <div class="subtitle-block">
+    <h3 class="subtitle"> 気持ちを伝えよう </h3>
+  </div> -->
+  <section class="section">
+    <div class="row sameheight-container">
+      <div class="col-md-6">
+        <div class="card card-block sameheight-item">
+          <!-- <div class="title-block">
+            <h3 class="title"> Underlined Inputs </h3>
+          </div> -->
+          <%= form_tag(upload_bannosama_photos_url, multipart: true) do %>
 <!--              <form  id="my_form" action="#" method="post" enctype="multipart/form-data" role="form"> -->
-                <div class="form-group">
-                  <label class="control-label">写真</label>
-                  <div>
-                    <!-- <p id="preview"></p> -->
-                    <p class="upload">
-                      <%= file_field_tag("image_files[]", multiple: true, accept: "image/*", style: "width:100%;", title: "画像をアップロードする") %>
-                    </p>
-                  </div>
-                </div>
-                <!-- <div class="form-group">
-                   <label class="control-label">音声</label>
-                     <div>
-                       <label>
-                          <p class="upload">
-                            <input type="file" name="audio_file"
-                              multiple="multiple" accept="audio/*"
-                              title="音声をアップロードする" style="width:100%;"/>
-                          </p>
-                        </label>
-                      </div>
-                    </div> -->
-                <div class="form-group">
-                  <label class="control-label">音声</label>
-                  <div>
-                    <p class="upload">
-                      <%= file_field_tag("audio_file", multiple: true, accept: "audio/*", style: "width:100%;", title: "音声をアップロードする") %>
-                    </p>
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label class="control-label">メッセージ</label>
-                  <%= text_area_tag(:say_comment, "", ows: "3", class: "form-control underlined") %>
-                </div>
-                <div class="form-group">
-                  <label class="control-label">テーマ</label>
-                  <div>
-                    <label>
-                      <%= radio_button_tag 'theme', '1', checked: true, class: "radio" %>
-                      <span>これからもよろしくお願いします！</span>
-                    </label>
-                  </div>
-                  <div>
-                    <label>
-                      <%= radio_button_tag 'theme', '2', class: "radio" %>
-                      <span>お誕生日おめでとう！</span>
-                    </label>
-                  </div>
-                  <div>
-                    <label>
-                      <%= radio_button_tag 'theme', '3', class: "radio" %>
-                      <span>お疲れさま！</span>
-                    </label>
-                  </div>
-                  <div>
-                    <label>
-                      <%= radio_button_tag 'theme', '4', class: "radio" %>
-                      <span>いらっしゃいませ！</span>
-                    </label>
-                  </div>
-                  <div>
-                    <label>
-                      <%= radio_button_tag 'theme', '5', class: "radio" %>
-                      <span>ありがとう！</span>
-                    </label>
-                  </div>
-                </div>
-              <% end %>
-              <%= button_tag("送信", class: "btn btn-success", onclick: "file_upload()") %>
-                                <!-- 即時でダイアログ表示 -->
-                                <!-- <button
-                                    type="submit"
-                                    data-toggle="modal"
-                                    data-target="#confirm-modal"
-                                    value='confirm-modal'
-                                    class="btn btn-success"
-                                    onclick="file_upload()">送信
-                                </button> -->
-
+            <div class="form-group">
+              <label class="control-label">写真</label>
+              <div>
+                <!-- <p id="preview"></p> -->
+                <p class="upload">
+                  <%= file_field_tag("image_files[]", multiple: true, accept: "image/*", style: "width:100%;", title: "画像をアップロードする") %>
+                </p>
+              </div>
             </div>
-          </div>
+            <!-- <div class="form-group">
+              <label class="control-label">音声</label>
+                <div>
+                  <label>
+                      <p class="upload">
+                        <input type="file" name="audio_file"
+                          multiple="multiple" accept="audio/*"
+                          title="音声をアップロードする" style="width:100%;"/>
+                      </p>
+                    </label>
+                  </div>
+                </div> -->
+            <div class="form-group">
+              <label class="control-label">音声</label>
+              <div>
+                <p class="upload">
+                  <%= file_field_tag("audio_file", multiple: true, accept: "audio/*", style: "width:100%;", title: "音声をアップロードする") %>
+                </p>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="control-label">メッセージ</label>
+              <%= text_area_tag(:say_comment, "", ows: "3", class: "form-control underlined") %>
+            </div>
+            <div class="form-group">
+              <label class="control-label">テーマ</label>
+              <div>
+                <label>
+                  <%= radio_button_tag 'theme', '1', checked: true, class: "radio" %>
+                  <span>これからもよろしくお願いします！</span>
+                </label>
+              </div>
+              <div>
+                <label>
+                  <%= radio_button_tag 'theme', '2', class: "radio" %>
+                  <span>お誕生日おめでとう！</span>
+                </label>
+              </div>
+              <div>
+                <label>
+                  <%= radio_button_tag 'theme', '3', class: "radio" %>
+                  <span>お疲れさま！</span>
+                </label>
+              </div>
+              <div>
+                <label>
+                  <%= radio_button_tag 'theme', '4', class: "radio" %>
+                  <span>いらっしゃいませ！</span>
+                </label>
+              </div>
+              <div>
+                <label>
+                  <%= radio_button_tag 'theme', '5', class: "radio" %>
+                  <span>ありがとう！</span>
+                </label>
+              </div>
+            </div>
+          <% end %>
+          <%= button_tag("送信", class: "btn btn-success", onclick: "file_upload()") %>
+                            <!-- 即時でダイアログ表示 -->
+                            <!-- <button
+                                type="submit"
+                                data-toggle="modal"
+                                data-target="#confirm-modal"
+                                value='confirm-modal'
+                                class="btn btn-success"
+                                onclick="file_upload()">送信
+                            </button> -->
+
         </div>
-      </section>
-    </article>
-    <footer class="footer">
-      <div class="footer-block buttons">
-        created by <a href="#">きのこ</a> </li>
       </div>
-            <!-- <div class="footer-block author">
-                <ul>
-                    <li> created by <a href="#">きのこ</a> </li>
-                </ul>
-            </div> -->
-    </footer>
-    <div class="modal fade" id="modal-media">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <%= button_tag(type: "button", class: "close", data: {dismiss: "modal"}, aria: {label: "Close"}) do %>
-              <span aria-hidden="true">&times;</span>
-              <span class="sr-only">Close</span>
-            <% end %>
-            <h4 class="modal-title">Media Library</h4>
-          </div>
-          <div class="modal-body modal-tab-container">
-            <ul class="nav nav-tabs modal-tabs" role="tablist">
-              <li class="nav-item">
-                <%= link_to("#gallery", "Gallery", class: "nav-link", data: {toggle: "tab"}, role: "tab") %>
-              </li>
-              <li class="nav-item">
-                <%= link_to("#upload", "Upload", class: "nav-link active", data: {toggle: "tab"}, role: "tab") %>
-              </li>
+    </div>
+  </section>
+</article>
+<footer class="footer">
+  <div class="footer-block buttons">
+    created by <a href="#">きのこ</a> </li>
+  </div>
+        <!-- <div class="footer-block author">
+            <ul>
+                <li> created by <a href="#">きのこ</a> </li>
             </ul>
-            <div class="tab-content modal-tab-content">
-              <div class="tab-pane fade" id="gallery" role="tabpanel">
-                <div class="images-container">
-                  <div class="row"> </div>
-                </div>
-              </div>
-              <div class="tab-pane fade active in" id="upload" role="tabpanel">
-                <div class="upload-container">
-                  <div id="dropzone">
-                    <%= form_tag(upload_bannosama_photos_url, multipart: true, class: "dropzone needsclick dz-clickable", id: "demo-upload") do %>
-                      <div class="dz-message-block">
-                        <div class="dz-message needsclick"> Drop files here or click to upload. </div>
-                      </div>
-                    <% end %>
+        </div> -->
+</footer>
+<div class="modal fade" id="modal-media">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <%= button_tag(type: "button", class: "close", data: {dismiss: "modal"}, aria: {label: "Close"}) do %>
+          <span aria-hidden="true">&times;</span>
+          <span class="sr-only">Close</span>
+        <% end %>
+        <h4 class="modal-title">Media Library</h4>
+      </div>
+      <div class="modal-body modal-tab-container">
+        <ul class="nav nav-tabs modal-tabs" role="tablist">
+          <li class="nav-item">
+            <%= link_to("#gallery", "Gallery", class: "nav-link", data: {toggle: "tab"}, role: "tab") %>
+          </li>
+          <li class="nav-item">
+            <%= link_to("#upload", "Upload", class: "nav-link active", data: {toggle: "tab"}, role: "tab") %>
+          </li>
+        </ul>
+        <div class="tab-content modal-tab-content">
+          <div class="tab-pane fade" id="gallery" role="tabpanel">
+            <div class="images-container">
+              <div class="row"> </div>
+            </div>
+          </div>
+          <div class="tab-pane fade active in" id="upload" role="tabpanel">
+            <div class="upload-container">
+              <div id="dropzone">
+                <%= form_tag(upload_bannosama_photos_url, multipart: true, class: "dropzone needsclick dz-clickable", id: "demo-upload") do %>
+                  <div class="dz-message-block">
+                    <div class="dz-message needsclick"> Drop files here or click to upload. </div>
                   </div>
-                </div>
+                <% end %>
               </div>
             </div>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Insert Selected</button>
-          </div>
         </div>
-        <!-- /.modal-content -->
       </div>
-      <!-- /.modal-dialog -->
-    </div>
-    <!-- /.modal -->
-    <div class="modal fade" id="confirm-modal">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title">
-              <i class="fa fa-check-square"></i> 完了
-            </h4>
-          </div>
-          <div class="modal-body">
-            <p>あなたの気持ちを想いをお届けします</p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="location.reload();">OK</button>
-          </div>
-        </div>
-        <!-- /.modal-content -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Insert Selected</button>
       </div>
-      <!-- /.modal-dialog -->
     </div>
-    <!-- /.modal -->
-    <div class="modal fade" id="confirm-modal-error">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title">エラー</h4>
-          </div>
-          <div class="modal-body">
-            <p>エラーが発生しました。</p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
-          </div>
-        </div>
-        <!-- /.modal-content -->
-      </div>
-      <!-- /.modal-dialog -->
-    </div>
+    <!-- /.modal-content -->
   </div>
+  <!-- /.modal-dialog -->
 </div>
-
-<!-- Reference block for JS -->
-<div class="ref" id="ref">
-  <div class="color-primary"></div>
-  <div class="chart">
-    <div class="color-primary"></div>
-    <div class="color-secondary"></div>
+<!-- /.modal -->
+<div class="modal fade" id="confirm-modal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          <i class="fa fa-check-square"></i> 完了
+        </h4>
+      </div>
+      <div class="modal-body">
+        <p>あなたの気持ちを想いをお届けします</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="location.reload();">OK</button>
+      </div>
+    </div>
+    <!-- /.modal-content -->
   </div>
+  <!-- /.modal-dialog -->
 </div>
-<%= javascript_include_tag 'bannosama/vendor.js' %>
-<%= javascript_include_tag 'bannosama/app.js' %>
-<%= javascript_include_tag 'bannosama/main.js' %>
+<!-- /.modal -->
+<div class="modal fade" id="confirm-modal-error">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">エラー</h4>
+      </div>
+      <div class="modal-body">
+        <p>エラーが発生しました。</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>

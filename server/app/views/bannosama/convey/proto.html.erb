@@ -19,13 +19,13 @@
           <!-- <div class="title-block">
               <h3 class="title"> Underlined Inputs </h3>
             </div> -->
-          <form id="my_form" action="#" method="post" enctype="multipart/form-data" role="form">
+          <%= form_tag(upload_bannosama_photos_url, multipart: true, id: "my_form") do %>
             <div class="form-group">
               <label class="control-label">写真</label>
               <div>
                 <!-- <p id="preview"></p> -->
                 <p class="upload">
-                  <input type="file" name="image_files[]" multiple="multiple" accept="image/*" title="画像をアップロードする" style="width:100%;" />
+                  <%= file_field_tag("image_files[]", multiple: true, accept: "image/*", style: "width:100%;", title: "画像をアップロードする") %>
                 </p>
               </div>
             </div>
@@ -45,50 +45,50 @@
               <label class="control-label">音声</label>
               <div>
                 <p class="upload">
-                  <input type="file" name="audio_file" multiple="multiple" accept="audio/*" title="音声をアップロードする" style="width:100%;" />
+                  <%= file_field_tag("audio_file", multiple: true, accept: "audio/*", style: "width:100%;", title: "音声をアップロードする") %>
                 </p>
               </div>
             </div>
 
             <div class="form-group">
               <label class="control-label">メッセージ</label>
-              <textarea name="say_comment" ows="3" class="form-control underlined"></textarea>
+              <%= text_area_tag(:say_comment, "", ows: "3", class: "form-control underlined") %>
             </div>
             <div class="form-group">
               <label class="control-label">テーマ</label>
               <div>
                 <label>
-                  <input class="radio" type="radio" name="theme" value="1" checked="checked">
+                  <%= radio_button_tag 'theme', '1', checked: true, class: "radio" %>
                   <span>これからもよろしくお願いします！</span>
                 </label>
               </div>
               <div>
                 <label>
-                  <input class="radio" type="radio" name="theme" value="2">
+                  <%= radio_button_tag 'theme', '2', class: "radio" %>
                   <span>お誕生日おめでとう！</span>
                 </label>
               </div>
               <div>
                 <label>
-                  <input class="radio" type="radio" name="theme" value="3">
+                  <%= radio_button_tag 'theme', '3', class: "radio" %>
                   <span>お疲れさま！</span>
                 </label>
               </div>
               <div>
                 <label>
-                  <input class="radio" type="radio" name="theme" value="4">
+                  <%= radio_button_tag 'theme', '4', class: "radio" %>
                   <span>いらっしゃいませ！</span>
                 </label>
               </div>
               <div>
                 <label>
-                  <input class="radio" type="radio" name="theme" value="5">
+                  <%= radio_button_tag 'theme', '5', class: "radio" %>
                   <span>ありがとう！</span>
                 </label>
               </div>
             </div>
-          </form>
-          <button type="submit" class="btn btn-success" onclick="file_upload()">送信</button>
+          <% end %>
+          <%= button_tag("送信", class: "btn btn-success", onclick: "file_upload()") %>
           <!-- 即時でダイアログ表示 -->
                     <!-- <button
                                 type="submit"
@@ -105,12 +105,12 @@
   </section>
 </article>
 <footer class="footer">
-    <div class="footer-block buttons">
-        created by
-        <a href="#">きのこ</a>
-        </li>
-    </div>
-    <!-- <div class="footer-block author">
+  <div class="footer-block buttons">
+    created by
+    <a href="#">きのこ</a>
+    </li>
+  </div>
+  <!-- <div class="footer-block author">
             <ul>
                 <li> created by <a href="#">きのこ</a> </li>
             </ul>

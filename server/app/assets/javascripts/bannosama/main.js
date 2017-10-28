@@ -6,10 +6,10 @@ function file_upload()
 
     dispLoading("loading...");
     // フォームデータを取得
-    var formdata = new FormData($('#my_form').get(0));
+    var form = $('#my_form').get(0);
+    var formdata = new FormData(form);
     $.ajax({
-        url: 'http://taptappun.net/bannosama/photos/upload',
-        //  url: 'https://taptappun.net/bannosama/photos/upload_message',
+        url: form.action,
         // url: 'http://tniky1.com/sandbox/kinoko/recieve.php',
         type : "POST",
         data : formdata,

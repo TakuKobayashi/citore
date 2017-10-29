@@ -37,7 +37,7 @@ class Datapool::FrickrImageMetum < Datapool::ImageMetum
       images += self.generate_images!(flickr_images: flickr_images, options: search)
       page_counter = page_counter + 1
       image_counter += flickr_images.size
-      break if image_counter > flickr_images.total.to_i
+      break if image_counter >= flickr_images.total.to_i
     end
     return images.uniq
   end

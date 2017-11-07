@@ -23,6 +23,77 @@ class Datapool::ResourceMetum < ApplicationRecord
     return self.where(origin_src: origin_srces)
   end
 
+  def self.constract(url:, title:, type: ,check_file: false, file_genre: nil, options: {})
+    if Datapool::ImageMetum.imagefile?(url)
+      if self.base_class.to_s == "Datapool::ImageMetum"
+        return self.constract(url: url, title: title, check_image_file: check_file, options: options)
+      else
+        return Datapool::WebSiteImageMetum.constract(url: url, title: title, check_image_file: check_file, options: options)
+      end
+    elsif Datapool::PdfMetum.pdffile?(url)
+      if self.base_class.to_s == "Datapool::PdfMetum"
+        return self.new(url: url, title: title, check_image_file: check_file, options: options)
+      else
+        return Datapool::PdfMetum.new(url: url, title: title, check_image_file: check_file, options: options)
+      end
+    elsif Datapool::AudioMetum.audiofile?(url)
+      if self.base_class.to_s == "Datapool::AudioMetum"
+        return self.constract(url: url, title: title, file_genre: file_genre, options: options)
+      else
+        return Datapool::WebSiteAudioMetum.constract(url: url, title: title, file_genre: file_genre, options: options)
+      end
+    elsif Datapool::VideoMetum.videofile?(url)
+      if self.base_class.to_s == "Datapool::VideoMetum"
+        return self.constract(url: url, title: title, file_genre: file_genre, options: options)
+      else
+        return Datapool::VideoMetum.constract(url: url, title: title, file_genre: file_genre, options: options)
+      end
+    else
+      return Datapool::Website.constract(url: url, title: title, options: options)
+    end
+  end
+
+  def self.import_resources!(resources:)
+    clazz_imports = {}
+    resources.each do |resource|
+      next unless resource.kind_of?(Datapool::ResourceMetum)
+      if resource.kind_of?(Datapool::ImageMetum)
+        if clazz_imports[Datapool::ImageMetum].blank?
+          clazz_imports[Datapool::ImageMetum] = []
+        end
+        clazz_imports[Datapool::ImageMetum] << resource
+      elsif resource.kind_of?(Datapool::PdfMetum)
+        if clazz_imports[Datapool::PdfMetum].blank?
+          clazz_imports[Datapool::PdfMetum] = []
+        end
+        clazz_imports[Datapool::PdfMetum] << resource
+      elsif resource.kind_of?(Datapool::AudioMetum)
+        if clazz_imports[Datapool::AudioMetum].blank?
+          clazz_imports[Datapool::AudioMetum] = []
+        end
+        clazz_imports[Datapool::AudioMetum] << resource
+      elsif resource.kind_of?(Datapool::VideoMetum)
+        if clazz_imports[Datapool::VideoMetum].blank?
+          clazz_imports[Datapool::VideoMetum] = []
+        end
+        clazz_imports[Datapool::VideoMetum] << resource
+      else
+        if clazz_imports[Datapool::Website].blank?
+          clazz_imports[Datapool::Website] = []
+        end
+        clazz_imports[Datapool::Website] << resource
+      end
+    end
+
+    clazz_imports.each do |clazz, imports|
+      src_resources = clazz.find_origin_src_by_url(url: imports.map(&:src).uniq).index_by(&:src)
+      import_resources = imports.select{|import| src_resources[import.src].blank? }
+      if import_resources.present?
+        clazz.import!(import_resources)
+      end
+    end
+  end
+
   def save_filename
     return SecureRandom.hex + File.extname(self.try(:original_filename).to_s)
   end

@@ -27,4 +27,9 @@ class Datapool::VideoMetum < Datapool::ResourceMetum
   }
 
   CRAWL_IMAGE_ROOT_PATH = "project/crawler/videos/"
+
+  #TODO check
+  def self.videofile?(url)
+    return false
+  end
 end

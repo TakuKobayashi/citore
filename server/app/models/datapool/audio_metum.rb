@@ -79,6 +79,17 @@ class Datapool::AudioMetum < Datapool::ResourceMetum
     return filepath
   end
 
+  def self.constract(url:, title:, file_genre: , options: {})
+    audio_metum = self.new(
+      title: title,
+      file_genre: file_genre,
+      options: {
+      }.merge(options)
+    )
+    audio_metum.src = url
+    return audio_metum
+  end
+
   def self.audiofile?(filename)
     return AUDIO_FILE_EXTENSIONS.include?(File.extname(filename))
   end

@@ -19,4 +19,8 @@
 class Datapool::PdfMetum < ApplicationRecord
   serialize :options, JSON
   has_many :pages, class_name: 'Datapool::PdfPageMetum', foreign_key: :datapool_pdf_metum_id
+
+  def self.pdffile?(filename)
+    return File.extname(filename).downcase == ".pdf"
+  end
 end

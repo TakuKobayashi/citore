@@ -58,6 +58,11 @@ class Datapool::ImageMetum < Datapool::ResourceMetum
     return imagefile_name.match(/(.+?#{ext})/).to_s
   end
 
+  def self.imagefile?(filename)
+    afilename = Addressable::URI.parse(filename.to_s)
+    return IMAGE_FILE_EXTENSIONS.include?(File.extname(filename)) || afilename.scheme == "data"
+  end
+
   def save_filename
     if self.original_filename.present?
       return self.original_filename

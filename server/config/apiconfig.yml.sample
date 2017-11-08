@@ -103,3 +103,17 @@ instagram:
 spotify:
   client_id:
   client_secret:
+
+getty_images:
+  standard:
+    key:
+    secret:
+  embed:
+    key:
+    secret:
+
+pixiv:
+  client_id:
+  client_secret:
+  username:
+  password:

@@ -6,8 +6,9 @@ class Egaonotatsuzin::AuthenticationController < BaseController
     end
     user = Egaonotatsuzin::User.find_or_initialize_by(token: token)
     if user.new_record?
-      user.update!(user_agent: request.user_agent)
+      user.user_agent = request.user_agent
     end
+    user.sign_in!
     session["user_id"] = user.id
     session["user_type"] = user.class.to_s
     session["redirect_url"] = callback_egaonotatsuzin_authentication_url

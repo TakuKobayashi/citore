@@ -3,5 +3,6 @@ class Egaonotatsuzin::BaseController < BaseController
 
   def find_user
     @user = Egaonotatsuzin::User.find_by(token: token)
+    @user.try(:sign_in!)
   end
 end

@@ -19,4 +19,9 @@
 class Egaonotatsuzin::User < ApplicationRecord
   serialize :options, JSON
   has_one :spotify, class_name: 'SpotifyAccount', as: :user
+
+  def sign_in!
+    self.last_accessed_at = Time.current
+    self.save!
+  end
 end

@@ -27,7 +27,8 @@ class Tools::AudioController < Homepage::BaseController
   def check_and_auth_account
     if @visitor.spotify.nil?
       session["redirect_url"] = listen_from_spotify_tools_audio_url
-      session["visitor_id"] = @visitor.id
+      session["user_id"] = @visitor.id
+      session["user_type"] = @visitor.class.to_s
       redirect_to "/auth/spotify" and return
     end
   end

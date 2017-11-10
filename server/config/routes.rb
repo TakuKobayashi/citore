@@ -177,7 +177,16 @@ Rails.application.routes.draw do
 
   namespace :egaonotatsuzin do
     resource :authentication, controller: :authentication, only: [] do
-      get :spotify
+      get :sign_in
+      get :callback
+    end
+
+    namespace :api do
+      resources :playlists, only: [:index] do
+        collection do
+          get :analysis
+        end
+      end
     end
   end
 

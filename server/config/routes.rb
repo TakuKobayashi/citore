@@ -196,6 +196,7 @@ Rails.application.routes.draw do
         get :index
         get :upload_admin
         post :upload
+        get :remove
       end
     end
   end

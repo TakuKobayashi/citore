@@ -5,6 +5,10 @@
       <td><%= file_field_tag "resource_file" %></td>
     </tr>
     <tr>
+      <td><%= label_tag("カテゴリ") %></td>
+      <td><%= select_tag(:category, options_for_select(Hackathon::Arstudio2017::Resource.categories)) %></td>
+    </tr>
+    <tr>
       <td><%= submit_tag("アップロードする") %></td>
     </tr>
   <% end %>
@@ -14,6 +18,7 @@
   <% @resources.each do |resource| %>
     <tr>
       <td><%= link_to(resource.original_filename, resource.url) %></td>
+      <td><%= link_to("削除する", remove_hackathon_arstudio2017_loader_url(resource_id: resource.id), data: {:confirm => "削除します。よろしいですか?"}) %></td>
     </tr>
   <% end %>
 </table>

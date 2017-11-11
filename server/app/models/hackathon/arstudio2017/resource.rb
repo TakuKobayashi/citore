@@ -45,4 +45,10 @@ class Hackathon::Arstudio2017::Resource < ApplicationRecord
     self.url = ApplicationRecord::S3_ROOT_URL + filepath
     self.save!
   end
+
+  def remove!
+    s3 = Aws::S3::Client.new
+    s3.delete_object(bucket: "taptappun", key: self.url.gsub(ApplicationRecord::S3_ROOT_URL, ""))
+    self.destroy
+  end
 end

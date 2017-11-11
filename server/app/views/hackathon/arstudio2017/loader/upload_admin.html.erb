@@ -1,0 +1,19 @@
+<table>
+  <%= form_tag(upload_hackathon_arstudio2017_loader_url, multipart: true) do %>
+    <tr>
+      <td><%= label_tag("ファイル") %></td>
+      <td><%= file_field_tag "resource_file" %></td>
+    </tr>
+    <tr>
+      <td><%= submit_tag("アップロードする") %></td>
+    </tr>
+  <% end %>
+</table>
+
+<table>
+  <% @resources.each do |resource| %>
+    <tr>
+      <td><%= link_to(resource.original_filename, resource.url) %></td>
+    </tr>
+  <% end %>
+</table>

@@ -39,7 +39,7 @@ class Hackathon::Arstudio2017::Resource < ApplicationRecord
 
   def upload!(binary, original_filename)
     s3 = Aws::S3::Client.new
-    filepath = RESOURCE_ROOT_PATH + SecureRandom.hex + File.extname(original_filename).downcase
+    filepath = RESOURCE_ROOT_PATH + "/" + SecureRandom.hex + File.extname(original_filename).downcase
     s3.put_object(bucket: "taptappun",body: binary, key: filepath, acl: "public-read")
     self.original_filename = original_filename
     self.url = ApplicationRecord::S3_ROOT_URL + filepath

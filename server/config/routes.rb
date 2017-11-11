@@ -190,6 +190,16 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace :hackathon do
+    namespace :arstudio2017 do
+      resource :loader, controller: :loader, only: [] do
+        get :index
+        get :upload_admin
+        post :upload
+      end
+    end
+  end
+
   namespace :bannosama do
     root to: "top#index"
 

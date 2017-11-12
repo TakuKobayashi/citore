@@ -4,6 +4,7 @@
 #
 #  id                :integer          not null, primary key
 #  category          :integer          default("unknown"), not null
+#  mode              :integer          default("admin"), not null
 #  url               :string(255)      not null
 #  original_filename :text(65535)      not null
 #  options           :text(65535)
@@ -13,6 +14,11 @@
 
 class Hackathon::Arstudio2017::Resource < ApplicationRecord
   RESOURCE_ROOT_PATH = "hackathon/arstudio2017/resources"
+
+  enum mode: {
+    admin: 0,
+    application: 1
+  }
 
   enum category: {
     unknown: 0,

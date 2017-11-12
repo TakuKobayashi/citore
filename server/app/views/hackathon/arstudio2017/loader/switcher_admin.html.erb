@@ -1,0 +1,11 @@
+<table>
+  <%= form_tag(switch_hackathon_arstudio2017_loader_url, multipart: true) do %>
+    <tr>
+      <td><%= label_tag("現在のMode") %></td>
+      <td><%= Hackathon::Arstudio2017::Resource.modes.invert[@current_mode] %></td>
+    </tr>
+    <tr>
+      <td><%= submit_tag("モードを切り替える") %></td>
+    </tr>
+  <% end %>
+</table>

@@ -1,5 +1,6 @@
 <table>
   <%= form_tag(upload_hackathon_arstudio2017_loader_url, multipart: true) do %>
+    <%= hidden_field_tag("mode", "0") %>
     <tr>
       <td><%= label_tag("ファイル") %></td>
       <td><%= file_field_tag "resource_file" %></td>

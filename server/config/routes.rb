@@ -197,6 +197,8 @@ Rails.application.routes.draw do
         get :upload_admin
         post :upload
         get :remove
+        get :switcher_admin
+        post :switch
       end
     end
   end

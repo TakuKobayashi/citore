@@ -4,6 +4,7 @@
 #
 #  id                :integer          not null, primary key
 #  category          :integer          default("unknown"), not null
+#  mode              :integer          default("admin"), not null
 #  url               :string(255)      not null
 #  original_filename :text(65535)      not null
 #  options           :text(65535)

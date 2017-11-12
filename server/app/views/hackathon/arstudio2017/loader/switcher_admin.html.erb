@@ -5,6 +5,10 @@
       <td><%= Hackathon::Arstudio2017::Resource.modes.invert[@current_mode] %></td>
     </tr>
     <tr>
+      <td><%= label_tag("Mode") %></td>
+      <td><%= select_tag(:mode, options_for_select(Hackathon::Arstudio2017::Resource.modes)) %></td>
+    </tr>
+    <tr>
       <td><%= submit_tag("モードを切り替える") %></td>
     </tr>
   <% end %>

@@ -16,12 +16,8 @@ class Hackathon::Arstudio2017::LoaderController < BaseController
   end
 
   def switch
-    current_mode = ExtraInfo.read_extra_info["arstudio_mode"].to_i
-    if current_mode == 0
-      ExtraInfo.update({"arstudio_mode" => 1})
-    else
-      ExtraInfo.update({"arstudio_mode" => 0})
-    end
+    mode = params[:mode].to_i
+    ExtraInfo.update({"arstudio_mode" => mode})
     redirect_to switcher_admin_hackathon_arstudio2017_loader_url
   end
 

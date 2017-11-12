@@ -17,7 +17,9 @@ class Hackathon::Arstudio2017::Resource < ApplicationRecord
 
   enum mode: {
     admin: 0,
-    application: 1
+    application: 1,
+    others: 2,
+    others_next: 3
   }
 
   enum category: {

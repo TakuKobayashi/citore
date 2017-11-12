@@ -1,5 +1,6 @@
 class Hackathon::Arstudio2017::LoaderController < BaseController
   layout false
+  protect_from_forgery
 
   def index
     resources = Hackathon::Arstudio2017::Resource.where(mode: ExtraInfo.read_extra_info["arstudio_mode"].to_i)

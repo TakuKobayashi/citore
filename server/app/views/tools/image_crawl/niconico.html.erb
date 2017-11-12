@@ -1,0 +1,13 @@
+<%= link_to("http://seiga.nicovideo.jp/", class: "logo_link") do %>
+  <p><%= image_tag("icon/seiga_logo.gif", size: "128x40") %></p>
+  <p><b>ニコニコ静画(イラスト)</b></p>
+<% end %>
+<%= form_tag(niconico_crawl_tools_image_crawl_url, multipart: true, class: "pure-form pure-form-aligned") do %>
+  <div class="pure-control-group">
+    <%= label_tag("キーワード") %>
+    <%= text_field_tag :keyword, "", placeholder: "検索したい文字列を入力してください", class: "pure-input-2-3" %>
+  </div>
+  <div class="pure-controls">
+    <%= submit_tag("画像をダウンロードする", class: "pure-button pure-button-primary") %>
+  </div>
+<% end %>

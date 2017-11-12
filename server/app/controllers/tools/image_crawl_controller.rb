@@ -1,6 +1,6 @@
 class Tools::ImageCrawlController < Homepage::BaseController
   before_action :load_upload_jobs, only: :index
-  before_action :execute_upload_job, only: [:url_crawl, :twitter_crawl, :flickr_crawl, :google_image_search_crawl]
+  before_action :execute_upload_job, only: [:url_crawl, :twitter_crawl, :flickr_crawl, :google_image_search_crawl, :niconico_crawl, :getty_images_crawl]
 
   def index
   end
@@ -33,6 +33,21 @@ class Tools::ImageCrawlController < Homepage::BaseController
     redirect_to tools_image_crawl_url
   end
 
+  def niconico
+  end
+
+  def niconico_crawl
+    redirect_to tools_image_crawl_url
+  end
+
+  def getty_images
+
+  end
+
+  def getty_images_crawl
+    redirect_to tools_image_crawl_url
+  end
+
   def download_zip
     job = @visitor.upload_jobs.find_by(id: params[:job_id])
     job.downloaded!
@@ -57,6 +72,10 @@ class Tools::ImageCrawlController < Homepage::BaseController
       prefix = "Datapool::TwitterImageMetum"
     elsif params[:action] == "url_crawl"
       prefix = "Datapool::WebSiteImageMetum"
+    elsif params[:action] == "niconico_crawl"
+      prefix = "Datapool::NiconicoImageMetum"
+    elsif params[:action] == "getty_images_crawl"
+      prefix = "Datapool::GettyImageMetum"
     else
       prefix = "Datapool::GoogleImageSearch"
     end

@@ -30,6 +30,14 @@ class ImageCrawlWorker
       else
         images = Datapool::TwitterImageMetum.search_image_tweet!(keyword: keyword)
       end
+    elsif request_params["action"] ==  "niconico_crawl"
+      keyword = ApplicationRecord.basic_sanitize(request_params["keyword"].to_s)
+      upload_job.options = upload_job.options.merge({keyword: keyword})
+      images = Datapool::NiconicoImageMetum.crawl_images!(keyword: keyword)
+    elsif request_params["action"] ==  "getty_images_crawl"
+      keyword = ApplicationRecord.basic_sanitize(request_params["keyword"].to_s)
+      upload_job.options = upload_job.options.merge({keyword: keyword})
+      images = Datapool::GettyImageMetum.crawl_images!(keyword: keyword)
     else
       keyword = ApplicationRecord.basic_sanitize(request_params["keyword"].to_s)
       upload_job.options = upload_job.options.merge({keyword: keyword})

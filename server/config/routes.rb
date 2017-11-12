@@ -129,6 +129,10 @@ Rails.application.routes.draw do
       get :download_zip
       get :google_image_search
       post :google_image_search_crawl
+      get :niconico
+      post :niconico_crawl
+      get :getty_images
+      post :getty_images_crawl
     end
 
     resource :audio, controller: :audio, only: [] do

@@ -1,0 +1,13 @@
+<%= link_to("http://www.gettyimages.co.jp/", class: "logo_link") do %>
+  <p><%= image_tag("icon/getty_images_logo.jpg", size: "128x23") %></p>
+  <p><b>gettyimages</b></p>
+<% end %>
+<%= form_tag(getty_images_crawl_tools_image_crawl_url, multipart: true, class: "pure-form pure-form-aligned") do %>
+  <div class="pure-control-group">
+    <%= label_tag("キーワード") %>
+    <%= text_field_tag :keyword, "", placeholder: "検索したい文字列を入力してください", class: "pure-input-2-3" %>
+  </div>
+  <div class="pure-controls">
+    <%= submit_tag("画像をダウンロードする", class: "pure-button pure-button-primary") %>
+  </div>
+<% end %>

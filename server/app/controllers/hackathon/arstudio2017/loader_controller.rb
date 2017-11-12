@@ -3,7 +3,7 @@ class Hackathon::Arstudio2017::LoaderController < BaseController
 
   def index
     resources = Hackathon::Arstudio2017::Resource.where(mode: ExtraInfo.read_extra_info["arstudio_mode"].to_i)
-    render :layout => false, :json => resources.map{|r| {url: r.url, category: Hackathon::Arstudio2017::Resource.categories[r.category] } }
+    render :layout => false, :json => resources.map{|r| {url: r.url, category: Hackathon::Arstudio2017::Resource.categories[r.category], mode: Hackathon::Arstudio2017::Resource.modes[r.mode]} }
   end
 
   def upload_admin

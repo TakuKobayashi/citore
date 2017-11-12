@@ -37,10 +37,22 @@ class Hackathon::Arstudio2017::Resource < ApplicationRecord
     return ApplicationRecord::S3_ROOT_URL + self.class.s3_file_image_root + self.filename
   end
 
-  def upload!(binary, original_filename)
+  def upload!(file, original_filename)
     s3 = Aws::S3::Client.new
     filepath = RESOURCE_ROOT_PATH + "/" + SecureRandom.hex + File.extname(original_filename).downcase
-    s3.put_object(bucket: "taptappun",body: binary, key: filepath, acl: "public-read")
+
+    image = MiniMagick::Image.open(file.path)
+    image.resize(Datapool::ImageMetum.calc_resize_text(width: image.width, height: image.height, max_length: 300))
+    if image.width * 4.to_f / 3 < image.height
+      crop_width = image.width
+      crop_height = (image.width * 4.to_f / 3).to_i
+    else
+      crop_width = image.width * 3.to_f / 4
+      crop_height = image.height
+    end
+    Rails.logger.info("#{crop_width}x#{crop_height}+#{(image.width - crop_width) / 2}+#{(image.height - crop_height) / 2}")
+    new_image = image.crop("#{crop_width}x#{crop_height}+#{(image.width - crop_width) / 2}+#{(image.height - crop_height) / 2}")
+    s3.put_object(bucket: "taptappun",body: new_image.to_blob, key: filepath, acl: "public-read")
     self.original_filename = original_filename
     self.url = ApplicationRecord::S3_ROOT_URL + filepath
     self.save!

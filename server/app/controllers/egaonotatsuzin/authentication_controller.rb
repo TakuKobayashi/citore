@@ -13,7 +13,7 @@ class Egaonotatsuzin::AuthenticationController < BaseController
     user.sign_in!
     session["user_id"] = user.id
     session["user_type"] = user.class.to_s
-    session["redirect_url"] = callback_egaonotatsuzin_authentication_url
+    session["redirect_url"] = callback_egaonotatsuzin_authentication_url(user_token: token)
     redirect_to "/auth/spotify"
   end
 

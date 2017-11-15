@@ -1,4 +1,6 @@
 class Egaonotatsuzin::AuthenticationController < BaseController
+  layout: false
+
   def sign_in
     token = params[:token]
     if token.blank?
@@ -16,9 +18,8 @@ class Egaonotatsuzin::AuthenticationController < BaseController
   end
 
   def callback
-    user = session["user_type"].constantize.find_by(id: session["user_id"])
+    @user = session["user_type"].constantize.find_by(id: session["user_id"])
     session.delete("user_id")
     session.delete("user_type")
-    redirect_to "egaonotatsuzin://auth?user_token=#{user.token}"
   end
 end

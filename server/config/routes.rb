@@ -189,6 +189,7 @@ Rails.application.routes.draw do
       resources :playlists, only: [:index] do
         collection do
           get :analysis
+          get :config
         end
       end
     end

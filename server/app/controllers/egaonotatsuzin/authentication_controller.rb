@@ -1,5 +1,5 @@
 class Egaonotatsuzin::AuthenticationController < BaseController
-  layout: false
+  layout false
 
   def sign_in
     token = params[:token]

@@ -31,6 +31,15 @@ class SpotifyAccount < Account
     return ApplicationRecord.request_and_parse_json(url: "https://api.spotify.com/v1/search", params: {q: text, type: search_type, limit: 50}, headers: {Authorization: "Bearer #{self.token}"})
   end
 
+  def playlist_tracks
+    playlist = get_playlists
+    tracks_hashes = []
+    playlist["items"].each do |playlist_item|
+      tracks_hashes << ApplicationRecord.request_and_parse_json(url: playlist_item["tracks"]["href"], headers: {Authorization: "Bearer #{self.token}"})
+    end
+    return tracks_hashes
+  end
+
   #max 50件
   def tracks(ids: [])
     return ApplicationRecord.request_and_parse_json(url: "https://api.spotify.com/v1/tracks", params: {ids: ids.join(",")}, headers: {Authorization: "Bearer #{self.token}"})

@@ -7,7 +7,7 @@
 #  title     :string(255)      not null
 #  track_id  :string(255)      not null
 #  isrc      :string(255)
-#  duration  :integer          default(0), not null
+#  duration  :float(24)        default(0.0), not null
 #  url       :string(255)
 #  album_ids :text(65535)
 #  options   :text(65535)
@@ -19,6 +19,9 @@
 #
 
 class Datapool::AudioTrack < ApplicationRecord
+  has_many :elements, as: :audio, class_name: 'Datapool::AudioElement'
+  has_one :detail, class_name: 'Datapool::AudioTrackDetail'
+
   serialize :album_ids, JSON
   serialize :options, JSON
 end

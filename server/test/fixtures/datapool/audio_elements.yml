@@ -1,0 +1,30 @@
+# == Schema Information
+#
+# Table name: datapool_audio_elements
+#
+#  id         :integer          not null, primary key
+#  audio_type :string(255)      not null
+#  audio_id   :integer          not null
+#  category   :integer          default("beats"), not null
+#  start      :float(24)        default(0.0), not null
+#  duration   :float(24)        default(0.0), not null
+#  confidence :float(24)        default(0.0), not null
+#  others     :text(65535)
+#  options    :text(65535)
+#
+# Indexes
+#
+#  datapool_audio_elements_index  (audio_type,audio_id,category)
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# This model initially had no columns defined. If you add columns to the
+# model remove the '{}' from the fixture names and add the columns immediately
+# below each fixture, per the syntax in the comments below
+#
+one: {}
+# column: value
+#
+two: {}
+# column: value

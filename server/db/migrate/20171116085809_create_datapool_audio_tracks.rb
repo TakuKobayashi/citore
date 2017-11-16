@@ -5,7 +5,7 @@ class CreateDatapoolAudioTracks < ActiveRecord::Migration[5.1]
       t.string :title, null: false
       t.string :track_id, null: false
       t.string :isrc
-      t.integer :duration, null: false, default: 0
+      t.float :duration, null: false, default: 0
       t.string :url
       t.text :album_ids
       t.text :options

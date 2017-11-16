@@ -9,7 +9,7 @@ class Egaonotatsuzin::Api::PlaylistsController < Egaonotatsuzin::Api::BaseContro
     render :layout => false, :json => analysis
   end
 
-  def config
+  def spotify_config
     apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
     render :layout => false, :json => {access_token: @user.spotify.token, client_id: apiconfig["apotify"]["client_id"]}
   end

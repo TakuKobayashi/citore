@@ -1,4 +1,4 @@
-class Egaonotatsuzin::Api::PlaylistsController < Egaonotatsuzin::BaseController
+class Egaonotatsuzin::Api::PlaylistsController < Egaonotatsuzin::Api::BaseController
   def index
     playlists = @user.spotify.get_playlists
     render :layout => false, :json => playlists

@@ -14,4 +14,6 @@
 #
 
 class Datapool::TrackResource < ApplicationRecord
+  belongs_to :resource, polymorphic: true, required: false
+  belongs_to :track, class_name: 'Datapool::AudioTrack', foreign_key: :track_id, required: false
 end

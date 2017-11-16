@@ -21,6 +21,8 @@
 #
 
 class SpotifyAccount < Account
+  has_many :playlists, class_name: 'SpotifyPlaylist', foreign_key: :account_id
+
   def get_playlists
     return ApplicationRecord.request_and_parse_json(url: "https://api.spotify.com/v1/me/playlists", headers: {Authorization: "Bearer #{self.token}"})
   end

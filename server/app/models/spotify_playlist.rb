@@ -20,4 +20,6 @@
 #
 
 class SpotifyPlaylist < ApplicationRecord
+  has_many :track_resources, as: :resource, class_name: 'Datapool::TrackResource'
+  has_many :tracks, through: :track_resources, source: :track
 end

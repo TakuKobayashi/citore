@@ -18,7 +18,5 @@
 #  index_datapool_audio_tracks_on_track_id_and_type  (track_id,type) UNIQUE
 #
 
-class Datapool::AudioTrack < ApplicationRecord
-  serialize :album_ids, JSON
-  serialize :options, JSON
+class Datapool::SpotifyAudioTrack < Datapool::AudioTrack
 end

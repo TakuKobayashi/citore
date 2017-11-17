@@ -17,6 +17,4 @@
 #
 
 class Datapool::SpotifyAudioAlbum < Datapool::AudioAlbum
-  serialize :track_ids, JSON
-  serialize :options, JSON
 end

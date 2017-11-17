@@ -189,7 +189,6 @@ Rails.application.routes.draw do
       resources :playlists, only: [:index] do
         collection do
           get :analysis
-          get :spotify_config
         end
       end
     end

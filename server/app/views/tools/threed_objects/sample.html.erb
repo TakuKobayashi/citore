@@ -1,0 +1,88 @@
+<%= javascript_include_tag 'libraries/threejs/three.min.js' %>
+<%= javascript_include_tag 'libraries/threejs/examples/js/controls/OrbitControls.js' %>
+<%= javascript_include_tag 'libraries/threejs/examples/js/loaders/DDSLoader.js' %>
+<%= javascript_include_tag 'libraries/threejs/examples/js/loaders/MTLLoader.js' %>
+<%= javascript_include_tag 'libraries/threejs/examples/js/loaders/OBJLoader.js' %>
+<%= javascript_include_tag 'libraries/threejs/examples/js/Detector.js' %>
+<%= javascript_include_tag 'libraries/threejs/examples/js/libs/stats.min.js' %>
+<script>
+	if (!Detector.webgl) Detector.addGetWebGLMessage();
+	var container, stats, controls;
+	var camera, scene, renderer, light;
+	var clock = new THREE.Clock();
+	init();
+	function init() {
+		container = document.createElement('div');
+		document.body.appendChild(container);
+		camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 2000);
+		// scene
+		scene = new THREE.Scene();
+
+		// stats
+		stats = new Stats();
+		container.appendChild(stats.dom);
+
+		// model
+		var onProgress = function ( xhr ) {
+			if ( xhr.lengthComputable ) {
+				var percentComplete = xhr.loaded / xhr.total * 100;
+				console.log( Math.round(percentComplete, 2) + '% downloaded' );
+			}
+		};
+
+		var onError = function (xhr) {
+			console.error(xhr);
+		};
+
+		THREE.Loader.Handlers.add(/\.dds$/i, new THREE.DDSLoader() );
+		var mtlLoader = new THREE.MTLLoader();
+		mtlLoader.load("<%= image_path('threedobjects/taku/taku_fix.mtl') %>", function(materials) {
+			materials.preload();
+			var objLoader = new THREE.OBJLoader();
+			objLoader.setMaterials(materials);
+			objLoader.load("<%= image_path('threedobjects/taku/taku_fix.obj') %>", function (object) {
+//				object.scale.set(5, 5, 5);
+//				object.rotation.set(0, 0, 90);
+//				object.position.set(0, 0, -10);
+				scene.add( object );
+			}, onProgress, onError );
+		});
+		//背景透明
+		renderer = new THREE.WebGLRenderer({alpha: true});
+		renderer.setClearColor( 0x000000, 0 );
+		renderer.setPixelRatio(window.devicePixelRatio);
+		renderer.setSize(window.innerWidth, window.innerHeight);
+		container.appendChild(renderer.domElement);
+		//
+
+		controls = new THREE.OrbitControls( camera, renderer.domElement );
+		controls.target.set( 0, 12, 0 );
+		camera.position.set( 2, 18, 38 );
+		controls.update();
+
+		window.addEventListener('resize', onWindowResize, false );
+
+		light = new THREE.HemisphereLight(0xffffff, 0x444444, 1.0);
+		light.position.set(0, 1, 0);
+		scene.add(light);
+		light = new THREE.DirectionalLight(0xffffff, 1.0);
+		light.position.set(0, 1, 0);
+		scene.add(light);
+		animate();
+	}
+
+	function onWindowResize() {
+		camera.aspect = window.innerWidth / window.innerHeight;
+		camera.updateProjectionMatrix();
+		renderer.setSize( window.innerWidth, window.innerHeight );
+	}
+	//
+	function animate() {
+		requestAnimationFrame( animate );
+		stats.update();
+		render();
+	}
+	function render() {
+		renderer.render( scene, camera );
+	}
+</script>

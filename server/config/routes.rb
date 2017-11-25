@@ -168,6 +168,13 @@ Rails.application.routes.draw do
         get :twitter_sample
       end
     end
+
+    resources :threed_objects, only: [:index] do
+      collection do
+        get :sample
+        get :editor
+      end
+    end
   end
 
   namespace :unibo do

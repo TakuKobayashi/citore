@@ -1,0 +1,383 @@
+<link href="css/main.css" rel="stylesheet" />
+<link id="theme" href="css/light.css" rel="stylesheet" />
+
+<%= javascript_include_tag 'libraries/threejs/three.min.js' %>
+<%= javascript_include_tag 'libraries/threejs/examples/libs/system.min.js' %>
+<%= javascript_include_tag 'libraries/threejs/examples/js/controls/EditorControls.js' %>
+<%= javascript_include_tag 'libraries/threejs/examples/js/controls/TransformControls.js' %>
+<%= javascript_include_tag 'libraries/threejs/examples/js/libs/jszip.min.js' %>
+<%= javascript_include_tag 'libraries/threejs/examples/js/libs/inflate.min.js' %>
+<%= javascript_include_tag 'libraries/threejs/examples/js/loaders/AMFLoader.js' %>
+<%= javascript_include_tag 'libraries/threejs/examples/js/loaders/AWDLoader.js' %>
+<%= javascript_include_tag 'libraries/threejs/examples/js/loaders/BabylonLoader.js' %>
+<%= javascript_include_tag 'libraries/threejs/examples/js/loaders/ColladaLoader.js' %>
+<%= javascript_include_tag 'libraries/threejs/examples/js/loaders/FBXLoader.js' %>
+<%= javascript_include_tag 'libraries/threejs/examples/js/loaders/GLTFLoader.js' %>
+<%= javascript_include_tag 'libraries/threejs/examples/js/loaders/KMZLoader.js' %>
+<%= javascript_include_tag 'libraries/threejs/examples/js/loaders/MD2Loader.js' %>
+<%= javascript_include_tag 'libraries/threejs/examples/js/loaders/OBJLoader.js' %>
+<%= javascript_include_tag 'libraries/threejs/examples/js/loaders/MTLLoader.js' %>
+<%= javascript_include_tag 'libraries/threejs/examples/js/loaders/PlayCanvasLoader.js' %>
+<%= javascript_include_tag 'libraries/threejs/examples/js/loaders/PLYLoader.js' %>
+<%= javascript_include_tag 'libraries/threejs/examples/js/loaders/STLLoader.js' %>
+<%= javascript_include_tag 'libraries/threejs/examples/js/loaders/TGALoader.js' %>
+<%= javascript_include_tag 'libraries/threejs/examples/js/loaders/TDSLoader.js' %>
+<%= javascript_include_tag 'libraries/threejs/examples/js/loaders/UTF8Loader.js' %>
+<%= javascript_include_tag 'libraries/threejs/examples/js/loaders/VRMLLoader.js' %>
+<%= javascript_include_tag 'libraries/threejs/examples/js/loaders/VTKLoader.js' %>
+<%= javascript_include_tag 'libraries/threejs/examples/js/loaders/ctm/lzma.js' %>
+<%= javascript_include_tag 'libraries/threejs/examples/js/loaders/ctm/ctm.js' %>
+<%= javascript_include_tag 'libraries/threejs/examples/js/loaders/ctm/CTMLoader.js' %>
+<%= javascript_include_tag 'libraries/threejs/examples/js/exporters/OBJExporter.js' %>
+<%= javascript_include_tag 'libraries/threejs/examples/js/exporters/GLTFExporter.js' %>
+<%= javascript_include_tag 'libraries/threejs/examples/js/exporters/STLExporter.js' %>
+<%= javascript_include_tag 'libraries/threejs/examples/js/renderers/Projector.js"' %>
+<%= javascript_include_tag 'libraries/threejs/examples/js/renderers/CanvasRenderer.js' %>
+<%= javascript_include_tag 'libraries/threejs/examples/js/renderers/RaytracingRenderer.js' %>
+<%= javascript_include_tag 'libraries/threejs/examples/js/renderers/SoftwareRenderer.js' %>
+<%= javascript_include_tag 'libraries/threejs/examples/js/renderers/SVGRenderer.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/libs/codemirror/codemirror.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/libs/codemirror/mode/javascript.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/libs/codemirror/mode/glsl.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/libs/esprima.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/libs/jsonlint.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/libs/glslprep.min.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/libs/codemirror/addon/dialog.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/libs/codemirror/addon/show-hint.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/libs/codemirror/addon/tern.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/libs/acorn/acorn.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/libs/acorn/acorn_loose.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/libs/acorn/walk.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/libs/ternjs/polyfill.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/libs/ternjs/signal.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/libs/ternjs/tern.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/libs/ternjs/def.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/libs/ternjs/comment.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/libs/ternjs/infer.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/libs/ternjs/doc_comment.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/libs/tern-threejs/threejs.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/libs/signals.min.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/libs/ui.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/libs/ui.three.js' %>
+
+<%= javascript_include_tag 'libraries/threejs/editor/js/libs/app.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/libs/Player.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/libs/Script.js' %>
+<%= javascript_include_tag 'libraries/threejs/examples/js/vr/WebVR.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/Storage.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/Editor.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/Config.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/History.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/Loader.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/Menubar.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/Menubar.File.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/Menubar.Edit.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/Menubar.Add.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/Menubar.Play.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/Menubar.Examples.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/Menubar.Help.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/Menubar.Status.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/Sidebar.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/Sidebar.Scene.js' %>
+
+
+<link rel="stylesheet" href="js/libs/codemirror/codemirror.css">
+<link rel="stylesheet" href="js/libs/codemirror/theme/monokai.css">
+<link rel="stylesheet" href="js/libs/codemirror/addon/dialog.css">
+<link rel="stylesheet" href="js/libs/codemirror/addon/show-hint.css">
+<link rel="stylesheet" href="js/libs/codemirror/addon/tern.css">
+
+
+<script src="js/Sidebar.Project.js"></script>
+<script src="js/Sidebar.Settings.js"></script>
+<script src="js/Sidebar.Properties.js"></script>
+<script src="js/Sidebar.Object.js"></script>
+<script src="js/Sidebar.Geometry.js"></script>
+<script src="js/Sidebar.Geometry.Geometry.js"></script>
+<script src="js/Sidebar.Geometry.BufferGeometry.js"></script>
+<script src="js/Sidebar.Geometry.Modifiers.js"></script>
+<script src="js/Sidebar.Geometry.BoxGeometry.js"></script>
+<script src="js/Sidebar.Geometry.CircleGeometry.js"></script>
+<script src="js/Sidebar.Geometry.CylinderGeometry.js"></script>
+<script src="js/Sidebar.Geometry.IcosahedronGeometry.js"></script>
+<script src="js/Sidebar.Geometry.PlaneGeometry.js"></script>
+<script src="js/Sidebar.Geometry.SphereGeometry.js"></script>
+<script src="js/Sidebar.Geometry.TorusGeometry.js"></script>
+<script src="js/Sidebar.Geometry.TorusKnotGeometry.js"></script>
+<script src="../examples/js/geometries/TeapotBufferGeometry.js"></script>
+<script src="js/Sidebar.Geometry.TeapotBufferGeometry.js"></script>
+<script src="js/Sidebar.Geometry.LatheGeometry.js"></script>
+<script src="js/Sidebar.Material.js"></script>
+<script src="js/Sidebar.Animation.js"></script>
+<script src="js/Sidebar.Script.js"></script>
+<script src="js/Sidebar.History.js"></script>
+<script src="js/Toolbar.js"></script>
+<script src="js/Viewport.js"></script>
+<script src="js/Viewport.Info.js"></script>
+
+<script src="js/Command.js"></script>
+<script src="js/commands/AddObjectCommand.js"></script>
+<script src="js/commands/RemoveObjectCommand.js"></script>
+<script src="js/commands/MoveObjectCommand.js"></script>
+<script src="js/commands/SetPositionCommand.js"></script>
+<script src="js/commands/SetRotationCommand.js"></script>
+<script src="js/commands/SetScaleCommand.js"></script>
+<script src="js/commands/SetValueCommand.js"></script>
+<script src="js/commands/SetUuidCommand.js"></script>
+<script src="js/commands/SetColorCommand.js"></script>
+<script src="js/commands/SetGeometryCommand.js"></script>
+<script src="js/commands/SetGeometryValueCommand.js"></script>
+<script src="js/commands/MultiCmdsCommand.js"></script>
+<script src="js/commands/AddScriptCommand.js"></script>
+<script src="js/commands/RemoveScriptCommand.js"></script>
+<script src="js/commands/SetScriptValueCommand.js"></script>
+<script src="js/commands/SetMaterialCommand.js"></script>
+<script src="js/commands/SetMaterialValueCommand.js"></script>
+<script src="js/commands/SetMaterialColorCommand.js"></script>
+<script src="js/commands/SetMaterialMapCommand.js"></script>
+<script src="js/commands/SetSceneCommand.js"></script>
+
+<!-- <script type="text/javascript" src="https://www.dropbox.com/static/api/2/dropins.js" id="dropboxjs" data-app-key="qyqgfqd9j8z890t"></script> -->
+
+<script src="js/libs/html2canvas.js"></script>
+<script src="js/libs/three.html.js"></script>
+
+<script>
+
+  window.URL = window.URL || window.webkitURL;
+  window.BlobBuilder = window.BlobBuilder || window.WebKitBlobBuilder || window.MozBlobBuilder;
+
+  const IS_MAC = navigator.platform.toUpperCase().indexOf( 'MAC' ) >= 0;
+
+  Number.prototype.format = function (){
+    return this.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+  };
+
+  //
+
+  var editor = new Editor();
+
+  var viewport = new Viewport( editor );
+  document.body.appendChild( viewport.dom );
+
+  var script = new Script( editor );
+  document.body.appendChild( script.dom );
+
+  var player = new Player( editor );
+  document.body.appendChild( player.dom );
+
+  var toolbar = new Toolbar( editor );
+  document.body.appendChild( toolbar.dom );
+
+  var menubar = new Menubar( editor );
+  document.body.appendChild( menubar.dom );
+
+  var sidebar = new Sidebar( editor );
+  document.body.appendChild( sidebar.dom );
+
+  var modal = new UI.Modal();
+  document.body.appendChild( modal.dom );
+
+  //
+
+  editor.setTheme( editor.config.getKey( 'theme' ) );
+
+  editor.storage.init( function () {
+
+    editor.storage.get( function ( state ) {
+
+      if ( isLoadingFromHash ) return;
+
+      if ( state !== undefined ) {
+
+        editor.fromJSON( state );
+
+      }
+
+      var selected = editor.config.getKey( 'selected' );
+
+      if ( selected !== undefined ) {
+
+        editor.selectByUuid( selected );
+
+      }
+
+    } );
+
+    //
+
+    var timeout;
+
+    function saveState( scene ) {
+
+      if ( editor.config.getKey( 'autosave' ) === false ) {
+
+        return;
+
+      }
+
+      clearTimeout( timeout );
+
+      timeout = setTimeout( function () {
+
+        editor.signals.savingStarted.dispatch();
+
+        timeout = setTimeout( function () {
+
+          editor.storage.set( editor.toJSON() );
+
+          editor.signals.savingFinished.dispatch();
+
+        }, 100 );
+
+      }, 1000 );
+
+    };
+
+    var signals = editor.signals;
+
+    signals.geometryChanged.add( saveState );
+    signals.objectAdded.add( saveState );
+    signals.objectChanged.add( saveState );
+    signals.objectRemoved.add( saveState );
+    signals.materialChanged.add( saveState );
+    signals.sceneBackgroundChanged.add( saveState );
+    signals.sceneFogChanged.add( saveState );
+    signals.sceneGraphChanged.add( saveState );
+    signals.scriptChanged.add( saveState );
+    signals.historyChanged.add( saveState );
+
+    signals.showModal.add( function ( content ) {
+
+      modal.show( content );
+
+    } );
+
+  } );
+
+  //
+
+  document.addEventListener( 'dragover', function ( event ) {
+
+    event.preventDefault();
+    event.dataTransfer.dropEffect = 'copy';
+
+  }, false );
+
+  document.addEventListener( 'drop', function ( event ) {
+
+    event.preventDefault();
+
+    if ( event.dataTransfer.files.length > 0 ) {
+
+      editor.loader.loadFile( event.dataTransfer.files[ 0 ] );
+
+    }
+
+  }, false );
+
+  document.addEventListener( 'keydown', function ( event ) {
+
+    switch ( event.keyCode ) {
+
+      case 8: // backspace
+
+        event.preventDefault(); // prevent browser back
+
+      case 46: // delete
+
+        var object = editor.selected;
+
+        if ( confirm( 'Delete ' + object.name + '?' ) === false ) return;
+
+        var parent = object.parent;
+        if ( parent !== null ) editor.execute( new RemoveObjectCommand( object ) );
+
+        break;
+
+      case 90: // Register Ctrl-Z for Undo, Ctrl-Shift-Z for Redo
+
+        if ( IS_MAC ? event.metaKey : event.ctrlKey ) {
+
+          if ( event.shiftKey ) {
+
+            editor.redo();
+
+          } else {
+
+            editor.undo();
+
+          }
+
+        }
+
+        break;
+
+      case 87: // Register W for translation transform mode
+
+        editor.signals.transformModeChanged.dispatch( 'translate' );
+
+        break;
+
+      case 69: // Register E for rotation transform mode
+
+        editor.signals.transformModeChanged.dispatch( 'rotate' );
+
+        break;
+
+      case 82: // Register R for scaling transform mode
+
+        editor.signals.transformModeChanged.dispatch( 'scale' );
+
+        break;
+
+    }
+
+  }, false );
+
+  function onWindowResize( event ) {
+
+    editor.signals.windowResize.dispatch();
+
+  }
+
+  window.addEventListener( 'resize', onWindowResize, false );
+
+  onWindowResize();
+
+  //
+
+  var isLoadingFromHash = false;
+  var hash = window.location.hash;
+
+  if ( hash.substr( 1, 5 ) === 'file=' ) {
+
+    var file = hash.substr( 6 );
+
+    if ( confirm( 'Any unsaved data will be lost. Are you sure?' ) ) {
+
+      var loader = new THREE.FileLoader();
+      loader.crossOrigin = '';
+      loader.load( file, function ( text ) {
+
+        editor.clear();
+        editor.fromJSON( JSON.parse( text ) );
+
+      } );
+
+      isLoadingFromHash = true;
+
+    }
+
+  }
+
+  /*
+  window.addEventListener( 'message', function ( event ) {
+
+    editor.clear();
+    editor.fromJSON( event.data );
+
+  }, false );
+  */
+
+</script>

@@ -34,7 +34,7 @@ THREE.GearVRController = function () {
 
 	}
 
-	this.setHand = function ( hand = 'right' ) {
+	this.setHand = function ( hand ) {
 
 		var handPos;
 

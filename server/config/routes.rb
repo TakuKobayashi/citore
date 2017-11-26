@@ -173,6 +173,7 @@ Rails.application.routes.draw do
       collection do
         get :sample
         get :editor
+        get :download
       end
     end
   end

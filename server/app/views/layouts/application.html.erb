@@ -43,6 +43,7 @@
 </head>
 
 <body>
+  <% if show_header? %>
   <div class="home-menu pure-menu pure-menu-horizontal">
     <ul class="pure-menu-list">
       <li class="pure-menu-item">
@@ -68,9 +69,8 @@
       </li>
     </ul>
   </div>
-  <div id="pjax-container">
-    <%= yield %>
-  </div>
+  <% end %>
+  <%= yield %>
 </body>
 
 </html>

@@ -11,4 +11,4 @@ Rails.application.config.assets.version = '1.0'
 # Rails.application.config.assets.precompile += %w( search.js )
 Rails.application.config.assets.precompile += %w( *.js *application.css)
 Rails.application.config.assets.precompile += %w( threedobjects/*)
-Rails.application.config.assets.precompile += %w( feykun*.css homepage*.css libraries*.css bannosama*.css)
+Rails.application.config.assets.precompile += %w( feykun*.css homepage*.css libraries*.css bannosama*.css tools*.css)

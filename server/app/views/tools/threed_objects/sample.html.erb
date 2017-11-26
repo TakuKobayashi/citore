@@ -5,6 +5,29 @@
 <%= javascript_include_tag 'libraries/threejs/examples/js/loaders/OBJLoader.js' %>
 <%= javascript_include_tag 'libraries/threejs/examples/js/Detector.js' %>
 <%= javascript_include_tag 'libraries/threejs/examples/js/libs/stats.min.js' %>
+<%= stylesheet_link_tag 'tools/threed_objects/sample.css' %>
+<div class="footer">
+	<div id="button"></div>
+	  <div id="container">
+  	  <div id="cont">
+	    <div class="footer_center">
+				<div class="pure-menu pure-menu-horizontal" id="threed_sample_footer_menu">
+					<ul class="pure-menu-list">
+						<li class="pure-menu-item">
+							<%= link_to("画面をキャプチャー", "#", class: "pure-button", id: "capture_image") %>
+						</li>
+						<li class="pure-menu-item">
+							<%= link_to("3Dモデルをダウンロード", "#", class: "pure-button") %>
+						</li>
+						<li class="pure-menu-item">
+							<%= link_to("エディタへ", "#", class: "pure-button") %>
+						</li>
+					</ul>
+				</div>
+	    </div>
+    </div>
+  </div>
+</div>
 <script>
 	if (!Detector.webgl) Detector.addGetWebGLMessage();
 	var container, stats, controls;
@@ -12,6 +35,23 @@
 	var clock = new THREE.Clock();
 	init();
 	function init() {
+		var capture_button = document.getElementById("capture_image");
+		capture_button.onclick = function(){
+			var captureImage = renderer.domElement.toDataURL('image/png');
+      captureImage = captureImage.replace('image/png', 'image/octet-stream');
+			var atag = document.createElement('a');
+			var date = new Date();
+			var year  = date.getFullYear();
+			var month = date.getMonth() + 1;
+			var day = date.getDate();
+			var hour = ( date.getHours()   < 10 ) ? '0' + date.getHours() : date.getHours();
+			var min = ( date.getMinutes() < 10 ) ? '0' + date.getMinutes() : date.getMinutes();
+			var sec = ( date.getSeconds() < 10 ) ? '0' + date.getSeconds() : date.getSeconds();
+      atag.download =  year.toString() + month.toString() + day.toString() + '_' + hour.toString() + min.toString() + sec.toString() + "_taku.png";
+      atag.href = captureImage;
+      atag.click();
+		};
+
 		container = document.createElement('div');
 		document.body.appendChild(container);
 		camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 2000);
@@ -48,7 +88,7 @@
 			}, onProgress, onError );
 		});
 		//背景透明
-		renderer = new THREE.WebGLRenderer({alpha: true});
+		renderer = new THREE.WebGLRenderer({alpha: true, preserveDrawingBuffer: true});
 		renderer.setClearColor( 0x000000, 0 );
 		renderer.setPixelRatio(window.devicePixelRatio);
 		renderer.setSize(window.innerWidth, window.innerHeight);
@@ -85,4 +125,5 @@
 	function render() {
 		renderer.render( scene, camera );
 	}
+	capture_image
 </script>

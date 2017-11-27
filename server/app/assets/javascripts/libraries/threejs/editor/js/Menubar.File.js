@@ -277,7 +277,7 @@ Menubar.File = function ( editor ) {
 		} );
 
 		var loader = new THREE.FileLoader( manager );
-		loader.load( 'js/libs/app/index.html', function ( content ) {
+		loader.load( '/assets/libraries/threejs/editor/js/libs/app/index.html', function ( content ) {
 
 			content = content.replace( '<!-- title -->', title );
 
@@ -308,12 +308,12 @@ Menubar.File = function ( editor ) {
 			zip.file( 'index.html', content );
 
 		} );
-		loader.load( 'js/libs/app.js', function ( content ) {
+		loader.load( '/assets/libraries/threejs/editor/js/libs/app.js', function ( content ) {
 
 			zip.file( 'js/app.js', content );
 
 		} );
-		loader.load( '../build/three.min.js', function ( content ) {
+		loader.load( '/assets/libraries/threejs/three.min.js', function ( content ) {
 
 			zip.file( 'js/three.min.js', content );
 
@@ -321,7 +321,7 @@ Menubar.File = function ( editor ) {
 
 		if ( vr ) {
 
-			loader.load( '../examples/js/vr/WebVR.js', function ( content ) {
+			loader.load( '/assets/libraries/threejs/examples/js/vr/WebVR.js', function ( content ) {
 
 				zip.file( 'js/WebVR.js', content );
 

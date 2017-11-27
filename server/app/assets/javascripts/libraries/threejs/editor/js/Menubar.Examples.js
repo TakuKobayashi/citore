@@ -41,7 +41,7 @@ Menubar.Examples = function ( editor ) {
 
 				if ( confirm( 'Any unsaved data will be lost. Are you sure?' ) ) {
 
-					loader.load( 'examples/' + item.file, function ( text ) {
+					loader.load( '/assets/libraries/threejs/editor/examples/' + item.file, function ( text ) {
 
 						editor.clear();
 						editor.fromJSON( JSON.parse( text ) );

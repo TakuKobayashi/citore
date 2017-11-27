@@ -20,7 +20,7 @@
 			  <%= link_to("3Dモデルをダウンロード", download_tools_threed_objects_url, class: "pure-button") %>
 			</li>
 			<li class="pure-menu-item">
-			  <%= link_to("エディタへ", editor_tools_threed_objects_url, class: "pure-button") %>
+			  <%= link_to("エディタへ", editor_tools_threed_objects_url(mtl_file_url: image_url('threedobjects/taku/taku_fix.mtl'), obj_file_url: image_url('threedobjects/taku/taku_fix.obj')), class: "pure-button") %>
 		    </li>
 		  </ul>
 		</div>

@@ -363,6 +363,31 @@
 
   }
 
+  var recieved_mtl_path = "<%= params["mtl_file_url"].to_s %>";
+  var recieved_obj_path = "<%= params["obj_file_url"].to_s %>";
+  if(recieved_mtl_path && recieved_obj_path){
+    // model
+    var onProgress = function ( xhr ) {
+      if ( xhr.lengthComputable ) {
+        var percentComplete = xhr.loaded / xhr.total * 100;
+        console.log( Math.round(percentComplete, 2) + '% downloaded' );
+      }
+    };
+
+    var onError = function (xhr) {
+      console.error(xhr);
+    };
+    var mtlLoader = new THREE.MTLLoader();
+    mtlLoader.load(recieved_mtl_path, function(materials) {
+      materials.preload();
+      var objLoader = new THREE.OBJLoader();
+      objLoader.setMaterials(materials);
+      objLoader.load(recieved_obj_path, function (object) {
+        editor.addObject(object);
+      }, onProgress, onError );
+    });
+  }
+
   /*
   window.addEventListener( 'message', function ( event ) {
 

@@ -6,7 +6,7 @@ var Config = function ( name ) {
 
 	var storage = {
 		'autosave': true,
-		'theme': 'css/light.css',
+		'theme': '/assets/libraries/threejs/editor/light.css',
 
 		'project/title': '',
 		'project/editable': false,

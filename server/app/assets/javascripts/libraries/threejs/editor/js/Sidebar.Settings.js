@@ -14,8 +14,8 @@ Sidebar.Settings = function ( editor ) {
 	// class
 
 	var options = {
-		'css/light.css': 'light',
-		'css/dark.css': 'dark'
+		'/assets/libraries/threejs/editor/light.css': 'light',
+		'/assets/libraries/threejs/editor/dark.css': 'dark'
 	};
 
 	var themeRow = new UI.Row();

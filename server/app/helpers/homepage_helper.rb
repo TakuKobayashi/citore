@@ -49,6 +49,22 @@ module HomepageHelper
         <meta name="twitter:title" content="WebSocketを使ったリアルタイム通信の遊び場">
         <meta name="twitter:image" content="#{image_url("icon/websocket.png")}">
       }
+    elsif controller_name == "threed_objects" && action_name == "sample"
+      header_html << %Q{
+        <title>taku 3Dスキャンしてもらったデータのご紹介</title>
+        <meta name="description" content="taku 3Dスキャンしてもらったデータの紹介と色々いじってもらうためのWeb3Dツールを取り揃えました">
+        <meta property="og:locale" content="ja_JP">
+        <meta property="og:type" content="website">
+        <meta property="og:title" content="taku 3Dスキャンしてもらったデータのご紹介">
+        <meta property="og:description" content="taku 3Dスキャンしてもらったデータの紹介と色々いじってもらうためのWeb3Dツールを取り揃えました">
+        <meta property="og:url" content="#{sample_tools_threed_objects_url}">
+        <meta property="og:site_name" content="#{homepage_sitename}">
+        <meta property="og:image" content="#{image_url("icon/taku_model.png")}">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:description" content="taku 3Dスキャンしてもらったデータの紹介と色々いじってもらうためのWeb3Dツールを取り揃えました">
+        <meta name="twitter:title" content="taku 3Dスキャンしてもらったデータのご紹介">
+        <meta name="twitter:image" content="#{image_url("icon/taku_model.png")}">
+      }
     else
       header_html << %Q{
         <title>#{homepage_sitename}</title>

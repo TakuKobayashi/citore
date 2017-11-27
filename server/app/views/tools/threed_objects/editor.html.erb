@@ -1,8 +1,8 @@
-<link href="css/main.css" rel="stylesheet" />
-<link id="theme" href="css/light.css" rel="stylesheet" />
+<%= stylesheet_link_tag 'libraries/threejs/editor/main.css' %>
+<%= stylesheet_link_tag 'libraries/threejs/editor/light.css', id: "theme" %>
 
 <%= javascript_include_tag 'libraries/threejs/three.min.js' %>
-<%= javascript_include_tag 'libraries/threejs/examples/libs/system.min.js' %>
+<%= javascript_include_tag 'libraries/threejs/examples/js/libs/system.min.js' %>
 <%= javascript_include_tag 'libraries/threejs/examples/js/controls/EditorControls.js' %>
 <%= javascript_include_tag 'libraries/threejs/examples/js/controls/TransformControls.js' %>
 <%= javascript_include_tag 'libraries/threejs/examples/js/libs/jszip.min.js' %>
@@ -31,7 +31,7 @@
 <%= javascript_include_tag 'libraries/threejs/examples/js/exporters/OBJExporter.js' %>
 <%= javascript_include_tag 'libraries/threejs/examples/js/exporters/GLTFExporter.js' %>
 <%= javascript_include_tag 'libraries/threejs/examples/js/exporters/STLExporter.js' %>
-<%= javascript_include_tag 'libraries/threejs/examples/js/renderers/Projector.js"' %>
+<%= javascript_include_tag 'libraries/threejs/examples/js/renderers/Projector.js' %>
 <%= javascript_include_tag 'libraries/threejs/examples/js/renderers/CanvasRenderer.js' %>
 <%= javascript_include_tag 'libraries/threejs/examples/js/renderers/RaytracingRenderer.js' %>
 <%= javascript_include_tag 'libraries/threejs/examples/js/renderers/SoftwareRenderer.js' %>
@@ -59,10 +59,9 @@
 <%= javascript_include_tag 'libraries/threejs/editor/js/libs/signals.min.js' %>
 <%= javascript_include_tag 'libraries/threejs/editor/js/libs/ui.js' %>
 <%= javascript_include_tag 'libraries/threejs/editor/js/libs/ui.three.js' %>
-
 <%= javascript_include_tag 'libraries/threejs/editor/js/libs/app.js' %>
-<%= javascript_include_tag 'libraries/threejs/editor/js/libs/Player.js' %>
-<%= javascript_include_tag 'libraries/threejs/editor/js/libs/Script.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/Player.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/Script.js' %>
 <%= javascript_include_tag 'libraries/threejs/examples/js/vr/WebVR.js' %>
 <%= javascript_include_tag 'libraries/threejs/editor/js/Storage.js' %>
 <%= javascript_include_tag 'libraries/threejs/editor/js/Editor.js' %>
@@ -79,68 +78,61 @@
 <%= javascript_include_tag 'libraries/threejs/editor/js/Menubar.Status.js' %>
 <%= javascript_include_tag 'libraries/threejs/editor/js/Sidebar.js' %>
 <%= javascript_include_tag 'libraries/threejs/editor/js/Sidebar.Scene.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/Sidebar.Project.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/Sidebar.Settings.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/Sidebar.Properties.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/Sidebar.Object.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/Sidebar.Geometry.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/Sidebar.Geometry.Geometry.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/Sidebar.Geometry.BufferGeometry.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/Sidebar.Geometry.Modifiers.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/Sidebar.Geometry.BoxGeometry.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/Sidebar.Geometry.CircleGeometry.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/Sidebar.Geometry.CylinderGeometry.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/Sidebar.Geometry.IcosahedronGeometry.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/Sidebar.Geometry.PlaneGeometry.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/Sidebar.Geometry.SphereGeometry.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/Sidebar.Geometry.TorusGeometry.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/Sidebar.Geometry.TorusKnotGeometry.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/Sidebar.Geometry.TeapotBufferGeometry.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/Sidebar.Geometry.LatheGeometry.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/Sidebar.Material.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/Sidebar.Animation.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/Sidebar.Script.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/Sidebar.History.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/Toolbar.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/Viewport.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/Viewport.Info.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/Command.js' %>
+<%= javascript_include_tag 'libraries/threejs/examples/js/geometries/TeapotBufferGeometry.js' %>
 
+<%= javascript_include_tag 'libraries/threejs/editor/js/commands/AddObjectCommand.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/commands/RemoveObjectCommand.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/commands/MoveObjectCommand.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/commands/SetPositionCommand.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/commands/SetRotationCommand.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/commands/SetScaleCommand.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/commands/SetValueCommand.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/commands/SetUuidCommand.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/commands/SetGeometryCommand.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/commands/SetGeometryValueCommand.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/commands/MultiCmdsCommand.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/commands/AddScriptCommand.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/commands/RemoveScriptCommand.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/commands/SetScriptValueCommand.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/commands/SetMaterialCommand.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/commands/SetMaterialValueCommand.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/commands/SetMaterialColorCommand.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/commands/SetMaterialMapCommand.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/commands/SetSceneCommand.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/libs/html2canvas.js' %>
+<%= javascript_include_tag 'libraries/threejs/editor/js/libs/three.html.js' %>
 
-<link rel="stylesheet" href="js/libs/codemirror/codemirror.css">
-<link rel="stylesheet" href="js/libs/codemirror/theme/monokai.css">
-<link rel="stylesheet" href="js/libs/codemirror/addon/dialog.css">
-<link rel="stylesheet" href="js/libs/codemirror/addon/show-hint.css">
-<link rel="stylesheet" href="js/libs/codemirror/addon/tern.css">
-
-
-<script src="js/Sidebar.Project.js"></script>
-<script src="js/Sidebar.Settings.js"></script>
-<script src="js/Sidebar.Properties.js"></script>
-<script src="js/Sidebar.Object.js"></script>
-<script src="js/Sidebar.Geometry.js"></script>
-<script src="js/Sidebar.Geometry.Geometry.js"></script>
-<script src="js/Sidebar.Geometry.BufferGeometry.js"></script>
-<script src="js/Sidebar.Geometry.Modifiers.js"></script>
-<script src="js/Sidebar.Geometry.BoxGeometry.js"></script>
-<script src="js/Sidebar.Geometry.CircleGeometry.js"></script>
-<script src="js/Sidebar.Geometry.CylinderGeometry.js"></script>
-<script src="js/Sidebar.Geometry.IcosahedronGeometry.js"></script>
-<script src="js/Sidebar.Geometry.PlaneGeometry.js"></script>
-<script src="js/Sidebar.Geometry.SphereGeometry.js"></script>
-<script src="js/Sidebar.Geometry.TorusGeometry.js"></script>
-<script src="js/Sidebar.Geometry.TorusKnotGeometry.js"></script>
-<script src="../examples/js/geometries/TeapotBufferGeometry.js"></script>
-<script src="js/Sidebar.Geometry.TeapotBufferGeometry.js"></script>
-<script src="js/Sidebar.Geometry.LatheGeometry.js"></script>
-<script src="js/Sidebar.Material.js"></script>
-<script src="js/Sidebar.Animation.js"></script>
-<script src="js/Sidebar.Script.js"></script>
-<script src="js/Sidebar.History.js"></script>
-<script src="js/Toolbar.js"></script>
-<script src="js/Viewport.js"></script>
-<script src="js/Viewport.Info.js"></script>
-
-<script src="js/Command.js"></script>
-<script src="js/commands/AddObjectCommand.js"></script>
-<script src="js/commands/RemoveObjectCommand.js"></script>
-<script src="js/commands/MoveObjectCommand.js"></script>
-<script src="js/commands/SetPositionCommand.js"></script>
-<script src="js/commands/SetRotationCommand.js"></script>
-<script src="js/commands/SetScaleCommand.js"></script>
-<script src="js/commands/SetValueCommand.js"></script>
-<script src="js/commands/SetUuidCommand.js"></script>
-<script src="js/commands/SetColorCommand.js"></script>
-<script src="js/commands/SetGeometryCommand.js"></script>
-<script src="js/commands/SetGeometryValueCommand.js"></script>
-<script src="js/commands/MultiCmdsCommand.js"></script>
-<script src="js/commands/AddScriptCommand.js"></script>
-<script src="js/commands/RemoveScriptCommand.js"></script>
-<script src="js/commands/SetScriptValueCommand.js"></script>
-<script src="js/commands/SetMaterialCommand.js"></script>
-<script src="js/commands/SetMaterialValueCommand.js"></script>
-<script src="js/commands/SetMaterialColorCommand.js"></script>
-<script src="js/commands/SetMaterialMapCommand.js"></script>
-<script src="js/commands/SetSceneCommand.js"></script>
-
-<!-- <script type="text/javascript" src="https://www.dropbox.com/static/api/2/dropins.js" id="dropboxjs" data-app-key="qyqgfqd9j8z890t"></script> -->
-
-<script src="js/libs/html2canvas.js"></script>
-<script src="js/libs/three.html.js"></script>
+<%= stylesheet_link_tag 'libraries/threejs/editor/libs/codemirror/codemirror.css' %>
+<%= stylesheet_link_tag 'libraries/threejs/editor/libs/codemirror/theme/monokai.css' %>
+<%= stylesheet_link_tag 'libraries/threejs/editor/libs/codemirror/addon/dialog.css' %>
+<%= stylesheet_link_tag 'libraries/threejs/editor/libs/codemirror/addon/show-hint.css' %>
+<%= stylesheet_link_tag 'libraries/threejs/editor/libs/codemirror/addon/tern.css' %>
 
 <script>
 

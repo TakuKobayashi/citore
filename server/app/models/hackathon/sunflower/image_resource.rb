@@ -55,8 +55,9 @@ class Hackathon::Sunflower::ImageResource < ApplicationRecord
 #    filepath = IMAGE_ROOT_PATH + SecureRandom.hex + ".png"
 #    s3 = Aws::S3::Client.new
 #    s3.put_object(bucket: "taptappun",body: image.to_blob, key: filepath, acl: "public-read")
+#    update!(width: image.width, height: image.height, url: ApplicationRecord::S3_ROOT_URL + filepath)
     filepath = Rails.root.to_s + "/tmp/" + SecureRandom.hex + ".png"
     File.open(filepath, "wb"){|f| f.write(image.to_blob) }
-    update!(width: image.width, height: image.height, url: ApplicationRecord::S3_ROOT_URL + filepath)
+    update!(width: image.width, height: image.height, url: filepath)
   end
 end

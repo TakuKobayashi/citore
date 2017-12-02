@@ -85,13 +85,13 @@ class Hackathon::Sunflower::CompositeWorker < ApplicationRecord
   end
 
   def upload_compoleted_routine!(image)
-#   filepath = Hackathon::Sunflower::ImageResource::IMAGE_ROOT_PATH + SecureRandom.hex + ".png"
-#   s3 = Aws::S3::Client.new
-#    s3.put_object(bucket: "taptappun",body: image.to_blob, key: filepath, acl: "public-read")
-#    update!(export_url: ApplicationRecord::S3_ROOT_URL + filepath, state: :complete)
-    filepath = Rails.root.to_s + "/tmp/" + SecureRandom.hex + ".png"
-    File.open(filepath, "wb"){|f| f.write(image.to_blob) }
-    update!(export_url: Rails.root.to_s + filepath, state: :complete)
+   filepath = Hackathon::Sunflower::ImageResource::IMAGE_ROOT_PATH + SecureRandom.hex + ".png"
+   s3 = Aws::S3::Client.new
+   s3.put_object(bucket: "taptappun",body: image.to_blob, key: filepath, acl: "public-read")
+   update!(export_url: ApplicationRecord::S3_ROOT_URL + filepath, state: :complete)
+#    filepath = Rails.root.to_s + "/tmp/" + SecureRandom.hex + ".png"
+#    File.open(filepath, "wb"){|f| f.write(image.to_blob) }
+#    update!(export_url: Rails.root.to_s + filepath, state: :complete)
 
     api_config = YAML.load(File.read("#{Rails.root.to_s}/config/apiconfig.yml"))
     twilio_client = Twilio::REST::Client.new(api_config["twilio"]["promo387"]["account_sid"], api_config["twilio"]["promo387"]["authtoken"])

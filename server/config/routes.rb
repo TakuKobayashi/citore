@@ -213,6 +213,24 @@ Rails.application.routes.draw do
         post :switch
       end
     end
+
+    namespace :sunflower do
+      resources :images, only: [:index] do
+        collection do
+          post :upload_ferry
+          post :upload_target
+          post :upload_image_resources
+        end
+      end
+      resources :users, only: [] do
+        collection do
+          post :login
+        end
+      end
+      resource :twillio, controller: :twillio, only: [] do
+        post :send_sms
+      end
+    end
   end
 
   namespace :bannosama do

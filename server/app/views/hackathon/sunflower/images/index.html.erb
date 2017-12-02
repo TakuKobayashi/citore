@@ -1,0 +1,72 @@
+<table>
+  <th>フェリーからアップロードする用のリンク</th>
+  <%= form_tag(upload_ferry_hackathon_sunflower_images_url, multipart: true) do %>
+    <tr>
+      <td>
+        <%= label_tag("画像ファイル") %>
+      </td>
+      <td>
+        <%= file_field_tag "image_files[]" %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <%= label_tag("画像ファイル") %>
+      </td>
+      <td>
+        <%= file_field_tag "image_files[]" %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <%= submit_tag("画像をアップロードする") %>
+      </td>
+    </tr>
+  <% end %>
+</table>
+<br>
+<table>
+  <th>ターゲット画像アップロード用</th>
+  <%= form_tag(upload_target_hackathon_sunflower_images_url, multipart: true) do %>
+    <tr>
+      <td>
+        <%= label_tag("画像ファイル") %>
+      </td>
+      <td>
+        <%= file_field_tag "target_image" %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <%= submit_tag("画像をアップロードする") %>
+      </td>
+    </tr>
+  <% end %>
+</table>
+<br>
+<table>
+  <th>コマ画像アップロード用</th>
+  <%= form_tag(upload_image_resources_hackathon_sunflower_images_url, multipart: true) do %>
+    <tr>
+      <td>
+        <%= label_tag("画像ファイル") %>
+      </td>
+      <td>
+        <%= file_field_tag "image_files[]" %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <%= label_tag("画像ファイル") %>
+      </td>
+      <td>
+        <%= file_field_tag "image_files[]" %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <%= submit_tag("画像をアップロードする") %>
+      </td>
+    </tr>
+  <% end %>
+</table>

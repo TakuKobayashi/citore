@@ -38,9 +38,6 @@ class Hackathon::Sunflower::CompositeWorker < ApplicationRecord
   def self.composite_ferry!
     ferry_images = Hackathon::Sunflower::ImageResource.ferry
     if ferry_images.present?
-      if Hackathon::Sunflower::CompositeWorker.where(category: :ferry, state: [:composite, :complete]).exists?
-        return false
-      end
       worker = Hackathon::Sunflower::CompositeWorker.create!(category: :ferry, state: :ready)
       ferry_image_count = ferry_images.count
 

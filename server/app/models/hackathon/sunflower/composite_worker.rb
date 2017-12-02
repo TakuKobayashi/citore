@@ -90,12 +90,6 @@ class Hackathon::Sunflower::CompositeWorker < ApplicationRecord
 
       post_card_composite_image = worker.composite_postcard(base_image)
       worker.upload_compoleted_routine!(post_card_composite_image)
-
-#      ferry_images.each do |ferry_image|
-#        ferry_img = MiniMagick::Image.open(ferry_image.url)
-
-#        worker_resource = worker.worker_resources.new(resource_id: ferry_image.id)
-#      end
       return true
     end
     return false
@@ -123,8 +117,8 @@ class Hackathon::Sunflower::CompositeWorker < ApplicationRecord
     twilio_client = Twilio::REST::Client.new(api_config["twilio"]["promo387"]["account_sid"], api_config["twilio"]["promo387"]["authtoken"])
     twilio_client.api.account.messages.create(
       from: api_config["twilio"]["promo387"]["phone_number"],
-      to: '+818055146460',
-      body: '写真ができました。ごちらからが確認いただけます' + export_url
+      to: '+819078888361',
+      body: '写真ができました。ごちらからが確認いただけます\n' + export_url
     )
   end
 end

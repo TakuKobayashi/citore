@@ -53,16 +53,12 @@ class Hackathon::Sunflower::CompositeWorker < ApplicationRecord
       end
       ferry_image_sample.resize("#{Hackathon::Sunflower::ImageResource::BASE_IMAGE_WIDTH}x#{Hackathon::Sunflower::ImageResource::BASE_IMAGE_HEIGHT}")
 
-      post_card_base_image = MiniMagick::Image.open(Rails.root.to_s + "/data/sunflower/alpha_base.png")
+      post_card_base_image = MiniMagick::Image.open(Rails.root.to_s + "/data/sunflower/postcard_base.png")
       composite_image = base_image.composite(ferry_image_sample) do |c|
         c.compose "Over"
         c.geometry "+0+0"
       end
-      post_card_composite_image = post_card_base_image.composite(composite_image) do |c|
-        c.compose "Over"
-        c.geometry "+0+0"
-      end
-
+      post_card_composite_image = composite_postcard(composite_image)
       worker.upload_compoleted_routine!(post_card_composite_image)
 
 #      ferry_images.each do |ferry_image|
@@ -75,14 +71,23 @@ class Hackathon::Sunflower::CompositeWorker < ApplicationRecord
     return false
   end
 
+  def composite_postcard(mozic_image)
+    post_card_base_image = MiniMagick::Image.open(Rails.root.to_s + "/data/sunflower/postcard_base.png")
+    post_card_composite_image = post_card_base_image.composite(mozic_image) do |c|
+      c.compose "Over"
+      c.geometry "+0+0"
+    end
+    return post_card_composite_image
+  end
+
   def upload_compoleted_routine!(image)
-    filepath = Hackathon::Sunflower::ImageResource::IMAGE_ROOT_PATH + SecureRandom.hex + ".png"
-    s3 = Aws::S3::Client.new
-    s3.put_object(bucket: "taptappun",body: image.to_blob, key: filepath, acl: "public-read")
-    update!(export_url: ApplicationRecord::S3_ROOT_URL + filepath, state: :complete)
-#    filepath = Rails.root.to_s + "/tmp/" + SecureRandom.hex + ".png"
-#    File.open(filepath, "wb"){|f| f.write(image.to_blob) }
-#    update!(export_url: Rails.root.to_s + filepath, state: :complete)
+#   filepath = Hackathon::Sunflower::ImageResource::IMAGE_ROOT_PATH + SecureRandom.hex + ".png"
+#   s3 = Aws::S3::Client.new
+#    s3.put_object(bucket: "taptappun",body: image.to_blob, key: filepath, acl: "public-read")
+#    update!(export_url: ApplicationRecord::S3_ROOT_URL + filepath, state: :complete)
+    filepath = Rails.root.to_s + "/tmp/" + SecureRandom.hex + ".png"
+    File.open(filepath, "wb"){|f| f.write(image.to_blob) }
+    update!(export_url: Rails.root.to_s + filepath, state: :complete)
 
     api_config = YAML.load(File.read("#{Rails.root.to_s}/config/apiconfig.yml"))
     twilio_client = Twilio::REST::Client.new(api_config["twilio"]["promo387"]["account_sid"], api_config["twilio"]["promo387"]["authtoken"])

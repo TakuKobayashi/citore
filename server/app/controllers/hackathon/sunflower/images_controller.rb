@@ -1,4 +1,6 @@
 class Hackathon::Sunflower::ImagesController < BaseController
+  protect_from_forgery
+
   def index
   end
 

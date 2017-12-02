@@ -47,22 +47,39 @@ class Hackathon::Sunflower::CompositeWorker < ApplicationRecord
       ferry_image_sample = MiniMagick::Image.open(ferry_images.first.url)
       base_image = MiniMagick::Image.open(Rails.root.to_s + "/data/sunflower/alpha_base.png")
       if ferry_image_sample.width < ferry_image_sample.height
-        ferry_image_sample.crop("#{ferry_image_sample.width}x#{ferry_image_sample.width}+0+#{(ferry_image_sample.height - ferry_image_sample.width) / 2}")
+        origin_height = base_image.height
+        origin_width = base_image.width * ferry_image_sample.width.to_f / ferry_image_sample.height
+        dumplicate_count = (origin_height / origin_width).to_i
       else
-        ferry_image_sample.crop("#{ferry_image_sample.height}x#{ferry_image_sample.height}+#{(ferry_image_sample.width - ferry_image_sample.height) / 2}+0")
+        origin_width = base_image.width
+        origin_height = base_image.height * ferry_image_sample.height.to_f / ferry_image_sample.width
+        dumplicate_count = (origin_width / origin_height).to_i
       end
-      ferry_image_sample.resize("#{Hackathon::Sunflower::ImageResource::BASE_IMAGE_WIDTH}x#{Hackathon::Sunflower::ImageResource::BASE_IMAGE_HEIGHT}")
-      ferry_image_sample.combine_options do |mogrify|
+      if dumplicate_count <= 0
+        dumplicate_count = 1
+      end
+
+      #1/2乗 ルート2
+      cell_count = ((ferry_image_count / dumplicate_count) ** 0.5).to_i
+
+      ferry_images.each_with_index do |ferry_image, index|
+        ferry_image_cell = MiniMagick::Image.open(ferry_image.url)
+        ferry_image_cell.resize("#{(origin_width / cell_count).to_i}x#{(origin_height / cell_count).to_i}")
+        column = index % cell_count
+        row = (index / cell_count).to_i
+        base_image = base_image.composite(ferry_image_cell) do |c|
+          c.compose "Over"
+          c.geometry "+#{column * ferry_image_cell.width}+#{row * ferry_image_cell.height}"
+        end
+      end
+
+      base_image.combine_options do |mogrify|
         mogrify.alpha 'on'
         mogrify.channel 'a'
         mogrify.evaluate 'set', '50%'
       end
 
-      composite_image = base_image.composite(ferry_image_sample) do |c|
-        c.compose "Over"
-        c.geometry "+0+0"
-      end
-      post_card_composite_image = worker.composite_postcard(composite_image)
+      post_card_composite_image = worker.composite_postcard(base_image)
       worker.upload_compoleted_routine!(post_card_composite_image)
 
 #      ferry_images.each do |ferry_image|

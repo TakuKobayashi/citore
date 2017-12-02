@@ -74,7 +74,6 @@ gem 'rails-i18n', '~> 5.0.0'
 gem 'activeadmin', git: 'https://github.com/activeadmin/activeadmin'
 gem 'inherited_resources', git: 'https://github.com/activeadmin/inherited_resources'
 
-gem 'cabocha'
 gem 'xml-simple'
 gem 'fastimage'
 
@@ -98,6 +97,7 @@ gem 'sidekiq'
 gem 'redis-namespace'
 gem 'omniauth-spotify'
 gem 'pdf-reader'
+gem 'twilio-ruby', '~> 5.5.1'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development

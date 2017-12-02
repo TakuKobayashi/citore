@@ -24,6 +24,8 @@ class Hackathon::Sunflower::ImageResource < ApplicationRecord
   has_many :worker_resources, class_name: 'Hackathon::Sunflower::WorkerResource', foreign_key: :resource_id
   has_many :workers, through: :worker_resources, source: :worker
 
+  IMAGE_ROOT_PATH = "hackathon/sunflower/images/"
+
   enum cateogory: {
     ferry: 0,
     backgraound: 1,
@@ -34,4 +36,13 @@ class Hackathon::Sunflower::ImageResource < ApplicationRecord
     fix: 0,
     mutable: 1
   }
+
+  def upload!(file)
+    image = MiniMagick::Image.open(file.path)
+    image.format(:png)
+    filepath = IMAGE_ROOT_PATH + SecureRandom.hex + ".png"
+    s3 = Aws::S3::Client.new
+    s3.put_object(bucket: "taptappun",body: image.to_blob, key: filepath, acl: "public-read")
+    update!(width: image.width, height: image.height, url: ApplicationRecord::S3_ROOT_URL + filepath)
+  end
 end

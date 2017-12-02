@@ -6,16 +6,28 @@ class Hackathon::Sunflower::ImagesController < BaseController
 
   def upload_ferry
     upload_files = params[:image_files] || []
-    render :json => {upload_file_count: upload_files.size, params: params.keys}
+    upload_files.each do |upload_file|
+      image_resource = Hackathon::Sunflower::ImageResource.new(category: :ferry, state: :fix)
+      image_resource.upload!(upload_file)
+    end
+    head(:ok)
   end
 
   def upload_target
+    user = Hackathon::Sunflower::User.find_by(token: params[:token])
+    image_resource = Hackathon::Sunflower::ImageResource.find_or_initialize_by(user_id: user.try(:id), category: :backgraound, state: :fix)
     upload_file = params[:target_image]
-    render :json => {upload_file_name: upload_file.original_filename, params: params.keys}
+    image_resource.upload!(upload_file)
+    head(:ok)
   end
 
   def upload_image_resources
+    user = Hackathon::Sunflower::User.find_by(token: params[:token])
     upload_files = params[:image_files] || []
-    render :json => {upload_file_count: upload_files.size, params: params.keys}
+    upload_files.each do |upload_file|
+      image_resource = Hackathon::Sunflower::ImageResource.new(user_id: user.try(:id), category: :mixter, state: :mutable)
+      image_resource.upload!(upload_file)
+    end
+    head(:ok)
   end
 end

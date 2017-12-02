@@ -52,13 +52,17 @@ class Hackathon::Sunflower::CompositeWorker < ApplicationRecord
         ferry_image_sample.crop("#{ferry_image_sample.height}x#{ferry_image_sample.height}+#{(ferry_image_sample.width - ferry_image_sample.height) / 2}+0")
       end
       ferry_image_sample.resize("#{Hackathon::Sunflower::ImageResource::BASE_IMAGE_WIDTH}x#{Hackathon::Sunflower::ImageResource::BASE_IMAGE_HEIGHT}")
+      ferry_image_sample.combine_options do |mogrify|
+        mogrify.alpha 'on'
+        mogrify.channel 'a'
+        mogrify.evaluate 'set', '50%'
+      end
 
-      post_card_base_image = MiniMagick::Image.open(Rails.root.to_s + "/data/sunflower/postcard_base.png")
       composite_image = base_image.composite(ferry_image_sample) do |c|
         c.compose "Over"
         c.geometry "+0+0"
       end
-      post_card_composite_image = composite_postcard(composite_image)
+      post_card_composite_image = worker.composite_postcard(composite_image)
       worker.upload_compoleted_routine!(post_card_composite_image)
 
 #      ferry_images.each do |ferry_image|

@@ -228,7 +228,7 @@ Rails.application.routes.draw do
         end
       end
       resource :twillio, controller: :twillio, only: [] do
-        post :send_sms
+        post :reserve
       end
     end
   end

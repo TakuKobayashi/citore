@@ -1,4 +1,5 @@
 class Hackathon::Sunflower::UsersController < BaseController
+  protect_from_forgery
   def login
     user = Hackathon::Sunflower::User.find_by(token: params[:token])
     if user.blank?

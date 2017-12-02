@@ -79,6 +79,15 @@ class Hackathon::Sunflower::CompositeWorker < ApplicationRecord
         mogrify.evaluate 'set', '50%'
       end
 
+      bg_image = Hackathon::Sunflower::ImageResource.background.first
+      if bg_image.present?
+        bg = MiniMagick::Image.open(bg_image.url)
+        base_image = bg.composite(base_image) do |c|
+          c.compose "Over"
+          c.geometry "+0+0"
+        end
+      end
+
       post_card_composite_image = worker.composite_postcard(base_image)
       worker.upload_compoleted_routine!(post_card_composite_image)
 

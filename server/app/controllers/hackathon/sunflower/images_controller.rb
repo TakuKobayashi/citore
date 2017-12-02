@@ -30,4 +30,8 @@ class Hackathon::Sunflower::ImagesController < BaseController
     end
     head(:ok)
   end
+
+  def composite
+    head(:ok)
+  end
 end

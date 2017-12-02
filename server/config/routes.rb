@@ -220,6 +220,7 @@ Rails.application.routes.draw do
           post :upload_ferry
           post :upload_target
           post :upload_image_resources
+          get :composite
         end
       end
       resources :users, only: [] do

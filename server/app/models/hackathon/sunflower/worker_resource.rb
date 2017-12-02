@@ -18,4 +18,7 @@
 #
 
 class Hackathon::Sunflower::WorkerResource < ApplicationRecord
+  belongs_to :user, class_name: 'Hackathon::Sunflower::User', foreign_key: :user_id, required: false
+  belongs_to :resource, class_name: 'Hackathon::Sunflower::ImageResource', foreign_key: :resource_id, required: false
+  belongs_to :worker, class_name: 'Hackathon::Sunflower::CompositeWorker', foreign_key: :worker_id, required: false
 end

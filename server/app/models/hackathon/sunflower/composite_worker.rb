@@ -18,4 +18,20 @@
 #
 
 class Hackathon::Sunflower::CompositeWorker < ApplicationRecord
+  serialize :options, JSON
+  belongs_to :user, class_name: 'Hackathon::Sunflower::User', foreign_key: :user_id, required: false
+  has_many :worker_resources, class_name: 'Hackathon::Sunflower::WorkerResource', foreign_key: :worker_id
+  has_many :resources, through: :worker_resources, source: :resource
+
+  enum cateogory: {
+    ferry: 0,
+    backgraound: 1,
+    mixter: 2
+  }
+
+  enum state: {
+    ready: 0,
+    composite: 1,
+    complete: 2,
+  }
 end

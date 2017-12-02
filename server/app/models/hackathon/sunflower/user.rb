@@ -19,4 +19,7 @@
 #
 
 class Hackathon::Sunflower::User < ApplicationRecord
+  has_many :workers, class_name: 'Hackathon::Sunflower::CompositeWorker', foreign_key: :user_id
+  has_many :resources, class_name: 'Hackathon::Sunflower::ImageResource', foreign_key: :user_id
+  has_many :worker_resources, class_name: 'Hackathon::Sunflower::WorkerResource', foreign_key: :user_id
 end

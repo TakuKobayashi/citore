@@ -15,7 +15,7 @@ class Hackathon::Sunflower::ImagesController < BaseController
 
   def upload_target
     user = Hackathon::Sunflower::User.find_by(token: params[:token])
-    image_resource = Hackathon::Sunflower::ImageResource.find_or_initialize_by(user_id: user.try(:id), category: :backgraound, state: :fix)
+    image_resource = Hackathon::Sunflower::ImageResource.find_or_initialize_by(user_id: user.try(:id), category: :background, state: :fix)
     upload_file = params[:target_image]
     image_resource.upload!(upload_file)
     head(:ok)

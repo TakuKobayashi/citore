@@ -29,9 +29,9 @@ class Hackathon::Sunflower::ImageResource < ApplicationRecord
 
   IMAGE_ROOT_PATH = "hackathon/sunflower/images/"
 
-  enum cateogory: {
+  enum category: {
     ferry: 0,
-    backgraound: 1,
+    background: 1,
     mixter: 2
   }
 
@@ -43,7 +43,7 @@ class Hackathon::Sunflower::ImageResource < ApplicationRecord
   def upload!(file)
     image = MiniMagick::Image.open(file.path)
     image.format(:png)
-    if backgraound?
+    if background?
       # 正方形になるように真ん中だけ切り抜く
       if image.width < image.height
         image.crop("#{image.width}x#{image.width}+0+#{(image.height - image.width) / 2}")
@@ -52,9 +52,11 @@ class Hackathon::Sunflower::ImageResource < ApplicationRecord
       end
       image.resize("#{BASE_IMAGE_WIDTH}x#{BASE_IMAGE_HEIGHT}")
     end
-    filepath = IMAGE_ROOT_PATH + SecureRandom.hex + ".png"
-    s3 = Aws::S3::Client.new
-    s3.put_object(bucket: "taptappun",body: image.to_blob, key: filepath, acl: "public-read")
+#    filepath = IMAGE_ROOT_PATH + SecureRandom.hex + ".png"
+#    s3 = Aws::S3::Client.new
+#    s3.put_object(bucket: "taptappun",body: image.to_blob, key: filepath, acl: "public-read")
+    filepath = Rails.root.to_s + "/tmp/" + SecureRandom.hex + ".png"
+    File.open(filepath, "wb"){|f| f.write(image.to_blob) }
     update!(width: image.width, height: image.height, url: ApplicationRecord::S3_ROOT_URL + filepath)
   end
 end

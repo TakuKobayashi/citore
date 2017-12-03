@@ -76,7 +76,7 @@ class Hackathon::Sunflower::CompositeWorker < ApplicationRecord
         mogrify.evaluate 'set', '50%'
       end
 
-      bg_image = Hackathon::Sunflower::ImageResource.background.first
+      bg_image = Hackathon::Sunflower::ImageResource.background.last
       if bg_image.present?
         bg = MiniMagick::Image.open(bg_image.url)
         base_image = bg.composite(base_image) do |c|

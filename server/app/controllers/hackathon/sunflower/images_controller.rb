@@ -32,7 +32,7 @@ class Hackathon::Sunflower::ImagesController < BaseController
   end
 
   def composite
-    #Hackathon::Sunflower::CompositeWorker.composite_ferry!
+    Hackathon::Sunflower::CompositeWorker.composite_ferry!
     head(:ok)
   end
 end

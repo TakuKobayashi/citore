@@ -115,7 +115,7 @@ class Hackathon::Sunflower::CompositeWorker < ApplicationRecord
     twilio_client.api.account.messages.create(
       from: api_config["twilio"]["promo387"]["phone_number"],
       to: '+819078888361',
-      body: '写真ができました。ごちらからが確認いただけます\n' + export_url
+      body: '写真ができました。こちらからが確認いただけます ' + export_url
     )
   end
 end

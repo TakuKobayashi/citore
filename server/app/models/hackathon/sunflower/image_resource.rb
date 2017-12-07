@@ -5,7 +5,7 @@
 #  id         :integer          not null, primary key
 #  user_id    :integer
 #  url        :string(255)      not null
-#  category   :integer          default(0), not null
+#  category   :integer          default("ferry"), not null
 #  state      :integer          not null
 #  width      :integer          default(0), not null
 #  height     :integer          default(0), not null

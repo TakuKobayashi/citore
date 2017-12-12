@@ -43,31 +43,29 @@ class Hackathon::Sunflower::CompositeWorker < ApplicationRecord
 
       ferry_image_sample = MiniMagick::Image.open(ferry_images.first.url)
       base_image = MiniMagick::Image.open(Rails.root.to_s + "/data/sunflower/alpha_base.png")
-      if ferry_image_sample.width < ferry_image_sample.height
-        origin_height = base_image.height
-        origin_width = base_image.width * ferry_image_sample.width.to_f / ferry_image_sample.height
-        dumplicate_count = (origin_height / origin_width).to_i
-      else
-        origin_width = base_image.width
-        origin_height = base_image.height * ferry_image_sample.height.to_f / ferry_image_sample.width
-        dumplicate_count = (origin_width / origin_height).to_i
-      end
-      if dumplicate_count <= 0
-        dumplicate_count = 1
-      end
+      base_image_area = base_image.width * base_image.height
+      cell_image_area = base_image_area.to_f / ferry_image_count.to_f
 
-      #1/2乗 ルート2
-      cell_count = ((ferry_image_count / dumplicate_count) ** 0.5).to_i
-
+      row_count = 0
+      cell_line_width = 0
       ferry_images.each_with_index do |ferry_image, index|
         ferry_image_cell = MiniMagick::Image.open(ferry_image.url)
-        ferry_image_cell.resize("#{(origin_width / cell_count).to_i}x#{(origin_height / cell_count).to_i}")
-        column = index % cell_count
-        row = (index / cell_count).to_i
+        ferry_image_area = ferry_image_cell.width * ferry_image_cell.height
+        ferry_image_scale = ferry_image_area.to_f / cell_image_area.to_f
+
+        resized_width = (ferry_image_cell.width * ferry_image_scale).to_i
+        resized_height = (ferry_image_cell.height * ferry_image_scale).to_i
+        ferry_image_cell.resize("#{resized_width}x#{resized_height}")
+
+        if (cell_line_width + resized_width) > base_image.width
+          cell_line_width = 0
+          row_count += 1
+        end
         base_image = base_image.composite(ferry_image_cell) do |c|
           c.compose "Over"
-          c.geometry "+#{column * ferry_image_cell.width}+#{row * ferry_image_cell.height}"
+          c.geometry "+#{cell_line_width}+#{row_count * ferry_image_cell.height}"
         end
+        cell_line_width += resized_width
       end
 
       base_image.combine_options do |mogrify|

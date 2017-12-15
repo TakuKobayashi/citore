@@ -1,72 +1,128 @@
-<table>
-  <th>フェリーからアップロードする用のリンク</th>
-  <%= form_tag(upload_ferry_hackathon_sunflower_images_url, multipart: true) do %>
-    <tr>
-      <td>
-        <%= label_tag("画像ファイル") %>
-      </td>
-      <td>
-        <%= file_field_tag "image_files[]" %>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <%= label_tag("画像ファイル") %>
-      </td>
-      <td>
-        <%= file_field_tag "image_files[]" %>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <%= submit_tag("画像をアップロードする") %>
-      </td>
-    </tr>
-  <% end %>
-</table>
-<br>
-<table>
-  <th>ターゲット画像アップロード用</th>
-  <%= form_tag(upload_target_hackathon_sunflower_images_url, multipart: true) do %>
-    <tr>
-      <td>
-        <%= label_tag("画像ファイル") %>
-      </td>
-      <td>
-        <%= file_field_tag "target_image" %>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <%= submit_tag("画像をアップロードする") %>
-      </td>
-    </tr>
-  <% end %>
-</table>
-<br>
-<table>
-  <th>コマ画像アップロード用</th>
-  <%= form_tag(upload_image_resources_hackathon_sunflower_images_url, multipart: true) do %>
-    <tr>
-      <td>
-        <%= label_tag("画像ファイル") %>
-      </td>
-      <td>
-        <%= file_field_tag "image_files[]" %>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <%= label_tag("画像ファイル") %>
-      </td>
-      <td>
-        <%= file_field_tag "image_files[]" %>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <%= submit_tag("画像をアップロードする") %>
-      </td>
-    </tr>
-  <% end %>
-</table>
+<%= form_tag(upload_target_hackathon_sunflower_images_url, multipart: true, id: "upload_image_form") do %>
+  <h3>ベースにする画像を選択<h3>
+  <div id="dropzone" effectAllowed="move">ここに画像をドロップ</div>
+  <ul id="target_image"></ul>
+  <h3>コマ画像として追加したい画像をアップロード<h3>
+  <div id="dropzone" effectAllowed="move">ここに画像をドロップ</div>
+  <ul id="resource_images"></ul>
+  <%= submit_tag("画像を作成する") %>
+<% end %>
+<script>
+  var uploadForm = document.getElementById("upload_image_form");
+  var formData = new FormData();
+  var URL_BLANK_IMAGE = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+  var elTargetDrop = document.getElementById('target_dropzone');
+  var elResourcesDrop = document.getElementById('resources_dropzone');
+  var elFiles = document.getElementById('target_image_file');
+  var uploadTargetFile;
+  var uploadResourceFiles = [];
+
+  uploadForm.onsubmit = function(){
+    var targetElement = document.createElement("input");
+    targetElement.type = "file";
+    targetElement.value = uploadTargetFile;
+    return true;
+  };
+
+  dropFileFields(elTargetDrop, function(event){
+    var files = event.dataTransfer.files;
+    if(files.length > 0){
+      var elFiles = document.getElementById('target_image');
+      elFiles.innerHTML = '';
+      var elFile = buildElFile(files[0]);
+      elFiles.appendChild(elFile);
+      uploadTargetFile = files[0];
+    }
+  });
+
+  dropFileFields(elResourcesDrop, function(event){
+    var files = event.dataTransfer.files;
+    var elFiles = document.getElementById('resource_images');
+    for (var i = 0; i < files.length; ++i) {
+      uploadResourceFiles.push(files[i]);
+    }
+    elFiles.innerHTML = '';
+    for(var i = 0;i < uploadResourceFiles.length;++i){
+      var elFile = buildElFile(uploadResourceFiles[i]);
+      elFiles.appendChild(elFile);
+    }
+  });
+
+  document.addEventListener('click', function(event) {
+    var elTarget = event.target;
+    if (elTarget.tagName === 'IMG') {
+      var src = elTarget.src;
+      var w = window.open('about:blank');
+      var d = w.document;
+      var title = escapeHtml(elTarget.getAttribute('title'));
+      d.open();
+      d.write('<title>' + title + '</title>');
+      d.write('<img src="' + src + '" />');
+      d.close();
+    }
+  });
+
+  function dropFileFields(dom, onDropped){
+    elDrop.addEventListener('dragover', function(event) {
+      event.preventDefault();
+      event.dataTransfer.dropEffect = 'copy';
+      showDropping();
+    });
+
+    elDrop.addEventListener('dragleave', function(event) {
+      hideDropping();
+    });
+
+    elDrop.addEventListener('drop', function(event) {
+      event.preventDefault();
+      hideDropping();
+      onDropped(event);
+    });
+  }
+
+  function showDropping() {
+    elDrop.classList.add('dropover');
+  }
+
+  function hideDropping() {
+    elDrop.classList.remove('dropover');
+  }
+
+  function showFiles(files) {
+    elFiles.innerHTML = '';
+
+    for (var i=0, l=files.length; i<l; i++) {
+      var file = files[i];
+      var elFile = buildElFile(file);
+      elFiles.appendChild(elFile);
+    }
+  }
+
+  function buildElFile(file) {
+    var elFile = document.createElement('li');
+    if (file.type.indexOf('image/') === 0) {
+        var elImage = document.createElement('img');
+        elImage.src = URL_BLANK_IMAGE;
+        elFile.appendChild(elImage);
+        attachImage(file, elImage);
+    }
+    return elFile;
+  }
+
+  function attachImage(file, elImage) {
+    var reader = new FileReader();
+    reader.onload = function(event) {
+      var src = event.target.result;
+      elImage.src = src;
+      elImage.setAttribute('title', file.name);
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function escapeHtml(source) {
+    var el = document.createElement('div');
+    el.appendChild(document.createTextNode(source));
+    var destination = el.innerHTML;
+    return destination;
+  }
+</script>

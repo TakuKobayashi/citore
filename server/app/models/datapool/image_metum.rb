@@ -76,6 +76,13 @@ class Datapool::ImageMetum < Datapool::ResourceMetum
     return filepath
   end
 
+  # Google Reverse Image Serachする
+  def self.search_reverse_image_url(image_url:)
+    search_url = Addressable::URI.parse("https://images.google.com/searchbyimage")
+    search_url.query_values = {image_url: image_url}
+    return search_url.to_s
+  end
+
   def convert_to_base64
     filepath = self.src
     ext = File.extname(filepath)

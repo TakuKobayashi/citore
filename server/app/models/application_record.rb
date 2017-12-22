@@ -26,11 +26,11 @@ class ApplicationRecord < ActiveRecord::Base
     return xml_to_hash
   end
 
-  def self.request_and_parse_html(url:, method: :get, params: {}, headers: {})
+  def self.request_and_parse_html(url:, method: :get, params: {}, headers: {}, body: {})
     http_client = HTTPClient.new
     http_client.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
     begin
-      response = http_client.send(method, url, params: params,headers: headers, follow_redirect: true)
+      response = http_client.send(method, url, params: params, headers: headers, body: body, follow_redirect: true)
       if response.status < 300 || (302..304).cover?(response.status)
         doc = Nokogiri::HTML.parse(response.body.encode('SJIS', 'UTF-8', invalid: :replace, undef: :replace, replace: '').encode('UTF-8'))
       else
@@ -43,10 +43,10 @@ class ApplicationRecord < ActiveRecord::Base
     return doc
   end
 
-  def self.request_and_parse_json(url:, method: :get, params: {}, headers: {})
+  def self.request_and_parse_json(url:, method: :get, params: {}, headers: {}, body: {})
     http_client = HTTPClient.new
     http_client.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
-    response = http_client.send(method, url, params, headers, {follow_redirect: true})
+    response = http_client.send(method, url, params: params, headers: headers, body: body, follow_redirect: true)
     hash = {}
     begin
       hash = JSON.parse(response.body)

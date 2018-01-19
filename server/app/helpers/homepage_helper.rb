@@ -3,18 +3,18 @@ module HomepageHelper
     header_html = ""
     if controller_name == "image_crawl" && action_name == "index"
       header_html << %Q{
-        <title>多くの画像ファイルを集めるためのツール置き場</title>
-        <meta name="description" content="WebサイトやSNSからキーワードを入力するとその中の画像だけをまとめて集めてダウンロードすることができるツール置き場">
+        <title>画像クローラー - 大量の画像データを集めることができるWebツール</title>
+        <meta name="description" content="画像クローラーではWebサイトやSNSからキーワードを入力するだけで簡単に目的の画像を簡単に集めてダウンロードすることができます">
         <meta property="og:locale" content="ja_JP">
         <meta property="og:type" content="website">
-        <meta property="og:title" content="多くの画像ファイルを集めるためのツール置き場">
-        <meta property="og:description" content="WebサイトやSNSからキーワードを入力するとその中の画像だけをまとめて集めてダウンロードすることができるツール置き場">
+        <meta property="og:title" content="画像クローラー">
+        <meta property="og:description" content="画像クローラーではWebサイトやSNSからキーワードを入力するだけで簡単に目的の画像を簡単に集めてダウンロードすることができます">
         <meta property="og:url" content="#{tools_image_crawl_url}">
         <meta property="og:site_name" content="#{homepage_sitename}">
         <meta property="og:image" content="#{image_url("icon/image_crawler.png")}">
         <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:description" content="WebサイトやSNSからキーワードを入力するとその中の画像だけをまとめて集めてダウンロードすることができるツール置き場">
-        <meta name="twitter:title" content="多くの画像ファイルを集めるためのツール置き場">
+        <meta name="twitter:description" content="画像クローラーではWebサイトやSNSからキーワードを入力するだけで簡単に目的の画像を簡単に集めてダウンロードすることができます">
+        <meta name="twitter:title" content="画像クローラー">
         <meta name="twitter:image" content="#{image_url("icon/image_crawler.png")}">
       }
     elsif controller_name == "webrtcs" && action_name == "index"

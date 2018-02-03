@@ -99,7 +99,7 @@ gem 'omniauth-spotify'
 gem 'pdf-reader'
 gem 'twilio-ruby', '~> 5.5.1'
 
-gem 'webpacker', '~> 3.0'
+# gem 'webpacker', '~> 3.0'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development

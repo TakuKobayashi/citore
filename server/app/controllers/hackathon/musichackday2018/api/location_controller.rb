@@ -11,7 +11,9 @@ class Hackathon::Musichackday2018::Api::LocationController < Hackathon::Musichac
         distance: 100.0,
         lat: 35.6598891,
         lon: 139.7054377,
-        user_token: "aaaa"
+        user_token: "aaaa",
+        sound_name: "hogehoge",
+        artist_name: "氷川きよし",
       }]
     }
   end

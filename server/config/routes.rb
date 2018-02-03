@@ -214,6 +214,11 @@ Rails.application.routes.draw do
         resource :location, controller: :location, only: [] do
           post :notify
         end
+        resource :sound, controller: :sound, only: [] do
+          get :search_one
+          post :play
+          post :play_next
+        end
       end
 
       root to: "top#index"

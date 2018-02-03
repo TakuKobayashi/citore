@@ -218,6 +218,7 @@ Rails.application.routes.draw do
           get :search_one
           post :play
           post :play_next
+          post :keep_remix
         end
       end
 

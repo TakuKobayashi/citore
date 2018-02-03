@@ -27,4 +27,12 @@ class Hackathon::Musichackday2018::Api::SoundController < Hackathon::Musichackda
       sound_image_url: "https://pics.prcm.jp/9902f9f4d3c80/65452637/png/65452637.png"
     }
   end
+
+  def keep_remix
+    render :layout => false, :json => {
+      base_sound_id: params[:sound_id].to_i,
+      neighbour_sound_id: params[:neighbour_sound_id].to_i,
+      neighbour_user_token: params[:neighbour_user_token].to_s
+    }
+  end
 end

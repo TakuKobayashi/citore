@@ -1,0 +1,29 @@
+# == Schema Information
+#
+# Table name: hackathon_musichackday2018_sound_players
+#
+#  id              :integer          not null, primary key
+#  user_id         :integer          not null
+#  state           :integer          default("standby"), not null
+#  log_id          :integer          not null
+#  sound_played_at :datetime
+#  sound_duration  :float(24)        default(0.0), not null
+#
+# Indexes
+#
+#  index_hackathon_musichackday2018_sound_players_on_log_id   (log_id)
+#  index_hackathon_musichackday2018_sound_players_on_user_id  (user_id)
+#  musichackday2018_sound_players_sound_played_at_index       (sound_played_at)
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# This model initially had no columns defined. If you add columns to the
+# model remove the '{}' from the fixture names and add the columns immediately
+# below each fixture, per the syntax in the comments below
+#
+one: {}
+# column: value
+#
+two: {}
+# column: value

@@ -12,6 +12,7 @@
       console.log("位置情報");
       var form = $(this).parents('form');
       form.attr('action', $(this).data('action'));
+      $('<input>').attr({'type': 'hidden', 'name': "token", 'value': "aaaaaa"}).appendTo(form);
       $('<input>').attr({'type': 'hidden', 'name': "lat", 'value': latlon.lat}).appendTo(form);
       $('<input>').attr({'type': 'hidden', 'name': "lon", 'value': latlon.lon}).appendTo(form);
       form.submit();

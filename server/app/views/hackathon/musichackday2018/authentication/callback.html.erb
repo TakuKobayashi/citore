@@ -1,11 +1,12 @@
 <%= javascript_include_tag 'libraries/browser-deeplink.min.js' %>
 <script>
   window.onload = function() {
-    if (userAgent.search(/iphone|ipad|ipod/) > -1) {
-      launch_frame.location.href = "com.spotify.music.hack.app://auth?token=#{@user.token}";
-//      setTimeout(function() {
-//          location.href = "com.spotify.music.hack.app://auth?token=#{@user.token}";
-//      }, 500);
-    }
+//    if (userAgent.search(/iphone|ipad|ipod/) > -1) {
+//      launch_frame.location.href = "com.spotify.music.hack.app://auth?token=#{@user.token}";
+      deeplink.open("com.spotify.music.hack.app://auth?token=#{@user.token}");
+      setTimeout(function() {
+        deeplink.open("com.spotify.music.hack.app://auth?token=#{@user.token}");
+      }, 500);
+//    }
   };
 </script>

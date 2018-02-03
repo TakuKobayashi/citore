@@ -1,4 +1,5 @@
 class Hackathon::Musichackday2018::Api::BaseController < BaseController
+  protect_from_forgery
   before_action :find_user
 
   private

@@ -203,6 +203,20 @@ Rails.application.routes.draw do
   end
 
   namespace :hackathon do
+    namespace :musichackday2018 do
+      resource :authentication, controller: :authentication, only: [] do
+        get :signin
+        get :callback
+      end
+
+      namespace :api do
+        resource :location, controller: :location, only: [] do
+        end
+      end
+
+      root to: "top#index"
+    end
+
     namespace :arstudio2017 do
       resource :loader, controller: :loader, only: [] do
         get :index

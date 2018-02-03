@@ -1,0 +1,29 @@
+# == Schema Information
+#
+# Table name: hackathon_musichackday2018_users
+#
+#  id               :integer          not null, primary key
+#  token            :string(255)      not null
+#  last_accessed_at :datetime         not null
+#  user_agent       :text(65535)
+#  options          :text(65535)
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#
+# Indexes
+#
+#  index_hackathon_musichackday2018_users_on_last_accessed_at  (last_accessed_at)
+#  index_hackathon_musichackday2018_users_on_token             (token) UNIQUE
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# This model initially had no columns defined. If you add columns to the
+# model remove the '{}' from the fixture names and add the columns immediately
+# below each fixture, per the syntax in the comments below
+#
+one: {}
+# column: value
+#
+two: {}
+# column: value

@@ -1,0 +1,12 @@
+<%= javascript_include_tag 'libraries/jquery.min.js' %>
+<%= javascript_include_tag 'libraries/browser-deeplink.min.js' %>
+<script>
+  $(document).ready(function(){
+    $("#deep_link").on("click", function(){
+      console.log("ディープリンク");
+      deeplink.open("com.spotify.music.hack.app://auth?token=aaaaaa");
+    });
+  });
+</script>
+
+<%= link_to("ディープリンクテスト", "", {id: "deep_link"}) %>

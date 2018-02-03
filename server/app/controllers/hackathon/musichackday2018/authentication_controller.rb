@@ -14,7 +14,7 @@ class Hackathon::Musichackday2018::AuthenticationController < BaseController
     user.sign_in!
     session["user_id"] = user.id
     session["user_type"] = user.class.to_s
-    session["redirect_url"] = callback_egaonotatsuzin_authentication_url(user_token: token)
+    session["redirect_url"] = callback_hackathon_musichackday2018_authentication_url
     redirect_to "/auth/spotify"
   end
 

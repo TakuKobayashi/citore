@@ -206,6 +206,7 @@ Rails.application.routes.draw do
     namespace :musichackday2018 do
       resource :authentication, controller: :authentication, only: [] do
         get :signin
+        get :spotify_login
         get :callback
       end
 

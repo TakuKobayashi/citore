@@ -11,7 +11,7 @@ class CreateAccounts < ActiveRecord::Migration[5.1]
       t.text :options
       t.timestamps
     end
+    add_index :accounts, [:user_type, :user_id, :type, :uid], unique: true, name: "unique_user_and_id_and_uid_accounts_index"
     add_index :accounts, :uid
-    add_index :accounts, [:user_type, :user_id, :type], unique: true, name: "unique_user_and_id_accounts_index"
   end
 end

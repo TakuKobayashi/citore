@@ -16,8 +16,8 @@
 #
 # Indexes
 #
-#  index_accounts_on_uid              (uid)
-#  unique_user_and_id_accounts_index  (user_type,user_id,type) UNIQUE
+#  index_accounts_on_uid                      (uid)
+#  unique_user_and_id_and_uid_accounts_index  (user_type,user_id,type,uid) UNIQUE
 #
 
 require 'test_helper'

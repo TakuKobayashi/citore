@@ -37,7 +37,7 @@ class Datapool::YoutubeAudioMetum < Datapool::AudioMetum
         end
         metum = Datapool::YoutubeAudioMetum.constract(
           url: "https://www.youtube.com/watch?v=" + item.id.video_id.to_s,
-          title: item.snippet.title,
+          title: ApplicationRecord.basic_sanitize(item.snippet.title),
           file_genre: :video_streaming,
           options: {
             channel_title: item.snippet.channel_title,

@@ -63,6 +63,9 @@ class Datapool::YoutubeAudioMetum < Datapool::AudioMetum
 
   def download_and_upload_file!
     file_name = SecureRandom.hex + ".wav"
+    if File.extname(self.file_url) == file_name
+      return true
+    end
     output_file_path = Rails.root.to_s + "/tmp/audio/" + file_name
     system("youtube-dl " + self.src + " -x -o " + output_file_path.to_s + " --audio-format=wav")
     fileurl = Datapool::YoutubeAudioMetum.upload_s3(File.open(output_file_path), file_name)

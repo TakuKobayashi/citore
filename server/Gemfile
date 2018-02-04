@@ -99,7 +99,6 @@ gem 'omniauth-spotify'
 gem 'pdf-reader'
 gem 'twilio-ruby', '~> 5.5.1'
 
-gem 'youtube-dl.rb'
 gem 'geokit'
 
 # Use Capistrano for deployment

@@ -28,6 +28,7 @@ class Hackathon::Musichackday2018::PlaySoundLog < ApplicationRecord
   }
 
   def download_and_upload_file!
+    self.sound.download_and_upload_file!
     self.download!
   end
 

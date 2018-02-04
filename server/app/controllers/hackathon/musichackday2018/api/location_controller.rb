@@ -12,13 +12,13 @@ class Hackathon::Musichackday2018::Api::LocationController < Hackathon::Musichac
       neighbours: locations.map do |location|
         player = user_players[location.user_id]
         {
-          sound_url: player.log.sound.file_url,
+          sound_url: player.try(:log).try(:sound).try(:file_url).to_s,
           distance: location.distance_to(last_location) * 1000,
           lat: location.lat,
           lon: location.lon,
           user_token: location.user.token,
-          sound_name: player.log.sound.title,
-          artist_name: player.log.sound.artist_name,
+          sound_name: player.try(:log).try(:sound).try(:title).to_s,
+          artist_name: player.try(:log).try(:sound).try(:artist_name).to_s,
         }
         end
     }

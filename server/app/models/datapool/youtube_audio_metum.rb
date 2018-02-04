@@ -63,7 +63,7 @@ class Datapool::YoutubeAudioMetum < Datapool::AudioMetum
 
   def download_and_upload_file!
     file_name = SecureRandom.hex + ".aac"
-    if File.extname(self.file_url) == File.extname(self.file_name)
+    if File.extname(self.file_url) == File.extname(file_name)
       return true
     end
     output_file_path = Rails.root.to_s + "/tmp/audio/" + file_name

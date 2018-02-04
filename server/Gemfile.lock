@@ -185,6 +185,9 @@ GEM
     formtastic_i18n (0.6.0)
     geocoder (1.4.5)
     geokit (1.11.0)
+    geokit-rails (2.3.0)
+      geokit (~> 1.5)
+      rails (>= 3.0)
     get_process_mem (0.2.1)
     globalid (0.4.1)
       activesupport (>= 4.2.0)
@@ -557,7 +560,7 @@ DEPENDENCIES
   flickraw
   foreman
   geocoder
-  geokit
+  geokit-rails
   google-api-client (~> 0.9)
   httpclient
   inherited_resources!

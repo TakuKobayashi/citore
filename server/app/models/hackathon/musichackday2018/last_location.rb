@@ -17,4 +17,10 @@
 #
 
 class Hackathon::Musichackday2018::LastLocation < ApplicationRecord
+  acts_as_mappable :distance_field_name => :distance,
+    :lat_column_name => :lat,
+    :lng_column_name => :lon
+
+  belongs_to :user, class_name: 'Hackathon::Musichackday2018::User', foreign_key: :user_id, required: false
+
 end

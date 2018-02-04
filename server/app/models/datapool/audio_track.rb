@@ -24,6 +24,8 @@ class Datapool::AudioTrack < ApplicationRecord
   has_many :elements, as: :audio, class_name: 'Datapool::AudioElement'
   has_one :detail, class_name: 'Datapool::AudioTrackDetail'
 
+  belongs_to :metum, class_name: 'Datapool::AudioMetum', foreign_key: :audio_metum_id, required: false
+
   serialize :album_ids, JSON
   serialize :options, JSON
 end

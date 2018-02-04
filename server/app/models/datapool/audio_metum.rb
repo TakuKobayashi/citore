@@ -18,6 +18,8 @@
 #
 
 class Datapool::AudioMetum < Datapool::ResourceMetum
+  serialize :options, JSON
+
   enum file_genre: {
     audio_file: 0,
     video_file: 1,

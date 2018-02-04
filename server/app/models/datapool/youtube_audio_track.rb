@@ -20,5 +20,5 @@
 #  index_datapool_audio_tracks_on_track_id_and_type  (track_id,type) UNIQUE
 #
 
-class Datapool::YoutbeAudioTrack < Datapool::AudioTrack
+class Datapool::YoutubeAudioTrack < Datapool::AudioTrack
 end

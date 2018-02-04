@@ -1,17 +1,23 @@
 class Hackathon::Musichackday2018::Api::SoundController < Hackathon::Musichackday2018::Api::BaseController
   def search_one
     keyword = params[:keyword]
-    play_sound_log = @user.setup_sound_player!(keyword: keyword)
+    audio_meta = Datapool::YoutubeAudioMetum.search_and_import!(keyword: keyword)
+    json_hash_arr = audio_meta[0..9].map do |metum|
+      {
+        sound_url: metum.src,
+        sound_id: metum.id,
+        sound_name: metum.title,
+        artist_name: metum.artist_name,
+        sound_image_url: metum.thumbnail_image_url
+      }
+    end
     render :layout => false, :json => {
-      sound_url: "https://maoudamashii.jokersounds.com/music/bgm/mp3/bgm_maoudamashii_orchestra26.mp3",
-      sound_id: play_sound_log.id,
-      sound_name: "hogehoge",
-      artist_name: "氷川きよし",
-      sound_image_url: "https://pics.prcm.jp/9902f9f4d3c80/65452637/png/65452637.png"
+      results: json_hash_arr
     }
   end
 
   def play
+    sound = Datapool::YoutubeAudioMetum.find_by(id: params[:sound_id])
     sound_player = @user.sound_player
     sound_player.play!
     render :layout => false, :json => {

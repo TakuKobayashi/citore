@@ -20,7 +20,7 @@
 require 'google/apis/youtube_v3'
 
 class Datapool::YoutubeAudioMetum < Datapool::AudioMetum
-  has_one :audio_track, class_name: 'Datapool::YoutbeAudioTrack', foreign_key: :audio_metum_id
+  has_one :audio_track, class_name: 'Datapool::YoutubeAudioTrack', foreign_key: :audio_metum_id
 
   def self.search_and_import!(keyword:)
     apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
@@ -28,20 +28,44 @@ class Datapool::YoutubeAudioMetum < Datapool::AudioMetum
     youtube.key = apiconfig["google_api"]["key"]
     youtube_search = youtube.list_searches("id,snippet", max_results: 50,  type: "video", q: keyword.to_s)
     audio_meta = []
+    id_tracks = Datapool::YoutubeAudioTrack.where(track_id: youtube_search.items.map{|item| item.id.video_id.to_s}).preload(:metum).index_by(&:track_id)
     self.transaction do
-      audio_meta = youtube_search.items.map do |item|
+      youtube_search.items.each do |item|
+        if id_tracks[item.id.video_id.to_s].present?
+          audio_meta << id_tracks[item.id.video_id.to_s].metum
+          next
+        end
         metum = Datapool::YoutubeAudioMetum.constract(
           url: "https://www.youtube.com/watch?v=" + item.id.video_id.to_s,
           title: item.snippet.title,
           file_genre: :video_streaming,
           options: {
             channel_title: item.snippet.channel_title,
-            thumnail_image_url: item.snippet.thumbnails.default.url
-        })
+            thumbnail_image_url: item.snippet.thumbnails.default.url
+          }
+        )
         metum.save!
-        metum
+        Datapool::YoutubeAudioTrack.create(
+          audio_metum_id: metum.id,
+          title: metum.title,
+          track_id: item.id.video_id.to_s,
+          url: metum.src,
+          options: {
+            channel_title: item.snippet.channel_title,
+            thumbnail_image_url: item.snippet.thumbnails.default.url
+          }
+        )
+        audio_meta << metum
       end
     end
     return audio_meta
+  end
+
+  def artist_name
+    self.options["channel_title"].to_s
+  end
+
+  def thumbnail_image_url
+    self.options["thumbnail_image_url"].to_s
   end
 end

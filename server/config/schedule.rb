@@ -9,7 +9,7 @@ every :day, at: '11:00' do
   runner "Homepage.import_routine!"
 end
 
-every :day, at: '3:00' do
+every :day, at: '10:00' do
   runner "Datapool::StoreProduct.update_data!"
 end
 

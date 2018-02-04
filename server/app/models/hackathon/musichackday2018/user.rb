@@ -39,12 +39,15 @@ class Hackathon::Musichackday2018::User < ApplicationRecord
     end
   end
 
-  def setup_sound_player!(keyword:)
-    log = Hackathon::Musichackday2018::PlaySoundLog.generate_search_one!(user: self,keyword: keyword)
+  def setup_sound_player!(audio_metum:)
+    log = self.sound_logs.create!(
+      state: :standby,
+      sound: audio_metum
+    )
     sound_player = Hackathon::Musichackday2018::SoundPlayer.find_or_initialize_by(user_id: self.id)
     sound_player.update!(state: :standby, log_id: log.id, sound_duration: 0, sound_played_at: nil)
     log.download_and_upload_file!
     sound_player.download!
-    return log
+    return sound_player
   end
 end

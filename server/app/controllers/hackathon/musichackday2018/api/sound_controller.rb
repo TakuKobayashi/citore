@@ -18,11 +18,11 @@ class Hackathon::Musichackday2018::Api::SoundController < Hackathon::Musichackda
 
   def play
     sound = Datapool::YoutubeAudioMetum.find_by(id: params[:sound_id])
-    sound_player = @user.sound_player
-    sound_player.play!
+    sound_player = @user.setup_sound_player!(audio_metum: sound)
     render :layout => false, :json => {
-      sound_id: sound_player.log_id,
-      sound_duration: 100.to_f
+      sound_file_url: sound_player.log.sound.file_url,
+      sound_player_log_id: sound_player.log_id,
+      sound_duration: sound_player.sound_duration
     }
   end
 

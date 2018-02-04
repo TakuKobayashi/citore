@@ -68,4 +68,8 @@ class Datapool::YoutubeAudioMetum < Datapool::AudioMetum
   def thumbnail_image_url
     self.options["thumbnail_image_url"].to_s
   end
+
+  def file_url
+    self.options["upload_audio_file_url"].to_s
+  end
 end

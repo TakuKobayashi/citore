@@ -27,17 +27,6 @@ class Hackathon::Musichackday2018::PlaySoundLog < ApplicationRecord
     complete: 3
   }
 
-  def self.generate_search_one!(user: ,keyword:)
-    audio_meta = Datapool::YoutubeAudioMetum.search_and_import!(keyword: keyword)
-    log = Hackathon::Musichackday2018::PlaySoundLog.create!(
-      user_id: user.id,
-      state: :standby,
-      sound: audio_meta.first,
-      next_sound_id: audio_meta.second.try(:id)
-    )
-    log
-  end
-
   def download_and_upload_file!
     self.download!
   end

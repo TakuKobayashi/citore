@@ -1,9 +1,10 @@
 class Hackathon::Musichackday2018::Api::LocationController < Hackathon::Musichackday2018::Api::BaseController
   def notify
+    last_location = @user.update_location!(lat: params[:lat].to_f, lon: params[:lon].to_f)
     render :layout => false, :json => {
       sender: {
-        lat: params[:lat],
-        lon: params[:lon]
+        lat: params[:lat].to_f,
+        lon: params[:lon].to_f
       },
       timestamp: Time.current.to_i,
       neighbours: [{

@@ -32,11 +32,13 @@ class Hackathon::Musichackday2018::User < ApplicationRecord
   end
 
   def update_location!(lat:, lon:)
+    last_location = nil
     transaction do
       log = self.location_logs.create!(lat: lat, lon: lon)
       last_location = Hackathon::Musichackday2018::LastLocation.find_or_initialize_by(user_id: self.id)
       last_location.update!(lat: lat, lon: lon, received_at: Time.current, log_id: log.id)
     end
+    return last_location
   end
 
   def setup_sound_player!(audio_metum:)

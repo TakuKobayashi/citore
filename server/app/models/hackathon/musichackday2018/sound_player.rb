@@ -17,10 +17,19 @@
 #
 
 class Hackathon::Musichackday2018::SoundPlayer < ApplicationRecord
+  belongs_to :log, class_name: 'Hackathon::Musichackday2018::PlaySoundLog', foreign_key: :log_id, required: false
+
   enum state: {
     standby: 0,
     download: 1,
     playing: 2,
     complete: 3
   }
+
+  def play!
+    transaction do
+      update!(state: :playing, sound_played_at: Time.current)
+      log.playing!
+    end
+  end
 end

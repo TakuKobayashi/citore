@@ -1,9 +1,10 @@
 class Hackathon::Musichackday2018::Api::SoundController < Hackathon::Musichackday2018::Api::BaseController
   def search_one
     keyword = params[:keyword]
+    play_sound_log = @user.setup_sound_player!(keyword: keyword)
     render :layout => false, :json => {
       sound_url: "https://maoudamashii.jokersounds.com/music/bgm/mp3/bgm_maoudamashii_orchestra26.mp3",
-      sound_id: 1,
+      sound_id: play_sound_log.id,
       sound_name: "hogehoge",
       artist_name: "氷川きよし",
       sound_image_url: "https://pics.prcm.jp/9902f9f4d3c80/65452637/png/65452637.png"
@@ -11,8 +12,10 @@ class Hackathon::Musichackday2018::Api::SoundController < Hackathon::Musichackda
   end
 
   def play
+    sound_player = @user.sound_player
+    sound_player.play!
     render :layout => false, :json => {
-      sound_id: params[:sound_id].to_i,
+      sound_id: sound_player.log_id,
       sound_duration: 100.to_f
     }
   end

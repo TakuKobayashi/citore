@@ -171,7 +171,7 @@ class ApplicationRecord < ActiveRecord::Base
   def destroy_cache!
     records = CacheStore::CACHE.read(self.class.table_name)
     if records.present?
-      records.delete("self.id")
+      records.delete(self.id.to_s)
       CacheStore::CACHE.write(self.class.table_name, records)
     end
   end

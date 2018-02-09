@@ -33,6 +33,7 @@ var WebSocketServer = require('ws').Server;
 var wss = new WebSocketServer({server:server});
 
 var connections = {};
+connections.plane_chat = [];
 connections.twitter_sample = [];
 connections.webrtc = [];
 connections.bannosama = [];

@@ -9,7 +9,6 @@
 
 class Sugarcoat::Seed < TwitterRecord
   def self.to_sugarcoat(text, options = {})
-    apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
     sanitaized_word = ApplicationRecord.basic_sanitize(text)
     sanitaized_word, urls = separate_urls(sanitaized_word)
     split_words = bracket_split(sanitaized_word)
@@ -41,9 +40,7 @@ class Sugarcoat::Seed < TwitterRecord
           tree_separate_words << cells[0]
           next
         end
-        list = `http -a #{apiconfig["metadata_wordassociator"]["username"]}:#{apiconfig["metadata_wordassociator"]["password"]} GET wordassociator.ap.mextractr.net/word_associator/api_query query==#{cells[0]}`
-        max_word = JSON.parse(list).max_by{|arr| get_word_score(arr[0].strip, features[0].strip) }
-        tree_separate_words << max_word[0]
+        tree_separate_words << cells[0]
       end
       tree_separate_words.join("")
     end

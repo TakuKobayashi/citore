@@ -1,10 +1,7 @@
 var path = require('path');
 var railsRootPath = path.normalize(__dirname + "/../");
 var fs = require("fs");
-var apiConfigString = fs.readFileSync(path.normalize(railsRootPath + "/config/apiconfig.yml"), "utf8");
-
-var YAML = require('yamljs');
-var apiConfig = YAML.parse(apiConfigString);
+require('dotenv').config({path: path.normalize(railsRootPath + ".env")})
 
 var sanitizer = require('./sanitizer.js');
 
@@ -15,7 +12,6 @@ var port = process.env.PORT || 3110;
 
 //サーバーの立ち上げ
 var http = require('http');
-
 //指定したポートにきたリクエストを受け取れるようにする
 var server = http.createServer(app).listen(port, function () {
   console.log('Server listening at port %d', port);
@@ -23,10 +19,10 @@ var server = http.createServer(app).listen(port, function () {
 
 var Twitter = require('twitter');
 var twitterClient = new Twitter({
-  consumer_key: apiConfig.twitter.citore.consumer_key,
-  consumer_secret: apiConfig.twitter.citore.consumer_secret,
-  access_token_key: apiConfig.twitter.citore.bot.access_token_key,
-  access_token_secret: apiConfig.twitter.citore.bot.access_token_secret
+  consumer_key: process.env.TWITTER_CITORE_CONSUMER_KEY,
+  consumer_secret: process.env.TWITTER_CITORE_CONSUMER_SECRET,
+  access_token_key: process.env.TWITTER_CITORE_BOT_ACCESS_TOKEN,
+  access_token_secret: process.env.TWITTER_CITORE_BOT_ACCESS_TOKEN_SECRET
 });
 
 var WebSocketServer = require('ws').Server;

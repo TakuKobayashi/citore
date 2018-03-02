@@ -45,14 +45,12 @@ class TwitterRecord < ApplicationRecord
   end
 
   def self.get_tweets(*twitter_ids)
-    apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
     client = self.get_twitter_rest_client("citore")
     tweets = client.statuses(twitter_ids)
     return tweets
   end
 
   def self.twitter_crawl(prefix_key: "", crawl_options: {})
-    apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
     client = self.get_twitter_rest_client("citore")
     is_all = false
     start_time = Time.now
@@ -118,23 +116,45 @@ class TwitterRecord < ApplicationRecord
   end
 
   def self.get_twitter_rest_client(username)
-    apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
     rest_client = Twitter::REST::Client.new do |config|
-      config.consumer_key        = apiconfig["twitter"][username]["consumer_key"]
-      config.consumer_secret     = apiconfig["twitter"][username]["consumer_secret"]
-      config.access_token        = apiconfig["twitter"][username]["bot"]["access_token_key"]
-      config.access_token_secret = apiconfig["twitter"][username]["bot"]["access_token_secret"]
+      if username == "citore"
+        config.consumer_key        = ENV.fetch('TWITTER_CITORE_CONSUMER_KEY', '')
+        config.consumer_secret     = ENV.fetch('TWITTER_CITORE_CONSUMER_SECRET', '')
+        config.access_token        = ENV.fetch('TWITTER_CITORE_BOT_ACCESS_TOKEN', '')
+        config.access_token_secret = ENV.fetch('TWITTER_CITORE_BOT_ACCESS_TOKEN_SECRET', '')
+      elsif username == "sugarcoat"
+        config.consumer_key        = ENV.fetch('TWITTER_SUGARCOAT_CONSUMER_KEY', '')
+        config.consumer_secret     = ENV.fetch('TWITTER_SUGARCOAT_CONSUMER_SECRET', '')
+        config.access_token        = ENV.fetch('TWITTER_SUGARCOAT_BOT_ACCESS_TOKEN', '')
+        config.access_token_secret = ENV.fetch('TWITTER_SUGARCOAT_BOT_ACCESS_TOKEN_SECRET', '')
+      elsif username == "fey_kun_ai"
+        config.consumer_key        = ENV.fetch('TWITTER_FEYKUNAI_CONSUMER_KEY', '')
+        config.consumer_secret     = ENV.fetch('TWITTER_FEYKUNAI_CONSUMER_SECRET', '')
+        config.access_token        = ENV.fetch('TWITTER_FEYKUNAI_BOT_ACCESS_TOKEN', '')
+        config.access_token_secret = ENV.fetch('TWITTER_FEYKUNAI_BOT_ACCESS_TOKEN_SECRET', '')
+      end
     end
     return rest_client
   end
 
   def self.get_twitter_stream_client(username)
-    apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
     stream_client = Twitter::Streaming::Client.new do |config|
-      config.consumer_key        = apiconfig["twitter"][username]["consumer_key"]
-      config.consumer_secret     = apiconfig["twitter"][username]["consumer_secret"]
-      config.access_token        = apiconfig["twitter"][username]["bot"]["access_token_key"]
-      config.access_token_secret = apiconfig["twitter"][username]["bot"]["access_token_secret"]
+      if username == "citore"
+        config.consumer_key        = ENV.fetch('TWITTER_CITORE_CONSUMER_KEY', '')
+        config.consumer_secret     = ENV.fetch('TWITTER_CITORE_CONSUMER_SECRET', '')
+        config.access_token        = ENV.fetch('TWITTER_CITORE_BOT_ACCESS_TOKEN', '')
+        config.access_token_secret = ENV.fetch('TWITTER_CITORE_BOT_ACCESS_TOKEN_SECRET', '')
+      elsif username == "sugarcoat"
+        config.consumer_key        = ENV.fetch('TWITTER_SUGARCOAT_CONSUMER_KEY', '')
+        config.consumer_secret     = ENV.fetch('TWITTER_SUGARCOAT_CONSUMER_SECRET', '')
+        config.access_token        = ENV.fetch('TWITTER_SUGARCOAT_BOT_ACCESS_TOKEN', '')
+        config.access_token_secret = ENV.fetch('TWITTER_SUGARCOAT_BOT_ACCESS_TOKEN_SECRET', '')
+      elsif username == "fey_kun_ai"
+        config.consumer_key        = ENV.fetch('TWITTER_FEYKUNAI_CONSUMER_KEY', '')
+        config.consumer_secret     = ENV.fetch('TWITTER_FEYKUNAI_CONSUMER_SECRET', '')
+        config.access_token        = ENV.fetch('TWITTER_FEYKUNAI_BOT_ACCESS_TOKEN', '')
+        config.access_token_secret = ENV.fetch('TWITTER_FEYKUNAI_BOT_ACCESS_TOKEN_SECRET', '')
+      end
     end
     return stream_client
   end

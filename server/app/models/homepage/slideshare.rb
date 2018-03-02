@@ -56,8 +56,7 @@ def self.import_articles!
   end
 
   def self.get_slideshare_client
-    apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
-    client = SlideshareApi::Client.new(apiconfig["slideshare"]["apikey"], apiconfig["slideshare"]["shared_secret"])
+    client = SlideshareApi::Client.new(ENV.fetch('SLIDESHARE_APIKEY', ''), ENV.fetch('SLIDESHARE_SHARED_SECRET', ''))
     return client
   end
 end

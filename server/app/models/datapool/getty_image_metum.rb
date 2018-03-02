@@ -20,12 +20,11 @@ class Datapool::GettyImageMetum < Datapool::ImageMetum
   GETTY_IMAGES_API_URL = "https://api.gettyimages.com/v3/search/images"
 
   def self.crawl_images!(keyword:)
-    apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
     all_images = []
     page = 1
     loop do
       images = []
-      json = ApplicationRecord.request_and_parse_json(url: GETTY_IMAGES_API_URL, params: {phrase: keyword, page_size: 100, page: page, fields: "detail_set"},  headers: {"Api-Key" => apiconfig["getty_images"]["standard"]["key"]})
+      json = ApplicationRecord.request_and_parse_json(url: GETTY_IMAGES_API_URL, params: {phrase: keyword, page_size: 100, page: page, fields: "detail_set"},  headers: {"Api-Key" => ENV.fetch('GETTY_IMAGES_STANDARD_KEY', '')})
       json["images"].each do |data_hash|
         image_url = data_hash["display_sizes"].map{|dhash| Addressable::URI.parse(dhash["uri"].to_s) }.map{|url| url.origin + url.path }.uniq.sample
         image = self.constract(

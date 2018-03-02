@@ -37,7 +37,6 @@ class CrawlScheduler < ApplicationRecord
   end
 
   def self.tweet_crawl(keyword, crawl_options, &block)
-    apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
     client = TwitterRecord.get_twitter_rest_client("citore")
     is_all = false
     start_time = Time.now

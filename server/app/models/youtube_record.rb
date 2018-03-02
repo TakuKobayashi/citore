@@ -4,9 +4,8 @@ class YoutubeRecord < ApplicationRecord
   self.abstract_class = true
 
   def self.crawl_loop_request(&block)
-    apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
     youtube = Google::Apis::YoutubeV3::YouTubeService.new
-    youtube.key = apiconfig["google_api"]["key"]
+    youtube.key = ENV.fetch('GOOGLE_API_KEY', '')
     page_token = ExtraInfo.read_extra_info[table_name]
     retry_counter = 0
     loop do

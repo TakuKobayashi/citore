@@ -1,4 +1,3 @@
-apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
 natto = ApplicationRecord.get_natto
 
 stream_client = TwitterRecord.get_twitter_stream_client("fey_kun_ai")

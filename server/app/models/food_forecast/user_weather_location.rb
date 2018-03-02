@@ -40,9 +40,8 @@ class FoodForecast::UserWeatherLocation < ApplicationRecord
   reverse_geocoded_by :lat, :lon, address: :address, language: :ja
 
   def update_weather_reports!
-    apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
     client = HTTPClient.new
-    response = client.get(YAHOO_WEATHER_API_URL, {appid: apiconfig["yahoo"]["appId"], coordinates: [self.lat, self.lon].join(","), output: :json})
+    response = client.get(YAHOO_WEATHER_API_URL, {appid: ENV.fetch('YAHOO_API_ID', ''), coordinates: [self.lat, self.lon].join(","), output: :json})
     hash = JSON.parse(response.body)
     update!(weather_reports: hash["Feature"])
   end
@@ -64,7 +63,6 @@ class FoodForecast::UserWeatherLocation < ApplicationRecord
   end
 
   def self.search_spots_from_location(latitude:, longitude:, api: :gnavi)
-    apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
     now = Time.now
     request_hash_common = {
       range: 3,
@@ -81,7 +79,7 @@ class FoodForecast::UserWeatherLocation < ApplicationRecord
     http_client = HTTPClient.new
     if api.to_s == "gnavi"
       request_hash = request_hash_common.merge({
-        keyid: apiconfig["gnavi"]["apikey"],
+        keyid: ENV.fetch('GNAVI_APIKEY', ''),
         input_coordinates_mode: 2,
         coordinates_mode: 2,
         latitude: latitude,
@@ -109,7 +107,7 @@ class FoodForecast::UserWeatherLocation < ApplicationRecord
       response = http_client.get(GNAVI_API_URL, request_hash, {})
     elsif api.to_s == "recruit"
       request_hash = request_hash_common.merge({
-        key: apiconfig["recruit"]["apikey"],
+        key: ENV.fetch('RECRUIT_APIKEY', ''),
         lat: latitude,
         lng: longitude,
         datum: "world",

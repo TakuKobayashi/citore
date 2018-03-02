@@ -1,8 +1,7 @@
 class Egaonotatsuzin::Api::PlaylistsController < Egaonotatsuzin::Api::BaseController
   def index
-    apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
     playlists = @user.spotify.import_and_load_playlists!
-    render :layout => false, :json => {access_token: @user.spotify.token, client_id: apiconfig["apotify"]["client_id"], playlists: playlists}
+    render :layout => false, :json => {access_token: @user.spotify.token, client_id: ENV.fetch('SPOTIFY_CLIENT_ID', ''), playlists: playlists}
   end
 
   def analysis

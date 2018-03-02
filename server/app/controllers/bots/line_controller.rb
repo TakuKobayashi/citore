@@ -168,11 +168,27 @@ class Bots::LineController < BaseController
 
   private
   def load_line_bot_client
-    apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
-    @client = Line::Bot::Client.new {|config|
-      config.channel_secret = apiconfig["line_bot"][params[:action]]["channel_secret"]
-      config.channel_token = apiconfig["line_bot"][params[:action]]["channel_token"]
-    }
+    @client = Line::Bot::Client.new  do |config|
+      if params[:action] == "sugarcoat"
+        config.channel_token = ENV.fetch('LINE_SUGARCOAT_BOT_CHANNEL_TOKEN', '')
+        config.channel_secret = ENV.fetch('LINE_SUGARCOAT_BOT_CHANNEL_SECRENT', '')
+      elsif params[:action] == "spotgacha"
+        config.channel_token = ENV.fetch('LINE_SPOTGACHA_BOT_CHANNEL_TOKEN', '')
+        config.channel_secret = ENV.fetch('LINE_SPOTGACHA_BOT_CHANNEL_SECRENT', '')
+      elsif params[:action] == "citore"
+        config.channel_token = ENV.fetch('LINE_CITORE_BOT_CHANNEL_TOKEN', '')
+        config.channel_secret = ENV.fetch('LINE_CITORE_BOT_CHANNEL_SECRENT', '')
+      elsif params[:action] == "job_with_life"
+        config.channel_token = ENV.fetch('LINE_JOB_WITH_LIFE_BOT_CHANNEL_TOKEN', '')
+        config.channel_secret = ENV.fetch('LINE_JOB_WITH_LIFE_BOT_CHANNEL_SECRENT', '')
+      elsif params[:action] == "shiritori"
+        config.channel_token = ENV.fetch('LINE_SHIRITORI_BOT_CHANNEL_TOKEN', '')
+        config.channel_secret = ENV.fetch('LINE_SHIRITORI_BOT_CHANNEL_SECRENT', '')
+      elsif params[:action] == "mone"
+        config.channel_token = ENV.fetch('LINE_MONE_BOT_CHANNEL_TOKEN', '')
+        config.channel_secret = ENV.fetch('LINE_MONE_BOT_CHANNEL_SECRENT', '')
+      end
+    end
   end
 
   def received_user_events

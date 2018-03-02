@@ -109,10 +109,9 @@ class Hackathon::Sunflower::CompositeWorker < ApplicationRecord
 #    update!(export_url: Rails.root.to_s + filepath, state: :complete)
 
 =begin
-    api_config = YAML.load(File.read("#{Rails.root.to_s}/config/apiconfig.yml"))
-    twilio_client = Twilio::REST::Client.new(api_config["twilio"]["promo387"]["account_sid"], api_config["twilio"]["promo387"]["authtoken"])
+    twilio_client = Twilio::REST::Client.new(ENV.fetch('TWILIO_PROMO387_ACCOUNT_SID', ''), ENV.fetch('TWILIO_PROMO387_AUTHTOKEN', ''))
     twilio_client.api.account.messages.create(
-      from: api_config["twilio"]["promo387"]["phone_number"],
+      from: ENV.fetch('TWILIO_PROMO387_PHONE_NUMBER', ''),
       to: '+TEL',
       body: '写真ができました。こちらからが確認いただけます ' + export_url
     )

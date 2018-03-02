@@ -129,15 +129,6 @@ namespace :cron_batch do
     puts "batch completed"
   end
 
-  task sugarcoat_bot_tweet: :environment do
-    apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
-#    facebook_sugarcoat = Koala::Facebook::API.new(apiconfig["facebook_bot"]["access_token"])
-#    page_token = facebook_sugarcoat.get_page_access_token("346231432435056")
-#    facebook_page = Koala::Facebook::API.new(page_token)
-    #facebook_page.put_wall_post('post on page wall')
-    #facebook_page.put_connections("346231432435056", 'feed', :message => "甘い甘いシュガーコートだお")
-  end
-
   task get_erokotoba: :environment do
     Citore::EroticWord.twitter_crawl(prefix_key: Citore::EroticWord::ERO_KOTOBA_BOT) do |twitter_client, options|
       tweet_results = twitter_client.user_timeline(Citore::EroticWord::ERO_KOTOBA_BOT, options)

@@ -53,8 +53,7 @@ class Homepage::Qiita < Homepage::Article
   end
 
   def self.get_qiita_client
-    apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
-    client = Qiita::Client.new(access_token: apiconfig["qiita"]["taptappun"]["accesstoken"])
+    client = Qiita::Client.new(access_token: ENV.fetch('QIITA_TAPTAPPUN_ACCESSTOKEN', ''))
     return client
   end
 end

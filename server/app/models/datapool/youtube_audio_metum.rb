@@ -23,9 +23,8 @@ class Datapool::YoutubeAudioMetum < Datapool::AudioMetum
   has_one :audio_track, class_name: 'Datapool::YoutubeAudioTrack', foreign_key: :audio_metum_id
 
   def self.search_and_import!(keyword:)
-    apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
     youtube = Google::Apis::YoutubeV3::YouTubeService.new
-    youtube.key = apiconfig["google_api"]["key"]
+    youtube.key = ENV.fetch('GOOGLE_API_KEY', '')
     youtube_search = youtube.list_searches("id,snippet", max_results: 50,  type: "video", q: keyword.to_s)
     audio_meta = []
     id_tracks = Datapool::YoutubeAudioTrack.where(track_id: youtube_search.items.map{|item| item.id.video_id.to_s}).preload(:metum).index_by(&:track_id)

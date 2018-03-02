@@ -20,9 +20,8 @@ class Datapool::FrickrImageMetum < Datapool::ImageMetum
   PER_PAGE = 500
 
   def self.get_flickr_client
-    apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
-    FlickRaw.api_key = apiconfig["flickr"]["apikey"]
-    FlickRaw.shared_secret = apiconfig["flickr"]["secret"]
+    FlickRaw.api_key = ENV.fetch('FLICKR_APIKEY', '')
+    FlickRaw.shared_secret = ENV.fetch('FLICKR_SECRET', '')
     return flickr
   end
 

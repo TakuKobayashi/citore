@@ -8,13 +8,14 @@
   },
   "author": "TakuKobayashi",
   "private": true,
-  "license": "",
   "dependencies": {
-    "express": "*",
-    "ws": "*",
-    "nodemon":"*",
-    "twitter":"*",
-    "yamljs":"*"
+    "dotenv": "*",
+    "express": "^4.16.2",
+    "nodemon": "^1.17.1",
+    "npm": "^5.7.1",
+    "twitter": "*",
+    "ws": "^4.1.0",
+    "yamljs": "*"
   },
   "repository": {
     "type": "git",

@@ -82,35 +82,6 @@ namespace :batch do
     end
   end
 
-  task import_to_similar_word: :environment do
-    similar_id = ExtraInfo.read_extra_info["similar_metadata"]
-    apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
-    parts = EmotionalWord::PARTS.values
-    Datapool::AppearWord.where(part: parts).where("id > ?", similar_id.to_i).find_in_batches do |appears|
-      appears.each do |appear|
-        list = `http -a #{apiconfig["metadata_wordassociator"]["username"]}:#{apiconfig["metadata_wordassociator"]["password"]} GET wordassociator.ap.mextractr.net/word_associator/api_query query==#{appear.word}`
-        word_score_list = JSON.parse(list).map{|l| [ApplicationRecord.basic_sanitize(l[0].encode("UTF-8")), l[1]] }
-        next if word_score_list.blank?
-        values = word_score_list.map{|word, score| "(" + ["NULL", 1, "'#{word}'", "'#{appear.part}'"].join(",") + ")" }
-        sql = "INSERT INTO `#{Datapool::AppearWord.table_name}` (#{Datapool::AppearWord.column_names.join(',')}) VALUES " + values.join(",") + " ON DUPLICATE KEY UPDATE `#{Datapool::AppearWord.table_name}`.`word` = VALUES(`word`)"
-        Datapool::AppearWord.connection.execute(sql)
-        word_ids = Datapool::AppearWord.where(word: word_score_list.map{|w| w[0] }, part: appear.part).pluck(:word, :id)
-
-        similar_values = word_score_list.map do |word, score|
-          w_id = word_ids.detect{|w, id| w == word }
-          if w_id.blank?
-            nil
-          else
-            "(" + ["NULL", appear.id, w_id[1], score, "'metadata'"].join(",") + ")"
-          end
-        end.compact
-        similar_sql = "INSERT INTO `#{SimilarWord.table_name}` (#{SimilarWord.column_names.join(',')}) VALUES " + similar_values.join(",") + " ON DUPLICATE KEY UPDATE `#{SimilarWord.table_name}`.`to_word_id` = VALUES(`to_word_id`)"
-        SimilarWord.connection.execute(similar_sql)
-      end
-      ExtraInfo.update({"similar_metadata" => appears.last.try(:id)})
-    end
-  end
-
   task import_to_dynamodb_from_table: :environment do
     Aws.config.update(Rails.application.config_for(:aws).symbolize_keys)
     client = Aws::DynamoDB::Client.new
@@ -135,7 +106,6 @@ namespace :batch do
 
   task rebuild_twitter_replay_id: :environment do
     tweet_id = ExtraInfo.read_extra_info["rebuild_tweet_id"]
-    apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
     client =  TwitterRecord.get_twitter_rest_client("citore")
     limit_span = (15.minutes.second / 120).to_i
     TwitterWord.where("id > ?", tweet_id.to_i).find_in_batches do |words|
@@ -220,7 +190,6 @@ namespace :batch do
   end
 
   task get_reply_tweet: :environment do
-    apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
     client =  TwitterRecord.get_twitter_rest_client("citore")
     limit_span = (15.minutes.second / 120).to_i
     TwitterWord.find_in_batches do |words|

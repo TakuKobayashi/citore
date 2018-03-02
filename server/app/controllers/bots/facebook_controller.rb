@@ -5,14 +5,13 @@ class Bots::FacebookController < BaseController
   def sugarcoat
     case request.method_symbol
     when :post
-      apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
       message = params["entry"][0]["messaging"][0]
       if message.include?("message")
         #ユーザーの発言
         sender = message["sender"]["id"]
         text = message["message"]["text"]
 
-        endpoint_uri = "https://graph.facebook.com/v2.6/me/messages?access_token=" + apiconfig["facebook_bot"]["access_token"]
+        endpoint_uri = "https://graph.facebook.com/v2.6/me/messages?access_token=" + ENV.fetch('FACEBOOK_SUGARCOAT_BOT_ACCESS_TOKEN', '')
         #sugarcoated = Sugarcoat::Seed.to_sugarcoat(text).join("")
         #voice = VoiceWord.generate_and_upload_voice(nil, ApplicationRecord.reading(sugarcoated), "aoi", VoiceWord::VOICE_S3_SUGARCOAT_FILE_ROOT, "public-read", VoiceWord::SUGARCOAT_VOICE_PARAMS)
         request_content = {

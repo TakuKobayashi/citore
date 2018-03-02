@@ -69,10 +69,6 @@ namespace :crawl do
   end
 
   task youtube: :environment do
-#    apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
-#    youtube = Google::Apis::YoutubeV3::YouTubeService.new
-#    youtube.key = apiconfig["google_api"]["key"]
-
     stay_id = ExtraInfo.read_extra_info["crawl_category_id"]
     YoutubeCategory.guide.where("id > ?", stay_id.to_i).find_each do |guide_category|
       YoutubeChannel.crawl_loop_request do |youtube, page_token|
@@ -121,9 +117,8 @@ namespace :crawl do
       ExtraInfo.update({"crawl_related_video_id" => video.id})
     end
 
-    apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
     youtube = Google::Apis::YoutubeV3::YouTubeService.new
-    youtube.key = apiconfig["google_api"]["key"]
+    youtube.key = ENV.fetch('GOOGLE_API_KEY', '')
 
     stay_id = ExtraInfo.read_extra_info["rebuild_video_id"]
     YoutubeVideo.where("id > ?", stay_id.to_i).find_in_batches({batch_size: 50}) do |videos|
@@ -169,9 +164,8 @@ namespace :crawl do
   end
 
   task rebuild_youtube_video_tags: :environment do
-    apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
     youtube = Google::Apis::YoutubeV3::YouTubeService.new
-    youtube.key = apiconfig["google_api"]["key"]
+    youtube.key = ENV.fetch('GOOGLE_API_KEY', '')
 
     stay_id = ExtraInfo.read_extra_info["rebuild_video_id"]
     YoutubeVideo.where("id > ?", stay_id.to_i).find_in_batches({batch_size: 50}) do |videos|

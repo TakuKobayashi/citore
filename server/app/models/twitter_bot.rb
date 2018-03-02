@@ -33,7 +33,7 @@ class TwitterBot < TwitterRecord
   def self.bots_activate
     #[Mone::TwitterBot, Shiritori::TwitterBot, Sugarcoat::TwitterBot, Citore::TwitterBot].each do |clazz|
     [Mone::TwitterBot].each do |clazz|
-      stream = clazz.get_twitter_stream_client
+      stream = TwitterRecord.get_twitter_stream_client("citore")
       #フォローされたらフォロー返し
       stream.on_event(:favorite) do |event|
         p event[:source]
@@ -46,19 +46,6 @@ class TwitterBot < TwitterRecord
         bot.follow!(twitter_user_id: event[:source][:id], twitter_screen_name: event[:source][:screen_name])
       end
     end
-  end
-
-  def self.get_twitter_stream_client(twitter_client_id)
-    key = "twitter_" + twitter_client_id
-    apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
-    extra_info = ExtraInfo.read_extra_info
-    stream_client = TweetStream::Client.new
-    stream_client.consumer_key       = apiconfig["twitter"]["consumer_key"]
-    stream_client.consumer_secret    = apiconfig["twitter"]["consumer_secret"]
-    stream_client.oauth_token        = extra_info[key]["token"]
-    stream_client.oauth_token_secret = extra_info[key]["token_secret"]
-    stream_client.auth_method        = :oauth
-    return stream_client
   end
 
   def tweet!(text)

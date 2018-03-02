@@ -63,10 +63,6 @@ coverage
 *.DS_Store
 server/db/schema.rb
 server/coverage/
-server/config/database.yml
-server/config/initializers/devise.rb
-server/config/secrets.yml
-server/config/apiconfig.yml
 
 .ruby-gemset
 .ruby-version
@@ -85,7 +81,9 @@ server/public/assets/
 !server/tmp/.keep
 
 server/.byebug_history
-server/config/aws.yml
+
+.env
+
 
 .Python
 [Bb]in

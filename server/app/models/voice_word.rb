@@ -49,10 +49,9 @@ class VoiceWord < ApplicationRecord
   end
 
   def self.generate_and_upload_voice!(from_clazz, text, speaker_name, upload_file_path = VOICE_S3_FILE_ROOT, acl = :private, options = {})
-    apiconfig = YAML.load(File.open(Rails.root.to_s + "/config/apiconfig.yml"))
     params = VOICE_PARAMS.merge({
-      username: apiconfig["aitalk"]["username"],
-      password: apiconfig["aitalk"]["password"],
+      username: ENV.fetch('AI_TALK_USERNAME', ''),
+      password: ENV.fetch('AI_TALK_PASSWORD', ''),
       text: text,
       speaker_name: speaker_name
     }).merge(options)

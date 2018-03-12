@@ -45,13 +45,13 @@ namespace :crawl do
     mediums.each do |k, v|
       medium_jas[I18n.t("activerecord.enum.categorised_word.medium_category.#{k}")] = v
     end
-    url_text = ExpressionCategorisedWord.request_and_get_links_from_html(ExpressionCategorisedWord::JAPANESE_HYOGEN_URL)
+    url_text = RequestParser.request_and_get_links_from_html(url: ExpressionCategorisedWord::JAPANESE_HYOGEN_URL)
     CrawlTargetUrl.execute_html_crawl!(ExpressionCategorisedWord.to_s) do |crawl_target, doc|
-      from_doc = ExpressionCategorisedWord.request_and_parse_html(url: crawl_target.crawl_from_keyword)
+      from_doc = RequestParser.request_and_parse_html(url: crawl_target.crawl_from_keyword)
       detail = from_doc.css("a").detect{|h| h[:href] == crawl_target.crawl_from_keyword }
       large_text = from_doc.css(".pan_anchor")[1].try(:text).to_s
       t, value = large_jas.detect{|k, v| large_text.include?(k.to_s) }
-      
+
       words = doc.css(".item2").map{|i| i.text }
       models = words.map do |w|
         ExpressionCategorisedWord.new({

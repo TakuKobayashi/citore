@@ -17,7 +17,7 @@
 
 class CharacterSerif < CategorisedWord
   def self.import_serif
-    doc = ApplicationRecord.request_and_parse_html(url: "http://40s-animeigen.com/sakuhin/")
+    doc = RequestParser.request_and_parse_html(url: "http://40s-animeigen.com/sakuhin/")
     link_list = doc.css(".so-panel").css("li.cat-item")
     link_list.css("a").each do |link|
       (1..100).each do |i|
@@ -26,7 +26,7 @@ class CharacterSerif < CategorisedWord
       	  url += "page/#{i}/"
       	end
       	p url
-        content_doc = ApplicationRecord.request_and_parse_html(url: url)
+        content_doc = RequestParser.request_and_parse_html(url: url)
         break if content_doc.css("dd").blank?
         import_list = []
         content_doc.css("dd").each do |dd|

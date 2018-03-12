@@ -7,6 +7,13 @@ module RequestParser
     return doc
   end
 
+  def self.request_and_get_links_from_html(url:, method: :get, params: {}, header: {}, options: {})
+    doc = self.request_and_parse_html(url: url,method: method, params: params, header: header, options: options)
+    result = {}
+    doc.css('a').select{|anchor| anchor[:href].present? && anchor[:href] != "/" }.each{|anchor| result[anchor[:href]] = anchor.text }
+    return result
+  end
+
   def self.request_and_parse_json(url: ,method: :get, params: {}, header: {}, options: {})
     text = self.request_and_response_body_text(url: url,method: method, params: params, header: header, options: options)
     parsed_json = {}

@@ -50,7 +50,7 @@ class Datapool::GoogleImageSearch < Datapool::ImageMetum
   def self.import_search_images!(search_url:, keyword:, number: 0, options: {})
     images = []
     websites = []
-    img_dom = ApplicationRecord.request_and_parse_html(url: search_url.to_s)
+    img_dom = RequestParser.request_and_parse_html(url: search_url.to_s, options: {:follow_redirect => true})
     searched_urls = img_dom.css("a").map{|a| Addressable::URI.parse(a["href"].to_s) }
     return [] if searched_urls.blank?
     searched_thumbnail_urls = img_dom.css("img").map do |img|

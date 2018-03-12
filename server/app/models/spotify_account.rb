@@ -46,7 +46,7 @@ class SpotifyAccount < Account
     import_tracks = []
     playlist_hashes["items"].each do |item|
       playlist_id_tracks[item["id"]] = []
-      track_jsons = ApplicationRecord.request_and_parse_json(url: item["tracks"]["href"], headers: {Authorization: "Bearer #{self.token}"})
+      track_jsons = RequestParser.request_and_parse_json(url: item["tracks"]["href"], headers: {Authorization: "Bearer #{self.token}"})
       track_jsons["items"].each do |t_json|
         playlist_id_tracks[item["id"]] << Datapool::SpotifyAudioTrack.new(
           title: t_json["name"],
@@ -67,38 +67,38 @@ class SpotifyAccount < Account
   end
 
   def get_playlists(offset: 0)
-    return ApplicationRecord.request_and_parse_json(url: "https://api.spotify.com/v1/me/playlists", params: {limit: 50, offset: offset}, headers: {Authorization: "Bearer #{self.token}"})
+    return RequestParser.request_and_parse_json(url: "https://api.spotify.com/v1/me/playlists", params: {limit: 50, offset: offset}, headers: {Authorization: "Bearer #{self.token}"})
   end
 
   # artist, playlist, track.
   def searches(text:, search_type: :track)
     #method: :get, params: {}, headers: {}
-    return ApplicationRecord.request_and_parse_json(url: "https://api.spotify.com/v1/search", params: {q: text, type: search_type, limit: 50}, headers: {Authorization: "Bearer #{self.token}"})
+    return RequestParser.request_and_parse_json(url: "https://api.spotify.com/v1/search", params: {q: text, type: search_type, limit: 50}, headers: {Authorization: "Bearer #{self.token}"})
   end
 
   def playlist_tracks
     playlist = get_playlists
     tracks_hashes = []
     playlist["items"].each do |playlist_item|
-      tracks_hashes << ApplicationRecord.request_and_parse_json(url: playlist_item["tracks"]["href"], headers: {Authorization: "Bearer #{self.token}"})
+      tracks_hashes << RequestParser.request_and_parse_json(url: playlist_item["tracks"]["href"], headers: {Authorization: "Bearer #{self.token}"})
     end
     return tracks_hashes
   end
 
   #max 50件
   def tracks(ids: [])
-    return ApplicationRecord.request_and_parse_json(url: "https://api.spotify.com/v1/tracks", params: {ids: ids.join(",")}, headers: {Authorization: "Bearer #{self.token}"})
+    return RequestParser.request_and_parse_json(url: "https://api.spotify.com/v1/tracks", params: {ids: ids.join(",")}, headers: {Authorization: "Bearer #{self.token}"})
   end
 
   def recommendations
-    return ApplicationRecord.request_and_parse_json(url: "https://developer.spotify.com/web-api/get-recommendations/", headers: {Authorization: "Bearer #{self.token}"})
+    return RequestParser.request_and_parse_json(url: "https://developer.spotify.com/web-api/get-recommendations/", headers: {Authorization: "Bearer #{self.token}"})
   end
 
   def audio_analysis(track_id:)
-    return ApplicationRecord.request_and_parse_json(url: "https://api.spotify.com/v1/audio-analysis/#{track_id}", headers: {Authorization: "Bearer #{self.token}"})
+    return RequestParser.request_and_parse_json(url: "https://api.spotify.com/v1/audio-analysis/#{track_id}", headers: {Authorization: "Bearer #{self.token}"})
   end
 
   def audio_features(track_id:)
-    return ApplicationRecord.request_and_parse_json(url: "https://api.spotify.com/v1/audio-features/#{track_id}", headers: {Authorization: "Bearer #{self.token}"})
+    return RequestParser.request_and_parse_json(url: "https://api.spotify.com/v1/audio-features/#{track_id}", headers: {Authorization: "Bearer #{self.token}"})
   end
 end

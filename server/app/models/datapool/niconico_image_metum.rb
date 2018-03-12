@@ -24,7 +24,7 @@ class Datapool::NiconicoImageMetum < Datapool::ImageMetum
     counter = 0
     loop do
       images = []
-      json = ApplicationRecord.request_and_parse_json(url: NICONICO_CONTENT_API_URL, params: {q: keyword, targets: "title,description,tags", _context: "taptappun", fields: "contentId,title,tags,categoryTags,thumbnailUrl", _sort: "-startTime", _offset: counter, _limit: 100})
+      json = RequestParser.request_and_parse_json(url: NICONICO_CONTENT_API_URL, params: {q: keyword, targets: "title,description,tags", _context: "taptappun", fields: "contentId,title,tags,categoryTags,thumbnailUrl", _sort: "-startTime", _offset: counter, _limit: 100})
       json["data"].each do |data_hash|
         image = self.constract(
           image_url: data_hash["thumbnailUrl"],

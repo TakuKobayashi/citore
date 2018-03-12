@@ -43,7 +43,7 @@ class Datapool::WebSiteAudioMetum < Datapool::AudioMetum
   def self.select_link_urls(url:)
     urls = []
     crawl_url = Addressable::URI.parse(url.to_s)
-    doc = ApplicationRecord.request_and_parse_html(url: crawl_url.to_s)
+    doc = RequestParser.request_and_parse_html(url: crawl_url.to_s, options: {:follow_redirect => true})
     doc.css("a").each do |a|
       link_url = Addressable::URI.parse(ApplicationRecord.merge_full_url(src: URI.encode(a["href"].to_s), org: crawl_url.to_s))
       if crawl_url.host == link_url.host && link_url.scheme.to_s.include?("http") && !Datapool::AudioMetum.audiofile?(link_url.to_s)
@@ -56,7 +56,7 @@ class Datapool::WebSiteAudioMetum < Datapool::AudioMetum
   def self.analize_and_import_audio!(url:, options: {})
     audios = []
     crawl_url = Addressable::URI.parse(url.to_s)
-    doc = ApplicationRecord.request_and_parse_html(url: crawl_url.to_s)
+    doc = RequestParser.request_and_parse_html(url: crawl_url.to_s, options: {:follow_redirect => true})
     site_title = ApplicationRecord.basic_sanitize(doc.title.to_s)
     doc.css("audio").each do |audio_doc|
       next if audio_doc["src"].blank?

@@ -42,7 +42,7 @@ class Datapool::GooglePlayApp < Datapool::StoreProduct
     URLS_HASH.each do |category, crawl_url|
       page_counter = 0
       while(page_counter <= RANKING_MAXPAGE) do
-        html = ApplicationRecord.request_and_parse_html(url: crawl_url,method: :post, params: {start: page_counter, num: RANKING_PERPAGE})
+        html = RequestParser.request_and_parse_html(url: crawl_url,method: :post, params: {start: page_counter, num: RANKING_PERPAGE}, options: {:follow_redirect => true})
         contents = html.css(".card-content")
         ids = contents.map do |c|
           url = ApplicationRecord.merge_full_url(src: c.css(".title").first[:href], org: crawl_url)
@@ -87,7 +87,7 @@ class Datapool::GooglePlayApp < Datapool::StoreProduct
   end
 
   def set_details
-    parsed_html = ApplicationRecord.request_and_parse_html(url: self.url)
+    parsed_html = RequestParser.request_and_parse_html(url: self.url, options: {:follow_redirect => true})
     rating_field = parsed_html.css(".score-container").css("meta")
     detail_contents = parsed_html.css(".details-wrapper").css(".content")
 

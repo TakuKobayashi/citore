@@ -26,43 +26,6 @@ class ApplicationRecord < ActiveRecord::Base
     return xml_to_hash
   end
 
-  def self.request_and_parse_html(url:, method: :get, params: {}, headers: {}, body: {})
-    http_client = HTTPClient.new
-    http_client.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
-    begin
-      response = http_client.send(method, url, params: params, headers: headers, body: body, follow_redirect: true)
-      if response.status < 300 || (302..304).cover?(response.status)
-        doc = Nokogiri::HTML.parse(response.body.encode('SJIS', 'UTF-8', invalid: :replace, undef: :replace, replace: '').encode('UTF-8'))
-      else
-        doc = Nokogiri::HTML.parse("")
-      end
-    rescue HTTPClient::ConnectTimeoutError => e
-      Rails.logger.warn "#{url} is timeout!!:" + e.message
-      doc = Nokogiri::HTML.parse("")
-    end
-    return doc
-  end
-
-  def self.request_and_parse_json(url:, method: :get, params: {}, headers: {}, body: {})
-    http_client = HTTPClient.new
-    http_client.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
-    response = http_client.send(method, url, params: params, headers: headers, body: body, follow_redirect: true)
-    hash = {}
-    begin
-      hash = JSON.parse(response.body)
-    rescue JSON::ParserError => e
-      puts "ERROR: #{url}:#{e}"
-    end
-    return hash
-  end
-
-  def self.request_and_get_links_from_html(url)
-    doc = request_and_parse_html(url: url)
-    result = {}
-    doc.css('a').select{|anchor| anchor[:href].present? && anchor[:href] != "/" }.each{|anchor| result[anchor[:href]] = anchor.text }
-    return result
-  end
-
   def self.basic_sanitize(text)
     #絵文字を除去
     sanitized_word = text.encode('SJIS', 'UTF-8', invalid: :replace, undef: :replace, replace: '').encode('UTF-8')

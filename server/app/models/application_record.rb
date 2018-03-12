@@ -1,8 +1,7 @@
-require 'xmlsimple'
-
 class ApplicationRecord < ActiveRecord::Base
   self.abstract_class = true
 
+=begin
   after_save do
     update_cache!
   end
@@ -197,4 +196,5 @@ class ApplicationRecord < ActiveRecord::Base
     end
     return src_url
   end
+=end
 end

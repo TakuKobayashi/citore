@@ -1,6 +1,8 @@
 class Datapool::ResourceMetum < ApplicationRecord
   self.abstract_class = true
 
+  S3_ROOT_URL = "https://taptappun.s3.amazonaws.com/"
+
   def src
     url = Addressable::URI.parse(self.origin_src)
     url.query = self.query

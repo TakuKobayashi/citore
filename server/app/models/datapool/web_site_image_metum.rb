@@ -55,20 +55,20 @@ class Datapool::WebSiteImageMetum < Datapool::ImageMetum
       if title.blank?
         title = d.text
       end
-      image_url = Addressable::URI.parse(ApplicationRecord.basic_sanitize(d["src"].to_s.gsub(/(\r\n|\r|\n)/, "")))
+      image_url = Addressable::URI.parse(Sanitizer.basic_sanitize(d["src"].to_s.gsub(/(\r\n|\r|\n)/, "")))
       if image_url.nil?
         Rails.logger.warn("not exists image_url")
         next
       end
       # base64encodeされたものはschemeがdataになる
       if image_url.scheme != "data"
-        image_url = ApplicationRecord.merge_full_url(src: image_url.to_s, org: from_site_url.to_s)
+        image_url = WebNormalizer.merge_full_url(src: image_url.to_s, org: from_site_url.to_s)
       end
       next if image_urls.include?(image_url.to_s)
       image_urls << image_url.to_s
-      image_title = ApplicationRecord.basic_sanitize(title.to_s)
+      image_title = Sanitizer.basic_sanitize(title.to_s)
       if image_title.blank?
-        image_title = ApplicationRecord.basic_sanitize(doc.title.to_s)
+        image_title = Sanitizer.basic_sanitize(doc.title.to_s)
       end
       image = self.constract(
         image_url: image_url.to_s,

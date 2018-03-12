@@ -28,8 +28,7 @@ class EmotionalWord < ApplicationRecord
 
   def self.calc_score(text)
     hash = ExtraInfo.read_extra_info
-    
-    natto = ApplicationRecord.get_natto
+    natto = TextAnalyzer.get_natto
     word_parts = {}
     natto.parse(text) do |n|
       next if n.surface.blank?

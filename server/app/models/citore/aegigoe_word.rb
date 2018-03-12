@@ -19,7 +19,7 @@ class Citore::AegigoeWord < TwitterRecord
   AEGIGOE_BOT = "aegigoe_bot"
 
   def self.generate!(text, twitter_word_id = nil)
-    reading = ApplicationRecord.reading(text)
+    reading = TextAnalyzer.reading(text)
     aegigoe_word = Citore::AegigoeWord.find_or_initialize_by(reading: reading)
     new_record = erotic_word.new_record?
     if new_record

@@ -21,10 +21,10 @@ class Citore::LinebotFollowerUser < LinebotFollowerUser
   has_many :answers, as: :answer_user, class_name: 'Citore::Answered'
 
   def search_and_generate_answer!(event:)
-    natto = ApplicationRecord.get_natto
-    sanitaized_word = ApplicationRecord.basic_sanitize(event.message['text'].to_s)
-    reading = ApplicationRecord.reading(sanitaized_word)
-    split_words = ApplicationRecord.ngram(reading, 2).uniq
+    natto = TextAnalyzer.get_natto
+    sanitaized_word = Sanitizer.basic_sanitize(event.message['text'].to_s)
+    reading = TextAnalyzer.reading(sanitaized_word)
+    split_words = TextAnalyzer.ngram(reading, 2).uniq
     ngrams = NgramWord.where(from_type: "Citore::EroticWord", bigram: split_words).includes(:from)
     erotic_word = ngrams.map(&:from).uniq.select{|citore_erotic_word| reading.include?(citore_erotic_word.reading) }.sample
 

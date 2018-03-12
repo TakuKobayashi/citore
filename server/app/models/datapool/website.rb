@@ -35,7 +35,7 @@ class Datapool::Website < Datapool::ResourceMetum
         Datapool::WebSiteImageMetum.crawl_images!(url: website.src)
         site = RequestParser.request_and_parse_html(url: website.src, options: {:follow_redirect => true})
         if site.title.present?
-          website.title = ApplicationRecord.basic_sanitize(site.title.to_s).truncate(255)
+          website.title = Sanitizer.basic_sanitize(site.title.to_s).truncate(255)
         end
       rescue => e
         website.write_crawl_error_log(e)

@@ -6,7 +6,7 @@ module CacheStore
   end
 
   def self.cache!
-    cache_to_memory!
+    self.cache_to_memory!
   end
 
   def self.cache_to_memory!

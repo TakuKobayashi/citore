@@ -45,7 +45,7 @@ class Datapool::WebSiteAudioMetum < Datapool::AudioMetum
     crawl_url = Addressable::URI.parse(url.to_s)
     doc = RequestParser.request_and_parse_html(url: crawl_url.to_s, options: {:follow_redirect => true})
     doc.css("a").each do |a|
-      link_url = Addressable::URI.parse(ApplicationRecord.merge_full_url(src: URI.encode(a["href"].to_s), org: crawl_url.to_s))
+      link_url = Addressable::URI.parse(WebNormalizer.merge_full_url(src: URI.encode(a["href"].to_s), org: crawl_url.to_s))
       if crawl_url.host == link_url.host && link_url.scheme.to_s.include?("http") && !Datapool::AudioMetum.audiofile?(link_url.to_s)
         urls << link_url.to_s
       end
@@ -57,10 +57,10 @@ class Datapool::WebSiteAudioMetum < Datapool::AudioMetum
     audios = []
     crawl_url = Addressable::URI.parse(url.to_s)
     doc = RequestParser.request_and_parse_html(url: crawl_url.to_s, options: {:follow_redirect => true})
-    site_title = ApplicationRecord.basic_sanitize(doc.title.to_s)
+    site_title = Sanitizer.basic_sanitize(doc.title.to_s)
     doc.css("audio").each do |audio_doc|
       next if audio_doc["src"].blank?
-      audio_url = Addressable::URI.parse(ApplicationRecord.merge_full_url(src: audio_doc["src"].to_s, org: crawl_url.to_s))
+      audio_url = Addressable::URI.parse(WebNormalizer.merge_full_url(src: audio_doc["src"].to_s, org: crawl_url.to_s))
       audio_metum = Datapool::WebSiteAudioMetum.new(
         title: site_title,
         file_genre: :audio_file,
@@ -74,8 +74,8 @@ class Datapool::WebSiteAudioMetum < Datapool::AudioMetum
     doc.css("a").each do |audio_doc|
       url = audio_doc["href"].to_s
       next unless Datapool::AudioMetum.audiofile?(url.to_s)
-      audio_url = Addressable::URI.parse(ApplicationRecord.merge_full_url(src: url, org: crawl_url.to_s))
-      title = ApplicationRecord.basic_sanitize(audio_doc.text)
+      audio_url = Addressable::URI.parse(WebNormalizer.merge_full_url(src: url, org: crawl_url.to_s))
+      title = Sanitizer.basic_sanitize(audio_doc.text)
       if title.blank?
         title = site_title
       end
@@ -95,7 +95,7 @@ class Datapool::WebSiteAudioMetum < Datapool::AudioMetum
         url = audio_doc.children.map{|a| a["src"] }.compact.first
       end
       next unless Datapool::AudioMetum.audiofile?(url.to_s)
-      audio_url = Addressable::URI.parse(ApplicationRecord.merge_full_url(src: url.to_s, org: crawl_url.to_s))
+      audio_url = Addressable::URI.parse(WebNormalizer.merge_full_url(src: url.to_s, org: crawl_url.to_s))
       audio_metum = Datapool::WebSiteAudioMetum.new(
         title: site_title,
         file_genre: :video_file,

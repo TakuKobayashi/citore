@@ -37,6 +37,10 @@ module Sanitizer
     return result, urls
   end
 
+  def self.delete_urls(text)
+    return text.gsub(/(https?|ftp)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)/, "")
+  end
+
   #記号を除去
   def self.delete_symbols(text)
     return text.gsub(/[【】、。《》「」〔〕・（）［］｛｝！＂＃＄％＆＇＊＋，－．／：；＜＝＞？＠＼＾＿｀｜￠￡￣\(\)\[\]<>{},!? \.\-\+\\~^='&%$#\"\'_\/;:*‼•一]/, "")

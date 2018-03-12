@@ -18,8 +18,8 @@
 class Datapool::TwitterWebsite < Datapool::Website
   def self.constract_from_tweet(tweet:, options: {})
     return [] unless tweet.urls?
-    tweet_text = ApplicationRecord.basic_sanitize(tweet.text)
-    tweet_text = ApplicationRecord.separate_urls(tweet_text).first
+    tweet_text = Sanitizer.basic_sanitize(tweet.text)
+    tweet_text = Sanitizer.delete_urls(tweet_text)
 
     websites = tweet.urls.flat_map do |urle|
       self.constract(url: urle.expanded_url.to_s, title: tweet_text, options: {tweet_id: tweet.id, tweet_text: tweet_text}.merge(options))

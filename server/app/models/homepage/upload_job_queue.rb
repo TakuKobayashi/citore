@@ -44,7 +44,7 @@ class Homepage::UploadJobQueue < ApplicationRecord
       job.cleaned!
       if job.cleaned? && job.upload_url.present?
         s3 = Aws::S3::Client.new
-        filepath = job.upload_url.gsub(ApplicationRecord::S3_ROOT_URL, "")
+        filepath = job.upload_url.gsub(Datapool::ResourceMetum::S3_ROOT_URL, "")
         s3.delete_object(bucket: "taptappun", key: filepath)
         job.update!(upload_url: nil, upload_file_size: nil)
       end
@@ -79,7 +79,7 @@ class Homepage::UploadJobQueue < ApplicationRecord
       zipfile = File.open(zippath)
       zipfile_size = zipfile.size
       upload_filepath = yield(zipfile)
-      self.update!(state: :complete, upload_url: ApplicationRecord::S3_ROOT_URL + upload_filepath, upload_file_size: zipfile_size)
+      self.update!(state: :complete, upload_url: Datapool::ResourceMetum::S3_ROOT_URL + upload_filepath, upload_file_size: zipfile_size)
     end
   end
 

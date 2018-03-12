@@ -4,7 +4,7 @@ module TextAnalyzer
   MECAB_NEOLOGD_DIC_PATH = "/usr/local/lib/mecab/dic/mecab-ipadic-neologd"
 
   def self.get_natto
-    @@natto ||= Natto::MeCab.new(dicdir: ApplicationRecord::MECAB_NEOLOGD_DIC_PATH)
+    @@natto ||= Natto::MeCab.new(dicdir: MECAB_NEOLOGD_DIC_PATH)
     return @@natto
   end
 
@@ -17,8 +17,8 @@ module TextAnalyzer
 
   def self.reading(text)
     #記号を除去
-    sanitaized_word = delete_symbols(text)
-    word = separate_urls(sanitaized_word).first
+    sanitaized_word = Sanitizer.delete_symbols(text)
+    word = Sanitizer.delete_urls(sanitaized_word)
     reading_array = []
     natto = self.get_natto
     natto.parse(word) do |n|

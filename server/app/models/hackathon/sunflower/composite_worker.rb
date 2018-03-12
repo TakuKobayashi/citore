@@ -103,7 +103,7 @@ class Hackathon::Sunflower::CompositeWorker < ApplicationRecord
    filepath = Hackathon::Sunflower::ImageResource::IMAGE_ROOT_PATH + SecureRandom.hex + ".png"
    s3 = Aws::S3::Client.new
    s3.put_object(bucket: "taptappun",body: image.to_blob, key: filepath, acl: "public-read")
-   update!(export_url: ApplicationRecord::S3_ROOT_URL + filepath, state: :complete)
+   update!(export_url: Datapool::ResourceMetum::S3_ROOT_URL + filepath, state: :complete)
 #    filepath = Rails.root.to_s + "/tmp/" + SecureRandom.hex + ".png"
 #    File.open(filepath, "wb"){|f| f.write(image.to_blob) }
 #    update!(export_url: Rails.root.to_s + filepath, state: :complete)

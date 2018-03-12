@@ -42,7 +42,7 @@ class Hackathon::Arstudio2017::Resource < ApplicationRecord
   }
 
   def file_url
-    return ApplicationRecord::S3_ROOT_URL + self.class.s3_file_image_root + self.filename
+    return Datapool::ResourceMetum::S3_ROOT_URL + self.class.s3_file_image_root + self.filename
   end
 
   def upload!(file, original_filename)
@@ -62,13 +62,13 @@ class Hackathon::Arstudio2017::Resource < ApplicationRecord
     new_image = image.crop("#{crop_width}x#{crop_height}+#{(image.width - crop_width) / 2}+#{(image.height - crop_height) / 2}")
     s3.put_object(bucket: "taptappun",body: new_image.to_blob, key: filepath, acl: "public-read")
     self.original_filename = original_filename
-    self.url = ApplicationRecord::S3_ROOT_URL + filepath
+    self.url = Datapool::ResourceMetum::S3_ROOT_URL + filepath
     self.save!
   end
 
   def remove!
     s3 = Aws::S3::Client.new
-    s3.delete_object(bucket: "taptappun", key: self.url.gsub(ApplicationRecord::S3_ROOT_URL, ""))
+    s3.delete_object(bucket: "taptappun", key: self.url.gsub(Datapool::ResourceMetum::S3_ROOT_URL, ""))
     self.destroy
   end
 end

@@ -83,11 +83,11 @@ class FeyKunAi::InquiryTweetImage < TwitterRecord
   end
 
   def s3_object_file_url
-    return ApplicationRecord::S3_ROOT_URL + IMAGE_S3_FILE_ROOT + self.output["object_image_name"]
+    return Datapool::ResourceMetum::S3_ROOT_URL + IMAGE_S3_FILE_ROOT + self.output["object_image_name"]
   end
 
   def s3_error_file_url
-    return ApplicationRecord::S3_ROOT_URL + IMAGE_S3_FILE_ROOT + self.output["err_image_name"]
+    return Datapool::ResourceMetum::S3_ROOT_URL + IMAGE_S3_FILE_ROOT + self.output["err_image_name"]
   end
 
   def self.get_image_urls_from_tweet(tweet:)

@@ -93,7 +93,7 @@ class Datapool::HatsugenKomachi < ApplicationRecord
   }
 
   def generate_keywords!
-    natto = ApplicationRecord.get_natto
+    natto = TextAnalyzer.get_natto
     formats = []
     self.class.natto_text_splitter(put_natto: natto, text: self.body.to_s) do |format|
       formats << format
@@ -131,7 +131,7 @@ class Datapool::HatsugenKomachi < ApplicationRecord
 
   def self.natto_text_splitter(put_natto: nil, text:)
     if put_natto.blank?
-      natto = ApplicationRecord.get_natto
+      natto = TextAnalyzer.get_natto
     else
       natto = put_natto
     end
@@ -151,7 +151,7 @@ class Datapool::HatsugenKomachi < ApplicationRecord
   end
 
   def self.import_words!
-    natto = ApplicationRecord.get_natto
+    natto = TextAnalyzer.get_natto
     self.find_in_batches(batch_size: 10000) do |komachies|
       import_words = []
       appear_imports = {}

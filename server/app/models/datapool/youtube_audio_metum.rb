@@ -36,7 +36,7 @@ class Datapool::YoutubeAudioMetum < Datapool::AudioMetum
         end
         metum = Datapool::YoutubeAudioMetum.constract(
           url: "https://www.youtube.com/watch?v=" + item.id.video_id.to_s,
-          title: ApplicationRecord.basic_sanitize(item.snippet.title),
+          title: Sanitizer.basic_sanitize(item.snippet.title),
           file_genre: :video_streaming,
           options: {
             channel_title: item.snippet.channel_title,
@@ -68,7 +68,7 @@ class Datapool::YoutubeAudioMetum < Datapool::AudioMetum
     output_file_path = Rails.root.to_s + "/tmp/audio/" + file_name
     system("youtube-dl " + self.src + " -x -o " + output_file_path.to_s + " --audio-format wav")
     fileurl = Datapool::YoutubeAudioMetum.upload_s3(File.open(output_file_path), file_name)
-    self.options["upload_audio_file_url"] = ApplicationRecord::S3_ROOT_URL + fileurl
+    self.options["upload_audio_file_url"] = Datapool::ResourceMetum::S3_ROOT_URL + fileurl
     File.delete(output_file_path)
     self.save!
   end

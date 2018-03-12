@@ -45,13 +45,13 @@ class Datapool::GooglePlayApp < Datapool::StoreProduct
         html = RequestParser.request_and_parse_html(url: crawl_url,method: :post, params: {start: page_counter, num: RANKING_PERPAGE}, options: {:follow_redirect => true})
         contents = html.css(".card-content")
         ids = contents.map do |c|
-          url = ApplicationRecord.merge_full_url(src: c.css(".title").first[:href], org: crawl_url)
+          url = WebNormalizer.merge_full_url(src: c.css(".title").first[:href], org: crawl_url)
           url.query_values["id"]
         end
         ids.compact!
         product_id_app = Datapool::GooglePlayApp.where(product_id: ids).index_by(&:product_id)
         contents.each do |content|
-          ads_url = ApplicationRecord.merge_full_url(src: content.css(".title").first[:href], org: crawl_url)
+          ads_url = WebNormalizer.merge_full_url(src: content.css(".title").first[:href], org: crawl_url)
           if product_id_app.has_key?(ads_url.query_values["id"])
             app_ins = product_id_app[ads_url.query_values["id"]]
           else
@@ -61,16 +61,16 @@ class Datapool::GooglePlayApp < Datapool::StoreProduct
               options: {}
             )
           end
-          app_ins.icon_url = ApplicationRecord.merge_full_url(src: content.css("img").first[:src], org: crawl_url).to_s
-          app_ins.title = ApplicationRecord.basic_sanitize(content.css(".title").first[:title].to_s)
-          app_ins.publisher_name = ApplicationRecord.basic_sanitize(content.css(".subtitle").first[:title].to_s)
+          app_ins.icon_url = WebNormalizer.merge_full_url(src: content.css("img").first[:src], org: crawl_url).to_s
+          app_ins.title = Sanitizer.basic_sanitize(content.css(".title").first[:title].to_s)
+          app_ins.publisher_name = Sanitizer.basic_sanitize(content.css(".subtitle").first[:title].to_s)
 
-          artist_url = ApplicationRecord.merge_full_url(src: content.css(".subtitle").first[:href], org: crawl_url)
+          artist_url = WebNormalizer.merge_full_url(src: content.css(".subtitle").first[:href], org: crawl_url)
           app_ins.options = app_ins.options.merge({
             publisher_url: artist_url.to_s,
             artist_id: artist_url.query_values["id"],
             price: content.css(".price-container").css(".display-price").last.try(:text),
-            summary: ApplicationRecord.basic_sanitize(content.css(".description").text).strip
+            summary: Sanitizer.basic_sanitize(content.css(".description").text).strip
           }).delete_if{|k, v| v.blank? }
           app_ins.set_details
           app_ins.save!
@@ -91,7 +91,7 @@ class Datapool::GooglePlayApp < Datapool::StoreProduct
     rating_field = parsed_html.css(".score-container").css("meta")
     detail_contents = parsed_html.css(".details-wrapper").css(".content")
 
-    self.description = ApplicationRecord.basic_sanitize(parsed_html.css(".description").css(".text-body").children.select{|c| c.text.strip.present? }.map{|c| c.children.to_html }.join)
+    self.description = Sanitizer.basic_sanitize(parsed_html.css(".description").css(".text-body").children.select{|c| c.text.strip.present? }.map{|c| c.children.to_html }.join)
     review_count_content = rating_field.detect{|h| h[:itemprop] == "ratingCount" }
     if review_count_content.present?
       self.review_count = review_count_content[:content].to_i
@@ -101,7 +101,7 @@ class Datapool::GooglePlayApp < Datapool::StoreProduct
       self.average_score = average_score_content[:content].to_f
     end
 
-    screenshot_urls = parsed_html.css(".screenshot-container").css("img").map{|h| ApplicationRecord.merge_full_url(src: h[:src], org: self.url).to_s }.select do |url|
+    screenshot_urls = parsed_html.css(".screenshot-container").css("img").map{|h| WebNormalizer.merge_full_url(src: h[:src], org: self.url).to_s }.select do |url|
       fi = FastImage.new(url)
       fi.type.present?
     end

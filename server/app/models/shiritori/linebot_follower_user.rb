@@ -22,16 +22,16 @@ class Shiritori::LinebotFollowerUser < LinebotFollowerUser
 
   def generate_return_message!(message: )
   	#半角カナとかをいい感じに
-  	sanitaized_word = ApplicationRecord.basic_sanitize(message)
+  	sanitaized_word = Sanitizer.basic_sanitize(message)
   	#記号を除去
-    sanitaized_word = ApplicationRecord.delete_symbols(sanitaized_word)
+    sanitaized_word = Sanitizer.delete_symbols(sanitaized_word)
     if sanitaized_word.match(/(?:\p{Hiragana}|\p{Katakana}|[一-龠々])+/).nil?
       return "日本語でOK?"
     elsif !sanitaized_word.match(/(\p{Hiragana}|\p{Katakana})+/).nil? && sanitaized_word.size <= 1
       return "えーと...なにを言っているのかよくわからんなぁ..."
     end
     reading_array = []
-    reading_word = ApplicationRecord.reading(sanitaized_word)
+    reading_word = TextAnalyzer.reading(sanitaized_word)
     if reading_word.blank?
       return "どうした?無言か?"
     end

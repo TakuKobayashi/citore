@@ -21,8 +21,8 @@
 class Datapool::TwitterVideoMetum < Datapool::VideoMetum
   def self.constract_from_tweet(tweet:)
     return [] unless tweet.media?
-    tweet_text = ApplicationRecord.basic_sanitize(tweet.text)
-    tweet_text = ApplicationRecord.separate_urls(tweet_text).first
+    tweet_text = Sanitizer.basic_sanitize(tweet.text)
+    tweet_text = Sanitizer.delete_urls(tweet_text)
 
     videos = tweet.media.flat_map do |m|
       case m

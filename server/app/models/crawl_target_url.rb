@@ -92,7 +92,7 @@ class CrawlTargetUrl < ApplicationRecord
       if columns_h[key].type.to_s == "integer" || columns_h[key].type.to_s == "float"
         clazz_instance.send(key + "=", dom)
       elsif columns_h[key].type.to_s == "string" || columns_h[key].type.to_s == "text"
-        clazz_instance.send(key + "=", ApplicationRecord.basic_sanitize(crawl_text))
+        clazz_instance.send(key + "=", Sanitizer.basic_sanitize(crawl_text))
       end
     end
     clazz_instance.save!

@@ -1,4 +1,4 @@
-natto = ApplicationRecord.get_natto
+natto = TextAnalyzer.get_natto
 
 directory_name = Rails.root.to_s + "/tmp/seq2seq_data"
 Dir.mkdir(directory_name) unless File.exists?(directory_name)

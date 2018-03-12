@@ -33,7 +33,7 @@ class DicExpressionWord < CategorisedWord
             descriptions = dc.css(".Jtnhj").map{|t| t.text.split("\n").select{|t| t.present? }.last }
             DicExpressionWord.transaction do
               descriptions.each do |des|
-                DicExpressionWord.create!(type: DicExpressionWord.to_s, detail_category: "", body: ExpressionCategorisedWord.basic_sanitize(text),description: des)
+                DicExpressionWord.create!(type: DicExpressionWord.to_s, detail_category: "", body: Sanitizer.basic_sanitize(text),description: des)
               end
             end
           end

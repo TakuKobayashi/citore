@@ -15,7 +15,7 @@
 #  index_citore_erotic_words_on_twitter_word_id  (twitter_word_id)
 #
 
-class Citore::EroticWord < TwitterRecord
+class Citore::EroticWord < CacheRecord
   has_many :ngrams, as: :from, class_name: 'NgramWord'
   has_many :voices, as: :from, class_name: 'VoiceWord'
 
@@ -26,9 +26,9 @@ class Citore::EroticWord < TwitterRecord
     tweet_results.each do |status|
       next if status.blank?
       next if TwitterWord.exists?(twitter_tweet_id: status.id)
-      sanitaized_word = TwitterRecord.sanitized(status.text)
-      without_url_tweet, urls = ApplicationRecord.separate_urls(sanitaized_word)
-      tweet = ApplicationRecord.delete_symbols(without_url_tweet)
+      sanitaized_word = Sanitizer.twitter_basic_sanitize(status.text)
+      without_url_tweet, urls = Sanitizer.separate_urls(sanitaized_word)
+      tweet = Sanitizer.delete_symbols(without_url_tweet)
       TwitterWord.transaction do
         tweet = TwitterWord.create!(
           twitter_user_id: status.user.id.to_s,
@@ -52,7 +52,7 @@ class Citore::EroticWord < TwitterRecord
   end
 
   def self.generate!(text, twitter_word_id = nil)
-    reading = ApplicationRecord.reading(text)
+    reading = TextAnalyzer.reading(text)
     erotic_word = Citore::EroticWord.find_or_initialize_by(reading: reading)
     new_record = erotic_word.new_record?
     if new_record
@@ -62,7 +62,7 @@ class Citore::EroticWord < TwitterRecord
     erotic_word.appear_count = erotic_word.appear_count.to_i + 1
     erotic_word.save!
     if new_record
-      words = ApplicationRecord.ngram(reading, 2).uniq
+      words = TextAnalyzer.ngram(reading, 2).uniq
       #なぜか謎のloadが入ってしまうのでimportするのは一回だけ
       values = words.map{|word| "(" + ["NULL", "'#{erotic_word.class.base_class.name}'", erotic_word.id, "'#{word}'"].join(",") + ")" }
       sql = "INSERT INTO `#{NgramWord.table_name}` (#{NgramWord.column_names.join(',')}) VALUES " + values.join(",")

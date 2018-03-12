@@ -1,4 +1,4 @@
-natto = ApplicationRecord.get_natto
+natto = TextAnalyzer.get_natto
 
 stream_client = TwitterRecord.get_twitter_stream_client("fey_kun_ai")
 stream_client.user do |status|

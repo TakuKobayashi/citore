@@ -19,7 +19,7 @@ class Unibo::TalkController < BaseController
   private
   def dummy_res
     word = params[:word].to_s
-    reading = ApplicationRecord.reading(word)
+    reading = TextAnalyzer.reading(word)
     if reading.start_with?("ハァ")
       return "どうしたの？"
     elsif reading.include?("サイキンヤルキガオキナインダヨネ")

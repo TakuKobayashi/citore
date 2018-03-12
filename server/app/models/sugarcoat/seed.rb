@@ -9,9 +9,9 @@
 
 class Sugarcoat::Seed < TwitterRecord
   def self.to_sugarcoat(text, options = {})
-    sanitaized_word = ApplicationRecord.basic_sanitize(text)
-    sanitaized_word, urls = separate_urls(sanitaized_word)
-    split_words = bracket_split(sanitaized_word)
+    sanitaized_word = Sanitizer.basic_sanitize(text)
+    sanitaized_word = Sanitizer.delete_urls(sanitaized_word)
+    split_words = TextAnalyzer.bracket_split(sanitaized_word)
     if split_words.blank?
       split_words = [sanitaized_word]
     end
@@ -52,7 +52,7 @@ class Sugarcoat::Seed < TwitterRecord
     verb = verbs.detect{|v| cverb.include?(v) }
     return nil if verb.blank?
     v = EmotionalWord::PARTS[verb]
-    reading_word = ApplicationRecord.reading(word)
+    reading_word = TextAnalyzer.reading(word)
     emotion = EmotionalWord.find_by(word: word, reading: reading_word, part: v)
     return nil if emotion.blank?
     return emotion.score.to_f

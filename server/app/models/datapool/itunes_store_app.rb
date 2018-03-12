@@ -94,12 +94,12 @@ class Datapool::ItunesStoreApp < Datapool::StoreProduct
     if date_string.present?
       self.published_at = Time.strptime(date_string, "%Y年%m月%d日")
     end
-    iphone_screenshot_urls = parsed_html.css(".iphone-screen-shots").css("img").map{|h| ApplicationRecord.merge_full_url(src: h[:src], org: self.url).to_s }.select do |url|
+    iphone_screenshot_urls = parsed_html.css(".iphone-screen-shots").css("img").map{|h| WebNormalizer.merge_full_url(src: h[:src], org: self.url).to_s }.select do |url|
       fi = FastImage.new(url)
       fi.type.present?
     end
 
-    ipad_screenshot_urls = parsed_html.css(".ipad-screen-shots").css("img").map{|h| ApplicationRecord.merge_full_url(src: h[:src], org: self.url).to_s }.select do |url|
+    ipad_screenshot_urls = parsed_html.css(".ipad-screen-shots").css("img").map{|h| WebNormalizer.merge_full_url(src: h[:src], org: self.url).to_s }.select do |url|
       fi = FastImage.new(url)
       fi.type.present?
     end
@@ -131,10 +131,10 @@ class Datapool::ItunesStoreApp < Datapool::StoreProduct
         else
           review_ins = store.reviews.new(review_id: review_id, options: {})
         end
-        review_ins.title = ApplicationRecord.basic_sanitize((entry["title"] || {})["label"].to_s)
-        review_ins.user_name = ApplicationRecord.basic_sanitize((user_attributes["name"] || {})["label"].to_s)
+        review_ins.title = Sanitizer.basic_sanitize((entry["title"] || {})["label"].to_s)
+        review_ins.user_name = Sanitizer.basic_sanitize((user_attributes["name"] || {})["label"].to_s)
         review_ins.score = (entry["im:rating"] || {})["label"].to_f
-        review_ins.message = ApplicationRecord.basic_sanitize((entry["content"] || {})["label"].to_s)
+        review_ins.message = Sanitizer.basic_sanitize((entry["content"] || {})["label"].to_s)
         review_ins.options = review_ins.options.merge({
           user_review_url: (user_attributes["url"] || {})["label"].to_s,
           version: (entry["im:version"] || {})["label"],

@@ -55,7 +55,7 @@ class Datapool::FrickrImageMetum < Datapool::ImageMetum
       else
         image = self.constract(
           image_url: image_url.to_s,
-          title: ApplicationRecord.basic_sanitize(flickr_image.title),
+          title: Sanitizer.basic_sanitize(flickr_image.title),
           options: {
             image_id: flickr_image.id,
             image_secret: flickr_image.secret,

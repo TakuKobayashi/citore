@@ -31,7 +31,7 @@ class Spotgacha::LinebotFollowerUser < LinebotFollowerUser
 　GOOGLE_PLACE_API_URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/output?parameters"
 
   def self.icon_url
-    return ApplicationRecord::S3_ROOT_URL + "project/spotgacha/icon/spotgacha_icon.jpg"
+    return Datapool::ResourceMetum::S3_ROOT_URL + "project/spotgacha/icon/spotgacha_icon.jpg"
   end
 
   def self.search_photo_url(keyword:)
@@ -190,7 +190,7 @@ class Spotgacha::LinebotFollowerUser < LinebotFollowerUser
           request_hash.merge!({
             latitude: hash["lat"],
             longitude: hash["lng"],
-            phone_number: Spotgacha::LinebotFollowerUser.search_phone_number(hash["shop_detail_memo"]),
+            phone_number: Sanitizer.search_phone_number(hash["shop_detail_memo"]),
             place_description: hash["catch"] || hash["name"],
             image_url: hash["photo"]["mobile"]["l"],
             url: hash["urls"]["pc"],

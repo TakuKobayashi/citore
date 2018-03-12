@@ -63,7 +63,7 @@ class ImageMetum < ApplicationRecord
   end
 
   def s3_file_url
-    return ApplicationRecord::S3_ROOT_URL + self.class.s3_file_image_root + self.filename
+    return Datapool::ResourceMetum::S3_ROOT_URL + self.class.s3_file_image_root + self.filename
   end
 
   def file_url
@@ -127,7 +127,7 @@ class ImageMetum < ApplicationRecord
         image_binary =  Base64.decode64(image_url.to_s.gsub(/data:image\/.+;base64\,/, ""))
         image.filename = SecureRandom.hex + ".#{fi.type.to_s}"
         uploaded_path = self.upload_s3(image_binary, image.filename)
-        image.src = ApplicationRecord::S3_ROOT_URL + uploaded_path
+        image.src = Datapool::ResourceMetum::S3_ROOT_URL + uploaded_path
       else
         image.src = image_url.to_s
       end

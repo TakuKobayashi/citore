@@ -5,9 +5,9 @@ class Citore::WordsController < BaseController
   end
 
   def search
-    sanitaized_word = ApplicationRecord.basic_sanitize(params[:text].to_s)
-    reading = ApplicationRecord.reading(sanitaized_word)
-    split_words = ApplicationRecord.ngram(reading, 2).uniq
+    sanitaized_word = Sanitizer.basic_sanitize(params[:text].to_s)
+    reading = TextAnalyzer.reading(sanitaized_word)
+    split_words = TextAnalyzer.ngram(reading, 2).uniq
     ngrams = NgramWord.where(from_type: "Citore::EroticWord", bigram: split_words).includes(:from)
     erotic_word = ngrams.map(&:from).uniq.select{|citore_erotic_word| reading.include?(citore_erotic_word.reading) }.sample
     hash = {}

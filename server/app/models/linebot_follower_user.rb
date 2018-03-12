@@ -25,7 +25,7 @@ class LinebotFollowerUser < ApplicationRecord
       profile = JSON.parse(response.body)
       follower.display_name = profile["displayName"]
       follower.picture_url = profile["pictureUrl"]
-      follower.status_message = ApplicationRecord.basic_sanitize(profile["statusMessage"].to_s)
+      follower.status_message = Sanitizer.basic_sanitize(profile["statusMessage"].to_s)
     end
     if isfollow
       follower.follow!

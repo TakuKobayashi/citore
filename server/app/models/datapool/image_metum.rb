@@ -113,7 +113,7 @@ class Datapool::ImageMetum < Datapool::ResourceMetum
       image_binary =  Base64.decode64(aimage_url.to_s.gsub(/data:image\/.+;base64\,/, ""))
       new_filename = SecureRandom.hex + ".#{image_type.to_s.downcase}"
       uploaded_path = self.upload_s3(image_binary, new_filename)
-      image.src = ApplicationRecord::S3_ROOT_URL + uploaded_path
+      image.src = Datapool::ResourceMetum::S3_ROOT_URL + uploaded_path
     else
       image.src = aimage_url.to_s
     end

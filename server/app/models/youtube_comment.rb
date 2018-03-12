@@ -28,7 +28,7 @@ class YoutubeComment < YoutubeRecord
         youtube_channel_id: channel_id,
         comment_id: item.id,
         published_at: item.snippet.top_level_comment.snippet.published_at,
-        comment: YoutubeComment.basic_sanitize(item.snippet.top_level_comment.snippet.text_display),
+        comment: Sanitizer.basic_sanitize(item.snippet.top_level_comment.snippet.text_display),
         like_count: item.snippet.top_level_comment.snippet.like_count.to_i
       )
       comment

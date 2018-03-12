@@ -88,7 +88,7 @@ class Datapool::AppearWord < ApplicationRecord
   def self.calc_score_and_parts(text:)
     word_parts = {}
     #TF-IDF法
-    natto = ApplicationRecord.get_natto
+    natto = TextAnalyzer.get_natto
     natto.parse(text) do |n|
       next if n.surface.blank?
       csv = n.feature.split(",")
@@ -125,6 +125,6 @@ class Datapool::AppearWord < ApplicationRecord
   end
 
   def word_and_read
-    return self.word + "\n(" + self.reading.tr('ァ-ン','ぁ-ん') + ")"
+    return self.word + "\n(" + TextAnalyzer.reading.tr('ァ-ン','ぁ-ん') + ")"
   end
 end

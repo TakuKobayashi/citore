@@ -11,7 +11,7 @@ class TwitterRecord < ApplicationRecord
   CRAWL_RESET_TIME_SPAN = 12.hours
 
   def self.sanitized(text)
-    sanitized_word = ApplicationRecord.basic_sanitize(text)
+    sanitized_word = Sanitizer.basic_sanitize(text)
     #返信やハッシュタグを除去
     sanitized_word = sanitized_word.gsub(/[#＃@][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー_]+/, "")
     #リツイートにRTとつける事が多いので、そこの部分は取り除く
@@ -26,7 +26,7 @@ class TwitterRecord < ApplicationRecord
     sanitaized_word = TwitterRecord.sanitized(text)
     puts sanitaized_word
 
-    split_words = ApplicationRecord.bracket_split(sanitaized_word)
+    split_words = TextAnalyzer.bracket_split(sanitaized_word)
     if split_words.blank?
       split_words = [sanitaized_word]
     end
@@ -37,7 +37,7 @@ class TwitterRecord < ApplicationRecord
         puts "generate_voice"
         if generate_voice
           VoiceWord.all_speacker_names.each do |speacker|
-            VoiceWord.generate_and_upload_voice!(twitter_record, ApplicationRecord.reading(word), speacker)
+            VoiceWord.generate_and_upload_voice!(twitter_record, TextAnalyzer.reading(word), speacker)
           end
         end
       end

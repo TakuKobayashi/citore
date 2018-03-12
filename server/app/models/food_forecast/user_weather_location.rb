@@ -193,7 +193,7 @@ class FoodForecast::UserWeatherLocation < ApplicationRecord
           request_hash.merge!({
             latitude: hash["lat"],
             longitude: hash["lng"],
-            phone_number: FoodForecast::UserWeatherLocation.search_phone_number(hash["shop_detail_memo"]),
+            phone_number: Sanitizer.search_phone_number(hash["shop_detail_memo"]),
             place_description: hash["catch"] || hash["name"],
             image_url: hash["photo"]["mobile"]["l"],
             url: hash["urls"]["pc"],

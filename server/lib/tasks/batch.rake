@@ -37,7 +37,7 @@ namespace :batch do
 
   task import_to_appear_word: :environment do
     sum_count = ExtraInfo.read_extra_info["sum_sentence_count"].to_i
-    natto = ApplicationRecord.get_natto
+    natto = TextAnalyzer.get_natto
     {
       TwitterWord => "tweet"
     }.each do |activerecord_clazz, field_name|
@@ -45,8 +45,8 @@ namespace :batch do
         import_words = []
         appear_imports = {}
         clazzes.each do |clazz|
-          sanitaized_word = ApplicationRecord.basic_sanitize(clazz.send(field_name))
-          without_url, urls = ApplicationRecord.separate_urls(sanitaized_word)
+          sanitaized_word = Sanitizer.basic_sanitize(clazz.send(field_name))
+          without_url = Sanitizer.delete_urls(sanitaized_word)
 
           words = []
           natto.parse(without_url) do |n|
@@ -92,7 +92,7 @@ namespace :batch do
     }.each do |activerecord_clazz, dynamodb_tablename|
       activerecord_clazz.find_in_batches do |clazzes|
         clazzes.each_slice(25) do |records|
-          ApplicationRecord.batch_execution_and_retry do
+          BatchUtility.execute_and_retry do
             client.batch_write_item({
               request_items: {
                 dynamodb_tablename => records.map{|r| {put_request: {item: r.attributes} } }
@@ -110,7 +110,7 @@ namespace :batch do
     limit_span = (15.minutes.second / 120).to_i
     TwitterWord.where("id > ?", tweet_id.to_i).find_in_batches do |words|
       words.each_slice(100) do |w|
-        ApplicationRecord.batch_execution_and_retry(sleep_second: 900) do
+        BatchUtility.execute_and_retry(sleep_second: 900) do
           t_words = []
           tweets = client.statuses(w.map(&:twitter_tweet_id))
           tweets.each do |status|
@@ -158,7 +158,7 @@ namespace :batch do
     jas = ja.split("\r\n")
     jws = jas.map do |j|
       js = j.split(":")
-      word = ApplicationRecord.basic_sanitize(js[0])
+      word = Sanitizer.basic_sanitize(js[0])
       reading = js[1].tr('ぁ-ん','ァ-ン')
       EmotionalWord.new(word: word, reading: reading, part: parts[js[2]],score: js[3].to_f, language: 0)
     end
@@ -199,12 +199,12 @@ namespace :batch do
           reply_tweet_ids << w.reply_to_tweet_id
         end
       end
-      ApplicationRecord.batch_execution_and_retry(sleep_second: 900) do
+      BatchUtility.execute_and_retry(sleep_second: 900) do
         tws = []
         tweets = client.statuses(reply_tweet_ids)
         tweets.each do |status|
           sanitaized_word = TwitterRecord.sanitized(status.text)
-          without_url_tweet, urls = ApplicationRecord.separate_urls(sanitaized_word)
+          without_url_tweet, urls = Sanitizer.separate_urls(sanitaized_word)
           t = TwitterWord.new(
             twitter_user_id: status.user.id.to_s,
             twitter_user_name: status.user.screen_name.to_s,
@@ -248,7 +248,7 @@ namespace :batch do
     old_logger = ActiveRecord::Base.logger
     ActiveRecord::Base.logger = nil
 
-    natto = ApplicationRecord.get_natto
+    natto = TextAnalyzer.get_natto
     {
       #TwitterWord => "tweet",
       #Lyric => "body"
@@ -258,7 +258,7 @@ namespace :batch do
       cached_hash_id = {}
       clazz.where("id > ?", last_saved_id.to_i).find_in_batches do |cs|
         batch_words = []
-        ApplicationRecord.batch_execution_and_retry do
+        BatchUtility.execute_and_retry do
           cs.each do |c|
             if clazz == Lyric
               split_list = c.send(word).to_s.split("\n").map(&:strip)
@@ -268,13 +268,13 @@ namespace :batch do
             split_list.each do |cell|
               arr = []
               sanitaized_word = TwitterRecord.sanitized(cell)
-              without_url_tweet, urls = ApplicationRecord.separate_urls(sanitaized_word)
-              without_kaomoji_tweet, kaomojis = ApplicationRecord.separate_kaomoji(without_url_tweet)
+              without_url_tweet = Sanitizer.delete_urls(sanitaized_word)
+              without_kaomoji_tweet, kaomojis = Sanitizer.separate_kaomoji(without_url_tweet)
               natto.parse(without_kaomoji_tweet.downcase) do |n|
                 next if n.surface.blank?
                 arr << n.surface
               end
-              words = arr.map{|t| ApplicationRecord.delete_symbols(t) }.select{|t| t.present? }.each_cons(3).map.to_a
+              words = arr.map{|t| Sanitizer.delete_symbols(t) }.select{|t| t.present? }.each_cons(3).map.to_a
               next if words.blank?
               batch_words << words
             end
@@ -339,7 +339,7 @@ namespace :batch do
     TwitterWord.find_in_batches do |ts|
       TwitterWord.transaction do
         ts.each do |t|
-          t.update(tweet: ApplicationRecord.basic_sanitize(t.tweet))
+          t.update(tweet: Sanitizer.basic_sanitize(t.tweet))
         end
       end
     end
@@ -374,7 +374,7 @@ namespace :batch do
   end
 
   task generate_komachi_res_set: :environment do
-    natto = ApplicationRecord.get_natto
+    natto = TextAnalyzer.get_natto
     topic_id_count = Datapool::HatsugenKomachi.group(:topic_id).count
     out_file = File.new(Rails.root.to_s + LEARNING_TXT_FILE_PATH, "w")
     topic_id_count.each do |topic_id, count|
@@ -387,7 +387,7 @@ namespace :batch do
         line = ""
         nres = []
         topic_keywords = []
-        natto.parse(ApplicationRecord.basic_sanitize(topic.body)) do |n|
+        natto.parse(Sanitizer.basic_sanitize(topic.body)) do |n|
           next if n.surface.to_s.strip.blank? || !["動詞", "形容詞", "名詞"].include?(n.feature.split(",").first)
           topic_keywords << n.surface.to_s
         end
@@ -395,7 +395,7 @@ namespace :batch do
         topic_keywords.uniq[0..9].each do |word|
           line += "__label__" + word + ", "
         end
-        natto.parse(ApplicationRecord.basic_sanitize(res.body)) do |n|
+        natto.parse(Sanitizer.basic_sanitize(res.body)) do |n|
           nres << n
         end
         line += nres.map{|res| res.surface }.join(" ")

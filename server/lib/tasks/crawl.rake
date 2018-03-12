@@ -12,7 +12,7 @@ namespace :crawl do
         WikipediaArticle.create!(
           wikipedia_page_id: page.id,
           title: article_json["query"]["pages"][page.id.to_s]["title"],
-          body: WikipediaArticle.basic_sanitize(doc.css("p").text)
+          body: Sanitizer.basic_sanitize(doc.css("p").text)
         )
       rescue
         sleep 1
@@ -59,7 +59,7 @@ namespace :crawl do
           large_category: value,
           medium_category: medium_jas[url_text[crawl_target.crawl_from_keyword]],
           detail_category: detail.try(:text).to_s,
-          body: ExpressionCategorisedWord.basic_sanitize(w)
+          body: Sanitizer.basic_sanitize(w)
         })
       end
       ExpressionCategorisedWord.import(models)

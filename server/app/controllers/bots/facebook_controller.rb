@@ -13,7 +13,7 @@ class Bots::FacebookController < BaseController
 
         endpoint_uri = "https://graph.facebook.com/v2.6/me/messages?access_token=" + ENV.fetch('FACEBOOK_SUGARCOAT_BOT_ACCESS_TOKEN', '')
         #sugarcoated = Sugarcoat::Seed.to_sugarcoat(text).join("")
-        #voice = VoiceWord.generate_and_upload_voice(nil, ApplicationRecord.reading(sugarcoated), "aoi", VoiceWord::VOICE_S3_SUGARCOAT_FILE_ROOT, "public-read", VoiceWord::SUGARCOAT_VOICE_PARAMS)
+        #voice = VoiceWord.generate_and_upload_voice(nil, TextAnalyzer.reading(sugarcoated), "aoi", VoiceWord::VOICE_S3_SUGARCOAT_FILE_ROOT, "public-read", VoiceWord::SUGARCOAT_VOICE_PARAMS)
         request_content = {
           recipient: {
             id:sender

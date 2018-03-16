@@ -3,7 +3,7 @@ class AudioCrawlWorker
 
   def perform(request_params, upload_job_id)
     upload_job = Homepage::UploadJobQueue.find_by(id: upload_job_id)
-    upload_job.crawling!
+    upload_job.executing!
     if request_params["crawl_type"] == "website"
       url = Sanitizer.basic_sanitize(request_params["crawl_url"].to_s)
       start_page = request_params["start_page_num"].to_i

@@ -471,7 +471,7 @@ ja:
       homepage_upload_job_queues:
         state:
           standby: 収集待ち
-          crawling: 収集中
+          executing: 収集中
           compressing: 圧縮中
           uploading: アップロード中
           complete: 完了

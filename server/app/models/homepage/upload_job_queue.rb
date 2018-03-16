@@ -25,7 +25,7 @@ class Homepage::UploadJobQueue < ApplicationRecord
 
   enum state: {
     standby: 0,
-    crawling: 1,
+    executing: 1,
     compressing: 2,
     uploading: 3,
     complete: 4,
@@ -40,7 +40,7 @@ class Homepage::UploadJobQueue < ApplicationRecord
     Homepage::UploadJobQueue.find_each do |job|
       next if job.standby?
       next if job.complete? && job.updated_at > 7.day.ago
-      next if (job.crawling? || job.compressing? || job.uploading?) && job.updated_at > 8.hours.ago
+      next if (job.executing? || job.compressing? || job.uploading?) && job.updated_at > 8.hours.ago
       job.cleaned!
       if job.cleaned? && job.upload_url.present?
         s3 = Aws::S3::Client.new

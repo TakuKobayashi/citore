@@ -79,7 +79,7 @@ class Tools::ImageCrawlController < Homepage::BaseController
     else
       prefix = "Datapool::GoogleImageSearch"
     end
-#    @upload_job = @visitor.upload_jobs.find_by(from_type: prefix, state: [:standby, :crawling, :compressing, :uploading])
+#    @upload_job = @visitor.upload_jobs.find_by(from_type: prefix, state: [:standby, :executing, :compressing, :uploading])
 #    is_new = false
 #    if @upload_job.blank?
     @upload_job = @visitor.upload_jobs.find_or_initialize_by(token: params[:authenticity_token])

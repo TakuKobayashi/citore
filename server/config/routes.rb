@@ -176,6 +176,14 @@ Rails.application.routes.draw do
         get :download
       end
     end
+
+    resource :video, controller: :video, only: [] do
+      get :index
+      get :editor
+      post :edit
+      get :crawl
+      post :execute_crawl
+    end
   end
 
   namespace :unibo do

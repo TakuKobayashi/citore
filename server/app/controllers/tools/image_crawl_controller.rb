@@ -79,20 +79,11 @@ class Tools::ImageCrawlController < Homepage::BaseController
     else
       prefix = "Datapool::GoogleImageSearch"
     end
-#    @upload_job = @visitor.upload_jobs.find_by(from_type: prefix, state: [:standby, :executing, :compressing, :uploading])
-#    is_new = false
-#    if @upload_job.blank?
     @upload_job = @visitor.upload_jobs.find_or_initialize_by(token: params[:authenticity_token])
     @upload_job.from_type = prefix
     @upload_job.options ||= {params: params.to_h.dup}
-    is_new = @upload_job.new_record?
     @upload_job.save!
-#    end
-    #if is_new
     flash[:notice] = "処理を受け付けました。処理が完了するまでしばらくお待ち下さい。"
     ImageCrawlWorker.perform_async(params.to_h.dup, @upload_job.id)
-    #else
-      #flash[:error] = "現在処理中のものがあるので、処理が終わって使うようにしてください"
-    #end
   end
 end

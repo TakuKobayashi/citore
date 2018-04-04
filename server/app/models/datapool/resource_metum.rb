@@ -25,34 +25,77 @@ class Datapool::ResourceMetum < ApplicationRecord
     return self.where(origin_src: origin_srces)
   end
 
-  def self.constract(url:, title:, type: ,check_file: false, file_genre: nil, options: {})
+  def self.file_extensions
+    return []
+  end
+
+  def self.match_filename(filepath)
+    paths = filepath.split("/")
+    resourcefile_name = paths.detect{|p| self.file_extensions.any?{|ie| p.include?(ie)} }
+    return "" if resourcefile_name.blank?
+    ext = self.file_extensions.detect{|ie| resourcefile_name.include?(ie) }
+    return resourcefile_name.match(/(.+?#{ext})/).to_s
+  end
+
+  def self.constract(url:, title:, check_file: false, file_genre: nil, priority_check_class: nil, options: {})
+    new_resource_class = nil
+    if priority_check_class.present?
+      new_resource_class = priority_check_class.to_s.constantize.constract(
+        url: url,
+        title: title,
+        priority_check_class: nil,
+        check_file: check_file,
+        file_genre: file_genre,
+        options: options
+      )
+      return new_resource_class
+    end
     if Datapool::ImageMetum.imagefile?(url)
       if self.base_class.to_s == "Datapool::ImageMetum"
-        return self.constract(url: url, title: title, check_image_file: check_file, options: options)
+        new_resource_class = self.new_image(image_url: url, title: title, check_image_file: check_file, options: options)
       else
-        return Datapool::WebSiteImageMetum.constract(url: url, title: title, check_image_file: check_file, options: options)
+        new_resource_class = Datapool::WebSiteImageMetum.new_image(image_url: url, title: title, check_image_file: check_file, options: options)
       end
-    elsif Datapool::PdfMetum.pdffile?(url)
-      if self.base_class.to_s == "Datapool::PdfMetum"
-        return self.new(url: url, title: title, check_image_file: check_file, options: options)
-      else
-        return Datapool::PdfMetum.new(url: url, title: title, check_image_file: check_file, options: options)
+      if new_resource_class.present?
+        return new_resource_class
       end
-    elsif Datapool::AudioMetum.audiofile?(url)
-      if self.base_class.to_s == "Datapool::AudioMetum"
-        return self.constract(url: url, title: title, file_genre: file_genre, options: options)
-      else
-        return Datapool::WebSiteAudioMetum.constract(url: url, title: title, file_genre: file_genre, options: options)
-      end
-    elsif Datapool::VideoMetum.videofile?(url)
-      if self.base_class.to_s == "Datapool::VideoMetum"
-        return self.constract(url: url, title: title, file_genre: file_genre, options: options)
-      else
-        return Datapool::VideoMetum.constract(url: url, title: title, file_genre: file_genre, options: options)
-      end
-    else
-      return Datapool::Website.constract(url: url, title: title, options: options)
     end
+    if Datapool::PdfMetum.pdffile?(url)
+      if self.base_class.to_s == "Datapool::PdfMetum"
+        new_resource_class = self.new_pdf(pdf_url: url, title: title, check_pdf_file: check_file, options: options)
+      else
+        new_resource_class = Datapool::PdfMetum.new_pdf(pdf_url: url, title: title, check_pdf_file: check_file, options: options)
+      end
+      if new_resource_class.present?
+        return new_resource_class
+      end
+    end
+    if Datapool::VideoMetum.videofile?(url)
+      if self.base_class.to_s == "Datapool::VideoMetum"
+        new_resource_class = self.new_video(video_url: url, title: title, file_genre: file_genre, options: options)
+      else
+        new_resource_class = Datapool::VideoMetum.new_video(video_url: url, title: title, file_genre: file_genre, options: options)
+      end
+      if new_resource_class.present?
+        return new_resource_class
+      end
+    end
+    if Datapool::AudioMetum.audiofile?(url)
+      if self.base_class.to_s == "Datapool::AudioMetum"
+        new_resource_class = self.new_audio(audio_url: url, title: title, file_genre: file_genre, options: options)
+      else
+        new_resource_class = Datapool::WebSiteAudioMetum.new_audio(audio_url: url, title: title, file_genre: file_genre, options: options)
+      end
+      if new_resource_class.present?
+        return new_resource_class
+      end
+    end
+    if self.base_class.to_s == "Datapool::Website"
+      new_resource_class = self.new_website(url: url, title: title, options: options)
+    else
+      new_resource_class = Datapool::Website.new_website(url: url, title: title, options: options)
+    end
+    return new_resource_class
   end
 
   def self.import_resources!(resources:)

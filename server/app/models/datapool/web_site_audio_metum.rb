@@ -67,7 +67,7 @@ class Datapool::WebSiteAudioMetum < Datapool::AudioMetum
         options: options.merge({from_url: crawl_url.to_s})
       )
       audio_metum.src = audio_url.to_s
-      filename = self.match_audio_filename(audio_metum.src.to_s)
+      filename = self.match_filename(audio_metum.src.to_s)
       audio_metum.set_original_filename(filename)
       audios << audio_metum
     end
@@ -85,7 +85,7 @@ class Datapool::WebSiteAudioMetum < Datapool::AudioMetum
         options: options.merge({from_url: crawl_url.to_s})
       )
       audio_metum.src = audio_url.to_s
-      filename = self.match_audio_filename(audio_metum.src.to_s)
+      filename = self.match_filename(audio_metum.src.to_s)
       audio_metum.set_original_filename(filename)
       audios << audio_metum
     end
@@ -102,7 +102,7 @@ class Datapool::WebSiteAudioMetum < Datapool::AudioMetum
         options: options.merge({from_url: crawl_url.to_s})
       )
       audio_metum.src = audio_url.to_s
-      filename = self.match_audio_filename(audio_metum.src.to_s)
+      filename = self.match_filename(audio_metum.src.to_s)
       audio_metum.set_original_filename(filename)
       audios << audio_metum
     end

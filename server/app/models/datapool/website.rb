@@ -18,7 +18,7 @@
 class Datapool::Website < Datapool::ResourceMetum
   serialize :options, JSON
 
-  def self.constract(url:, title: "", options: {})
+  def self.new_website(url:, title: "", options: {})
     website = self.new(
       title: title,
       options: {

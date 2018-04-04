@@ -50,24 +50,20 @@ class Datapool::ImageMetum < Datapool::ResourceMetum
   CRAWL_IMAGE_ROOT_PATH = "project/crawler/images/"
   CRAWL_IMAGE_BACKUP_PATH = "backup/crawler/images/"
 
-  def self.match_image_filename(filepath)
-    paths = filepath.split("/")
-    imagefile_name = paths.detect{|p| IMAGE_FILE_EXTENSIONS.any?{|ie| p.include?(ie)} }
-    return "" if imagefile_name.blank?
-    ext = IMAGE_FILE_EXTENSIONS.detect{|ie| imagefile_name.include?(ie) }
-    return imagefile_name.match(/(.+?#{ext})/).to_s
+  def self.imagefile?(url)
+    aurl = Addressable::URI.parse(url.to_s)
+    return IMAGE_FILE_EXTENSIONS.include?(File.extname(url)) || aurl.scheme == "data"
   end
 
-  def self.imagefile?(filename)
-    afilename = Addressable::URI.parse(filename.to_s)
-    return IMAGE_FILE_EXTENSIONS.include?(File.extname(filename)) || afilename.scheme == "data"
+  def self.file_extensions
+    return IMAGE_FILE_EXTENSIONS
   end
 
   def save_filename
     if self.original_filename.present?
       return self.original_filename
     end
-    return super
+    return super.save_filename
   end
 
   def self.upload_s3(binary, filename)
@@ -92,7 +88,7 @@ class Datapool::ImageMetum < Datapool::ResourceMetum
     return "data:image/" + ext[1..ext.size] + ";base64," + base64_image
   end
 
-  def self.constract(image_url:, title:, check_image_file: false, options: {})
+  def self.new_image(image_url:, title:, check_image_file: false, options: {})
     aimage_url = Addressable::URI.parse(image_url.to_s)
     image_type = nil
     if check_image_file
@@ -117,7 +113,7 @@ class Datapool::ImageMetum < Datapool::ResourceMetum
     else
       image.src = aimage_url.to_s
     end
-    filename = self.match_image_filename(image.src.to_s)
+    filename = self.match_filename(image.src.to_s)
     image.set_original_filename(filename)
     return image
   end

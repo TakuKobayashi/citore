@@ -40,18 +40,15 @@ class Datapool::AudioMetum < Datapool::ResourceMetum
     #https://ja.wikipedia.org/wiki/Opus_(%E9%9F%B3%E5%A3%B0%E5%9C%A7%E7%B8%AE)
     ".opus",
     #https://ja.wikipedia.org/wiki/AAC
-    ".mov",".mp4","m2ts",".m4a",".m4b",".m4p",".3gp",".3g2",".aac",
-    #https://ja.wikipedia.org/wiki/Windows_Media_Audio
-    ".wma", ".asf",
+    "m2ts",".m4b",".aac",
     #https://ja.wikipedia.org/wiki/ATRAC
     ".omg", ".oma", ".aa3",
-    ".mp4",
     #https://ja.wikipedia.org/wiki/FLAC
     ".flac", ".fla",
     ".mpc",
     ".ape", ".mac",
     #https://ja.wikipedia.org/wiki/TTA
-    ".tta", ".mka", ".mkv",
+    ".tta",
     #https://ja.wikipedia.org/wiki/WavPack
     ".wv",
     #https://ja.wikipedia.org/wiki/La_(%E9%9F%B3%E5%A3%B0%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%83%95%E3%82%A9%E3%83%BC%E3%83%9E%E3%83%83%E3%83%88)
@@ -60,19 +57,15 @@ class Datapool::AudioMetum < Datapool::ResourceMetum
     ".alac"
   ]
 
+  def self.file_extensions
+    return AUDIO_FILE_EXTENSIONS
+  end
+
   def save_filename
     if self.original_filename.present?
       return self.original_filename
     end
-    return super
-  end
-
-  def self.match_audio_filename(filepath)
-    paths = filepath.split("/")
-    audiofile_name = paths.detect{|p| AUDIO_FILE_EXTENSIONS.any?{|ie| p.include?(ie)} }
-    return "" if audiofile_name.blank?
-    ext = AUDIO_FILE_EXTENSIONS.detect{|ie| audiofile_name.include?(ie) }
-    return audiofile_name.match(/(.+?#{ext})/).to_s
+    return super.save_filename
   end
 
   def self.upload_s3(binary, filename)
@@ -81,14 +74,25 @@ class Datapool::AudioMetum < Datapool::ResourceMetum
     return filepath
   end
 
-  def self.constract(url:, title:, file_genre: , options: {})
+  def self.new_audio(audio_url:, title:, file_genre: , options: {})
     audio_metum = self.new(
       title: title,
       file_genre: file_genre,
       options: {
       }.merge(options)
     )
-    audio_metum.src = url
+    audio_metum.src = audio_url
+    if file_genre.blank?
+      if Datapool::VideoMetum.streaming_site?(audio_metum.src)
+        audio_metum.data_category = "video_streaming"
+      elsif Datapool::VideoMetum.videofile?(audio_metum.src)
+        audio_metum.data_category = "video_file"
+      else
+        audio_metum.data_category = "audio_file"
+      end
+    end
+    filename = self.match_filename(audio_metum.src.to_s)
+    audio_metum.set_original_filename(filename)
     return audio_metum
   end
 

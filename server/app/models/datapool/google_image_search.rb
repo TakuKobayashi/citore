@@ -39,9 +39,9 @@ class Datapool::GoogleImageSearch < Datapool::ImageMetum
     image_url = Addressable::URI.parse(url.to_s)
     pathes = image_url.path.split("/")
     if pathes.size > 0
-      pathes[pathes.size - 1] = self.match_image_filename(image_url.to_s)
+      pathes[pathes.size - 1] = self.match_filename(image_url.to_s)
     else
-      pathes = [("/" + self.match_image_filename(image_url.to_s))]
+      pathes = [("/" + self.match_filename(image_url.to_s))]
     end
     image_url.path = pathes.join("/")
     return image_url.to_s

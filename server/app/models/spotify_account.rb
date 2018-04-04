@@ -16,8 +16,8 @@
 #
 # Indexes
 #
-#  index_accounts_on_uid                      (uid)
-#  unique_user_and_id_and_uid_accounts_index  (user_type,user_id,type,uid) UNIQUE
+#  index_accounts_on_uid           (uid)
+#  unique_homepage_accounts_index  (user_type,user_id,type) UNIQUE
 #
 
 class SpotifyAccount < Account

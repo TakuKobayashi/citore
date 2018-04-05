@@ -52,6 +52,13 @@ class Datapool::GoogleImageSearch < Datapool::ImageMetum
     websites = []
     img_dom = RequestParser.request_and_parse_html(url: search_url.to_s, options: {:follow_redirect => true})
     searched_urls = img_dom.css("a").map{|a| Addressable::URI.parse(a["href"].to_s) }
+    web_attributes = img_dom.css(".rg_meta").map do |a|
+      begin
+        JSON.parse(a.text)
+      rescue JSON::ParserError => e
+        {}
+      end
+    end
     return [] if searched_urls.blank?
     searched_thumbnail_urls = img_dom.css("img").map do |img|
       if img["data-src"].blank?
@@ -67,9 +74,9 @@ class Datapool::GoogleImageSearch < Datapool::ImageMetum
       image_url = self.laundering_url_path(url: link_metum["imgurl"].to_s)
       split_keywords = keyword.to_s.split(" ")
       image = self.constract(
-        image_url: image_url.to_s,
+        url: image_url.to_s,
         title: split_keywords.first,
-        check_image_file: true,
+        check_file: true,
         options: {
           keywords: keyword.to_s,
           number: number + counter + 1
@@ -77,9 +84,9 @@ class Datapool::GoogleImageSearch < Datapool::ImageMetum
       )
       if image.blank?
         image = self.constract(
-          image_url: searched_thumbnail_urls[index].to_s,
+          url: searched_thumbnail_urls[index].to_s,
           title: split_keywords.first,
-          check_image_file: true,
+          check_file: true,
           options: {
             keyword: keyword.to_s,
             number: number + counter + 1
@@ -88,16 +95,12 @@ class Datapool::GoogleImageSearch < Datapool::ImageMetum
       end
       if image.present?
         images << image
-        websites << Datapool::GoogleSearchWebsite.constract(url: link_metum["imgrefurl"].to_s, options: {keyword: keyword.to_s, number: number + counter + 1})
+        web_attribute = web_attributes[index] || {}
+        websites << Datapool::GoogleSearchWebsite.constract(url: link_metum["imgrefurl"].to_s, title: web_attribute["pt"].to_s, options: {keyword: keyword.to_s, number: number + counter + 1})
         counter = counter + 1
       end
     end
-    src_images = Datapool::ImageMetum.find_origin_src_by_url(url: images.map(&:src)).index_by(&:src)
-    src_websites = Datapool::Website.find_origin_src_by_url(url: websites.map(&:src)).index_by(&:src)
-    import_images = images.select{|image| src_images[image.src].blank? }
-    import_websites = websites.select{|website| src_websites[website.src].blank? }
-    self.import!(import_images)
-    Datapool::GoogleSearchWebsite.import!(import_websites)
+    self.import_resources!(resources: images + websites)
     return images
   end
 end

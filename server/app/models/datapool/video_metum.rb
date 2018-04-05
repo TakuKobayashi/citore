@@ -72,7 +72,7 @@ class Datapool::VideoMetum < Datapool::ResourceMetum
   def self.new_video(video_url:, title:, file_genre: , options: {})
     video_metum = self.new(
       title: title,
-      file_genre: file_genre,
+      data_category: file_genre,
       options: {
       }.merge(options)
     )
@@ -84,8 +84,6 @@ class Datapool::VideoMetum < Datapool::ResourceMetum
         video_metum.data_category = "file"
       end
     end
-    filename = self.match_filename(video_metum.src.to_s)
-    video_metum.set_original_filename(filename)
     return video_metum
   end
 

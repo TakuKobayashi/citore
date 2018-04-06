@@ -67,10 +67,25 @@ class Datapool::YoutubeAudioMetum < Datapool::AudioMetum
     end
     output_file_path = Rails.root.to_s + "/tmp/audio/" + file_name
     system("youtube-dl " + self.src + " -x -o " + output_file_path.to_s + " --audio-format wav")
-    fileurl = Datapool::YoutubeAudioMetum.upload_s3(File.open(output_file_path), file_name)
+    fileurl =  ResourceUtility.upload_s3(File.open(output_file_path), self.s3_path + file_name)
     self.options["upload_audio_file_url"] = Datapool::ResourceMetum::S3_ROOT_URL + fileurl
     File.delete(output_file_path)
     self.save!
+  end
+
+  def download_resource
+    file_name = SecureRandom.hex + ".wav"
+    if File.extname(self.file_url) == File.extname(file_name)
+      return nil
+    end
+
+    aurl = Addressable::URI.parse(self.src)
+    output_file_path = Rails.root.to_s + "/tmp/audio/" + file_name
+    system("youtube-dl " + self.src + " -x -o " + output_file_path.to_s + " --audio-format wav")
+    file = File.open(output_file_path)
+    blob = file.read
+    File.delete(output_file_path)
+    return blob
   end
 
   def artist_name

@@ -50,6 +50,14 @@ class Datapool::ImageMetum < Datapool::ResourceMetum
   CRAWL_IMAGE_ROOT_PATH = "project/crawler/images/"
   CRAWL_IMAGE_BACKUP_PATH = "backup/crawler/images/"
 
+  def s3_path
+    return CRAWL_IMAGE_ROOT_PATH
+  end
+
+  def backup_s3_path
+    return CRAWL_IMAGE_BACKUP_PATH
+  end
+
   def self.imagefile?(url)
     aurl = Addressable::URI.parse(url.to_s)
     return IMAGE_FILE_EXTENSIONS.include?(File.extname(url)) || aurl.scheme == "data"
@@ -64,12 +72,6 @@ class Datapool::ImageMetum < Datapool::ResourceMetum
       return self.original_filename
     end
     return super.save_filename
-  end
-
-  def self.upload_s3(binary, filename)
-    filepath = CRAWL_IMAGE_ROOT_PATH + filename
-    self.upload_to_s3(binary, filepath)
-    return filepath
   end
 
   # Google Reverse Image Serachする
@@ -108,7 +110,7 @@ class Datapool::ImageMetum < Datapool::ResourceMetum
     if aimage_url.scheme == "data"
       image_binary =  Base64.decode64(aimage_url.to_s.gsub(/data:image\/.+;base64\,/, ""))
       new_filename = SecureRandom.hex + ".#{image_type.to_s.downcase}"
-      uploaded_path = self.upload_s3(image_binary, new_filename)
+      uploaded_path = ResourceUtility.upload_s3(image_binary, image.s3_path + new_filename)
       image.src = Datapool::ResourceMetum::S3_ROOT_URL + uploaded_path
     else
       image.src = aimage_url.to_s

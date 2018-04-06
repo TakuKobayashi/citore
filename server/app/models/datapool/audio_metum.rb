@@ -57,6 +57,14 @@ class Datapool::AudioMetum < Datapool::ResourceMetum
     ".alac"
   ]
 
+  def s3_path
+    return CRAWL_AUDIO_ROOT_PATH
+  end
+
+  def backup_s3_path
+    return CRAWL_AUDIO_BACKUP_PATH
+  end
+
   def self.file_extensions
     return AUDIO_FILE_EXTENSIONS
   end
@@ -66,12 +74,6 @@ class Datapool::AudioMetum < Datapool::ResourceMetum
       return self.original_filename
     end
     return super.save_filename
-  end
-
-  def self.upload_s3(binary, filename)
-    filepath = CRAWL_AUDIO_ROOT_PATH + filename
-    self.upload_to_s3(binary, filepath)
-    return filepath
   end
 
   def self.new_audio(audio_url:, title:, file_genre: , options: {})

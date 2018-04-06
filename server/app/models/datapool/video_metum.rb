@@ -64,6 +64,15 @@ class Datapool::VideoMetum < Datapool::ResourceMetum
   }
 
   CRAWL_VIDEO_ROOT_PATH = "project/crawler/videos/"
+  CRAWL_VIDEO_BACKUP_PATH = "backup/crawler/videos/"
+
+  def s3_path
+    return CRAWL_VIDEO_ROOT_PATH
+  end
+
+  def backup_s3_path
+    return CRAWL_VIDEO_BACKUP_PATH
+  end
 
   def self.file_extensions
     return VIDEO_FILE_EXTENSIONS

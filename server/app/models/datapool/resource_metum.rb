@@ -3,6 +3,9 @@ class Datapool::ResourceMetum < ApplicationRecord
 
   S3_ROOT_URL = "https://taptappun.s3.amazonaws.com/"
 
+  CRAWL_RESOURCE_ROOT_PATH = "project/crawler/resources/"
+  CRAWL_RESOURCE_BACKUP_PATH = "backup/crawler/resources/"
+
   def src
     url = Addressable::URI.parse(self.origin_src)
     url.query = self.query
@@ -13,6 +16,14 @@ class Datapool::ResourceMetum < ApplicationRecord
     origin_src, query = Datapool::ResourceMetum.url_partition(url: url)
     self.origin_src = origin_src
     self.query = query
+  end
+
+  def s3_path
+    return CRAWL_RESOURCE_ROOT_PATH
+  end
+
+  def backup_s3_path
+    return CRAWL_RESOURCE_BACKUP_PATH
   end
 
   def self.find_origin_src_by_url(url:)
@@ -151,49 +162,20 @@ class Datapool::ResourceMetum < ApplicationRecord
     end
   end
 
-  def self.crawler_routine!
-    Homepage::UploadJobQueue.cleanup!
-    Datapool::Website.resource_crawl!
-    Datapool::ImageMetum.backup!
-  end
-
-  def self.upload_to_s3(binary, filepath)
-    s3 = Aws::S3::Client.new
-    s3.put_object(bucket: "taptappun",body: binary, key: filepath, acl: "public-read")
-  end
-
-  def download_resource_response
+  def download_resource
     aurl = Addressable::URI.parse(self.src)
     client = HTTPClient.new
     client.connect_timeout = 300
     client.send_timeout    = 300
     client.receive_timeout = 300
     client.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
-    response = nil
-    begin
-      response = client.get(aurl.to_s)
-    rescue => e
+    response = client.get(aurl.to_s)
+    if response.blank? || (response.status >= 300 && !(302..304).cover?(response.status))
       Rails.logger.warn("download error #{self.class.to_s}_#{self.id}:#{aurl.to_s}")
+      return nil
+    else
+      return response.body
     end
-    return response
-  end
-
-  def self.compress_to_zip(zip_filepath:, resources: [])
-    filename_hash = {}
-    Zip::OutputStream.open(zip_filepath) do |stream|
-      resources.each do |resource|
-        response = resource.download_resource_response
-        next if response.blank? || (response.status >= 300 && !(302..304).cover?(response.status))
-        if filename_hash[resource.save_filename].nil?
-          stream.put_next_entry(resource.save_filename)
-        else
-          stream.put_next_entry(SecureRandom.hex + File.extname(resource.save_filename))
-        end
-        stream.print(response.body)
-        filename_hash[resource.save_filename] = resource
-      end
-    end
-    return zip_filepath
   end
 
   private

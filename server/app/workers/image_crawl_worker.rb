@@ -1,6 +1,4 @@
-class ImageCrawlWorker
-  include Sidekiq::Worker
-
+class ImageCrawlWorker < CrawlWorkerBase
   def perform(request_params, upload_job_id)
     upload_job = Homepage::UploadJobQueue.find_by(id: upload_job_id)
     upload_job.executing!
@@ -44,25 +42,6 @@ class ImageCrawlWorker
       images = Datapool::GoogleImageSearch.crawl_images!(keyword: keyword)
     end
     upload_job.save!
-    if images.blank?
-      upload_job.failed!
-      return
-    end
-    take_over_hash = {
-      homepage_access_id: upload_job.homepage_access_id,
-      token: upload_job.token,
-      from_type: upload_job.from_type,
-      state: upload_job.state,
-      options: upload_job.options
-    }
-    # 画像の数が多いとメモリに乗り切らないおそれがあるので500件ずつに区切って処理を行おうと思う
-    images.each_slice(500).with_index do |slice_images, index|
-      if index == 0
-        job = upload_job
-      else
-        job = Homepage::UploadJobQueue.create(take_over_hash)
-      end
-      job.compress_and_upload_images!(images: slice_images)
-    end
+    resources_in_one_package_and_upload_s3!(upload_job: upload_job, resources: images, split_size: 500)
   end
 end

@@ -18,7 +18,7 @@ every :day, at: '7:00' do
 end
 
 every :day, at: '0:00' do
-  runner "Datapool::ResourceMetum.crawler_routine!"
+  runner "ResourceUtility.crawler_routine!"
 end
 
 =begin

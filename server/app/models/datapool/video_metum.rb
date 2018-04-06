@@ -2,15 +2,16 @@
 #
 # Table name: datapool_video_meta
 #
-#  id              :integer          not null, primary key
-#  type            :string(255)
-#  title           :string(255)      not null
-#  front_image_url :text(65535)
-#  data_category   :integer          default("file"), not null
-#  bitrate         :integer          default(0), not null
-#  origin_src      :string(255)      not null
-#  query           :text(65535)
-#  options         :text(65535)
+#  id                :integer          not null, primary key
+#  type              :string(255)
+#  title             :string(255)      not null
+#  front_image_url   :text(65535)
+#  data_category     :integer          default("file"), not null
+#  bitrate           :integer          default(0), not null
+#  origin_src        :string(255)      not null
+#  query             :text(65535)
+#  options           :text(65535)
+#  original_filename :string(255)
 #
 # Indexes
 #
@@ -93,6 +94,8 @@ class Datapool::VideoMetum < Datapool::ResourceMetum
         video_metum.data_category = "file"
       end
     end
+    filename = self.match_filename(video_metum.src.to_s)
+    video_metum.set_original_filename(filename)
     return video_metum
   end
 

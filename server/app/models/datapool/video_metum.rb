@@ -8,10 +8,10 @@
 #  front_image_url   :text(65535)
 #  data_category     :integer          default("file"), not null
 #  bitrate           :integer          default(0), not null
+#  original_filename :string(255)
 #  origin_src        :string(255)      not null
 #  query             :text(65535)
 #  options           :text(65535)
-#  original_filename :string(255)
 #
 # Indexes
 #
@@ -50,15 +50,6 @@ class Datapool::VideoMetum < Datapool::ResourceMetum
     ".swf"
   ]
 
-  YOUTUBE_HOSTS = [
-    "www.youtube.com",
-    "youtu.be"
-  ]
-
-  NICONICO_VIDEO_HOSTS = [
-    "www.nicovideo.jp"
-  ]
-
   enum data_category: {
     file: 0,
     streaming: 1
@@ -80,7 +71,13 @@ class Datapool::VideoMetum < Datapool::ResourceMetum
   end
 
   def self.new_video(video_url:, title:, file_genre: , options: {})
-    video_metum = self.new(
+    video_clazz = Datapool::VideoMetum
+    if Datapool::YoutubeVideoMetum.youtube?(video_url)
+      video_clazz = Datapool::YoutubeVideoMetum
+    elsif Datapool::NiconicoVideoMetum.niconico_video?(video_url)
+      video_clazz = Datapool::NiconicoVideoMetum
+    end
+    video_metum = video_clazz.new(
       title: title,
       data_category: file_genre,
       options: {
@@ -88,7 +85,7 @@ class Datapool::VideoMetum < Datapool::ResourceMetum
     )
     video_metum.src = video_url
     if file_genre.blank?
-      if self.streaming_site?(video_metum.src)
+      if video_metum.type == "Datapool::YoutubeVideoMetum" || video_metum.type == "Datapool::NiconicoVideoMetum"
         video_metum.data_category = "streaming"
       else
         video_metum.data_category = "file"
@@ -100,11 +97,6 @@ class Datapool::VideoMetum < Datapool::ResourceMetum
   end
 
   def self.videofile?(url)
-    return VIDEO_FILE_EXTENSIONS.include?(File.extname(url)) || self.streaming_site?(url)
-  end
-
-  def self.streaming_site?(url)
-    aurl = Addressable::URI.parse(url.to_s)
-    return YOUTUBE_HOSTS.include?(aurl.host) || (NICONICO_VIDEO_HOSTS.include?(aurl.host) && aurl.path.include?("/watch"))
+    return VIDEO_FILE_EXTENSIONS.include?(File.extname(url)) || Datapool::NiconicoVideoMetum.niconico_video?(url) || Datapool::YoutubeVideoMetum.youtube?(url)
   end
 end

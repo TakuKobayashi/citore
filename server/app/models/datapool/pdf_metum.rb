@@ -20,8 +20,23 @@ class Datapool::PdfMetum < ApplicationRecord
   serialize :options, JSON
   has_many :pages, class_name: 'Datapool::PdfPageMetum', foreign_key: :datapool_pdf_metum_id
 
+  CRAWL_PDF_ROOT_PATH = "project/crawler/pdfs/"
+  CRAWL_PDF_BACKUP_PATH = "backup/crawler/pdfs/"
+
+  def s3_path
+    return CRAWL_PDF_ROOT_PATH
+  end
+
+  def backup_s3_path
+    return CRAWL_PDF_BACKUP_PATH
+  end
+
   def self.file_extensions
     return [".pdf"]
+  end
+
+  def directory_name
+    return "pdfs"
   end
 
   def self.pdffile?(filename)

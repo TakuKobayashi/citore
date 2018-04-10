@@ -26,6 +26,10 @@ class Datapool::ResourceMetum < ApplicationRecord
     return CRAWL_RESOURCE_BACKUP_PATH
   end
 
+  def directory_name
+    return "resources"
+  end
+
   def self.find_origin_src_by_url(url:)
     urls = [url].flatten.uniq
     origin_srces = []

@@ -58,6 +58,10 @@ class Datapool::ImageMetum < Datapool::ResourceMetum
     return CRAWL_IMAGE_BACKUP_PATH
   end
 
+  def directory_name
+    return "images"
+  end
+
   def self.imagefile?(url)
     aurl = Addressable::URI.parse(url.to_s)
     return IMAGE_FILE_EXTENSIONS.include?(File.extname(url)) || aurl.scheme == "data"

@@ -66,6 +66,10 @@ class Datapool::VideoMetum < Datapool::ResourceMetum
     return CRAWL_VIDEO_BACKUP_PATH
   end
 
+  def directory_name
+    return "videos"
+  end
+
   def self.file_extensions
     return VIDEO_FILE_EXTENSIONS
   end

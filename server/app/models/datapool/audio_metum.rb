@@ -69,6 +69,10 @@ class Datapool::AudioMetum < Datapool::ResourceMetum
     return AUDIO_FILE_EXTENSIONS
   end
 
+  def directory_name
+    return "audios"
+  end
+
   def save_filename
     if self.original_filename.present?
       return self.original_filename

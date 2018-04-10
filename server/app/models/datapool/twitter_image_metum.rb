@@ -97,11 +97,7 @@ class Datapool::TwitterImageMetum < Datapool::ImageMetum
       end
     end
     images.uniq!(&:src)
-    import_videos = videos.select{|v| twitter_videos[v.src].blank? }.uniq(&:src)
-    import_websites = websites.select{|w| twitter_websites[w.src].blank? }.uniq(&:src)
-    self.import!(images.select(&:new_record?))
-    Datapool::TwitterVideoMetum.import!(import_videos)
-    Datapool::TwitterWebsite.import!(import_websites)
+    self.import_resources!(resources: images + videos + websites)
     if quoteds_tweets.present?
       images += self.generate_images(tweets: quoteds_tweets, options: options)
     end
@@ -112,8 +108,9 @@ class Datapool::TwitterImageMetum < Datapool::ImageMetum
     tweet_text = Sanitizer.basic_sanitize(tweet.text)
     tweet_text = Sanitizer.delete_urls(tweet_text)
     image = self.constract(
-      image_url: image_url.to_s,
+      url: image_url.to_s,
       title: tweet_text,
+      check_file: false,
       options: {
         tweet_id: tweet.id
       }.merge(options)

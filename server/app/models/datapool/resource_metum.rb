@@ -90,7 +90,7 @@ class Datapool::ResourceMetum < ApplicationRecord
       if self.base_class.to_s == "Datapool::VideoMetum"
         new_resource_class = self.new_video(video_url: url, title: title, file_genre: file_genre, options: options)
       else
-        video_clazz = Datapool::VideoMetum
+        video_clazz = Datapool::WebSiteVideoMetum
         if Datapool::YoutubeVideoMetum.youtube?(url)
           video_clazz = Datapool::YoutubeVideoMetum
         elsif Datapool::NiconicoVideoMetum.niconico_video?(url)
@@ -106,7 +106,7 @@ class Datapool::ResourceMetum < ApplicationRecord
       if self.base_class.to_s == "Datapool::AudioMetum"
         new_resource_class = self.new_audio(audio_url: url, title: title, file_genre: file_genre, options: options)
       else
-        audio_clazz = Datapool::AudioMetum
+        audio_clazz = Datapool::WebSiteAudioMetum
         if Datapool::YoutubeVideoMetum.youtube?(url)
           audio_clazz = Datapool::YoutubeAudioMetum
         elsif Datapool::NiconicoVideoMetum.niconico_video?(url)

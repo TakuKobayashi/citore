@@ -85,7 +85,13 @@ class Datapool::ResourceMetum < ApplicationRecord
       if self.base_class.to_s == "Datapool::VideoMetum"
         new_resource_class = self.new_video(video_url: url, title: title, file_genre: file_genre, options: options)
       else
-        new_resource_class = Datapool::VideoMetum.new_video(video_url: url, title: title, file_genre: file_genre, options: options)
+        video_clazz = Datapool::VideoMetum
+        if Datapool::YoutubeVideoMetum.youtube?(url)
+          video_clazz = Datapool::YoutubeVideoMetum
+        elsif Datapool::NiconicoVideoMetum.niconico_video?(url)
+          video_clazz = Datapool::NiconicoVideoMetum
+        end
+        new_resource_class = video_clazz.new_video(video_url: url, title: title, file_genre: file_genre, options: options)
       end
       if new_resource_class.present?
         return new_resource_class
@@ -95,7 +101,13 @@ class Datapool::ResourceMetum < ApplicationRecord
       if self.base_class.to_s == "Datapool::AudioMetum"
         new_resource_class = self.new_audio(audio_url: url, title: title, file_genre: file_genre, options: options)
       else
-        new_resource_class = Datapool::WebSiteAudioMetum.new_audio(audio_url: url, title: title, file_genre: file_genre, options: options)
+        audio_clazz = Datapool::AudioMetum
+        if Datapool::YoutubeVideoMetum.youtube?(url)
+          audio_clazz = Datapool::YoutubeAudioMetum
+        elsif Datapool::NiconicoVideoMetum.niconico_video?(url)
+          audio_clazz = Datapool::NiconicoAudioMetum
+        end
+        new_resource_class = audio_clazz.new_audio(audio_url: url, title: title, file_genre: file_genre, options: options)
       end
       if new_resource_class.present?
         return new_resource_class

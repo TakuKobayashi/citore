@@ -71,13 +71,7 @@ class Datapool::VideoMetum < Datapool::ResourceMetum
   end
 
   def self.new_video(video_url:, title:, file_genre: , options: {})
-    video_clazz = Datapool::VideoMetum
-    if Datapool::YoutubeVideoMetum.youtube?(video_url)
-      video_clazz = Datapool::YoutubeVideoMetum
-    elsif Datapool::NiconicoVideoMetum.niconico_video?(video_url)
-      video_clazz = Datapool::NiconicoVideoMetum
-    end
-    video_metum = video_clazz.new(
+    video_metum = self.new(
       title: title,
       data_category: file_genre,
       options: {

@@ -85,7 +85,7 @@ class Datapool::AudioMetum < Datapool::ResourceMetum
     )
     audio_metum.src = audio_url
     if file_genre.blank?
-      if Datapool::VideoMetum.streaming_site?(audio_metum.src)
+      if audio_metum.type == "Datapool::YoutubeAudioMetum" || audio_metum.type == "Datapool::NiconicoAudioMetum"
         audio_metum.data_category = "video_streaming"
       elsif Datapool::VideoMetum.videofile?(audio_metum.src)
         audio_metum.data_category = "video_file"

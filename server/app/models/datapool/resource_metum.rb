@@ -156,7 +156,7 @@ class Datapool::ResourceMetum < ApplicationRecord
 
     clazz_imports.each do |clazz, imports|
       src_resources = clazz.find_origin_src_by_url(url: imports.map(&:src).uniq).index_by(&:src)
-      import_resources = imports.select{|import| src_resources[import.src].blank? }
+      import_resources = imports.select{|imp| src_resources[imp.src].blank? }
       if import_resources.present?
         clazz.import!(import_resources)
       end

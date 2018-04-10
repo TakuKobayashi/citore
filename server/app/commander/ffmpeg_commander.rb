@@ -71,7 +71,7 @@ class FfmpegCommander
     output_filepath:,
     image_width:,
     image_height:,
-    crop_frame_second: 0,
+    crop_frame_second: 0
     )
     command = "ffmpeg -ss #{crop_frame_second} -i #{input_filepath} -vframes 1 -vf select='eq(pict_type\,I)' -s #{image_width}x#{image_height} #{output_filepath}"
     result = system(command)

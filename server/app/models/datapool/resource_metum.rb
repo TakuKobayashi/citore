@@ -49,6 +49,7 @@ class Datapool::ResourceMetum < ApplicationRecord
   end
 
   def self.constract(url:, title:, check_file: false, file_genre: nil, priority_check_class: nil, options: {})
+    url.strip!
     new_resource_class = nil
     if priority_check_class.present?
       new_resource_class = priority_check_class.to_s.constantize.constract(
@@ -176,18 +177,8 @@ class Datapool::ResourceMetum < ApplicationRecord
 
   def download_resource
     aurl = Addressable::URI.parse(self.src)
-    client = HTTPClient.new
-    client.connect_timeout = 300
-    client.send_timeout    = 300
-    client.receive_timeout = 300
-    client.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
-    response = client.get(aurl.to_s)
-    if response.blank? || (response.status >= 300 && !(302..304).cover?(response.status))
-      Rails.logger.warn("download error #{self.class.to_s}_#{self.id}:#{aurl.to_s}")
-      return nil
-    else
-      return response.body
-    end
+    response_body = request_and_response_body(url: aurl.to_s, options: {:follow_redirect => true})
+    return response_body
   end
 
   private

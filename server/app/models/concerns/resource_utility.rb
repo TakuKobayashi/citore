@@ -4,7 +4,7 @@ module ResourceUtility
     Zip::OutputStream.open(zip_filepath) do |stream|
       resources.each do |resource|
         response_body = resource.download_resource
-        next if response_body.nil?
+        next if response_body.brank?
         if filename_hash[resource.save_filename].nil?
           stream.put_next_entry(resource.save_filename)
         else

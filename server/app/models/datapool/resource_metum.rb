@@ -177,7 +177,7 @@ class Datapool::ResourceMetum < ApplicationRecord
 
   def download_resource
     aurl = Addressable::URI.parse(self.src)
-    response_body = request_and_response_body(url: aurl.to_s, options: {:follow_redirect => true})
+    response_body = RequestParser.request_and_response_body(url: aurl.to_s, options: {:follow_redirect => true})
     return response_body
   end
 

@@ -1,16 +1,16 @@
 module ResourceUtility
   def self.download_and_compress_to_zip(zip_filepath:, resources: [])
     filename_hash = {}
-    resource_groups = resources.group_by{|resource| resource.directory_name }
+    resource_groups = resources.group_by{|res| res.directory_name }
     Zip::OutputStream.open(zip_filepath) do |stream|
-      resource_groups.each do |directory_name, resources_arr|
+      resource_groups.each do |dir_name, resources_arr|
         resources_arr.each do |resource|
           response_body = resource.download_resource
           next if response_body.blank?
           if filename_hash[resource.save_filename].nil?
-            stream.put_next_entry(resource.directory_name + "/" + resource.save_filename)
+            stream.put_next_entry(dir_name + "/" + resource.save_filename)
           else
-            stream.put_next_entry(resource.directory_name + "/" + SecureRandom.hex + File.extname(resource.save_filename))
+            stream.put_next_entry(dir_name + "/" + SecureRandom.hex + File.extname(resource.save_filename))
           end
           stream.print(response_body)
           filename_hash[resource.save_filename] = resource

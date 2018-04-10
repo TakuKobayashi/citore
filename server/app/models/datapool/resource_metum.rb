@@ -54,11 +54,12 @@ class Datapool::ResourceMetum < ApplicationRecord
 
   def self.constract(url:, title:, check_file: false, file_genre: nil, priority_check_class: nil, options: {})
     url.strip!
+    sanitized_title = Sanitizer.basic_sanitize(title)
     new_resource_class = nil
     if priority_check_class.present?
       new_resource_class = priority_check_class.to_s.constantize.constract(
         url: url,
-        title: title,
+        title: sanitized_title,
         priority_check_class: nil,
         check_file: check_file,
         file_genre: file_genre,
@@ -68,9 +69,9 @@ class Datapool::ResourceMetum < ApplicationRecord
     end
     if Datapool::ImageMetum.imagefile?(url)
       if self.base_class.to_s == "Datapool::ImageMetum"
-        new_resource_class = self.new_image(image_url: url, title: title, check_image_file: check_file, options: options)
+        new_resource_class = self.new_image(image_url: url, title: sanitized_title, check_image_file: check_file, options: options)
       else
-        new_resource_class = Datapool::WebSiteImageMetum.new_image(image_url: url, title: title, check_image_file: check_file, options: options)
+        new_resource_class = Datapool::WebSiteImageMetum.new_image(image_url: url, title: sanitized_title, check_image_file: check_file, options: options)
       end
       if new_resource_class.present?
         return new_resource_class
@@ -78,9 +79,9 @@ class Datapool::ResourceMetum < ApplicationRecord
     end
     if Datapool::PdfMetum.pdffile?(url)
       if self.base_class.to_s == "Datapool::PdfMetum"
-        new_resource_class = self.new_pdf(pdf_url: url, title: title, check_pdf_file: check_file, options: options)
+        new_resource_class = self.new_pdf(pdf_url: url, title: sanitized_title, check_pdf_file: check_file, options: options)
       else
-        new_resource_class = Datapool::PdfMetum.new_pdf(pdf_url: url, title: title, check_pdf_file: check_file, options: options)
+        new_resource_class = Datapool::PdfMetum.new_pdf(pdf_url: url, title: sanitized_title, check_pdf_file: check_file, options: options)
       end
       if new_resource_class.present?
         return new_resource_class
@@ -88,7 +89,7 @@ class Datapool::ResourceMetum < ApplicationRecord
     end
     if Datapool::VideoMetum.videofile?(url)
       if self.base_class.to_s == "Datapool::VideoMetum"
-        new_resource_class = self.new_video(video_url: url, title: title, file_genre: file_genre, options: options)
+        new_resource_class = self.new_video(video_url: url, title: sanitized_title, file_genre: file_genre, options: options)
       else
         video_clazz = Datapool::WebSiteVideoMetum
         if Datapool::YoutubeVideoMetum.youtube?(url)
@@ -96,7 +97,7 @@ class Datapool::ResourceMetum < ApplicationRecord
         elsif Datapool::NiconicoVideoMetum.niconico_video?(url)
           video_clazz = Datapool::NiconicoVideoMetum
         end
-        new_resource_class = video_clazz.new_video(video_url: url, title: title, file_genre: file_genre, options: options)
+        new_resource_class = video_clazz.new_video(video_url: url, title: sanitized_title, file_genre: file_genre, options: options)
       end
       if new_resource_class.present?
         return new_resource_class
@@ -104,7 +105,7 @@ class Datapool::ResourceMetum < ApplicationRecord
     end
     if Datapool::AudioMetum.audiofile?(url)
       if self.base_class.to_s == "Datapool::AudioMetum"
-        new_resource_class = self.new_audio(audio_url: url, title: title, file_genre: file_genre, options: options)
+        new_resource_class = self.new_audio(audio_url: url, title: sanitized_title, file_genre: file_genre, options: options)
       else
         audio_clazz = Datapool::WebSiteAudioMetum
         if Datapool::YoutubeVideoMetum.youtube?(url)
@@ -112,16 +113,16 @@ class Datapool::ResourceMetum < ApplicationRecord
         elsif Datapool::NiconicoVideoMetum.niconico_video?(url)
           audio_clazz = Datapool::NiconicoAudioMetum
         end
-        new_resource_class = audio_clazz.new_audio(audio_url: url, title: title, file_genre: file_genre, options: options)
+        new_resource_class = audio_clazz.new_audio(audio_url: url, title: sanitized_title, file_genre: file_genre, options: options)
       end
       if new_resource_class.present?
         return new_resource_class
       end
     end
     if self.base_class.to_s == "Datapool::Website"
-      new_resource_class = self.new_website(url: url, title: title, options: options)
+      new_resource_class = self.new_website(url: url, title: sanitized_title, options: options)
     else
-      new_resource_class = Datapool::Website.new_website(url: url, title: title, options: options)
+      new_resource_class = Datapool::Website.new_website(url: url, title: sanitized_title, options: options)
     end
     return new_resource_class
   end

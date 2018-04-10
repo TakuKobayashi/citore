@@ -44,7 +44,7 @@ module RequestParser
         self.record_log(url: url, method: method, params: params, header: header, options: options, insert_top_messages: ["request Error Status Code: #{response.status}"])
       end
       result = response.body
-    rescue SocketError, HTTPClient::ConnectTimeoutError => e
+    rescue SocketError, HTTPClient::ConnectTimeoutError, HTTPClient::BadResponseError, Addressable::URI::InvalidURIError => e
       self.record_log(url: url, method: method, params: params, header: header, options: options, error_messages: ["error: #{e.message}"] + e.backtrace, insert_top_messages: ["exception:" + e.class.to_s])
     end
     return result

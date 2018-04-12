@@ -64,7 +64,7 @@ class Datapool::ImageMetum < Datapool::ResourceMetum
 
   def self.imagefile?(url)
     aurl = Addressable::URI.parse(url.to_s)
-    return IMAGE_FILE_EXTENSIONS.include?(File.extname(url)) || aurl.scheme == "data"
+    return IMAGE_FILE_EXTENSIONS.any?{|ext| File.extname(aurl.path).downcase.start_with?(ext) } || aurl.scheme == "data"
   end
 
   def self.file_extensions

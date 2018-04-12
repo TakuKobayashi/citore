@@ -102,7 +102,7 @@ class Datapool::AudioMetum < Datapool::ResourceMetum
     return audio_metum
   end
 
-  def self.audiofile?(filename)
-    return AUDIO_FILE_EXTENSIONS.include?(File.extname(filename))
+  def self.audiofile?(url)
+    return AUDIO_FILE_EXTENSIONS.any?{|ext| File.extname(url).downcase.start_with?(ext) }
   end
 end

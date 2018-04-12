@@ -95,6 +95,6 @@ class Datapool::VideoMetum < Datapool::ResourceMetum
   end
 
   def self.videofile?(url)
-    return VIDEO_FILE_EXTENSIONS.include?(File.extname(url)) || Datapool::NiconicoVideoMetum.niconico_video?(url) || Datapool::YoutubeVideoMetum.youtube?(url)
+    return VIDEO_FILE_EXTENSIONS.any?{|ext| File.extname(url).downcase.start_with?(ext) } || Datapool::NiconicoVideoMetum.niconico_video?(url) || Datapool::YoutubeVideoMetum.youtube?(url)
   end
 end

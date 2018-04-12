@@ -40,7 +40,7 @@ class Datapool::PdfMetum < ApplicationRecord
   end
 
   def self.pdffile?(filename)
-    return File.extname(filename).downcase == ".pdf"
+    return File.extname(filename).downcase.start_with?(".pdf")
   end
 
   def self.new_pdf(pdf_url:, title:, check_pdf_file: false, options: {})

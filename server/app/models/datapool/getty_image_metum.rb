@@ -28,9 +28,8 @@ class Datapool::GettyImageMetum < Datapool::ImageMetum
       json["images"].each do |data_hash|
         image_url = data_hash["display_sizes"].map{|dhash| Addressable::URI.parse(dhash["uri"].to_s) }.map{|url| url.origin + url.path }.uniq.sample
         image = self.constract(
-          image_url: image_url,
+          url: image_url,
           title: data_hash["title"],
-          check_image_file: false,
           options: {
             keywords: keyword.to_s,
             id: data_hash["id"],
@@ -42,11 +41,7 @@ class Datapool::GettyImageMetum < Datapool::ImageMetum
         images << image
       end
       break if images.blank?
-      src_images = Datapool::ImageMetum.find_origin_src_by_url(url: images.map(&:src)).index_by(&:src)
-      import_images = images.select{|image| src_images[image.src].blank? }
-      if import_images.present?
-        self.import!(import_images)
-      end
+      self.import_resources!(resources: images)
       all_images += images
       break if json["result_count"].to_i <= (page * 100) + images.size
       page = page + 1

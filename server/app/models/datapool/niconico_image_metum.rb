@@ -27,9 +27,8 @@ class Datapool::NiconicoImageMetum < Datapool::ImageMetum
       json = RequestParser.request_and_parse_json(url: NICONICO_CONTENT_API_URL, params: {q: keyword, targets: "title,description,tags", _context: "taptappun", fields: "contentId,title,tags,categoryTags,thumbnailUrl", _sort: "-startTime", _offset: counter, _limit: 100})
       json["data"].each do |data_hash|
         image = self.constract(
-          image_url: data_hash["thumbnailUrl"],
+          url: data_hash["thumbnailUrl"],
           title: data_hash["title"],
-          check_image_file: false,
           options: {
             keywords: keyword.to_s,
             content_id: data_hash["contentId"],
@@ -40,11 +39,7 @@ class Datapool::NiconicoImageMetum < Datapool::ImageMetum
         images << image
       end
       break if images.blank?
-      src_images = Datapool::ImageMetum.find_origin_src_by_url(url: images.map(&:src)).index_by(&:src)
-      import_images = images.select{|image| src_images[image.src].blank? }
-      if import_images.present?
-        self.import!(import_images)
-      end
+      self.import_resources!(resources: images)
       all_images += images
       counter = counter + images.size
       break if json["meta"]["totalCount"].to_i <= counter

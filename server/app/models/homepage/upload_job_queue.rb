@@ -62,6 +62,10 @@ class Homepage::UploadJobQueue < ApplicationRecord
     Tempfile.create(SecureRandom.hex) do |tempfile|
       self.compressing!
       zippath = ResourceUtility.download_and_compress_to_zip(zip_filepath: tempfile.path, resources: resources)
+      if zippath.blank?
+        self.failed!
+        return false
+      end
       self.uploading!
       upload_resource_path = resources.group_by{|resource| resource.s3_path }.max_by{|path, resources| resources.size }.first
       if upload_resource_path.blank?

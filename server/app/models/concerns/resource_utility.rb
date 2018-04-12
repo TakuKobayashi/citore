@@ -2,6 +2,7 @@ module ResourceUtility
   def self.download_and_compress_to_zip(zip_filepath:, resources: [])
     filename_hash = {}
     resource_groups = resources.group_by{|res| res.directory_name }
+    content_count = 0
     Zip::OutputStream.open(zip_filepath) do |stream|
       resource_groups.each do |dir_name, resources_arr|
         resources_arr.each do |resource|
@@ -14,10 +15,15 @@ module ResourceUtility
           end
           stream.print(response_body)
           filename_hash[resource.save_filename] = resource
+          content_count = content_count+ 1
         end
       end
     end
-    return zip_filepath
+    if content_count.zero?
+      return nil
+    else
+      return zip_filepath
+    end
   end
 
   def self.crawler_routine!

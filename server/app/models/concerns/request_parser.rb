@@ -39,7 +39,9 @@ module RequestParser
     http_client.receive_timeout = 600
     result = ""
     begin
-      response = http_client.send(method, url, {query: params, header: header}.merge(options))
+      request_option_hash = {query: params, header: header}.merge(options)
+      request_option_hash.delete_if{|k, v| v.blank? }
+      response = http_client.send(method, url, request_option_hash)
       if response.status >= 400
         self.record_log(url: url, method: method, params: params, header: header, options: options, insert_top_messages: ["request Error Status Code: #{response.status}"])
       end

@@ -38,7 +38,7 @@ class Datapool::FrickrImageMetum < Datapool::ImageMetum
       image_counter += flickr_images.size
       break if image_counter >= flickr_images.total.to_i
     end
-    return images.uniq
+    return images.uniq(&:src)
   end
 
   private

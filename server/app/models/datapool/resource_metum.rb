@@ -7,7 +7,7 @@ class Datapool::ResourceMetum < ApplicationRecord
   CRAWL_RESOURCE_BACKUP_PATH = "backup/crawler/resources/"
 
   def src
-    return self.origin_src + self.other_src
+    return self.origin_src + self.other_src.to_s
   end
 
   def src=(url)

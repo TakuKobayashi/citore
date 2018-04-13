@@ -7,15 +7,13 @@ class Datapool::ResourceMetum < ApplicationRecord
   CRAWL_RESOURCE_BACKUP_PATH = "backup/crawler/resources/"
 
   def src
-    url = Addressable::URI.parse(self.origin_src)
-    url.query = self.query
-    return url.to_s
+    return self.origin_src + self.other_src
   end
 
   def src=(url)
-    origin_src, query = Datapool::ResourceMetum.url_partition(url: url)
+    origin_src, other_src = Datapool::ResourceMetum.url_partition(url: url)
     self.origin_src = origin_src
-    self.query = query
+    self.other_src = other_src
   end
 
   def s3_path
@@ -34,7 +32,7 @@ class Datapool::ResourceMetum < ApplicationRecord
     urls = [url].flatten.uniq
     origin_srces = []
     urls.each do |u|
-      origin_src, query = Datapool::ResourceMetum.url_partition(url: u)
+      origin_src, other = Datapool::ResourceMetum.url_partition(url: u)
       origin_srces << origin_src
     end
     return self.where(origin_src: origin_srces)
@@ -196,9 +194,15 @@ class Datapool::ResourceMetum < ApplicationRecord
         word_counter = word_counter + word.size + 1
         word_counter <= 255
       end
-      return srces.join("/"), other_pathes.join("/")
+      origin_src = srces.join("/")
+      other_src = other_pathes.join("/")
     else
-      return pure_url, aurl.query
+      origin_src = pure_url
+      other_src = ""
     end
+    if aurl.query.present?
+      other_src += "?" + aurl.query
+    end
+    return origin_src, other_src
   end
 end

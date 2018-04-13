@@ -6,7 +6,7 @@ class CreateDatapoolAudioMeta < ActiveRecord::Migration[5.1]
       t.string :title, null: false
       t.string :original_filename
       t.string :origin_src, null: false
-      t.text :query
+      t.text :other_src
       t.text :options
     end
     add_index :datapool_audio_meta, :title

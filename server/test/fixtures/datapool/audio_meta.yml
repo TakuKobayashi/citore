@@ -8,7 +8,7 @@
 #  title             :string(255)      not null
 #  original_filename :string(255)
 #  origin_src        :string(255)      not null
-#  query             :text(65535)
+#  other_src         :text(65535)
 #  options           :text(65535)
 #
 # Indexes

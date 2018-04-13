@@ -9,7 +9,7 @@
 #  important         :boolean          default(FALSE), not null
 #  data_category     :integer          default(0), not null
 #  origin_src        :string(255)      not null
-#  query             :text(65535)
+#  other_src         :text(65535)
 #  options           :text(65535)
 #
 # Indexes

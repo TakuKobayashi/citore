@@ -7,7 +7,7 @@ class CreateDatapoolVideoMeta < ActiveRecord::Migration[5.1]
       t.integer :data_category, null: false, default: 0
       t.integer :bitrate, null: false, default: 0
       t.string :origin_src, null: false
-      t.text :query
+      t.text :other_src
       t.text :options
     end
 

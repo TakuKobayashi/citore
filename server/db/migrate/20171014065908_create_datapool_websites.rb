@@ -4,7 +4,7 @@ class CreateDatapoolWebsites < ActiveRecord::Migration[5.1]
       t.string :type
       t.string :title, null: false
       t.string :origin_src, null: false
-      t.text :query
+      t.text :other_src
       t.text :options
     end
 

@@ -6,7 +6,7 @@
 #  type       :string(255)
 #  title      :string(255)      not null
 #  origin_src :string(255)      not null
-#  query      :text(65535)
+#  other_src  :text(65535)
 #  options    :text(65535)
 #
 # Indexes

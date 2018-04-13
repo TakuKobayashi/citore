@@ -8,10 +8,10 @@
 #  front_image_url   :text(65535)
 #  data_category     :integer          default("file"), not null
 #  bitrate           :integer          default(0), not null
-#  origin_src        :string(255)      not null
-#  query             :text(65535)
-#  options           :text(65535)
 #  original_filename :string(255)
+#  origin_src        :string(255)      not null
+#  other_src         :text(65535)
+#  options           :text(65535)
 #
 # Indexes
 #

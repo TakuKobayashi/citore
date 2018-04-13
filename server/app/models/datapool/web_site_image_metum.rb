@@ -30,11 +30,7 @@ class Datapool::WebSiteImageMetum < Datapool::ImageMetum
       images += self.generate_objects_from_parsed_html(doc: doc, filter: filter, from_site_url: address_url.to_s)
     end
     images.uniq!(&:src)
-    src_images = Datapool::ImageMetum.find_origin_src_by_url(url: images.map(&:src)).index_by(&:src)
-    import_images = images.select{|image| src_images[image.src].blank? }
-    if import_images.present?
-      self.import!(import_images)
-    end
+    self.import_resources!(resources: images)
     return images
   end
 
@@ -71,9 +67,9 @@ class Datapool::WebSiteImageMetum < Datapool::ImageMetum
         image_title = Sanitizer.basic_sanitize(doc.title.to_s)
       end
       image = self.constract(
-        image_url: image_url.to_s,
+        url: image_url.to_s,
         title: image_title,
-        check_image_file: true,
+        check_file: true,
         options: {
           from_url: from_site_url.to_s
         }

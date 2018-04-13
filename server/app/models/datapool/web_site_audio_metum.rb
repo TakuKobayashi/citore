@@ -107,13 +107,7 @@ class Datapool::WebSiteAudioMetum < Datapool::AudioMetum
       audios << audio_metum
     end
     audios.uniq!(&:src)
-    if audios.present?
-      src_audios = Datapool::AudioMetum.find_origin_src_by_url(url: audios.map(&:src)).index_by(&:src)
-      import_audios = audios.select{|audio| src_audios[audio.src].blank? }
-      if import_audios.present?
-        Datapool::WebSiteAudioMetum.import!(import_audios)
-      end
-    end
+    self.import_resources!(resources: audios)
     return audios
   end
 end

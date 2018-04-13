@@ -73,9 +73,6 @@ class Datapool::TwitterImageMetum < Datapool::ImageMetum
   private
   def self.generate_images(tweets:, options: {})
     images = []
-    twitter_images = Datapool::ImageMetum.find_origin_src_by_url(url: tweets.map{|t| TwitterRecord.get_image_urls_from_tweet(tweet: t) }).index_by(&:src)
-    twitter_videos = Datapool::VideoMetum.find_origin_src_by_url(url: tweets.map{|t| TwitterRecord.get_video_urls_from_tweet(tweet: t) }).index_by(&:src)
-    twitter_websites = Datapool::Website.find_origin_src_by_url(url: tweets.map{|t| t.urls.flat_map{|urle| urle.expanded_url.to_s } }).index_by(&:src)
     videos = []
     websites = []
     quoteds_tweets = []
@@ -83,11 +80,7 @@ class Datapool::TwitterImageMetum < Datapool::ImageMetum
     tweets.each do |tweet|
       image_urls = TwitterRecord.get_image_urls_from_tweet(tweet: tweet)
       image_urls.each do |image_url|
-        if twitter_images[image_url].present?
-          images << twitter_images[image_url]
-        else
-          images << self.constract_image_from_tweet(tweet: tweet, image_url: image_url, options: options)
-        end
+        images << self.constract_image_from_tweet(tweet: tweet, image_url: image_url, options: options)
       end
 
       videos += Datapool::TwitterVideoMetum.constract_from_tweet(tweet: tweet)

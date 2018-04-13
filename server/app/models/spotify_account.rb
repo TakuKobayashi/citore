@@ -67,7 +67,7 @@ class SpotifyAccount < Account
   end
 
   def get_playlists(offset: 0)
-    return RequestParser.request_and_parse_json(url: "https://api.spotify.com/v1/me/playlists", params: {limit: 50, offset: offset}, : {Authorization: "Bearer #{self.token}"})
+    return RequestParser.request_and_parse_json(url: "https://api.spotify.com/v1/me/playlists", params: {limit: 50, offset: offset}, header: {Authorization: "Bearer #{self.token}"})
   end
 
   # artist, playlist, track.

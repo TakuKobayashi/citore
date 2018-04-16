@@ -21,6 +21,14 @@
 #
 
 class Homepage::UploadJobQueue < ApplicationRecord
+  # {
+  #   upload_info: {
+  #     url:
+  #     url_key:
+  #     google_account_id:
+  #   }
+  # }
+  #
   serialize :options, JSON
 
   enum state: {
@@ -67,17 +75,7 @@ class Homepage::UploadJobQueue < ApplicationRecord
         return false
       end
       self.uploading!
-      upload_resource_path = resources.group_by{|resource| resource.s3_path }.max_by{|path, resources| resources.size }.first
-      if upload_resource_path.blank?
-        self.failed!
-        return false
-      end
-      zipfile = File.open(zippath)
-      zipfile_size = zipfile.size
-#      upload_filepath = Rails.root.to_s + "/tmp/#{Time.current.strftime("%Y%m%d_%H%M%S%L")}.zip"
-#      FileUtils.cp(zippath, upload_filepath)
-      upload_filepath = ResourceUtility.upload_s3(zipfile, upload_resource_path + "#{Time.current.strftime("%Y%m%d_%H%M%S%L")}.zip")
-      self.update!(state: :complete, upload_url: Datapool::ResourceMetum::S3_ROOT_URL + upload_filepath, upload_file_size: zipfile_size)
+      upload_complessed_file!(zippath)
     end
   end
 
@@ -93,5 +91,35 @@ class Homepage::UploadJobQueue < ApplicationRecord
     else
       return I18n.t("activerecord.models.datapool_image_metum.other")
     end
+  end
+
+  def upload_complessed_file!(zippath)
+    zipfile = File.open(zippath)
+    zipfile_size = zipfile.size
+    upload_info = options["upload_info"] || {}
+    if upload_info["upload_info"].present?
+      if upload_info["upload_info"]["google_account_id"]
+        google_account = GoogleAccount.find_by(id: upload_info["upload_info"]["google_account_id"])
+        if google_account.present?
+          google_account.upload_to_drive(zipfile)
+          self.update!(state: :complete, upload_file_size: zipfile_size)
+          return true
+        end
+      elsif upload_info["upload_info"]["url"].present? && upload_info["upload_info"]["url_key"].present?
+        RequestParser.request_and_response_body(url: upload_info["upload_info"]["url"], method: :post, body: {upload_info["upload_info"]["url_key"] => zipfile})
+        self.update!(state: :complete, upload_url: upload_info["upload_info"]["url"], upload_file_size: zipfile_size)
+        return true
+      end
+    end
+    upload_resource_path = resources.group_by{|resource| resource.s3_path }.max_by{|path, resources| resources.size }.first
+    if upload_resource_path.blank?
+      self.failed!
+      return false
+    end
+    #      upload_filepath = Rails.root.to_s + "/tmp/#{Time.current.strftime("%Y%m%d_%H%M%S%L")}.zip"
+    #      FileUtils.cp(zippath, upload_filepath)
+    upload_filepath = ResourceUtility.upload_s3(zipfile, upload_resource_path + "#{Time.current.strftime("%Y%m%d_%H%M%S%L")}.zip")
+    self.update!(state: :complete, upload_url: Datapool::ResourceMetum::S3_ROOT_URL + upload_filepath, upload_file_size: zipfile_size)
+    return true
   end
 end

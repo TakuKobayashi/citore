@@ -20,4 +20,5 @@ class Homepage::Access < ApplicationRecord
   has_many :upload_jobs, class_name: 'Homepage::UploadJobQueue', foreign_key: :homepage_access_id
   has_many :accounts, class_name: 'Homepage::Account', foreign_key: :homepage_access_id
   has_one :spotify, class_name: 'SpotifyAccount', as: :user
+  has_one :google, class_name: 'GoogleAccount', as: :user
 end

@@ -1,4 +1,6 @@
 class Tools::ImageCrawlController < Homepage::BaseController
+  include GoogleOperation
+
   before_action :load_upload_jobs, only: :index
   before_action :execute_upload_job, only: [:url_crawl, :twitter_crawl, :flickr_crawl, :google_image_search_crawl, :niconico_crawl, :getty_images_crawl]
 

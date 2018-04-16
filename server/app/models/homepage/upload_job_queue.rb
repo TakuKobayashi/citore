@@ -74,9 +74,9 @@ class Homepage::UploadJobQueue < ApplicationRecord
       end
       zipfile = File.open(zippath)
       zipfile_size = zipfile.size
-      upload_filepath = Rails.root.to_s + "/tmp/#{Time.current.strftime("%Y%m%d_%H%M%S%L")}.zip"
-      FileUtils.cp(zippath, upload_filepath)
-      #upload_filepath = ResourceUtility.upload_s3(zipfile, upload_resource_path + "#{Time.current.strftime("%Y%m%d_%H%M%S%L")}.zip")
+#      upload_filepath = Rails.root.to_s + "/tmp/#{Time.current.strftime("%Y%m%d_%H%M%S%L")}.zip"
+#      FileUtils.cp(zippath, upload_filepath)
+      upload_filepath = ResourceUtility.upload_s3(zipfile, upload_resource_path + "#{Time.current.strftime("%Y%m%d_%H%M%S%L")}.zip")
       self.update!(state: :complete, upload_url: Datapool::ResourceMetum::S3_ROOT_URL + upload_filepath, upload_file_size: zipfile_size)
     end
   end

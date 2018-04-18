@@ -23,6 +23,14 @@
 class SpotifyAccount < Account
   has_many :playlists, class_name: 'SpotifyPlaylist', foreign_key: :account_id
 
+  def self.sign_up!(user: ,omni_auth:)
+    account = self.find_or_initialize_by(user: user, uid: omni_auth.uid)
+    account.token = omni_auth.credentials.token
+    account.expired_at = Time.at(omni_auth.credentials.expires_at)
+    account.options = {extra: omni_auth.extra.to_hash}
+    account.save!
+  end
+
   def import_and_load_playlists!
     import_playlists = []
     playlist_hashes = get_playlists

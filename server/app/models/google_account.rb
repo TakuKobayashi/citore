@@ -21,6 +21,16 @@
 #
 
 class GoogleAccount < Account
+
+  def self.sign_up!(user: ,omni_auth:)
+    account = self.find_or_initialize_by(user: user, uid: omni_auth.uid)
+    account.token = omni_auth.credentials.refresh_token
+    account.token_secret = omni_auth.credentials.token
+    account.expired_at = Time.at(omni_auth.credentials.expires_at)
+    account.options = {extra: omni_auth.extra.to_hash, info: omni_auth.info.to_hash}
+    account.save!
+  end
+
   def upload_to_drive(upload_file)
     pathes = upload_file.path.split("/")
     service = Google::Apis::DriveV3::DriveService.new

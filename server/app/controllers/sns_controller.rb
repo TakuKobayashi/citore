@@ -9,7 +9,13 @@ class SnsController < BaseController
     if session["redirect_url"].present?
       if session["user_id"].present? && session["user_type"].present?
         user = session["user_type"].constantize.find_by(id: session["user_id"])
-        Account.sign_up!(user: user, omni_auth: auth)
+        clazz = Account
+        if auth.provider == "spotify"
+          clazz = SpotifyAccount
+        elsif auth.provider == "google_oauth2"
+          clazz = GoogleAccount
+        end
+        clazz.sign_up!(user: user, omni_auth: auth)
       end
       redirect_to session["redirect_url"]
     else

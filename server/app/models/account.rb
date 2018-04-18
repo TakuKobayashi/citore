@@ -25,13 +25,10 @@ class Account < ApplicationRecord
   belongs_to :user, polymorphic: true, required: false
 
   def self.sign_up!(user: ,omni_auth:)
-    if omni_auth.provider == "spotify"
-      account = SpotifyAccount.find_or_initialize_by(user: user, uid: omni_auth.uid)
-      account.token = omni_auth.credentials.token
-      account.expired_at = Time.at(omni_auth.credentials.expires_at)
-      account.options = {extra: omni_auth.extra.to_hash}
-      account.save!
-    end
+    account = self.find_or_initialize_by(user: user, uid: omni_auth.uid)
+    account.token = omni_auth.credentials.token
+    account.options = {extra: omni_auth.extra.to_hash}
+    account.save!
   end
 
   def expired?

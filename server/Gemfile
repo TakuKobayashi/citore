@@ -55,6 +55,7 @@ gem 'addressable'
 gem 'line-bot-api'
 gem "koala", '~> 2.2'
 gem 'google-api-client', '~> 0.9'
+gem 'google_drive'
 
 gem 'omniauth'
 gem 'omniauth-twitter'
@@ -72,6 +73,7 @@ gem 'rails-i18n', '~> 5.0.0'
 
 gem 'activeadmin', git: 'https://github.com/activeadmin/activeadmin'
 gem 'inherited_resources', git: 'https://github.com/activeadmin/inherited_resources'
+gem 'active_admin_import', git: 'https://github.com/activeadmin-plugins/active_admin_import'
 
 gem 'xml-simple'
 gem 'fastimage'

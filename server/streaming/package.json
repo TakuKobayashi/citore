@@ -10,11 +10,10 @@
   "private": true,
   "dependencies": {
     "dotenv": "*",
-    "express": "^4.16.2",
-    "nodemon": "^1.17.1",
-    "npm": "^5.7.1",
+    "express": "*",
+    "nodemon": "*",
     "twitter": "*",
-    "ws": "^4.1.0",
+    "ws": "^5.1.1",
     "yamljs": "*"
   },
   "repository": {

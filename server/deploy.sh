@@ -1,6 +1,8 @@
 #!/bin/sh
 
+cd ../
 git pull
+cd ./server/
 bundle install
 RAILS_ENV=production rails db:migrate
 RAILS_ENV=production rails assets:clean

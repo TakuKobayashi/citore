@@ -14,6 +14,6 @@ SECRET_KEY_BASE=$(rake secret) rails server -e production -p 3100 -d
 kill -9 `cat tmp/pids/sidekiq.pid`
 RAILS_ENV=production bundle exec sidekiq -C config/sidekiq.yml
 cd ./streaming/
-npm update
+npm install
 forever restart index.js
 cd ../

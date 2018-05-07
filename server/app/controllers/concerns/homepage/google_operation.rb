@@ -1,6 +1,5 @@
 module Homepage
-  module GoogleOperation
-    extend ActiveSupport::Concern
+  module GoogleOperation extend ActiveSupport::Concern
 
   private
   def google_oauth(visitor, callback_url)

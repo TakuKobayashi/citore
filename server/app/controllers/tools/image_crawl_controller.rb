@@ -1,5 +1,4 @@
 class Tools::ImageCrawlController < Homepage::BaseController
-  include Homepage::GoogleOperation
 
   before_action :load_upload_jobs, only: :index
   before_action :execute_upload_job, only: [:url_crawl, :twitter_crawl, :flickr_crawl, :google_image_search_crawl, :niconico_crawl, :getty_images_crawl]
@@ -58,7 +57,12 @@ class Tools::ImageCrawlController < Homepage::BaseController
 
   private
   def check_and_auth_google
-    google_oauth(@visitor, tools_image_crawl_url)
+    if @visitor.google.nil?
+      session["redirect_url"] = tools_image_crawl_url
+      session["user_id"] = @visitor.id
+      session["user_type"] = @visitor.class.to_s
+      redirect_to "/auth/google_oauth2" and return
+    end
   end
 
   def load_upload_jobs

@@ -7,7 +7,8 @@ module ResourceUtility
       resource_groups.each do |dir_name, resources_arr|
         resources_arr.each do |resource|
           response_body = resource.download_resource
-          next if response_body.blank?
+          # blank?だと正規表現チェックしているようで、バイナリデータが必ずしもUTF-8とは限らないのでここではblank?を使わない
+          next if response_body.nil? || response_body.empty?
           if filename_hash[resource.save_filename].nil?
             stream.put_next_entry(dir_name + "/" + resource.save_filename)
           else

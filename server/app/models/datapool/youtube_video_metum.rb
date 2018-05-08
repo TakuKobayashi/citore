@@ -25,6 +25,18 @@ class Datapool::YoutubeVideoMetum < Datapool::VideoMetum
     "youtu.be"
   ]
 
+  def src=(url)
+    aurl = Addressable::URI.parse(url)
+    query_hash = aurl.query_values
+    self.origin_src = aurl.origin.to_s + aurl.path.to_s + "?v=" + query_hash["v"].to_s
+    query_hash.delete_if{|key, value| key == "v" }
+    if query_hash.present?
+      self.other_src = "&" + query_hash.map{|key, value| key.to_s + "=" + value.to_s }.join("&")
+    else
+      self.other_src = ""
+    end
+  end
+
   def download_resource
     aurl = Addressable::URI.parse(self.src)
     file_name = self.original_filename + ".mp4"

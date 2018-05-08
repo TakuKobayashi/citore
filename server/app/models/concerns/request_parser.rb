@@ -41,14 +41,13 @@ module RequestParser
     begin
       request_option_hash = {query: params, header: header, body: body}.merge(options)
       request_option_hash.delete_if{|k, v| v.blank? }
-      escaped_url = URI.escape(url)
-      response = http_client.send(method, escaped_url, request_option_hash)
+      response = http_client.send(method, url, request_option_hash)
       if response.status >= 400
-        self.record_log(url: escaped_url, method: method, params: params, header: header, options: options, insert_top_messages: ["request Error Status Code: #{response.status}"])
+        self.record_log(url: url, method: method, params: params, header: header, options: options, insert_top_messages: ["request Error Status Code: #{response.status}"])
       end
       result = response.body
     rescue SocketError, HTTPClient::ConnectTimeoutError, HTTPClient::BadResponseError, Addressable::URI::InvalidURIError => e
-      self.record_log(url: escaped_url, method: method, params: params, header: header, options: options, error_messages: ["error: #{e.message}"] + e.backtrace, insert_top_messages: ["exception:" + e.class.to_s])
+      self.record_log(url: url, method: method, params: params, header: header, options: options, error_messages: ["error: #{e.message}"] + e.backtrace, insert_top_messages: ["exception:" + e.class.to_s])
     end
     return result
   end

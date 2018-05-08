@@ -195,7 +195,7 @@ class Datapool::ResourceMetum < ApplicationRecord
         word_counter <= 255
       end
       origin_src = srces.join("/")
-      other_src = other_pathes.join("/")
+      other_src = "/" + other_pathes.join("/")
     else
       origin_src = pure_url
       other_src = ""

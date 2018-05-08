@@ -15,5 +15,5 @@
 #  index_datapool_threed_model_meta_on_title       (title)
 #
 
-class Datapool::ThreedModelMetum < ApplicationRecord
+class Datapool::ThreedModelMetum < Datapool::ResourceMetum
 end

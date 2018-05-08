@@ -16,7 +16,7 @@
 #  index_datapool_pdf_meta_on_title       (title)
 #
 
-class Datapool::PdfMetum < ApplicationRecord
+class Datapool::PdfMetum < Datapool::ResourceMetum
   serialize :options, JSON
   has_many :pages, class_name: 'Datapool::PdfPageMetum', foreign_key: :datapool_pdf_metum_id
 

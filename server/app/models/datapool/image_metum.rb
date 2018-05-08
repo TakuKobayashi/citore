@@ -19,6 +19,13 @@
 class Datapool::ImageMetum < Datapool::ResourceMetum
   serialize :options, JSON
 
+  after_destroy do
+    if self.src.include?(Datapool::ResourceMetum::S3_ROOT_URL)
+      s3 = Aws::S3::Client.new
+      s3.delete_object(bucket: "taptappun", key: self.src.gsub(Datapool::ResourceMetum::S3_ROOT_URL, ""))
+    end
+  end
+
   IMAGE_FILE_EXTENSIONS = [
     ".agp",
     ".ai", #Illustrator

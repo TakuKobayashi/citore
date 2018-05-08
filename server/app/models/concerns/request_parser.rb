@@ -38,16 +38,28 @@ module RequestParser
     http_client.send_timeout    = 600
     http_client.receive_timeout = 600
     result = ""
+    request_option_hash = {query: params, header: header, body: body}.merge(options)
+    request_option_hash.delete_if{|k, v| v.blank? }
+    is_url_rescue = false
     begin
-      request_option_hash = {query: params, header: header, body: body}.merge(options)
-      request_option_hash.delete_if{|k, v| v.blank? }
       response = http_client.send(method, url, request_option_hash)
       if response.status >= 400
         self.record_log(url: url, method: method, params: params, header: header, options: options, insert_top_messages: ["request Error Status Code: #{response.status}"])
       end
       result = response.body
-    rescue SocketError, HTTPClient::ConnectTimeoutError, HTTPClient::BadResponseError, Addressable::URI::InvalidURIError => e
+    rescue SocketError, HTTPClient::ConnectTimeoutError, HTTPClient::BadResponseError => e
       self.record_log(url: url, method: method, params: params, header: header, options: options, error_messages: ["error: #{e.message}"] + e.backtrace, insert_top_messages: ["exception:" + e.class.to_s])
+    rescue Addressable::URI::InvalidURIError, URI::InvalidURIError => e
+      if is_url_rescue
+        self.record_log(url: URI.escape(url), method: method, params: params, header: header, options: options, insert_top_messages: ["request Error Status Code: #{response.status}"])
+      else
+        is_url_rescue = true
+        response = http_client.send(method, URI.escape(url), request_option_hash)
+        if response.status >= 400
+          self.record_log(url: URI.escape(url), method: method, params: params, header: header, options: options, insert_top_messages: ["request Error Status Code: #{response.status}"])
+        end
+        result = response.body
+      end
     end
     return result
   end

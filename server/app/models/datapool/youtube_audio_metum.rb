@@ -22,6 +22,18 @@ require 'google/apis/youtube_v3'
 class Datapool::YoutubeAudioMetum < Datapool::AudioMetum
   has_one :audio_track, class_name: 'Datapool::YoutubeAudioTrack', foreign_key: :audio_metum_id
 
+  def src=(url)
+    aurl = Addressable::URI.parse(url)
+    query_hash = aurl.query_values
+    self.origin_src = aurl.origin.to_s + aurl.path.to_s + "?v=" + query_hash["v"].to_s
+    query_hash.delete_if{|key, value| key == "v" }
+    if query_hash.present?
+      self.other_src = "&" + query_hash.map{|key, value| key.to_s + "=" + value.to_s }.join("&")
+    else
+      self.other_src = ""
+    end
+  end
+
   def self.search_and_import!(keyword:)
     youtube = Google::Apis::YoutubeV3::YouTubeService.new
     youtube.key = ENV.fetch('GOOGLE_API_KEY', '')

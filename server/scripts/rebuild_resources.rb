@@ -1,22 +1,31 @@
-[Datapool::AudioMetum, Datapool::ImageMetum, Datapool::VideoMetum, Datapool::PdfMetum, Datapool::ThreedModelMetum].find_each do |resource|
-  aurl = Addressable::URI.parse(resource.src)
-  url_parts = aurl.to_s.split("?").select{|url_part| url_part.present? }
-  resource.src = url_parts.join("?")
-  resource.save!
-  if aurl.to_s != resource.src
-    puts "changed:" + resource.id.to_s + ": " + aurl.to_s + " to " + resource.src
+[Datapool::AudioMetum, Datapool::ImageMetum, Datapool::VideoMetum, Datapool::PdfMetum, Datapool::ThreedModelMetum].each do |clazz|
+  clazz.find_each do |resource|
+    aurl = Addressable::URI.parse(resource.src)
+    url_parts = aurl.to_s.split("?").select{|url_part| url_part.present? }
+    resource.src = url_parts.join("?")
+    resource.save!
+    if aurl.to_s != resource.src
+      puts "changed:" + resource.id.to_s + ": " + aurl.to_s + " to " + resource.src
+    end
   end
 end
 
-[Datapool::AudioMetum, Datapool::ImageMetum, Datapool::VideoMetum, Datapool::PdfMetum, Datapool::ThreedModelMetum].find_each do |resource|
-  src_resources = resource.class.find_origin_src_by_url(url: resource.src)
-  uniq_src_resources = src_resources.index_by(&:src)
-  src_resources.each do |res|
-    if uniq_src_resources.has_key?(res.src)
-      uniq_src_resources.delete(res.src)
-    else
-      puts "destroy:" + res.id.to_s + ": " + res.src
-      res.destroy
+[Datapool::AudioMetum, Datapool::ImageMetum, Datapool::VideoMetum, Datapool::PdfMetum, Datapool::ThreedModelMetum].each do |clazz|
+  clazz.find_each do |resource|
+    response_body = resource.download_resource
+    if response_body.nil? || response_body.empty?
+      resource.destroy
+      next
+    end
+    src_resources = clazz.find_origin_src_by_url(url: resource.src)
+    uniq_src_resources = src_resources.index_by(&:src)
+    src_resources.each do |res|
+      if uniq_src_resources.has_key?(res.src)
+        uniq_src_resources.delete(res.src)
+      else
+        puts "destroy:" + res.id.to_s + ": " + res.src
+        res.destroy
+      end
     end
   end
 end

@@ -142,7 +142,7 @@ class Datapool::ImageMetum < Datapool::ResourceMetum
       next if not_backup_images.blank?
       self.write_image_buckup_log("#{not_backup_images.size} images backup start!!\n first id:#{not_backup_images.first.try(:id)} last id:#{not_backup_images.last.try(:id)}")
       Tempfile.create(SecureRandom.hex) do |tempfile|
-        zippath = self.compress_to_zip(zip_filepath: tempfile.path, resources: not_backup_images)
+        zippath = ResourceUtility.download_and_compress_to_zip(zip_filepath: tempfile.path, resources: not_backup_images)
         s3 = Aws::S3::Client.new
         filepath = CRAWL_IMAGE_BACKUP_PATH + "#{Time.current.strftime("%Y%m%d_%H%M%S%L")}.zip"
         s3.put_object(bucket: "taptappun",body: File.open(zippath), key: filepath)

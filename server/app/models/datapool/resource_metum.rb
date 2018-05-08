@@ -186,7 +186,7 @@ class Datapool::ResourceMetum < ApplicationRecord
 
   private
   def self.url_partition(url:)
-    aurl = Addressable::URI.parse(url)
+    aurl = Addressable::URI.parse(URI.escape(url))
     pure_url = aurl.origin.to_s + aurl.path.to_s
     if pure_url.size > 255
       word_counter = 0

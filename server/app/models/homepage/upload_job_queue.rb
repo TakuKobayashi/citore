@@ -75,7 +75,7 @@ class Homepage::UploadJobQueue < ApplicationRecord
         return false
       end
       self.uploading!
-      upload_complessed_file!(zippath)
+      upload_complessed_file!(zippath: zippath, resources: resources)
     end
   end
 
@@ -93,7 +93,7 @@ class Homepage::UploadJobQueue < ApplicationRecord
     end
   end
 
-  def upload_complessed_file!(zippath)
+  def upload_complessed_file!(zippath:, resources:)
     zipfile = File.open(zippath)
     zipfile_size = zipfile.size
     upload_info = options["upload_info"] || {}

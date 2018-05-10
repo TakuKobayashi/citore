@@ -103,6 +103,8 @@ gem 'twilio-ruby', '~> 5.5.1'
 gem 'dotenv-rails', require: 'dotenv/rails-now'
 gem 'geokit-rails'
 
+gem 'webpacker'
+
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 

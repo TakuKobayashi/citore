@@ -1,2 +1,2 @@
-web: bin/rails s
+web: bin/rails server
 webpacker: bin/webpack-dev-server

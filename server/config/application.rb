@@ -30,6 +30,12 @@ module Server
       end
     end
 
+    config.generators do |g|
+      g.stylesheets     false
+      g.javascripts     false
+      g.helper          false
+    end
+
     config.after_initialize do
       if defined?(Rails::Server) || (defined?(Puma))
         # アプリキャッシュにマスター情報を入れておくことでスピードを稼ぐ

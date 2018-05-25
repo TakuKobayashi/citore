@@ -82,28 +82,6 @@ namespace :batch do
     end
   end
 
-  task import_to_dynamodb_from_table: :environment do
-    Aws.config.update(Rails.application.config_for(:aws).symbolize_keys)
-    client = Aws::DynamoDB::Client.new
-    {
-      TwitterWord => "TwitterWordDynamo",
-      Datapool::AppearWord => "AppearWordDynamo",
-      MarkovTrigram => "MarkovTrigramDynamo",
-    }.each do |activerecord_clazz, dynamodb_tablename|
-      activerecord_clazz.find_in_batches do |clazzes|
-        clazzes.each_slice(25) do |records|
-          BatchUtility.execute_and_retry do
-            client.batch_write_item({
-              request_items: {
-                dynamodb_tablename => records.map{|r| {put_request: {item: r.attributes} } }
-              }
-            })
-          end
-        end
-      end
-    end
-  end
-
   task rebuild_twitter_replay_id: :environment do
     tweet_id = ExtraInfo.read_extra_info["rebuild_tweet_id"]
     client =  TwitterRecord.get_twitter_rest_client("citore")

@@ -2,7 +2,7 @@
 #
 # Table name: datapool_audio_elements
 #
-#  id         :integer          not null, primary key
+#  id         :bigint(8)        not null, primary key
 #  audio_type :string(255)      not null
 #  audio_id   :integer          not null
 #  category   :integer          default("beats"), not null

@@ -2,7 +2,7 @@
 #
 # Table name: datapool_texts
 #
-#  id       :integer          not null, primary key
+#  id       :bigint(8)        not null, primary key
 #  type     :string(255)
 #  body     :text(65535)      not null
 #  from_url :string(255)

@@ -2,7 +2,7 @@
 #
 # Table name: datapool_store_products
 #
-#  id             :integer          not null, primary key
+#  id             :bigint(8)        not null, primary key
 #  type           :string(255)
 #  publisher_name :string(255)
 #  product_id     :string(255)      not null

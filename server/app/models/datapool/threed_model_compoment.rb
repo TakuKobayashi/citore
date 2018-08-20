@@ -2,7 +2,7 @@
 #
 # Table name: datapool_threed_model_compoments
 #
-#  id                :integer          not null, primary key
+#  id                :bigint(8)        not null, primary key
 #  threed_model_id   :integer          not null
 #  title             :string(255)      not null
 #  original_filepath :string(255)

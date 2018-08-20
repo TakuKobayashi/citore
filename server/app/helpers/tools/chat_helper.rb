@@ -1,2 +1,0 @@
-module Tools::ChatHelper
-end

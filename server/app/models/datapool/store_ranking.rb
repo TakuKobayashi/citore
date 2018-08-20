@@ -2,7 +2,7 @@
 #
 # Table name: datapool_store_rankings
 #
-#  id                        :integer          not null, primary key
+#  id                        :bigint(8)        not null, primary key
 #  datapool_store_product_id :integer          not null
 #  category                  :integer          default("top_grossing"), not null
 #  rank                      :integer          default(0), not null

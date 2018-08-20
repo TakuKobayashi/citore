@@ -9,14 +9,6 @@ every :day, at: '11:00' do
   runner "Homepage.import_routine!"
 end
 
-every :day, at: '10:00' do
-  runner "Datapool::StoreProduct.update_data!"
-end
-
-every :day, at: '7:00' do
-  runner "Datapool::StoreProduct.backup_to_s3"
-end
-
 every :day, at: '0:00' do
   runner "ResourceUtility.crawler_routine!"
 end

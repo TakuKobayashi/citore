@@ -2,7 +2,7 @@
 #
 # Table name: datapool_audio_track_details
 #
-#  id                :integer          not null, primary key
+#  id                :bigint(8)        not null, primary key
 #  track_id          :integer          not null
 #  sample_rate       :integer          default(0), not null
 #  tempo             :float(24)        default(0.0), not null

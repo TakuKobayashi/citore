@@ -2,7 +2,7 @@
 #
 # Table name: datapool_reviews
 #
-#  id                        :integer          not null, primary key
+#  id                        :bigint(8)        not null, primary key
 #  datapool_store_product_id :integer
 #  review_id                 :string(255)      not null
 #  title                     :string(255)

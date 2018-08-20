@@ -2,7 +2,7 @@
 #
 # Table name: datapool_hatsugen_komachi_keywords
 #
-#  id                           :integer          not null, primary key
+#  id                           :bigint(8)        not null, primary key
 #  datapool_hatsugen_komachi_id :integer          not null
 #  word                         :string(255)      not null
 #  part                         :string(255)      not null

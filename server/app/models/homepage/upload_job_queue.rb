@@ -2,7 +2,7 @@
 #
 # Table name: homepage_upload_job_queues
 #
-#  id                 :integer          not null, primary key
+#  id                 :bigint(8)        not null, primary key
 #  homepage_access_id :integer          not null
 #  from_type          :string(255)      not null
 #  token              :string(255)      not null

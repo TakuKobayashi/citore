@@ -2,7 +2,7 @@
 #
 # Table name: homepage_accesses
 #
-#  id         :integer          not null, primary key
+#  id         :bigint(8)        not null, primary key
 #  ip_address :string(255)      not null
 #  uid        :string(255)      not null
 #  user_agent :text(65535)

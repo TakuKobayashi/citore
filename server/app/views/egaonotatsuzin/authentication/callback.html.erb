@@ -1,6 +1,0 @@
-<%= javascript_include_tag 'libraries/browser-deeplink.min.js' %>
-<script>
-    window.onload = function() {
-      deeplink.open("egaonotatsuzin://auth?user_token=#{@user.token}");
-    };
-</script>

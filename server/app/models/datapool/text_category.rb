@@ -2,7 +2,7 @@
 #
 # Table name: datapool_text_categories
 #
-#  id                   :integer          not null, primary key
+#  id                   :bigint(8)        not null, primary key
 #  datapool_text_id     :integer          not null
 #  datapool_category_id :integer          not null
 #

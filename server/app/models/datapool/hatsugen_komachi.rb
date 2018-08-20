@@ -2,7 +2,7 @@
 #
 # Table name: datapool_hatsugen_komachis
 #
-#  id                :integer          not null, primary key
+#  id                :bigint(8)        not null, primary key
 #  topic_id          :integer          not null
 #  res_number        :string(255)      not null
 #  top_res_flag      :string(255)      not null
@@ -12,7 +12,7 @@
 #  posted_at         :datetime         not null
 #  publish_flag      :string(255)      not null
 #  parent_topic_flag :string(255)      not null
-#  komachi_user_id   :integer          not null
+#  komachi_user_id   :bigint(8)        not null
 #  advice            :text(65535)
 #  funny             :integer          default(0), not null
 #  surprise          :integer          default(0), not null

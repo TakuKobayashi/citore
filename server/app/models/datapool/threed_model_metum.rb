@@ -2,7 +2,7 @@
 #
 # Table name: datapool_threed_model_meta
 #
-#  id         :integer          not null, primary key
+#  id         :bigint(8)        not null, primary key
 #  type       :string(255)
 #  title      :string(255)      not null
 #  origin_src :string(255)      not null

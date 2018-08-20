@@ -2,7 +2,7 @@
 #
 # Table name: spotify_playlists
 #
-#  id          :integer          not null, primary key
+#  id          :bigint(8)        not null, primary key
 #  account_id  :integer          not null
 #  playlist_id :string(255)      not null
 #  name        :string(255)

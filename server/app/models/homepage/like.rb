@@ -2,7 +2,7 @@
 #
 # Table name: homepage_likes
 #
-#  id                 :integer          not null, primary key
+#  id                 :bigint(8)        not null, primary key
 #  from_type          :string(255)      not null
 #  from_id            :integer          not null
 #  homepage_access_id :integer          not null

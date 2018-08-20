@@ -2,7 +2,7 @@
 #
 # Table name: datapool_image_meta
 #
-#  id                :integer          not null, primary key
+#  id                :bigint(8)        not null, primary key
 #  type              :string(255)
 #  title             :string(255)      not null
 #  original_filename :string(255)
@@ -25,7 +25,7 @@ class Datapool::InstagramImageMetum < Datapool::ImageMetum
     images = []
     doc = RequestParser.request_and_parse_html(url: INSTAGRAM_TAG_SEARCH_API_URL + keyword.to_s + "/")
     target_json_string = doc.css("script").map{|js_dom| js_dom.text.match(/\{.*}/).to_s }[2]
-    break if target_json_string.blank?
+    return nil if target_json_string.blank?
     json_hash = {}
     begin
       json_hash = JSON.parse(target_json_string)

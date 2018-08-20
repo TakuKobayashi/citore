@@ -1,2 +1,0 @@
-module Homepage::HogeHelper
-end

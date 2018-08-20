@@ -1,2 +1,0 @@
-module Tools::TexturePackerHelper
-end

@@ -69,6 +69,11 @@ ActiveAdmin.setup do |config|
   # case when Pundit is unable to find suitable policy.
   # config.pundit_default_policy = "MyDefaultPunditPolicy"
 
+  # If you wish to maintain a separate set of Pundit policies for admin
+  # resources, you may set a namespace here that Pundit will search
+  # within when looking for a resource's policy.
+  # config.pundit_policy_namespace = :admin
+
   # You can customize your CanCan Ability class name here.
   # config.cancan_ability_class = "Ability"
 
@@ -178,6 +183,13 @@ ActiveAdmin.setup do |config|
   # resources or you can disable them globally from here.
   #
   # config.breadcrumb = false
+
+  # == Create Another Checkbox
+  #
+  # Create another checkbox is disabled by default. You can customize it for individual
+  # resources or you can enable them globally from here.
+  #
+  # config.create_another = true
 
   # == Register Stylesheets & Javascripts
   #

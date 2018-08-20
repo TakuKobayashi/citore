@@ -2,7 +2,7 @@
 #
 # Table name: datapool_audio_albums
 #
-#  id        :integer          not null, primary key
+#  id        :bigint(8)        not null, primary key
 #  type      :string(255)
 #  title     :string(255)      default(""), not null
 #  album_id  :string(255)      not null

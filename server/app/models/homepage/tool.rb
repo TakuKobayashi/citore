@@ -2,7 +2,7 @@
 #
 # Table name: homepage_tools
 #
-#  id          :integer          not null, primary key
+#  id          :bigint(8)        not null, primary key
 #  title       :string(255)
 #  description :text(65535)
 #  path        :string(255)

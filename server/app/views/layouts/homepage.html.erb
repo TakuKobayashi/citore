@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <%= canonical_tag %>
+  <%= generate_homepage_seo_header %>
+  <%= csrf_meta_tags %>
+  <%= stylesheet_link_tag 'libraries/pure/pure-min.css' %>
+  <%= stylesheet_link_tag 'homepage/main.css' %>
+  <%= javascript_include_tag 'libraries/jquery.min.js' %>
+  <%= javascript_include_tag 'libraries/jquery.pjax.js' %>
+  <%= javascript_include_tag 'libraries/jquery.easing.js' %>
+  <%= javascript_include_tag 'libraries/jquery.scrollfollow.js' %>
+  <script>
+    $('.pure-menu').scrollFollow();
+
+    var visitor = <%= @visitor.try(:to_json, {only: [:id, :uid]}).try(:html_safe) || {}.to_json %>;
+    if(Object.keys(visitor).length === 0){
+      var uid = localStorage.getItem("uid");
+      var params = "";
+      if(uid){
+        params = "uid=" + uid;
+      }
+      var xhr = new XMLHttpRequest();
+      // ハンドラの登録.
+      xhr.onreadystatechange = function() {
+        if(xhr.readyState == 4){
+          if( xhr.status == 200 || xhr.status == 304 ) {
+            var data = JSON.parse(xhr.responseText); // responseXML もあり
+            document.cookie = 'uid=' + data.uid;
+            localStorage.setItem("uid", data.uid);
+          }
+          xhr.abort();
+        }
+      };
+      xhr.open('POST', '<%= regist_visitor_top_url %>', true);
+      xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+      xhr.send(params);
+    }
+  </script>
+</head>
+
+<body>
+  <% if show_header? %>
+  <div class="home-menu pure-menu pure-menu-horizontal">
+    <ul class="pure-menu-list">
+      <li class="pure-menu-item">
+        <%= link_to(t("homepage.header.home"), root_path, class: "pure-menu-link") %>
+      </li>
+      <li class="pure-menu-item">
+        <%= link_to(t("homepage.header.profile"), profile_path, class: "pure-menu-link") %>
+      </li>
+      <li class="pure-menu-item">
+        <%= link_to(t("homepage.header.products"), products_path, class: "pure-menu-link") %>
+      </li>
+      <li class="pure-menu-item">
+        <%= link_to(t("homepage.header.tools"), tools_root_path, class: "pure-menu-link") %>
+      </li>
+      <li class="pure-menu-item">
+        <%= link_to(t("homepage.header.articles"), articles_path, class: "pure-menu-link") %>
+      </li>
+      <li class="pure-menu-item">
+        <%= link_to(t("homepage.header.relations"), relations_path, class: "pure-menu-link") %>
+      </li>
+      <li class="pure-menu-item">
+        <%= link_to(t("homepage.header.contacts"), contact_path, class: "pure-menu-link") %>
+      </li>
+    </ul>
+  </div>
+  <% end %>
+  <%= yield %>
+</body>
+
+</html>

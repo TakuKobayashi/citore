@@ -1,2 +1,0 @@
-module Homepage::AnnouncementsHelper
-end

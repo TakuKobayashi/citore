@@ -2,7 +2,7 @@
 #
 # Table name: accounts
 #
-#  id           :integer          not null, primary key
+#  id           :bigint(8)        not null, primary key
 #  user_type    :string(255)      not null
 #  user_id      :integer          not null
 #  type         :string(255)

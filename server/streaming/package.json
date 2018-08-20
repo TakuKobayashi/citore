@@ -13,7 +13,7 @@
     "express": "*",
     "nodemon": "*",
     "twitter": "*",
-    "ws": "^5.1.1",
+    "ws": "*",
     "yamljs": "*"
   },
   "repository": {

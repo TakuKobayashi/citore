@@ -2,7 +2,7 @@
 #
 # Table name: datapool_pdf_page_meta
 #
-#  id                    :integer          not null, primary key
+#  id                    :bigint(8)        not null, primary key
 #  datapool_pdf_metum_id :integer          not null
 #  page_number           :integer          default(0), not null
 #  extract_image_url     :string(255)

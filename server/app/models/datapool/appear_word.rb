@@ -2,7 +2,7 @@
 #
 # Table name: datapool_appear_words
 #
-#  id             :integer          not null, primary key
+#  id             :bigint(8)        not null, primary key
 #  appear_count   :integer          default(0), not null
 #  type           :string(255)
 #  word           :string(255)      not null

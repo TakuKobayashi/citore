@@ -1,2 +1,0 @@
-module Unibo::TalkHelper
-end

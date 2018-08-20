@@ -1,2 +1,0 @@
-module Bots::FacebookHelper
-end

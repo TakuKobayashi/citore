@@ -1,2 +1,0 @@
-module Bots::LandingHelper
-end

@@ -2,7 +2,7 @@
 #
 # Table name: datapool_track_resources
 #
-#  id            :integer          not null, primary key
+#  id            :bigint(8)        not null, primary key
 #  resource_type :string(255)      not null
 #  resource_id   :integer          not null
 #  track_id      :integer          not null

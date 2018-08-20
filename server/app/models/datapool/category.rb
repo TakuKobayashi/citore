@@ -2,7 +2,7 @@
 #
 # Table name: datapool_categories
 #
-#  id                 :integer          not null, primary key
+#  id                 :bigint(8)        not null, primary key
 #  name               :string(255)      not null
 #  defined_number     :integer          default("unknown"), not null
 #  parent_category_id :integer

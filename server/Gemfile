@@ -98,6 +98,7 @@ gem 'twilio-ruby'
 
 gem 'dotenv-rails', require: 'dotenv/rails-now'
 gem 'geokit-rails'
+gem 'webpacker'
 
 #gem 'rack-cors', :require => 'rack/cors'
 
